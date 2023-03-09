@@ -33,19 +33,15 @@ jobs:
         distribution: 'temurin'
     - name: Add permission
       run: chmod +x server/gradlew
-#    - name: Init with Gradle 
-#      run: server/gradlew init
     - name: Use with Gradle
       uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
       with:
         arguments: build
         build-root-directory: server
-#    - name: Build with Gradle 
-#      run: server/gradlew build
         
     # build한 후 프로젝트를 압축합니다.
     - name: Make zip file
-      run: zip -r ./partypeople.zip .
+      run: zip -r ./partypeople.zip server
       shell: bash
     
     # Access Key와 Secret Access Key를 통해 권한을 확인합니다.
@@ -61,10 +57,10 @@ jobs:
     - name: Upload to S3
       run: aws s3 cp --region ap-northeast-2 ./partypeople.zip s3://$S3_BUCKET_NAME/partypeople.zip
       
-#     # CodeDeploy에게 배포 명령을 내립니다.
-#     - name: Code Deploy
-#       run: >
-#         aws deploy create-deployment --application-name be-0-name
-#         --deployment-config-name CodeDeployDefault.AllAtOnce
-#         --deployment-group-name be-0-name-group
-#         --s3-location bucket=$S3_BUCKET_NAME,bundleType=zip,key=partypeople.zip
+    # CodeDeploy에게 배포 명령을 내립니다.
+    - name: Code Deploy
+      run: >
+        aws deploy create-deployment --application-name partypeople
+        --deployment-config-name CodeDeployDefault.AllAtOnce
+        --deployment-group-name partypeople_group
+        --s3-location bucket=$S3_BUCKET_NAME,bundleType=zip,key=partypeople.zip
