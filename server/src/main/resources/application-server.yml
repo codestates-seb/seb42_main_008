@@ -4,6 +4,8 @@ spring:
       ddl-auto: create
     database: mysql
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    properties:
+      hibernate.default_batch_fetch_size: 500
   datasource:
     url: jdbc:mysql://${DATABASE_URL}/pre_project?useSSL=false&characterEncoding=UTF-8&serverTimezone=UTC
     username: ${DATABASE_USERNAME}
