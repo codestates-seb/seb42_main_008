@@ -30,5 +30,4 @@ jobs:
           aws s3 cp \
             --region ap-northeast-2 \
             build s3://partypeople \
-            --delete
         working-directory: ./client
