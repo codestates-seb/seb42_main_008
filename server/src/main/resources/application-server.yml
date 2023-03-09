@@ -1,0 +1,27 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: create
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+  datasource:
+    url: jdbc:mysql://${DATABASE_URL}/pre_project?useSSL=false&characterEncoding=UTF-8&serverTimezone=UTC
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            clientId: ${GOOGLE_CLIENT_ID}
+            clientSecret: ${GOOGLE_CLIENT_SECRET}
+            scope:
+              - email
+              - profile
+jwt:
+  key: ${JWT_SECRET_KEY}
+  access-token-expiration-minutes: 10
+  refresh-token-expiration-minutes: 300
+config:
+  domain: ${AWS_S3_ENDPOINT}
