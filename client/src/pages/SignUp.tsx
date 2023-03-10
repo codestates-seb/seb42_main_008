@@ -10,11 +10,6 @@ const SignUp = () => {
   const [pwcheck, setPwcheck] = useState('');
   const navigate = useNavigate();
 
-  // 회원가입에 성공할 시 로그인 페이지로 이동 (추후 조건 추가하기)
-  // const handleClick = () => {
-  //   navigate('/login');
-  // };
-
   const handleClick = () => {
     if (email === '') {
       Swal.fire('', '이메일을 입력해주세요!');
@@ -25,6 +20,7 @@ const SignUp = () => {
     } else if (pwcheck === '') {
       Swal.fire('', '비밀번호 확인을 해주세요!');
     } else {
+      // 회원가입에 성공할 시 로그인 페이지로 이동 (추후 조건 추가하기)
       Swal.fire('Congratulation!', '가입을 축하합니다.');
       navigate('/login');
     }
