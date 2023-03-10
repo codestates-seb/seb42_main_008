@@ -7,7 +7,9 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import partypeople.server.dto.MultiResponseDto;
 import partypeople.server.dto.SingleResponseDto;
+import partypeople.server.member.dto.FollowDto;
 import partypeople.server.member.dto.MemberDto;
+import partypeople.server.member.entity.Follow;
 import partypeople.server.member.entity.Member;
 import partypeople.server.member.mapper.MemberMapper;
 import partypeople.server.member.service.MemberService;
@@ -57,6 +59,34 @@ public class MemberController {
                 new SingleResponseDto<>(memberMapper.membertoMemberResponse(member)));
     }
 
+    @GetMapping("/{member-id}/subscribers")
+    public ResponseEntity getSubScriberList(@PathVariable("member-id") long memberId) {
+        //글 들어오면 TODO..
+        return ResponseEntity.ok(
+        ).build();
+    }
+
+    @GetMapping("/{member-id}/participants")
+    public ResponseEntity getParticipantList(@PathVariable("member-id") long memberId) {
+        //글 들어오면 TODO..
+        return ResponseEntity.ok(
+        ).build();
+    }
+
+    @GetMapping("/{member-id}/writers")
+    public ResponseEntity getWriterList(@PathVariable("member-id") long memberId) {
+        //글 들어오면 TODO..
+        return ResponseEntity.ok(
+        ).build();
+    }
+
+    @GetMapping("/{member-id}/reviews")
+    public ResponseEntity getReviewList(@PathVariable("member-id") long memberId) {
+        //글 들어오면 TODO..
+        return ResponseEntity.ok(
+        ).build();
+    }
+
     @GetMapping
     public ResponseEntity getMembers(@Positive @RequestParam int page,
                                      @Positive @RequestParam int size,
@@ -80,6 +110,20 @@ public class MemberController {
 
         return ResponseEntity.ok(
                 new SingleResponseDto<>(memberMapper.membertoMemberResponse(updatedMember)));
+    }
+
+    @PostMapping("/follows")
+    public ResponseEntity postFollow(@Valid @RequestBody FollowDto.Post requestBody) {
+        Follow follow = new Follow();
+        follow.setFollower(memberService.findMember(requestBody.getFollowerId()));
+        follow.setFollowing(memberService.findMember(requestBody.getFollowingId()));
+
+        memberService.followExe(follow);
+
+        return ResponseEntity.ok().build();
+
+//        return ResponseEntity.ok(
+//                new SingleResponseDto<>(memberMapper.membertoMemberResponse(updatedMember)));
     }
 
     @DeleteMapping("/{member-id}")

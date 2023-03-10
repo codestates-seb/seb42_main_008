@@ -11,7 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 import partypeople.server.auth.utils.CustomAuthorityUtils;
 import partypeople.server.exception.BusinessLogicException;
 import partypeople.server.exception.ExceptionCode;
+import partypeople.server.member.entity.Follow;
 import partypeople.server.member.entity.Member;
+import partypeople.server.member.repository.FollowRepository;
 import partypeople.server.member.repository.MemberRepository;
 import partypeople.server.utils.CustomBeanUtils;
 
@@ -25,6 +27,8 @@ import java.util.Optional;
 @Slf4j
 public class MemberService {
     private final MemberRepository memberRepository;
+
+    private final FollowRepository followRepository;
     private final CustomBeanUtils<Member> beanUtils;
     private final PasswordEncoder passwordEncoder;
     private final CustomAuthorityUtils authorityUtils;
@@ -41,6 +45,21 @@ public class MemberService {
 
         Member savedMember = memberRepository.save(member);
         return savedMember;
+    }
+
+    public void followExe(Follow follow) {
+        //중복 확인 ** 등록 되어 있으면 취소 삭제?
+        Optional<Follow> optionalFollow = followRepository.findByFollowerMemberIdAndFollowingMemberId(follow.getFollower().getMemberId(),follow.getFollowing().getMemberId());
+
+        optionalFollow.ifPresentOrElse(
+                followRepository::delete,
+                ()->followRepository.save(follow)
+        );
+//        if(optionalFollow!=null) ?optionalFollow.ifPresent(followRepository::delete);
+//
+//        Follow savedFollow = optionalFollow.orElse(followRepository.save(follow)); //값이 없다면 follow를 저장
+
+//        return savedFollow;
     }
 
     @Transactional(readOnly = true)
