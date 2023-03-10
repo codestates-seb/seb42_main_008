@@ -36,8 +36,18 @@ public class Member extends Auditable {
 
     private Integer score;
 
+    private Integer followerCount;
+
+    private Integer followingCount;
+
     @Enumerated(value = EnumType.STRING)
     private MemberStatus memberStatus = MemberStatus.MEMBER_ACTIVE;
+
+    @OneToMany(mappedBy = "follower", cascade = CascadeType.REMOVE) //필드명 으로 !
+    private List<Follow> followers = new ArrayList<>();
+
+    @OneToMany(mappedBy = "following", cascade = CascadeType.REMOVE)    //
+    private List<Follow> followings = new ArrayList<>();
 
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> roles = new ArrayList<>();
