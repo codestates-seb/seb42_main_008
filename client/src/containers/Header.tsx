@@ -69,6 +69,8 @@ const HeaderBox = styled.header`
   color: white;
   justify-content: space-between;
   padding: 10px;
+  position: fixed;
+  z-index: 999;
   a {
     display: flex;
     align-items: center;

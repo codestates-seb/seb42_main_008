@@ -33,11 +33,11 @@ const CountrySelect = () => {
         <h1>대륙 이름</h1>
         <p>동행자를 구하고 싶은 나라를 선택해보세요!</p>
       </div>
+      <div className="list-top">
+        <div>내가 함께하고 싶은 도시가 없나요?</div>
+        <Link to="/add">글 작성하기</Link>
+      </div>
       <CountryListBox>
-        <div className="list-top">
-          <div>내가 함께하고 싶은 도시가 없나요?</div>
-          <Link to="/add">글 작성하기</Link>
-        </div>
         <div className="countrybox">
           <ul className="hot-country">
             <li
@@ -117,6 +117,7 @@ const CountryListContainer = styled.div`
   flex-direction: column;
   width: 100%;
   position: relative;
+  align-items: center;
 
   .country-name-box {
     display: flex;
@@ -133,15 +134,6 @@ const CountryListContainer = styled.div`
       font-size: 4rem;
     }
   }
-`;
-
-const CountryListBox = styled.section`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  position: absolute;
-  top: 270px;
-  width: 100%;
   .list-top {
     display: flex;
     align-items: center;
@@ -161,6 +153,15 @@ const CountryListBox = styled.section`
       border-radius: 10px;
     }
   }
+`;
+
+const CountryListBox = styled.section`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  position: relative;
+
   .countrybox {
     display: flex;
     width: 80%;
