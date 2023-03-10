@@ -3,20 +3,21 @@ import styled from 'styled-components';
 
 const ContinentSelect = () => {
   return (
-    <Container>
+    <>
       <Title>
         <h1>대륙별 둘러보기</h1>
       </Title>
-      <MapChart />
-    </Container>
+      <MapContainer>
+        <MapChart />
+      </MapContainer>
+    </>
   );
 };
 
-const Container = styled.section`
-  border: 1px solid red;
+const MapContainer = styled.section`
   width: 100%;
   height: calc(100vh - 60px);
-  overflow: hidden;
+  overflow-y: hidden;
   g {
     > path {
       :nth-of-type(7) {
@@ -36,7 +37,7 @@ const Container = styled.section`
 
 const Title = styled.div`
   width: 70%;
-  height: 80px;
+  height: 70px;
   background-color: #feb35c;
   position: absolute;
   right: 0;

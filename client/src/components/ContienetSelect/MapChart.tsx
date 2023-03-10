@@ -69,11 +69,11 @@ const MapChart = () => {
       coordinates={coordinates}
       onClick={() => handleMarkerClick(code)}
     >
-      <g transform="translate(-55, -38)">
+      <g transform="translate(-37, -39)">
         <svg
           version="1.0"
           xmlns="http://www.w3.org/2000/svg"
-          width="110px"
+          width="73px"
           height="50px"
           viewBox="0 0 163.000000 81.000000"
           preserveAspectRatio="xMidYMid meet"
@@ -92,7 +92,7 @@ const MapChart = () => {
         y={markerOffset - 30}
         style={{
           fill: 'white',
-          fontSize: '0.8rem',
+          fontSize: '0.6rem',
           fontWeight: '900',
         }}
       >
@@ -105,7 +105,7 @@ const MapChart = () => {
     <ComposableMap
       className="composableMap"
       projection="geoEquirectangular"
-      projectionConfig={{ scale: 130 }}
+      projectionConfig={{ scale: 120, center: [0, -20] }}
     >
       <Geographies geography={geoUrl}>
         {({ geographies }) =>
