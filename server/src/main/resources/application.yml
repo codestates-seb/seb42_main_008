@@ -10,7 +10,7 @@ spring:
       ddl-auto: create
     properties:
       hibernate:
-        format_sql: true
+#        format_sql: true
         default_batch_fetch_size: 500
   security:
     oauth2:
@@ -29,7 +29,7 @@ logging:
         orm:
           jpa: DEBUG
 jwt:
-  key:
+  key: partypeople5437895438023498342098039248230932580325809
   access-token-expiration-minutes: 10
   refresh-token-expiration-minutes: 300
 #config:
