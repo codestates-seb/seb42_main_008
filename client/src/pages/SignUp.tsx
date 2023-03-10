@@ -1,5 +1,9 @@
 import styled from 'styled-components';
 
+const handleSubmit = () => {
+  console.log('click!');
+};
+
 const SignUp = () => {
   return (
     <Container>
@@ -11,7 +15,10 @@ const SignUp = () => {
             <input type="text" id="email"></input>
           </div>
           <div className="group">
-            <label htmlFor="nickname">닉네임</label>
+            <div className="wrapper">
+              <label htmlFor="nickname">닉네임</label>
+              <button id="nick-check">중복확인</button>
+            </div>
             <input type="text" id="nickname"></input>
           </div>
           <div className="group">
@@ -19,11 +26,13 @@ const SignUp = () => {
             <input type="text" id="pw"></input>
           </div>
           <div className="group">
-            <label htmlFor="pwcheck">비밀번호 확인</label>
-            <input type="text" id="pwcheck"></input>
+            <label htmlFor="pw-check">비밀번호 확인</label>
+            <input type="text" id="pw-check"></input>
           </div>
         </form>
-        <button type="submit">가입하기</button>
+        <button id="join" type="submit" onClick={handleSubmit}>
+          가입하기
+        </button>
       </SignUpBox>
     </Container>
   );
@@ -57,6 +66,26 @@ const SignUpBox = styled.section`
     flex-direction: column;
     margin-bottom: 25px;
   }
+  .wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  #nick-check {
+    background-color: #feb35c;
+    color: white;
+    border: none;
+    transition: all 0.2s ease 0s;
+    width: 80px;
+    height: 100%;
+    border-radius: 5px;
+    cursor: pointer;
+    &:hover {
+      color: black;
+      background-color: white;
+      box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.15);
+    }
+  }
   label {
     color: #777777;
     font-size: 15px;
@@ -71,7 +100,7 @@ const SignUpBox = styled.section`
       outline: none;
     }
   }
-  button {
+  #join {
     width: 100%;
     color: white;
     cursor: pointer;
@@ -89,6 +118,11 @@ const SignUpBox = styled.section`
       color: black;
       background-color: white;
       box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.15);
+    }
+    &:active {
+      box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.15);
+      position: relative;
+      top: 2px;
     }
   }
 `;
