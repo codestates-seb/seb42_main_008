@@ -1,5 +1,4 @@
 import { FcGoogle } from 'react-icons/fc';
-
 import styled from 'styled-components';
 
 const Login = () => {
@@ -17,12 +16,20 @@ const Login = () => {
             <label htmlFor="pw">비밀번호</label>
             <input type="text" id="pw"></input>
           </div>
-          <button type="submit">로그인</button>
+          <button id="btn-login" type="submit">
+            로그인
+          </button>
         </form>
         <OauthLoginBox>
-          <div>---- OR ----</div>
-          <div>
-            <FcGoogle />
+          <div className="divider">
+            <hr />
+            <span>OR</span>
+            <hr />
+          </div>
+          <div className="btn-wrapper">
+            <button id="btn-google">
+              <GoogleLogo />
+            </button>
           </div>
         </OauthLoginBox>
       </LoginBox>
@@ -77,7 +84,7 @@ const LoginBox = styled.section`
       outline: none;
     }
   }
-  button {
+  #btn-login {
     width: 100%;
     color: white;
     cursor: pointer;
@@ -91,6 +98,7 @@ const LoginBox = styled.section`
     border: none;
     padding: 10px;
     margin-top: 10px;
+    margin-bottom: 20px;
     &:hover {
       color: black;
       background-color: white;
@@ -108,4 +116,53 @@ const OauthLoginBox = styled.section`
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  width: 100%;
+  .divider {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 1px;
+    margin: 20px;
+    span {
+      color: #888888;
+      font-weight: 600;
+      margin: 0px 20px;
+    }
+    hr {
+      width: 100%;
+      border: none;
+      height: 1px;
+      background-color: #888888;
+    }
+  }
+  .btn-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  #btn-google {
+    cursor: pointer;
+    background: white;
+    border: 0px white;
+    width: 40px;
+    height: 40px;
+    border-radius: 100%;
+  }
 `;
+const GoogleLogo = styled(FcGoogle)`
+  width: 100%;
+  height: 100%;
+`;
+
+/* TODO:
+1. 기본 구조 * 
+2. 유효성 검사
+2-1. 둘 다 value 가 없을 경우
+2-2. 이메일이 비어있을 경우
+2-3. 이메일이 가입되지 않은 이메일인 경우
+2-4. 이메일이 올바르지 않은 형식일 경우
+2-5. 비밀번호가 비어있을 경우
+2-6. 비밀번호가 가입되지 않은 비밀번호인 경우
+2-7. 비밀번호가 올바르지 않은 경우
+ */
