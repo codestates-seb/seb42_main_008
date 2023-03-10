@@ -12,12 +12,21 @@ const GlobalStyle = createGlobalStyle`
     width: 100%;
   }
 
-  main {
+ol,ul{
+  list-style: none;
+}
+ a {
+  text-decoration: none;
+  color: black;
+}
+
+
+ main {
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
   }
-`;
 
+`;
 export default GlobalStyle;
