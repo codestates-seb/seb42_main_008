@@ -17,7 +17,7 @@ const Footer = () => {
           href="https://github.com/codestates-seb/seb42_main_008"
         >
           <GitIcon />
-          <div>깃헙 바로가기</div>
+          <span>github 바로가기</span>
         </a>
       </p>
     </FooterBox>
@@ -57,7 +57,7 @@ const FooterBox = styled.footer`
     justify-content: center;
     align-items: center;
     text-decoration: none;
-    > div {
+    > span {
       padding: 5px;
     }
   }
