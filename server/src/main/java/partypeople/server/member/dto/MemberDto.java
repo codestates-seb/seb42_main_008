@@ -48,6 +48,12 @@ public class MemberDto {
     }
 
     @Getter
+    public static class Nickname {
+        @NotBlank
+        private String nickname;
+    }
+
+    @Getter
     @Builder
     public static class Response {
         private Long memberId;

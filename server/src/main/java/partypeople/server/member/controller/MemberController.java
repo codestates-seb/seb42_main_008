@@ -38,6 +38,13 @@ public class MemberController {
         return ResponseEntity.created(location).build();
     }
 
+    @PostMapping("/nickname")
+    public ResponseEntity nicknameCheck(@Valid @RequestBody MemberDto.Nickname requestBody) {
+        memberService.verifyExistsNickname(requestBody.getNickname());
+
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping("/{member-id}")
     public ResponseEntity getMember(@PathVariable("member-id") long memberId) {
         Member member = memberService.findMember(memberId);

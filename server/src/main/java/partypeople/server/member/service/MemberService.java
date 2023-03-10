@@ -103,7 +103,7 @@ public class MemberService {
         }
     }
 
-    private void verifyExistsNickname(String nickname) {
+    public void verifyExistsNickname(String nickname) {
         Optional<Member> member = memberRepository.findByNickname(nickname);
         if (member.isPresent()) {
             throw new BusinessLogicException(ExceptionCode.NICKNAME_EXIST);
