@@ -12,23 +12,23 @@ const GlobalStyle = createGlobalStyle`
     width: 100%;
   }
 
-ol,ul{
+  ol,ul{
   list-style: none;
-}
- a {
+  }
+  
+  a {
   text-decoration: none;
   color: black;
-}
+  }
 
-
- main {
+  main {
     width: 100%;
     height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
     padding-top: 60px;
+    min-height: calc(100vh - 60px);
   }
-
 `;
 export default GlobalStyle;

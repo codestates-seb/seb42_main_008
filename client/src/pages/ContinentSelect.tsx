@@ -41,7 +41,7 @@ const Title = styled.div`
   background-color: #feb35c;
   position: absolute;
   right: 0;
-  top: 50px;
+  top: 70px;
   display: flex;
   align-items: center;
   padding: 30px;
