@@ -68,6 +68,7 @@ public class MemberDto {
 
         private String memberStatus;
 
+        private Integer score;
     }
 
 }

@@ -41,6 +41,10 @@ public class MemberController {
     @GetMapping("/{member-id}")
     public ResponseEntity getMember(@PathVariable("member-id") long memberId) {
         Member member = memberService.findMember(memberId);
+        //service
+        member.setScore(50);
+        member.setFollowerCount(0);
+        member.setFollowingCount(0);
 
         return ResponseEntity.ok(
                 new SingleResponseDto<>(memberMapper.membertoMemberResponse(member)));
@@ -77,5 +81,4 @@ public class MemberController {
         memberService.deleteMember(memberId,password.getPassword());
         return ResponseEntity.noContent().build();
     }
-
 }
