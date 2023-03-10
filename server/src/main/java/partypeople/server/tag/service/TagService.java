@@ -16,7 +16,7 @@ import java.util.Optional;
 public class TagService {
     private final TagRepository tagRepository;
 
-    public List<Tag> findByTagNames(List<String> tagNames) {
+    public List<Tag> findTagsByNames(List<String> tagNames) {
         List<Tag> tags = new ArrayList<>();
 
         if (tagNames == null) {
