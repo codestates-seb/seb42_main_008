@@ -11,21 +11,22 @@ const GlobalStyle = createGlobalStyle`
   html, body, #root {
     width: 100%;
   }
-<<<<<<< HEAD
+
 ol,ul{
   list-style: none;
 }
-a{
+ a {
   text-decoration: none;
+  color: black;
 }
-=======
 
-  main {
+
+ main {
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
   }
->>>>>>> bb87bb1eefc6fa6dfc83cf882e2b25c679489b51
+
 `;
 export default GlobalStyle;

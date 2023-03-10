@@ -50,6 +50,7 @@ const SideBar = styled.nav`
   width: 40%;
   right: 0;
   top: 60px;
+  z-index: 100;
   background-color: white;
   border-left: 1px solid black;
   color: black;
