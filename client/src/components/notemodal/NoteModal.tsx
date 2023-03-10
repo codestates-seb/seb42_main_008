@@ -29,6 +29,13 @@ const NoteModal = ({ setNoteModal }: Props) => {
         <Message />
         <Message />
         <Message />
+        <Message />
+        <Message />
+        <Message />
+        <Message />
+        <Message />
+        <Message />
+        <Message />
       </ul>
     </SideBar>
   );
@@ -42,8 +49,7 @@ const SideBar = styled.nav`
   position: absolute;
   width: 40%;
   right: 0;
-  top: 100px;
-  height: 100%;
+  top: 60px;
   background-color: white;
   border-left: 1px solid black;
   color: black;

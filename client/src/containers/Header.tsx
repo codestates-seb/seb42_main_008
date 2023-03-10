@@ -62,7 +62,7 @@ const HeaderBox = styled.header`
   display: flex;
   align-items: center;
   width: 100%;
-  height: 100px;
+  height: 60px;
   top: 0;
   background-color: #5d62a0;
   color: white;
