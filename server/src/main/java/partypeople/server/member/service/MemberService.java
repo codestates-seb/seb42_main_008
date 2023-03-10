@@ -59,12 +59,12 @@ public class MemberService {
 
     @Transactional(readOnly = true)
     public List<Follow> findFollowers(Long memberId) {
-        return followRepository.findByFollowerMemberId(memberId);
+        return followRepository.findAllByFollowerMemberId(memberId);
     }
 
     @Transactional(readOnly = true)
     public List<Follow> findFollowings(Long memberId) {
-        return followRepository.findByFollowingMemberId(memberId);
+        return followRepository.findAllByFollowingMemberId(memberId);
     }
 
     @Transactional(readOnly = true)

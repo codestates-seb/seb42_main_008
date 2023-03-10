@@ -61,12 +61,12 @@ public class MemberController {
                 new SingleResponseDto<>(memberMapper.membertoMemberResponse(member)));
     }
 
-    @GetMapping("/{member-id}/follwer")
+    @GetMapping("/{member-id}/follower")
     public ResponseEntity getFollower(@PathVariable("member-id") long memberId) {
         List<Follow> follows = memberService.findFollowers(memberId);
 
         return ResponseEntity.ok(
-                new SingleResponseDto<>(memberMapper.followsToFollowerResponses(follows))
+                new SingleResponseDto<>(memberMapper.followsToFollowingResponses(follows))
         );
     }
 
@@ -75,7 +75,7 @@ public class MemberController {
         List<Follow> follows = memberService.findFollowings(memberId);
 
         return ResponseEntity.ok(
-                new SingleResponseDto<>(memberMapper.followsToFollowingResponses(follows))
+                new SingleResponseDto<>(memberMapper.followsToFollowerResponses(follows))
         );
     }
 
