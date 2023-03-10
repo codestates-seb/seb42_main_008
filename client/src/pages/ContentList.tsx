@@ -1,5 +1,5 @@
 const ContentList = () => {
-  return <div></div>;
+  return <div>ContentList</div>;
 };
 
 export default ContentList;

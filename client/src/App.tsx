@@ -30,7 +30,7 @@ const App = () => {
           <Route path="/:continent" element={<CountrySelect />} />
           <Route path="/:continent/:countryCode" element={<ContentList />} />
           <Route
-            path="/:continent/:countryCode/:contentId"
+            path="/:continent/:contryCode/:contentId"
             element={<ContentDetail />}
           />
           <Route path="/add" element={<ContentAdd />} />
