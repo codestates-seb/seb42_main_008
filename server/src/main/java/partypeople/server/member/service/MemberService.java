@@ -68,9 +68,7 @@ public class MemberService {
 
     public void deleteMember(long memberId,String password) {
         Member member = findVerifiedMemberById(memberId);
-//        String encryptedPassword = passwordEncoder.encode(password);
-//        log.info("{}",encryptedPassword);
-        log.info("{}",member.getPassword());
+
         if (passwordEncoder.matches(password, member.getPassword())) {
             member.setMemberStatus(Member.MemberStatus.MEMBER_QUIT);
         } else {

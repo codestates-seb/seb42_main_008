@@ -42,6 +42,10 @@ public class MemberDto {
         private String password;
     }
 
+    @Getter
+    public static class Password {
+        private String password;
+    }
 
     @Getter
     @Builder

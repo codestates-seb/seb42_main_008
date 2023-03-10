@@ -73,8 +73,8 @@ public class MemberController {
 
     @DeleteMapping("/{member-id}")
     public ResponseEntity deleteMember(@PathVariable("member-id") long memberId,
-                                       @RequestBody String password) {
-        memberService.deleteMember(memberId,password);
+                                       @RequestBody MemberDto.Password password) {
+        memberService.deleteMember(memberId,password.getPassword());
         return ResponseEntity.noContent().build();
     }
 
