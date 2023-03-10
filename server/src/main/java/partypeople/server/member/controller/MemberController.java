@@ -7,6 +7,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import partypeople.server.dto.MultiResponseDto;
 import partypeople.server.dto.SingleResponseDto;
+import partypeople.server.exception.BusinessLogicException;
+import partypeople.server.exception.ExceptionCode;
 import partypeople.server.member.dto.FollowDto;
 import partypeople.server.member.dto.MemberDto;
 import partypeople.server.member.entity.Follow;
@@ -57,6 +59,24 @@ public class MemberController {
 
         return ResponseEntity.ok(
                 new SingleResponseDto<>(memberMapper.membertoMemberResponse(member)));
+    }
+
+    @GetMapping("/{member-id}/follwer")
+    public ResponseEntity getFollower(@PathVariable("member-id") long memberId) {
+        List<Follow> follows = memberService.findFollowers(memberId);
+
+        return ResponseEntity.ok(
+                new SingleResponseDto<>(memberMapper.followsToFollowerResponses(follows))
+        );
+    }
+
+    @GetMapping("/{member-id}/following")
+    public ResponseEntity getFollowing(@PathVariable("member-id") long memberId) {
+        List<Follow> follows = memberService.findFollowings(memberId);
+
+        return ResponseEntity.ok(
+                new SingleResponseDto<>(memberMapper.followsToFollowingResponses(follows))
+        );
     }
 
     @GetMapping("/{member-id}/subscribers")
@@ -114,6 +134,11 @@ public class MemberController {
 
     @PostMapping("/follows")
     public ResponseEntity postFollow(@Valid @RequestBody FollowDto.Post requestBody) {
+
+        if (requestBody.getFollowerId().equals(requestBody.getFollowingId())) {
+            throw new BusinessLogicException(ExceptionCode.FOLLOW_ERROR);
+        }
+
         Follow follow = new Follow();
         follow.setFollower(memberService.findMember(requestBody.getFollowerId()));
         follow.setFollowing(memberService.findMember(requestBody.getFollowingId()));
@@ -121,9 +146,6 @@ public class MemberController {
         memberService.followExe(follow);
 
         return ResponseEntity.ok().build();
-
-//        return ResponseEntity.ok(
-//                new SingleResponseDto<>(memberMapper.membertoMemberResponse(updatedMember)));
     }
 
     @DeleteMapping("/{member-id}")

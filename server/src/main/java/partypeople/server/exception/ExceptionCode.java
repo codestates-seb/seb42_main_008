@@ -7,6 +7,9 @@ public enum ExceptionCode {
     EMAIL_EXISTS(409, "Email Already Exists"),
     NICKNAME_EXIST(409, "Nickname Already Exists"),
     PASSWORD_NOT_MATCH(403,"Password Not Match"),
+
+    FOLLOW_ERROR(400,"Follower - Following SAME ERROR"),
+
     MESSAGE_NOT_FOUND(404, "Message Not Found");
 
 

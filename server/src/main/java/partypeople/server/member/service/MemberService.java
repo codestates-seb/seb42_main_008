@@ -55,11 +55,16 @@ public class MemberService {
                 followRepository::delete,
                 ()->followRepository.save(follow)
         );
-//        if(optionalFollow!=null) ?optionalFollow.ifPresent(followRepository::delete);
-//
-//        Follow savedFollow = optionalFollow.orElse(followRepository.save(follow)); //값이 없다면 follow를 저장
+    }
 
-//        return savedFollow;
+    @Transactional(readOnly = true)
+    public List<Follow> findFollowers(Long memberId) {
+        return followRepository.findByFollowerMemberId(memberId);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Follow> findFollowings(Long memberId) {
+        return followRepository.findByFollowingMemberId(memberId);
     }
 
     @Transactional(readOnly = true)
