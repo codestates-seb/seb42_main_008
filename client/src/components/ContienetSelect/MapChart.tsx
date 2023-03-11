@@ -4,24 +4,21 @@ import {
   Geography,
   Marker,
 } from 'react-simple-maps';
-import { useNavigate } from 'react-router-dom';
 
-const MapChart = () => {
-  const navigate = useNavigate();
+interface PropsType {
+  handleMarkerClick(code: string): void;
+}
+
+interface MarkerInterface {
+  markerOffset: number;
+  name: string;
+  coordinates: [number, number];
+  code: string;
+}
+
+const MapChart = ({ handleMarkerClick }: PropsType) => {
   const geoUrl: string =
     'https://raw.githubusercontent.com/deldersveld/topojson/master/world-countries.json';
-
-  const handleMarkerClick = (code: string) => {
-    navigate(`/${code}`);
-  };
-
-  interface MarkerInterface {
-    markerOffset: number;
-    name: string;
-    // eslint-disable-next-line
-    coordinates: any;
-    code: string;
-  }
 
   const markers: MarkerInterface[] = [
     {
@@ -103,9 +100,9 @@ const MapChart = () => {
 
   return (
     <ComposableMap
-      className="composableMap"
       projection="geoEquirectangular"
-      projectionConfig={{ scale: 120, center: [0, -20] }}
+      projectionConfig={{ scale: 120, center: [0, 25] }}
+      height={395}
     >
       <Geographies geography={geoUrl}>
         {({ geographies }) =>
