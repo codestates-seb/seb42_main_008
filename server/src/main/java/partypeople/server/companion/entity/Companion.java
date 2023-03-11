@@ -21,12 +21,15 @@ public class Companion extends Auditable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long companionId;
 
+    @Column(columnDefinition = "TEXT")
     private String title;
 
+    @Column(columnDefinition = "LONGTEXT")
     private String content;
 
     private LocalDate date;
 
+    @Column(nullable = false)
     private String address;
 
     @Column(columnDefinition = "DECIMAL(8,5)")
@@ -35,7 +38,7 @@ public class Companion extends Auditable {
     @Column(columnDefinition = "DECIMAL(8,5)")
     private Double lng;
 
-    private Boolean companionStatus = false;
+    private boolean companionStatus;
 
     @OneToMany(mappedBy = "companion", cascade = CascadeType.ALL)
     private List<CompanionTag> companionTags = new ArrayList<>();
