@@ -16,11 +16,11 @@ public class CompanionTag {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long companionTagId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "TAG_ID")
     private Tag tag;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "COMPANION_ID")
     private Companion companion;
 
