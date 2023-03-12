@@ -7,7 +7,11 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import partypeople.server.dto.MultiResponseDto;
 import partypeople.server.dto.SingleResponseDto;
+import partypeople.server.exception.BusinessLogicException;
+import partypeople.server.exception.ExceptionCode;
+import partypeople.server.member.dto.FollowDto;
 import partypeople.server.member.dto.MemberDto;
+import partypeople.server.member.entity.Follow;
 import partypeople.server.member.entity.Member;
 import partypeople.server.member.mapper.MemberMapper;
 import partypeople.server.member.service.MemberService;
@@ -38,12 +42,69 @@ public class MemberController {
         return ResponseEntity.created(location).build();
     }
 
+    @PostMapping("/nickname")
+    public ResponseEntity nicknameCheck(@Valid @RequestBody MemberDto.Nickname requestBody) {
+        memberService.verifyExistsNickname(requestBody.getNickname());
+
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping("/{member-id}")
     public ResponseEntity getMember(@PathVariable("member-id") long memberId) {
         Member member = memberService.findMember(memberId);
+        //service
+        member.setScore(50);
+        member.setFollowerCount(0);
+        member.setFollowingCount(0);
 
         return ResponseEntity.ok(
                 new SingleResponseDto<>(memberMapper.membertoMemberResponse(member)));
+    }
+
+    @GetMapping("/{member-id}/follower")
+    public ResponseEntity getFollower(@PathVariable("member-id") long memberId) {
+        List<Follow> follows = memberService.findFollowers(memberId);
+
+        return ResponseEntity.ok(
+                new SingleResponseDto<>(memberMapper.followsToFollowingResponses(follows))
+        );
+    }
+
+    @GetMapping("/{member-id}/following")
+    public ResponseEntity getFollowing(@PathVariable("member-id") long memberId) {
+        List<Follow> follows = memberService.findFollowings(memberId);
+
+        return ResponseEntity.ok(
+                new SingleResponseDto<>(memberMapper.followsToFollowerResponses(follows))
+        );
+    }
+
+    @GetMapping("/{member-id}/subscribers")
+    public ResponseEntity getSubScriberList(@PathVariable("member-id") long memberId) {
+        //글 들어오면 TODO..
+        return ResponseEntity.ok(
+        ).build();
+    }
+
+    @GetMapping("/{member-id}/participants")
+    public ResponseEntity getParticipantList(@PathVariable("member-id") long memberId) {
+        //글 들어오면 TODO..
+        return ResponseEntity.ok(
+        ).build();
+    }
+
+    @GetMapping("/{member-id}/writers")
+    public ResponseEntity getWriterList(@PathVariable("member-id") long memberId) {
+        //글 들어오면 TODO..
+        return ResponseEntity.ok(
+        ).build();
+    }
+
+    @GetMapping("/{member-id}/reviews")
+    public ResponseEntity getReviewList(@PathVariable("member-id") long memberId) {
+        //글 들어오면 TODO..
+        return ResponseEntity.ok(
+        ).build();
     }
 
     @GetMapping
@@ -71,11 +132,26 @@ public class MemberController {
                 new SingleResponseDto<>(memberMapper.membertoMemberResponse(updatedMember)));
     }
 
+    @PostMapping("/follows")
+    public ResponseEntity postFollow(@Valid @RequestBody FollowDto.Post requestBody) {
+
+        if (requestBody.getFollowerId().equals(requestBody.getFollowingId())) {
+            throw new BusinessLogicException(ExceptionCode.FOLLOW_ERROR);
+        }
+
+        Follow follow = new Follow();
+        follow.setFollower(memberService.findMember(requestBody.getFollowerId()));
+        follow.setFollowing(memberService.findMember(requestBody.getFollowingId()));
+
+        memberService.followExe(follow);
+
+        return ResponseEntity.ok().build();
+    }
+
     @DeleteMapping("/{member-id}")
     public ResponseEntity deleteMember(@PathVariable("member-id") long memberId,
                                        @RequestBody MemberDto.Password password) {
         memberService.deleteMember(memberId,password.getPassword());
         return ResponseEntity.noContent().build();
     }
-
 }

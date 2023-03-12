@@ -11,7 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 import partypeople.server.auth.utils.CustomAuthorityUtils;
 import partypeople.server.exception.BusinessLogicException;
 import partypeople.server.exception.ExceptionCode;
+import partypeople.server.member.entity.Follow;
 import partypeople.server.member.entity.Member;
+import partypeople.server.member.repository.FollowRepository;
 import partypeople.server.member.repository.MemberRepository;
 import partypeople.server.utils.CustomBeanUtils;
 
@@ -25,6 +27,8 @@ import java.util.Optional;
 @Slf4j
 public class MemberService {
     private final MemberRepository memberRepository;
+
+    private final FollowRepository followRepository;
     private final CustomBeanUtils<Member> beanUtils;
     private final PasswordEncoder passwordEncoder;
     private final CustomAuthorityUtils authorityUtils;
@@ -41,6 +45,26 @@ public class MemberService {
 
         Member savedMember = memberRepository.save(member);
         return savedMember;
+    }
+
+    public void followExe(Follow follow) {
+        //중복 확인 ** 등록 되어 있으면 취소 삭제?
+        Optional<Follow> optionalFollow = followRepository.findByFollowerMemberIdAndFollowingMemberId(follow.getFollower().getMemberId(),follow.getFollowing().getMemberId());
+
+        optionalFollow.ifPresentOrElse(
+                followRepository::delete,
+                ()->followRepository.save(follow)
+        );
+    }
+
+    @Transactional(readOnly = true)
+    public List<Follow> findFollowers(Long memberId) {
+        return followRepository.findAllByFollowerMemberId(memberId);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Follow> findFollowings(Long memberId) {
+        return followRepository.findAllByFollowingMemberId(memberId);
     }
 
     @Transactional(readOnly = true)
@@ -103,7 +127,7 @@ public class MemberService {
         }
     }
 
-    private void verifyExistsNickname(String nickname) {
+    public void verifyExistsNickname(String nickname) {
         Optional<Member> member = memberRepository.findByNickname(nickname);
         if (member.isPresent()) {
             throw new BusinessLogicException(ExceptionCode.NICKNAME_EXIST);
