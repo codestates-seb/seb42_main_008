@@ -27,7 +27,7 @@ const GlobalStyle = createGlobalStyle`
     align-items: flex-start;
     justify-content: center;
     padding-top: 60px;
-    min-height: calc(100vh - 60px);
+    min-height: 100vh;
   }
 `;
 export default GlobalStyle;
