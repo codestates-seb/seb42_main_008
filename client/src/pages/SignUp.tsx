@@ -40,10 +40,13 @@ const SignUp = () => {
 
 export default SignUp;
 
-const Container = styled.main`
+const Container = styled.div`
   background-color: #f6f6f6;
   width: 100vw;
-  height: 100vh;
+  height: calc(100vh - 60px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 const SignUpBox = styled.section`
   background-color: white;
