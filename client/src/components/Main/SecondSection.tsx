@@ -97,10 +97,14 @@ const SecondWrapper = styled(SectionWrapper)`
     }
   }
 
+  @media screen and (max-width: 992px) {
+    padding: 70px 0;
+  }
   @media screen and (max-width: 768px) {
     height: 70vh;
     justify-content: center;
     align-items: center;
+    padding: 0;
 
     .showDesc {
       opacity: 1;
