@@ -6,8 +6,10 @@ import { SectionWrapper } from './SectionWrapper';
 import FirstTitle from './FirstTitle';
 import { useEffect, useState } from 'react';
 import ImageFilter from './ImageFilter';
+import { useNavigate } from 'react-router-dom';
 
 const FirstSection = () => {
+  const navigate = useNavigate();
   const [isShowButton, setIsShowButton] = useState(false);
   const settings = {
     dots: true,
@@ -23,6 +25,10 @@ const FirstSection = () => {
     draggable: false,
   };
 
+  const handleButtonClick = () => {
+    navigate('/continents');
+  };
+
   useEffect(() => {
     setTimeout(() => setIsShowButton(true), 5000);
   }, []);
@@ -30,7 +36,11 @@ const FirstSection = () => {
   return (
     <FirstWrapper>
       <FirstTitle />
-      {isShowButton && <FirstButton>동행자 구하러 가기</FirstButton>}
+      {isShowButton && (
+        <FirstButton onClick={handleButtonClick}>
+          동행자 구하러 가기
+        </FirstButton>
+      )}
       <Filter></Filter>
       <Slider {...settings}>
         <SlideContent>
