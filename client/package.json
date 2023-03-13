@@ -18,8 +18,10 @@
     "react-router-dom": "^6.8.2",
     "react-scripts": "5.0.1",
     "react-simple-maps": "^3.0.0",
+    "react-slick": "^0.29.0",
     "react-toastify": "^9.1.1",
     "recoil": "^0.7.7",
+    "slick-carousel": "^1.8.1",
     "styled-components": "^5.3.8",
     "sweetalert2": "^11.7.3",
     "toastr": "^2.1.4",
@@ -52,6 +54,7 @@
   },
   "devDependencies": {
     "@types/react-simple-maps": "^3.0.0",
+    "@types/react-slick": "^0.23.10",
     "@types/styled-components": "^5.1.26",
     "@typescript-eslint/eslint-plugin": "^5.54.1",
     "@typescript-eslint/parser": "^5.54.1",

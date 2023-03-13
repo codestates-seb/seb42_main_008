@@ -1,36 +1,134 @@
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { FaChevronRight } from 'react-icons/fa';
-import { useEffect, useState } from 'react';
-import axios from 'axios';
-// import { useEffect, useState } from 'react';
 
 const CountrySelect = () => {
-  // 엔드포인트와 대륙이 일치할때 값으로 이미지, 대륙이름 조정
-  // 나라 이미지 api
-  // 쿼리 검색값 조정
-  //FIXME: 키값 변수 설정 필요
-  const [countryImageURL, setCountryImageURL] = useState('');
-  useEffect(() => {
-    const fetchImage = async () => {
-      try {
-        const response = await axios.get(
-          `https://pixabay.com/api/?key=34284444-6b3b851d07d7372bd0e3f9184&q=영국+여행&image_type=photo`
-        );
-        const images = response.data.hits;
-        const randomIdx = Math.floor(Math.random() * images.length);
-        setCountryImageURL(images[randomIdx].webformatURL);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchImage();
-  }, []);
+  const { continent } = useParams();
+
+  // 타이틀
+  let title = '';
+  let titleImg = '';
+  type Countries = {
+    name: string;
+  };
+  let countries: Countries[] = [];
+  if (continent === 'europe') {
+    title = 'Europe';
+    titleImg =
+      'https://cdn.pixabay.com/photo/2020/07/12/16/40/paris-5397889_1280.jpg';
+    countries = [
+      {
+        name: 'United Kingdom',
+      },
+      {
+        name: 'France',
+      },
+      {
+        name: 'Spain',
+      },
+      {
+        name: 'Germany',
+      },
+    ];
+  } else if (continent === 'africa') {
+    title = 'Africa';
+    titleImg =
+      'https://cdn.pixabay.com/photo/2019/03/02/21/25/morocco-4030733_1280.jpg';
+    countries = [
+      {
+        name: 'Egypt',
+      },
+      {
+        name: 'Morocco',
+      },
+      {
+        name: 'Republic of South Africa',
+      },
+      {
+        name: 'Kenya',
+      },
+    ];
+  } else if (continent === 'asia') {
+    title = 'Asia';
+    titleImg =
+      'https://cdn.pixabay.com/photo/2020/07/23/01/16/heritage-5430081_1280.jpg';
+    countries = [
+      {
+        name: 'Republic of Korea',
+      },
+      {
+        name: 'Japan',
+      },
+      {
+        name: 'China',
+      },
+      {
+        name: 'Vietnam',
+      },
+    ];
+  } else if (continent === 'northAmerica') {
+    title = 'North America';
+    titleImg =
+      'https://cdn.pixabay.com/photo/2020/06/08/20/58/nyc-5276112__480.jpg';
+    countries = [
+      {
+        name: 'United States of America',
+      },
+      {
+        name: 'Canada',
+      },
+      {
+        name: 'Mexico',
+      },
+      {
+        name: 'Cuba',
+      },
+    ];
+  } else if (continent === 'southAmerica') {
+    title = 'South America';
+    titleImg =
+      'https://cdn.pixabay.com/photo/2019/02/06/00/06/peru-3978148_1280.jpg';
+    countries = [
+      {
+        name: 'Brazil',
+      },
+      {
+        name: 'Peru',
+      },
+      {
+        name: 'Argentina',
+      },
+      {
+        name: 'Chile',
+      },
+    ];
+  } else if (continent === 'oceania') {
+    title = 'Oceania';
+    titleImg =
+      'https://cdn.pixabay.com/photo/2019/05/15/18/22/sydney-4205646_1280.jpg';
+    countries = [
+      {
+        name: 'Australia',
+      },
+      {
+        name: 'New Zealand',
+      },
+      {
+        name: 'Fiji',
+      },
+      {
+        name: 'Papua New Guinea',
+      },
+    ];
+  }
 
   return (
     <CountryListContainer>
-      <div className="country-name-box">
-        <h1>대륙 이름</h1>
+      <div
+        className="country-name-box"
+        style={{ backgroundImage: `url(${titleImg})` }}
+      >
+        <h1>{title}</h1>
         <p>동행자를 구하고 싶은 나라를 선택해보세요!</p>
       </div>
       <div className="list-top">
@@ -40,32 +138,25 @@ const CountrySelect = () => {
       <CountryListBox>
         <div className="countrybox">
           <ul className="hot-country">
-            <li
-              style={{
-                backgroundImage: `url(${countryImageURL})`,
-                backgroundSize: `100% 100%`,
-                backgroundRepeat: `no-repeat`,
-              }}
-            >
-              <div>
-                England <FaChevronRight />
-              </div>
-            </li>
-            <li>
-              <div>
-                France <FaChevronRight />
-              </div>
-            </li>
-            <li>
-              <div>
-                Spain <FaChevronRight />
-              </div>
-            </li>
-            <li>
-              <div>
-                Germany <FaChevronRight />
-              </div>
-            </li>
+            {countries.map((country, idx) => (
+              <li
+                key={idx}
+                style={{
+                  backgroundImage: `url(
+                    https://source.unsplash.com/featured/?${country.name.replace(
+                      /\s+/g,
+                      ','
+                    )},travel
+                  )`,
+                  backgroundSize: `100% 100%`,
+                  backgroundRepeat: `no-repeat`,
+                }}
+              >
+                <div>
+                  {country.name} <FaChevronRight />
+                </div>
+              </li>
+            ))}
           </ul>
           <ul className="random-country">
             <li>
@@ -125,7 +216,7 @@ const CountryListContainer = styled.div`
     align-items: center;
     justify-content: center;
     height: 300px;
-    background-image: url('https://cdn.pixabay.com/photo/2020/07/12/16/40/paris-5397889_1280.jpg');
+    width: 100%;
     background-repeat: no-repeat;
     background-size: 100% 100%;
     color: white;
@@ -135,11 +226,14 @@ const CountryListContainer = styled.div`
     }
   }
   .list-top {
+    position: absolute;
     display: flex;
     align-items: center;
     justify-content: space-around;
     background-color: #feb35c;
     height: 60px;
+    top: 270px;
+    z-index: 500;
     width: 80%;
     padding: 0px 30px 0px 30px;
     > a {
@@ -161,6 +255,7 @@ const CountryListBox = styled.section`
   align-items: center;
   width: 100%;
   position: relative;
+  margin-top: 20px;
 
   .countrybox {
     display: flex;
