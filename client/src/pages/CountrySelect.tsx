@@ -1,15 +1,17 @@
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { FaChevronRight } from 'react-icons/fa';
 
 const CountrySelect = () => {
   const { continent } = useParams();
+  const navigate = useNavigate();
 
   // 타이틀
   let title = '';
   let titleImg = '';
   type Countries = {
     name: string;
+    code: string;
   };
   let countries: Countries[] = [];
   if (continent === 'europe') {
@@ -18,16 +20,20 @@ const CountrySelect = () => {
       'https://cdn.pixabay.com/photo/2020/07/12/16/40/paris-5397889_1280.jpg';
     countries = [
       {
-        name: 'United Kingdom',
+        name: 'England',
+        code: 'gbr',
       },
       {
         name: 'France',
+        code: 'fra',
       },
       {
         name: 'Spain',
+        code: 'esp',
       },
       {
         name: 'Germany',
+        code: 'deu',
       },
     ];
   } else if (continent === 'africa') {
@@ -37,15 +43,19 @@ const CountrySelect = () => {
     countries = [
       {
         name: 'Egypt',
+        code: 'egy',
       },
       {
         name: 'Morocco',
+        code: 'mar',
       },
       {
-        name: 'Republic of South Africa',
+        name: 'South Africa',
+        code: 'zaf',
       },
       {
         name: 'Kenya',
+        code: 'ken',
       },
     ];
   } else if (continent === 'asia') {
@@ -54,16 +64,20 @@ const CountrySelect = () => {
       'https://cdn.pixabay.com/photo/2020/07/23/01/16/heritage-5430081_1280.jpg';
     countries = [
       {
-        name: 'Republic of Korea',
+        name: 'Korea',
+        code: 'kor',
       },
       {
         name: 'Japan',
+        code: 'jpn',
       },
       {
         name: 'China',
+        code: 'chn',
       },
       {
         name: 'Vietnam',
+        code: 'vnm',
       },
     ];
   } else if (continent === 'northAmerica') {
@@ -72,16 +86,20 @@ const CountrySelect = () => {
       'https://cdn.pixabay.com/photo/2020/06/08/20/58/nyc-5276112__480.jpg';
     countries = [
       {
-        name: 'United States of America',
+        name: 'USA',
+        code: 'usa',
       },
       {
         name: 'Canada',
+        code: 'can',
       },
       {
         name: 'Mexico',
+        code: 'mex',
       },
       {
         name: 'Cuba',
+        code: 'cub',
       },
     ];
   } else if (continent === 'southAmerica') {
@@ -91,15 +109,19 @@ const CountrySelect = () => {
     countries = [
       {
         name: 'Brazil',
+        code: 'bra',
       },
       {
         name: 'Peru',
+        code: 'per',
       },
       {
         name: 'Argentina',
+        code: 'arg',
       },
       {
         name: 'Chile',
+        code: 'bol',
       },
     ];
   } else if (continent === 'oceania') {
@@ -109,18 +131,26 @@ const CountrySelect = () => {
     countries = [
       {
         name: 'Australia',
+        code: 'aus',
       },
       {
         name: 'New Zealand',
+        code: 'nzl',
       },
       {
         name: 'Fiji',
+        code: 'fji',
       },
       {
         name: 'Papua New Guinea',
+        code: 'png',
       },
     ];
   }
+
+  const handleCountryClick = (code: string): void => {
+    navigate(`/${continent}/${code}`);
+  };
 
   return (
     <CountryListContainer>
@@ -140,6 +170,7 @@ const CountrySelect = () => {
           <ul className="hot-country">
             {countries.map((country, idx) => (
               <li
+                onClick={() => handleCountryClick(country.code)}
                 key={idx}
                 style={{
                   backgroundImage: `url(
@@ -150,6 +181,7 @@ const CountrySelect = () => {
                   )`,
                   backgroundSize: `100% 100%`,
                   backgroundRepeat: `no-repeat`,
+                  cursor: 'pointer',
                 }}
               >
                 <div>
