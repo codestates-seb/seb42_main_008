@@ -23,7 +23,7 @@ const SearchBox = styled.div`
   height: 60px;
   background-color: #feb35c;
   position: absolute;
-  top: 32vh;
+  top: 36vh;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
 `;
 

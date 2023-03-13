@@ -43,7 +43,7 @@ const ListTitle = () => {
 
 const ListTitleWrapper = styled.div`
   width: 100%;
-  height: 35vh;
+  height: 40vh;
   display: flex;
   justify-content: center;
   align-items: center;
