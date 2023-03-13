@@ -92,11 +92,11 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         return refreshToken;
     }
 
-    private void validBlackListToken(String accessToken) {
-
-        String blackToken = (String) redisTemplate.opsForValue().get(accessToken);
-        if(StringUtils.hasText(blackToken))
-            throw new BusinessLogicException(ExceptionCode.BLACK_LIST_TOKEN);
-    }
+//    private void validBlackListToken(String accessToken) {
+//
+//        String blackToken = (String) redisTemplate.opsForValue().get(accessToken);
+//        if(StringUtils.hasText(blackToken))
+//            throw new BusinessLogicException(ExceptionCode.BLACK_LIST_TOKEN);
+//    }
 
 }

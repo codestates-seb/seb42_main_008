@@ -45,26 +45,8 @@ public class MemberController {
 
     @PostMapping("/logout")
     public ResponseEntity logoutMember(@RequestHeader("Authorization") String Authorization) {
-        String accessToken = Authorization.replace("Bearer ", "");
+        memberService.logout(Authorization);
 
-        String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(jwtTokenizer.getSecretKey());
-        try{
-            Long expiration = jwtTokenizer.getExpiration(accessToken,base64EncodedSecretKey);
-            redisTemplate.opsForValue().set(accessToken, "logout", expiration, TimeUnit.MILLISECONDS);
-        } catch (
-    SignatureException se) {
-            System.out.println("111"+se.getMessage());
-    } catch (
-    ExpiredJwtException ee) {
-            System.out.println("222"+ee.getMessage());
-    } catch (Exception e) {
-            System.out.println("333"+e.getMessage());
-    }
-
-
-
-
-//        memberService.logout(accessToken);
         return ResponseEntity.ok().build();
     }
 

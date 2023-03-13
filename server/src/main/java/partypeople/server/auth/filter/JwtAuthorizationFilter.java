@@ -75,7 +75,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(jwtTokenizer.getSecretKey());
         Map<String, Object> claims = jwtTokenizer.getClaims(jws, base64EncodedSecretKey).getBody();
 
-        String isLogout = (String)redisTemplate.opsForValue().get(jws); //access token 확인
+        String isLogout = (String)redisTemplate.opsForValue().get(jws); //redis안 블랙리스트 확인
         if (ObjectUtils.isEmpty(isLogout)) {
             setAuthenticationToContext(claims);//정상토큰을 context에 저장
         }

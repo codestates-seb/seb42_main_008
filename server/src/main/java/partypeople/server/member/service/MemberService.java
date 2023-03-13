@@ -1,7 +1,10 @@
 package partypeople.server.member.service;
 
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.security.SignatureException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.util.http.parser.Authorization;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -139,13 +142,19 @@ public class MemberService {
         }
     }
 
-//    public void logout(String accessToken) {
-//
-//        //엑세스 토큰 남은 유효시간 확인
-//        Long expiration = jwtTokenizer.getExpiration(accessToken);
-//        log.info("logout!!!!!");
-//        //Redis Cache에 저장
-//        redisTemplate.opsForValue().set(accessToken, "logout", expiration, TimeUnit.MILLISECONDS);
-//
-//    }
+    public void logout(String Authorization) {
+        String accessToken = Authorization.replace("Bearer ", "");
+
+        String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(jwtTokenizer.getSecretKey());
+        try{
+            Long expiration = jwtTokenizer.getExpiration(accessToken,base64EncodedSecretKey);
+            redisTemplate.opsForValue().set(accessToken, "logout", expiration, TimeUnit.MILLISECONDS);
+        } catch (SignatureException se) {
+            throw new BusinessLogicException(ExceptionCode.SIGNATURE_ERROR);
+        } catch (ExpiredJwtException ee) {
+            throw new BusinessLogicException(ExceptionCode.EXPIRED_ERROR);
+        } catch (Exception e) {
+            throw new BusinessLogicException(ExceptionCode.ACCESS_TOKEN_ERROR);
+        }
+    }
 }
