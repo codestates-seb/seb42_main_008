@@ -2,16 +2,7 @@ import styled from 'styled-components';
 import ImageFilter from 'components/Main/ImageFilter';
 import { useParams } from 'react-router-dom';
 import countries from 'assets/countries.json';
-
-interface CountryData {
-  name: string;
-  code: string;
-}
-
-interface CountryNames {
-  en: string;
-  ko: string;
-}
+import { CountryData, CountryNames } from 'interfaces/ContentList.interface';
 
 const ListTitle = () => {
   const { continent, countryCode } = useParams();

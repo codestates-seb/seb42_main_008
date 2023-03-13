@@ -21,4 +21,14 @@ interface QueryString {
   nationCode: string;
 }
 
-export type { ListData, QueryString };
+interface CountryData {
+  name: string;
+  code: string;
+}
+
+interface CountryNames {
+  en: string;
+  ko: string;
+}
+
+export type { ListData, QueryString, CountryData, CountryNames };
