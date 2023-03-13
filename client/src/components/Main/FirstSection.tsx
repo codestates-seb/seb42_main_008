@@ -143,6 +143,13 @@ const FirstButton = styled.button`
       transform: translateY(0);
     }
   }
+
+  @media screen and (max-width: 992px) {
+    font-size: 1rem;
+  }
+  @media screen and (max-width: 576px) {
+    font-size: 0.8rem;
+  }
 `;
 
 export default FirstSection;
