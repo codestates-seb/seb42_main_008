@@ -52,6 +52,11 @@ public class CompanionService {
         return updateCompanion;
     }
 
+    public void deleteCompanion(Long companionId) {
+        findVerifiedCompanionById(companionId);
+        companionRepository.deleteById(companionId);
+    }
+
     private Companion findVerifiedCompanionById(Long companionId) {
         Optional<Companion> optionalCompanion = companionRepository.findById(companionId);
         Companion findCompanion = optionalCompanion.orElseThrow(() ->

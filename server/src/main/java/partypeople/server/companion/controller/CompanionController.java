@@ -47,5 +47,10 @@ public class CompanionController {
         return ResponseEntity.ok(new SingleResponseDto<>(mapper.companionToCompanionResponseDto(companion)));
     }
 
+    @DeleteMapping("/{companion-id}")
+    public ResponseEntity deleteCompanion(@PathVariable("companion-id") @Positive Long companionId) {
+        companionService.deleteCompanion(companionId);
 
+        return ResponseEntity.noContent().build();
+    }
 }
