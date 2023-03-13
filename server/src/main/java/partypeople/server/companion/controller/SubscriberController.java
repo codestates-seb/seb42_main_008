@@ -37,4 +37,13 @@ public class SubscriberController {
         return ResponseEntity.ok().build();
     }
 
+    @DeleteMapping("/subscribers")
+    public ResponseEntity deleteSubscriber(@PathVariable("companion-id") @Positive Long companionId,
+                                           @RequestBody SubscriberParticipantDto.Request requestBody) {
+        Long memberId = requestBody.getMemberId();
+
+        subscriberService.deleteSubscriber(memberId, companionId);
+        return ResponseEntity.noContent().build();
+    }
+
 }
