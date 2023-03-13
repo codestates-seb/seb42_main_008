@@ -51,6 +51,11 @@ const TitleText = styled.div`
   justify-content: center;
   z-index: 2;
   color: #fff;
+  text-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+  > h1 {
+    font-weight: 800;
+    font-size: 4rem;
+  }
 `;
 
 const Filter = styled(ImageFilter)`
