@@ -43,6 +43,61 @@ public interface CompanionMapper {
         return companion;
     }
 
+    default Companion companionPatchDtoToCompanion(CompanionDto.Patch requestBody, List<Tag> tags) {
+        if ( requestBody == null ) {
+            return null;
+        }
+
+        Companion companion = new Companion();
+
+        Nation nation = null;
+        if (requestBody.getNationCode() != null) {
+            nation = new Nation();
+            nation.setName(requestBody.getNationName());
+            nation.setCode(requestBody.getNationCode());
+            nation.setContinent(requestBody.getContinent());
+        }
+
+        companion.setNation( nation );
+        companion.setCompanionId(requestBody.getCompanionId());
+        companion.setTitle( requestBody.getTitle() );
+        companion.setContent( requestBody.getContent() );
+        companion.setDate( requestBody.getDate() );
+        companion.setAddress( requestBody.getAddress() );
+        companion.setLat( requestBody.getLat() );
+        companion.setLng( requestBody.getLng() );
+
+        List<CompanionTag> companionTags = tags.isEmpty() ? null : tagsToCompanionTags(companion, tags);
+        companion.setCompanionTags(companionTags);
+
+        return companion;
+    }
+
+    default CompanionDto.Response companionToCompanionResponseDto(Companion companion) {
+        if ( companion == null ) {
+            return null;
+        }
+
+        CompanionDto.Response response = new CompanionDto.Response();
+
+        response.setMemberId( companion.getMember().getMemberId() );
+        response.setNickname( companion.getMember().getNickname() );
+        response.setCompanionId( companion.getCompanionId() );
+        response.setTitle( companion.getTitle() );
+        response.setContent( companion.getContent() );
+        response.setDate( companion.getDate() );
+        response.setAddress( companion.getAddress() );
+        response.setLat( companion.getLat() );
+        response.setLng( companion.getLng() );
+
+        List<String> tags = companion.getCompanionTags().stream()
+                .map(companionTag -> companionTag.getTag().getName())
+                .collect(Collectors.toList());
+        response.setTags(tags);
+
+        return response;
+    }
+
     default List<CompanionTag> tagsToCompanionTags(Companion companion, List<Tag> tags) {
         List<CompanionTag> companionTags = tags.stream()
                 .map(tag -> {
