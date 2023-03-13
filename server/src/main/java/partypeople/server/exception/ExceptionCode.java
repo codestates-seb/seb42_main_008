@@ -9,7 +9,7 @@ public enum ExceptionCode {
     PASSWORD_NOT_MATCH(403,"Password Not Match"),
 
     FOLLOW_ERROR(400,"Follower - Following SAME ERROR"),
-
+    COMPANION_NOT_FOUND(404, "Companion Not Found"),
     MESSAGE_NOT_FOUND(404, "Message Not Found");
 
 

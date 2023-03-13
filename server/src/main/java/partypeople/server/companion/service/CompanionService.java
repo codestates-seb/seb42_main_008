@@ -5,8 +5,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import partypeople.server.companion.entity.Companion;
 import partypeople.server.companion.repository.CompanionRepository;
+import partypeople.server.companion.repository.CompanionTagRepository;
 import partypeople.server.exception.BusinessLogicException;
 import partypeople.server.exception.ExceptionCode;
+import partypeople.server.member.entity.Member;
 import partypeople.server.member.service.MemberService;
 import partypeople.server.nation.entity.Nation;
 import partypeople.server.nation.service.NationService;
@@ -19,8 +21,10 @@ import java.util.Optional;
 @Transactional
 public class CompanionService {
     private final CompanionRepository companionRepository;
+    private final CompanionTagRepository companionTagRepository;
     private final MemberService memberService;
     private final NationService nationService;
+    private final CustomBeanUtils<Companion> beanUtils;
 
     public Companion createCompanion(Companion companion) {
         Member member = memberService.findMember(companion.getMember().getMemberId());
@@ -29,5 +33,40 @@ public class CompanionService {
         companion.setNation(nation);
 
         return companionRepository.save(companion);
+    }
+
+    public Companion updateCompanion(Companion companion) {
+        Companion findCompanion = findVerifiedCompanionById(companion.getCompanionId());
+        if (companion.getNation() != null && !findCompanion.getNation().equals(companion.getNation())) {
+            Nation nation = nationService.findNation(companion.getNation());
+            findCompanion.setNation(nation);
+        }
+
+        Optional.ofNullable(companion.getCompanionTags()).ifPresent(companionTags -> {
+            companionTagRepository.deleteByCompanionCompanionId(findCompanion.getCompanionId());
+            findCompanion.setCompanionTags(companionTags);
+        });
+
+        Companion updateCompanion = beanUtils.copyNonNullProperties(companion, findCompanion);
+
+        return updateCompanion;
+    }
+
+    public void deleteCompanion(Long companionId) {
+        findVerifiedCompanionById(companionId);
+        companionRepository.deleteById(companionId);
+    }
+
+    @Transactional(readOnly = true)
+    public Companion findCompanion(Long companionId) {
+        return findVerifiedCompanionById(companionId);
+    }
+
+    private Companion findVerifiedCompanionById(Long companionId) {
+        Optional<Companion> optionalCompanion = companionRepository.findById(companionId);
+        Companion findCompanion = optionalCompanion.orElseThrow(() ->
+                new BusinessLogicException(ExceptionCode.COMPANION_NOT_FOUND));
+
+        return findCompanion;
     }
 }
