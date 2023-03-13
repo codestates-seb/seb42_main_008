@@ -10,6 +10,12 @@ public enum ExceptionCode {
 
     FOLLOW_ERROR(400,"Follower - Following SAME ERROR"),
     COMPANION_NOT_FOUND(404, "Companion Not Found"),
+
+    SUBSCRIBER_EXIST(409, "Member Already Subscribed"),
+    PARTICIPANT_EXIST(409, "Member Already Participated"),
+    SUBSCRIBER_NOT_FOUND(404, "Member Not Subscribed"),
+    PARTICIPANT_NOT_FOUND(404, "Member Not Participated"),
+
     MESSAGE_NOT_FOUND(404, "Message Not Found");
 
 

@@ -5,10 +5,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import partypeople.server.companion.entity.Subscriber;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface SubscriberRepository extends JpaRepository<Subscriber, Long> {
-    void deleteByMemberMemberIdAndCompanionCompanionId(long memberId, long companionId);
+    Optional<Subscriber> findByMemberMemberIdAndCompanionCompanionId(Long memberId, Long companionId);
 
     @EntityGraph(attributePaths = {"member"})
     List<Subscriber> findByCompanionCompanionId(Long companionId);
+
+    @EntityGraph(attributePaths = {"companion"})
+    List<Subscriber> findByMemberMemberId(Long memberId);
 }

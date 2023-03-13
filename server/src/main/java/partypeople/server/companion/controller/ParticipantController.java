@@ -23,7 +23,7 @@ public class ParticipantController {
 
     @GetMapping
     public ResponseEntity getParticipants(@PathVariable("companion-id") @Positive Long companionId) {
-        List<Participant> participants = participantService.getParticipants(companionId);
+        List<Participant> participants = participantService.getParticipantsByCompanion(companionId);
 
         return ResponseEntity.ok(
             new SingleResponseDto<>(mapper.participantsToParticipantResponses(participants))
