@@ -8,18 +8,16 @@ const SecondSection = () => {
 
   return (
     <SecondWrapper>
-      <ContentBox className={scrollY > 300 ? 'showDesc' : 'notShowDesc'}>
+      <ContentBox className={scrollY > 200 ? 'showDesc' : 'notShowDesc'}>
         <Desc>
-          {scrollY > 300 && (
+          {scrollY > 200 && (
             <>
               <h1>Party People</h1>
               <p>
                 Lorem Ipsum is simply dummy text of the printing and typesetting
                 industry. Lorem Ipsum has been the industry&apos;s standard
                 dummy text ever since the 1500s, when an unknown printer took a
-                galley of type and scrambled it to make a type specimen book. It
-                has survived not only five centuries, but also the leap into
-                electronic typesetting, remaining essentially unchanged.
+                galley of type and scrambled it to make a type specimen book.
               </p>
             </>
           )}
@@ -30,7 +28,7 @@ const SecondSection = () => {
           alt="party"
         />
       </ContentBox>
-      <ImageWrapper className={scrollY > 300 ? 'showImg' : 'notShowImg'}>
+      <ImageWrapper className={scrollY > 200 ? 'showImg' : 'notShowImg'}>
         <Filter2></Filter2>
         <img
           src="https://i.esdrop.com/d/f/XWTMtUmtv1/PpdEvGOnr2.png"
@@ -83,14 +81,45 @@ const SecondWrapper = styled(SectionWrapper)`
     }
     to {
       opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes slideup {
+    from {
+      opacity: 0;
+      transform: translateY(60px);
+    }
+    to {
+      opacity: 1;
       transform: translateY(0);
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    height: 70vh;
+    justify-content: center;
+    align-items: center;
+
+    .showDesc {
+      opacity: 1;
+      transform: translateY(0);
+      h1,
+      p {
+        animation: slideup 0.3s linear;
+        animation-delay: 0.1s;
+      }
+    }
+    .notShowDesc {
+      opacity: 0;
+      transform: translateY(60px);
     }
   }
 `;
 
 const ContentBox = styled.div`
-  width: 30%;
-  padding-bottom: 30%;
+  width: 35%;
+  padding-bottom: 35%;
   position: absolute;
   z-index: 3;
   top: 10%;
@@ -102,6 +131,14 @@ const ContentBox = styled.div`
 
   > img {
     position: absolute;
+    top: 0;
+  }
+
+  @media screen and (max-width: 768px) {
+    position: relative;
+    padding-bottom: 0;
+    width: 80%;
+    height: 70%;
     top: 0;
   }
 `;
@@ -127,6 +164,32 @@ const Desc = styled.div`
   p {
     line-height: 1.7rem;
   }
+
+  @media screen and (max-width: 1280px) {
+    p {
+      line-height: 1.5rem;
+    }
+  }
+  @media screen and (max-width: 992px) {
+    p {
+      line-height: 1.4rem;
+      font-size: 0.9rem;
+    }
+  }
+  @media screen and (max-width: 768px) {
+    p {
+      line-height: 1.7rem;
+      font-size: 1rem;
+    }
+  }
+  @media screen and (max-width: 576px) {
+    h1 {
+      font-size: 1.2rem;
+    }
+    p {
+      line-height: 1.4rem;
+    }
+  }
 `;
 
 const ImageWrapper = styled.div`
@@ -139,10 +202,7 @@ const ImageWrapper = styled.div`
   margin: 50px 0;
   margin-right: 5%;
 
-  .show {
-    display: none;
-  }
-  .notShow {
+  @media screen and (max-width: 768px) {
     display: none;
   }
 `;

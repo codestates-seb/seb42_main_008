@@ -100,7 +100,7 @@ const FirstWrapper = styled(SectionWrapper)`
   }
 
   @media screen and (max-width: 992px) {
-    height: 70vh;
+    height: 80vh;
   }
 `;
 
