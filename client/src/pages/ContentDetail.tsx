@@ -153,6 +153,7 @@ const LeftBox = styled.section`
 
 const RightBox = styled.section`
   width: 34%;
+  height: 100%;
 `;
 
 /* TODO:
