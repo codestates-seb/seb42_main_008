@@ -53,4 +53,11 @@ public class CompanionController {
 
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/{companion-id}")
+    public ResponseEntity getCompanion(@PathVariable("companion-id") @Positive Long companionId) {
+        Companion companion = companionService.findCompanion(companionId);
+
+        return ResponseEntity.ok(new SingleResponseDto<>(mapper.companionToCompanionResponseDto(companion)));
+    }
 }

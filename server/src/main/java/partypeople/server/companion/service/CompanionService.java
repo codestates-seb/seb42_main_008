@@ -57,6 +57,11 @@ public class CompanionService {
         companionRepository.deleteById(companionId);
     }
 
+    @Transactional(readOnly = true)
+    public Companion findCompanion(Long companionId) {
+        return findVerifiedCompanionById(companionId);
+    }
+
     private Companion findVerifiedCompanionById(Long companionId) {
         Optional<Companion> optionalCompanion = companionRepository.findById(companionId);
         Companion findCompanion = optionalCompanion.orElseThrow(() ->

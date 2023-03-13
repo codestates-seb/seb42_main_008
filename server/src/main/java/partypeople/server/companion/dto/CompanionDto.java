@@ -89,6 +89,8 @@ public class CompanionDto {
 
         private String nickname;
 
+        private Integer score;
+
         private String title;
 
         private String content;
