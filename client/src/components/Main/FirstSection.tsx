@@ -5,8 +5,11 @@ import 'slick-carousel/slick/slick-theme.css';
 import { SectionWrapper } from './SectionWrapper';
 import FirstTitle from './FirstTitle';
 import { useEffect, useState } from 'react';
+import ImageFilter from './ImageFilter';
+import { useNavigate } from 'react-router-dom';
 
 const FirstSection = () => {
+  const navigate = useNavigate();
   const [isShowButton, setIsShowButton] = useState(false);
   const settings = {
     dots: true,
@@ -22,6 +25,10 @@ const FirstSection = () => {
     draggable: false,
   };
 
+  const handleButtonClick = () => {
+    navigate('/continents');
+  };
+
   useEffect(() => {
     setTimeout(() => setIsShowButton(true), 5000);
   }, []);
@@ -29,8 +36,12 @@ const FirstSection = () => {
   return (
     <FirstWrapper>
       <FirstTitle />
-      {isShowButton && <FirstButton>동행자 구하러 가기</FirstButton>}
-      <ImageFilter></ImageFilter>
+      {isShowButton && (
+        <FirstButton onClick={handleButtonClick}>
+          동행자 구하러 가기
+        </FirstButton>
+      )}
+      <Filter></Filter>
       <Slider {...settings}>
         <SlideContent>
           <img
@@ -61,6 +72,12 @@ const FirstWrapper = styled(SectionWrapper)`
   justify-content: center;
   position: relative;
   overflow: hidden;
+
+  div {
+    width: 100%;
+    height: 100%;
+  }
+
   .slick-slider {
     width: 100%;
     overflow: hidden;
@@ -73,31 +90,31 @@ const FirstWrapper = styled(SectionWrapper)`
     right: 20px;
     z-index: 3;
   }
-  ul {
+  .slick-dots {
     position: absolute;
     bottom: 30px;
     z-index: 3;
   }
+  .slick-dots li button:before {
+    color: #fff;
+  }
+
+  @media screen and (max-width: 992px) {
+    height: 80vh;
+  }
 `;
 
-const ImageFilter = styled.div`
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  top: 0;
-  background-color: #000650;
-  opacity: 0.25;
+const Filter = styled(ImageFilter)`
   z-index: 2;
-  @media screen and (max-width: 1080px) {
-    height: calc(100% - 10px);
-  }
 `;
 
 const SlideContent = styled.div`
   width: 100%;
   max-height: calc(100vh - 60px);
   > img {
-    width: 100%;
+    width: 110%;
+    height: 100%;
+    object-fit: cover;
   }
 `;
 
@@ -125,6 +142,13 @@ const FirstButton = styled.button`
       opacity: 1;
       transform: translateY(0);
     }
+  }
+
+  @media screen and (max-width: 992px) {
+    font-size: 1rem;
+  }
+  @media screen and (max-width: 576px) {
+    font-size: 0.8rem;
   }
 `;
 
