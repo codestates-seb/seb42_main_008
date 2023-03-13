@@ -33,5 +33,23 @@ public class MessageController {
         return ResponseEntity.created(location).build();
     }
 
+    @GetMapping("/{message-id}")
+    public ResponseEntity getMessage(@PathVariable("message-id") Long messageId) {
+        Message message = messageService.getMessage(messageId);
+
+        return ResponseEntity.ok(
+            new SingleResponseDto<>(mapper.messageToMessageResponse(message))
+        );
+    }
+
+    @GetMapping
+    public ResponseEntity getMessages(@RequestParam("memberId") Long memberId) {
+        List<Message> messages = messageService.getMessages(memberId);
+
+        return ResponseEntity.ok(
+            new SingleResponseDto<>(mapper.messagesToMessageResponses(messages))
+        );
+    }
+
 
 }
