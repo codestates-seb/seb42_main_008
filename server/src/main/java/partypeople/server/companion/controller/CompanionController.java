@@ -64,11 +64,11 @@ public class CompanionController {
     }
 
     @GetMapping("/nations")
-    public ResponseEntity getCompanionByNation(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
-                                               @RequestParam(value = "size", required = false, defaultValue = "10") int size,
-                                               @RequestParam(value = "sortDir", required = false, defaultValue = "DESC") String sortDir,
-                                               @RequestParam(value = "sortBy", required = false, defaultValue = "createdAt") String sortBy,
-                                               @RequestParam("nationCode") String nationCode) {
+    public ResponseEntity getCompanionsByNation(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                                @RequestParam(value = "size", required = false, defaultValue = "10") int size,
+                                                @RequestParam(value = "sortDir", required = false, defaultValue = "DESC") String sortDir,
+                                                @RequestParam(value = "sortBy", required = false, defaultValue = "createdAt") String sortBy,
+                                                @RequestParam("nationCode") String nationCode) {
         Page<Companion> companionPage = companionService.findCompanionsByNation(page - 1, size, sortDir, sortBy, nationCode);
         List<Companion> companions = companionPage.getContent();
 
