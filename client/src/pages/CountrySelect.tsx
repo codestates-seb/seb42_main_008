@@ -125,6 +125,7 @@ const CountryListContainer = styled.div`
     align-items: center;
     justify-content: center;
     height: 300px;
+    width: 100%;
     background-image: url('https://cdn.pixabay.com/photo/2020/07/12/16/40/paris-5397889_1280.jpg');
     background-repeat: no-repeat;
     background-size: 100% 100%;
@@ -135,11 +136,14 @@ const CountryListContainer = styled.div`
     }
   }
   .list-top {
+    position: absolute;
     display: flex;
     align-items: center;
     justify-content: space-around;
     background-color: #feb35c;
     height: 60px;
+    top: 270px;
+    z-index: 500;
     width: 80%;
     padding: 0px 30px 0px 30px;
     > a {
@@ -161,6 +165,7 @@ const CountryListBox = styled.section`
   align-items: center;
   width: 100%;
   position: relative;
+  margin-top: 20px;
 
   .countrybox {
     display: flex;
