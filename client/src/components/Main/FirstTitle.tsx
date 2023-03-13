@@ -9,7 +9,6 @@ const FirstTitle = () => {
       setInnerWidth(window.innerWidth);
     };
     window.addEventListener('resize', resizeListener);
-    console.log('innerWidth', innerWidth);
   });
 
   return (
