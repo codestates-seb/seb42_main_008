@@ -43,6 +43,7 @@ const SecondWrapper = styled(SectionWrapper)`
   position: relative;
   justify-content: flex-end;
   align-items: flex-end;
+
   div {
     transition: 0.7s;
   }
@@ -96,10 +97,14 @@ const SecondWrapper = styled(SectionWrapper)`
     }
   }
 
+  @media screen and (max-width: 992px) {
+    padding: 70px 0;
+  }
   @media screen and (max-width: 768px) {
     height: 70vh;
     justify-content: center;
     align-items: center;
+    padding: 0;
 
     .showDesc {
       opacity: 1;
@@ -118,8 +123,8 @@ const SecondWrapper = styled(SectionWrapper)`
 `;
 
 const ContentBox = styled.div`
-  width: 35%;
-  padding-bottom: 35%;
+  width: 30%;
+  padding-bottom: 30%;
   position: absolute;
   z-index: 3;
   top: 10%;
@@ -134,6 +139,10 @@ const ContentBox = styled.div`
     top: 0;
   }
 
+  @media screen and (max-width: 1280px) {
+    width: 35%;
+    padding-bottom: 35%;
+  }
   @media screen and (max-width: 768px) {
     position: relative;
     padding-bottom: 0;
