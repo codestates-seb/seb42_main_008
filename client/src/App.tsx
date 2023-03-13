@@ -15,11 +15,13 @@ import {
 } from 'pages';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
+import ScrollToTop from 'utils/ScrollToTop';
 
 const App = () => {
   return (
     <BrowserRouter>
       <GlobalStyle />
+      <ScrollToTop />
       <Header />
       <main>
         <Routes>
