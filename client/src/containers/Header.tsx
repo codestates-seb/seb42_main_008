@@ -25,7 +25,6 @@ const Header = () => {
         </Link>
         <Link to="/continents">파티 구하기</Link>
         <button onClick={LoginHandler}>임시 로그인</button>
-        <Link to="/:continent">나라선택</Link>
       </div>
 
       {isLogin ? (
