@@ -51,5 +51,11 @@ public class MessageController {
         );
     }
 
+    @DeleteMapping("/{message-id}")
+    public ResponseEntity deleteMessage(@PathVariable("message-id") Long messageId) {
+        messageService.deleteMessage(messageId);
+
+        return ResponseEntity.noContent().build();
+    }
 
 }
