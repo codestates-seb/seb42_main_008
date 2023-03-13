@@ -19,7 +19,7 @@ const FirstSection = () => {
     cssEase: 'linear',
     pauseOnFocus: true,
     pauseOnHover: true,
-    draggable: true,
+    draggable: false,
   };
 
   useEffect(() => {
@@ -113,13 +113,13 @@ const FirstButton = styled.button`
   font-weight: 800;
   background-color: #feb35c;
   border: none;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
-  animation: fadein 1s linear;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+  animation: fadein 0.5s linear;
 
   @keyframes fadein {
     from {
       opacity: 0;
-      transform: translateY(60px);
+      transform: translateY(30px);
     }
     to {
       opacity: 1;
