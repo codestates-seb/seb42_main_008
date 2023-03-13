@@ -32,7 +32,7 @@ const ListTitle = () => {
   );
 };
 
-const ListTitleWrapper = styled.div`
+const ListTitleWrapper = styled.section`
   width: 100%;
   height: 40vh;
   display: flex;
