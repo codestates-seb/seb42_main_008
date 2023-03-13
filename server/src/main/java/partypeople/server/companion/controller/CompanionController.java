@@ -46,4 +46,6 @@ public class CompanionController {
 
         return ResponseEntity.ok(new SingleResponseDto<>(mapper.companionToCompanionResponseDto(companion)));
     }
+
+
 }

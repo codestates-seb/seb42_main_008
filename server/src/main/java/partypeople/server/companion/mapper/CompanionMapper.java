@@ -89,6 +89,7 @@ public interface CompanionMapper {
         response.setAddress( companion.getAddress() );
         response.setLat( companion.getLat() );
         response.setLng( companion.getLng() );
+        response.setCompanionStatus(companion.isCompanionStatus());
 
         List<String> tags = companion.getCompanionTags().stream()
                 .map(companionTag -> companionTag.getTag().getName())

@@ -103,6 +103,8 @@ public class CompanionDto {
         private Double lng;
 
         private List<String> tags;
+
+        private boolean companionStatus;
     }
 
 }
