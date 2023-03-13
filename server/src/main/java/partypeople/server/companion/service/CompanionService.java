@@ -1,6 +1,9 @@
 package partypeople.server.companion.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import partypeople.server.companion.entity.Companion;
@@ -60,6 +63,11 @@ public class CompanionService {
     @Transactional(readOnly = true)
     public Companion findCompanion(Long companionId) {
         return findVerifiedCompanionById(companionId);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<Companion> findCompanionsByNation(int page, int size, String sortDir, String sortBy, String nationCode) {
+        return companionRepository.findByNationCode(PageRequest.of(page, size, Sort.Direction.valueOf(sortDir), sortBy), nationCode);
     }
 
     private Companion findVerifiedCompanionById(Long companionId) {

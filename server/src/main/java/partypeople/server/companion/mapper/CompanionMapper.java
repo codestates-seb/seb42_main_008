@@ -100,6 +100,8 @@ public interface CompanionMapper {
         return response;
     }
 
+    List<CompanionDto.Response> companionsToCompanionResponseDtos(List<Companion> companions);
+
     default List<CompanionTag> tagsToCompanionTags(Companion companion, List<Tag> tags) {
         List<CompanionTag> companionTags = tags.stream()
                 .map(tag -> {
