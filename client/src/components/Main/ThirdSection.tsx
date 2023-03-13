@@ -1,3 +1,4 @@
+import { useScroll } from 'hooks/useScroll';
 import styled from 'styled-components';
 import { SectionWrapper } from './SectionWrapper';
 
@@ -7,7 +8,12 @@ interface ServiceDesc {
   desc: string;
 }
 
+interface Article {
+  len: number;
+}
+
 const ThirdSection = () => {
+  const scrollY = useScroll();
   const descriptions: ServiceDesc[] = [
     {
       imgURL: 'https://i.esdrop.com/d/f/XWTMtUmtv1/gpGzHnf0Y7.png',
@@ -30,7 +36,11 @@ const ThirdSection = () => {
     <ThirdWrapper>
       <DescList>
         {descriptions.map((item, idx) => (
-          <DescArticle key={idx}>
+          <DescArticle
+            key={idx}
+            len={idx + 1}
+            className={scrollY >= 920 ? 'show' : 'notShow'}
+          >
             <img src={item.imgURL} alt={item.title} />
             <DescText>
               <h1>{item.title}</h1>
@@ -46,17 +56,31 @@ const ThirdSection = () => {
 const ThirdWrapper = styled(SectionWrapper)`
   background-color: #5d62a0;
 
-  @media screen and (max-width: 1280px) {
-    background-color: red;
+  .show {
+    opacity: 1;
+    transform: translateY(0);
+    div h1 {
+      animation: showup 0.5s linear;
+    }
+    div p {
+      animation: showup 0.5s linear;
+      animation-delay: 0.1s;
+    }
   }
-  @media screen and (max-width: 992px) {
-    background-color: orange;
+  .notShow {
+    opacity: 0;
+    transform: translateY(60px);
   }
-  @media screen and (max-width: 768px) {
-    background-color: blue;
-  }
-  @media screen and (max-width: 576px) {
-    background-color: green;
+
+  @keyframes showup {
+    from {
+      opacity: 0;
+      transform: translateY(60px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 `;
 
@@ -78,7 +102,7 @@ const DescList = styled.ul`
   }
 `;
 
-const DescArticle = styled.li`
+const DescArticle = styled.li<Article>`
   width: 100%;
   height: 100%;
   display: flex;
@@ -87,6 +111,7 @@ const DescArticle = styled.li`
   justify-content: flex-start;
   padding: 0 19%;
   color: #fff;
+  transition: 0.7s;
 
   > img {
     width: 100%;
