@@ -29,7 +29,7 @@ public class MessageDto {
         private String createdAt;
         private boolean isRead;
 
-        @NoArgsConstructor
+        @AllArgsConstructor
         @Getter
         @Setter
         public static class Sender {
