@@ -4,12 +4,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.util.StringUtils;
 import partypeople.server.auth.jwt.JwtTokenizer;
+import partypeople.server.exception.BusinessLogicException;
+import partypeople.server.exception.ExceptionCode;
 import partypeople.server.member.dto.MemberDto;
 import partypeople.server.member.entity.Member;
 
@@ -26,6 +30,8 @@ import java.util.Map;
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
     private final JwtTokenizer jwtTokenizer;
+
+    private final RedisTemplate<String, String> redisTemplate;
 
     @SneakyThrows
     @Override
@@ -85,4 +91,12 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         return refreshToken;
     }
+
+    private void validBlackListToken(String accessToken) {
+
+        String blackToken = (String) redisTemplate.opsForValue().get(accessToken);
+        if(StringUtils.hasText(blackToken))
+            throw new BusinessLogicException(ExceptionCode.BLACK_LIST_TOKEN);
+    }
+
 }

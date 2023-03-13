@@ -94,4 +94,18 @@ public class JwtTokenizer {
 
         return key;
     }
+
+    public Long getExpiration(String accessToken,String base64EncodedSecretKey){
+        Key key = getKeyFromBase64EncodedKey(base64EncodedSecretKey);
+
+        Date expiration = Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(accessToken)
+                .getBody()
+                .getExpiration();
+
+        long now = new Date().getTime();
+        return expiration.getTime() - now;
+    }
 }

@@ -5,9 +5,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import partypeople.server.auth.jwt.JwtTokenizer;
 import partypeople.server.auth.utils.CustomAuthorityUtils;
 import partypeople.server.exception.BusinessLogicException;
 import partypeople.server.exception.ExceptionCode;
@@ -20,6 +22,7 @@ import partypeople.server.utils.CustomBeanUtils;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @Transactional
@@ -32,6 +35,8 @@ public class MemberService {
     private final CustomBeanUtils<Member> beanUtils;
     private final PasswordEncoder passwordEncoder;
     private final CustomAuthorityUtils authorityUtils;
+    private final JwtTokenizer jwtTokenizer;
+    private final RedisTemplate<String, String> redisTemplate;
 
 
     public Member createMember(Member member) {
@@ -133,4 +138,14 @@ public class MemberService {
             throw new BusinessLogicException(ExceptionCode.NICKNAME_EXIST);
         }
     }
+
+//    public void logout(String accessToken) {
+//
+//        //엑세스 토큰 남은 유효시간 확인
+//        Long expiration = jwtTokenizer.getExpiration(accessToken);
+//        log.info("logout!!!!!");
+//        //Redis Cache에 저장
+//        redisTemplate.opsForValue().set(accessToken, "logout", expiration, TimeUnit.MILLISECONDS);
+//
+//    }
 }

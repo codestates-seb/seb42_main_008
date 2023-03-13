@@ -1,10 +1,15 @@
 package partypeople.server.member.controller;
 
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.security.SignatureException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import partypeople.server.auth.jwt.JwtTokenizer;
 import partypeople.server.dto.MultiResponseDto;
 import partypeople.server.dto.SingleResponseDto;
 import partypeople.server.exception.BusinessLogicException;
@@ -21,6 +26,8 @@ import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import java.net.URI;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @CrossOrigin
 @RestController
@@ -32,8 +39,38 @@ public class MemberController {
     private final MemberService memberService;
     private final MemberMapper memberMapper;
 
+    private final JwtTokenizer jwtTokenizer;
+
+    private final RedisTemplate<String,String> redisTemplate;
+
+    @PostMapping("/logout")
+    public ResponseEntity logoutMember(@RequestHeader("Authorization") String Authorization) {
+        String accessToken = Authorization.replace("Bearer ", "");
+
+        String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(jwtTokenizer.getSecretKey());
+        try{
+            Long expiration = jwtTokenizer.getExpiration(accessToken,base64EncodedSecretKey);
+            redisTemplate.opsForValue().set(accessToken, "logout", expiration, TimeUnit.MILLISECONDS);
+        } catch (
+    SignatureException se) {
+            System.out.println("111"+se.getMessage());
+    } catch (
+    ExpiredJwtException ee) {
+            System.out.println("222"+ee.getMessage());
+    } catch (Exception e) {
+            System.out.println("333"+e.getMessage());
+    }
+
+
+
+
+//        memberService.logout(accessToken);
+        return ResponseEntity.ok().build();
+    }
+
     @PostMapping
     public ResponseEntity postMember(@Valid @RequestBody MemberDto.Post requestBody) {
+
         Member member = memberMapper.memberPostToMember(requestBody);
 
         Member createdMember = memberService.createMember(member);

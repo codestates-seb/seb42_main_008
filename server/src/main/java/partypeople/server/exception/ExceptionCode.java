@@ -8,6 +8,8 @@ public enum ExceptionCode {
     NICKNAME_EXIST(409, "Nickname Already Exists"),
     PASSWORD_NOT_MATCH(403,"Password Not Match"),
 
+    BLACK_LIST_TOKEN(401, "만료된 토큰 입니다."),
+
     FOLLOW_ERROR(400,"Follower - Following SAME ERROR"),
 
     MESSAGE_NOT_FOUND(404, "Message Not Found");
