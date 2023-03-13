@@ -73,10 +73,13 @@ const FirstWrapper = styled(SectionWrapper)`
     right: 20px;
     z-index: 3;
   }
-  ul {
+  .slick-dots {
     position: absolute;
     bottom: 30px;
     z-index: 3;
+  }
+  .slick-dots li button:before {
+    color: #fff;
   }
 `;
 
