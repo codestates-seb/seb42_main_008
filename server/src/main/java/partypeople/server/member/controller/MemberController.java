@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import partypeople.server.auth.jwt.JwtTokenizer;
+import partypeople.server.companion.entity.Companion;
+import partypeople.server.companion.mapper.CompanionMapper;
 import partypeople.server.dto.MultiResponseDto;
 import partypeople.server.dto.SingleResponseDto;
 import partypeople.server.exception.BusinessLogicException;
@@ -40,8 +42,9 @@ public class MemberController {
     private final static String MEMBER_DEFAULT_URL = "/members";
     private final MemberService memberService;
     private final MemberMapper memberMapper;
-
     private final ReviewMapper reviewMapper;
+
+    private final CompanionMapper companionMapper;
 
     @PostMapping("/logout")
     public ResponseEntity logoutMember(@RequestHeader("Authorization") String Authorization) {
@@ -117,9 +120,10 @@ public class MemberController {
 
     @GetMapping("/{member-id}/writers")
     public ResponseEntity getWriterList(@PathVariable("member-id") long memberId) {
-        //글 들어오면 TODO..
+        List<Companion> findCompanions = memberService.findAllWriterById(memberId);
         return ResponseEntity.ok(
-        ).build();
+                new SingleResponseDto<>(companionMapper.companionsToCompanionResponses(findCompanions))
+        );
     }
 
     @GetMapping("/{member-id}/reviews")
@@ -178,4 +182,6 @@ public class MemberController {
         memberService.deleteMember(memberId,password.getPassword());
         return ResponseEntity.noContent().build();
     }
+
+//    @PostMapping("/reissue")
 }

@@ -1,6 +1,7 @@
 package partypeople.server.companion.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -48,5 +49,16 @@ public class CompanionDto {
 
         @Positive
         private Long memberId;
+    }
+
+    @Getter
+    @Builder
+    public static class Response {
+        private Long companionId;
+        private String address;
+//        private Double lat;
+//        private Double lng;
+        private LocalDate date;
+        private boolean companionStatus;
     }
 }

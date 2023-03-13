@@ -7,6 +7,8 @@ import partypeople.server.companion.entity.Companion;
 import partypeople.server.companion.entity.CompanionTag;
 import partypeople.server.member.entity.Member;
 import partypeople.server.nation.entity.Nation;
+import partypeople.server.review.dto.ReviewDto;
+import partypeople.server.review.entity.Review;
 import partypeople.server.tag.entity.Tag;
 
 import java.util.List;
@@ -55,4 +57,8 @@ public interface CompanionMapper {
 
         return companionTags;
     }
+
+    CompanionDto.Response companionToCompanionResponse(Companion companion);
+
+    List<CompanionDto.Response> companionsToCompanionResponses(List<Companion> companions);
 }

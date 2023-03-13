@@ -7,6 +7,7 @@ import partypeople.server.companion.entity.Companion;
 import partypeople.server.companion.repository.CompanionRepository;
 import partypeople.server.exception.BusinessLogicException;
 import partypeople.server.exception.ExceptionCode;
+import partypeople.server.member.entity.Member;
 import partypeople.server.member.service.MemberService;
 import partypeople.server.nation.entity.Nation;
 import partypeople.server.nation.service.NationService;

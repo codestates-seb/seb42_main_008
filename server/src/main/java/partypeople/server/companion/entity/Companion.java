@@ -65,5 +65,5 @@ public class Companion extends Auditable {
 
     //참여자 리스트 추가
     @OneToMany(mappedBy = "companion", cascade = CascadeType.REMOVE)    //
-    private List<Participant> paricipants = new ArrayList<>();
+    private List<Participant> participants = new ArrayList<>();
 }

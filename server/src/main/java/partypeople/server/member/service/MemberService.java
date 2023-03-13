@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import partypeople.server.auth.jwt.JwtTokenizer;
 import partypeople.server.auth.utils.CustomAuthorityUtils;
+import partypeople.server.companion.entity.Companion;
+import partypeople.server.companion.repository.CompanionRepository;
 import partypeople.server.exception.BusinessLogicException;
 import partypeople.server.exception.ExceptionCode;
 import partypeople.server.member.entity.Follow;
@@ -34,6 +36,7 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 @Slf4j
 public class MemberService {
+    private final CompanionRepository companionRepository;
     private final MemberRepository memberRepository;
 
     private final FollowRepository followRepository;
@@ -165,5 +168,10 @@ public class MemberService {
     public List<Review> findAllReviewById(Long memberId) {
         Member findMember = findVerifiedMemberById(memberId);
         return reviewRepository.findByMemberId(findMember.getMemberId());
+    }
+
+    public List<Companion> findAllWriterById(long memberId) {
+        Member findMember = findVerifiedMemberById(memberId);
+        return companionRepository.findAllByMemberMemberId(findMember.getMemberId());
     }
 }
