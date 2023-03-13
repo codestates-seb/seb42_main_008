@@ -17,6 +17,7 @@ import partypeople.server.nation.entity.Nation;
 import partypeople.server.nation.service.NationService;
 import partypeople.server.utils.CustomBeanUtils;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -68,6 +69,11 @@ public class CompanionService {
     @Transactional(readOnly = true)
     public Page<Companion> findCompanionsByNation(int page, int size, String sortDir, String sortBy, String nationCode) {
         return companionRepository.findByNationCode(PageRequest.of(page, size, Sort.Direction.valueOf(sortDir), sortBy), nationCode);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Companion> findCompanionsByContinent(int continent) {
+        return companionRepository.findByNationContinent(continent);
     }
 
     private Companion findVerifiedCompanionById(Long companionId) {

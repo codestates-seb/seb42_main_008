@@ -76,4 +76,11 @@ public class CompanionController {
                 new MultiResponseDto<>(mapper.companionsToCompanionResponseDtos(companions), companionPage)
         );
     }
+
+    @GetMapping("/continents")
+    public ResponseEntity getCountsOfCompanionsByContinent(@RequestParam("continent") int continent) {
+        List<Companion> companions = companionService.findCompanionsByContinent(continent);
+
+        return ResponseEntity.ok(new SingleResponseDto<>(mapper.companionsToContinentResponseDtos(companions)));
+    }
 }
