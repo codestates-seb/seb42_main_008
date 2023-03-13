@@ -40,6 +40,10 @@ const SignUp = () => {
     []
   );
 
+  const handleCheckEmail = () => {
+    Swal.fire('', '추후 추가 예정입니다');
+  };
+
   // 닉네임 유효성 검사
   const handleChangeNickame = useCallback<
     (event: React.ChangeEvent<HTMLInputElement>) => void
@@ -98,7 +102,12 @@ const SignUp = () => {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (isNickname === false || isEmail === false) {
+    if (
+      isNickname === false ||
+      isEmail === false ||
+      isPassword === false ||
+      isPwCheck === false
+    ) {
       Swal.fire('', '양식을 다시 확인해주세요');
     } else {
       // 회원가입에 성공할 시 로그인 페이지로 이동 (추후 조건 추가하기)
@@ -113,7 +122,12 @@ const SignUp = () => {
         <h2>회원가입</h2>
         <form onSubmit={handleSubmit}>
           <div className="group">
-            <label htmlFor="email">이메일</label>
+            <div className="wrapper">
+              <label htmlFor="nickname">이메일</label>
+              <div className="btn-check" onClick={handleCheckEmail}>
+                중복확인
+              </div>
+            </div>
             <input type="text" id="email" onChange={handleChangeEmail}></input>
             {email.length > 0 && (
               <span className={`message ${isEmail ? 'success' : 'error'}`}>
@@ -124,9 +138,9 @@ const SignUp = () => {
           <div className="group">
             <div className="wrapper">
               <label htmlFor="nickname">닉네임</label>
-              <button id="nick-check" onClick={handleCheckNickname}>
+              <div className="btn-check" onClick={handleCheckNickname}>
                 중복확인
-              </button>
+              </div>
             </div>
             <input
               type="text"
@@ -226,7 +240,7 @@ const SignUpBox = styled.section`
     justify-content: space-between;
     align-items: center;
   }
-  #nick-check {
+  .btn-check {
     background-color: #feb35c;
     color: white;
     border: none;
@@ -235,6 +249,8 @@ const SignUpBox = styled.section`
     height: 100%;
     border-radius: 5px;
     cursor: pointer;
+    text-align: center;
+    font-size: 0.85rem;
     &:hover {
       color: black;
       background-color: white;
@@ -285,7 +301,7 @@ const SignUpBox = styled.section`
 /* TODO:
 1. 기본 구조 * 
 2. 유효성 검사
-2-1. 전부 value 가 없을 경우
+2-1. 전부 value 가 없을 경우 *
 2-2. 이메일
 2-2-1. 이메일이 비어있는 경우
 2-2-2. 이미 가입된 이메일인 경우
