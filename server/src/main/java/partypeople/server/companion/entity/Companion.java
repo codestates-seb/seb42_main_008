@@ -58,4 +58,12 @@ public class Companion extends Auditable {
             companionTag.setCompanion(this);
         }
     }
+
+    //신청자 리스트 추가
+    @OneToMany(mappedBy = "companion", cascade = CascadeType.REMOVE)    //
+    private List<Subscriber> subscribers = new ArrayList<>();
+
+    //참여자 리스트 추가
+    @OneToMany(mappedBy = "companion", cascade = CascadeType.REMOVE)    //
+    private List<Participant> paricipants = new ArrayList<>();
 }

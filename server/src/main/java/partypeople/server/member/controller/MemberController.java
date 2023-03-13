@@ -20,6 +20,8 @@ import partypeople.server.member.entity.Follow;
 import partypeople.server.member.entity.Member;
 import partypeople.server.member.mapper.MemberMapper;
 import partypeople.server.member.service.MemberService;
+import partypeople.server.review.entity.Review;
+import partypeople.server.review.mapper.ReviewMapper;
 import partypeople.server.utils.UriCreator;
 
 import javax.validation.Valid;
@@ -39,9 +41,7 @@ public class MemberController {
     private final MemberService memberService;
     private final MemberMapper memberMapper;
 
-    private final JwtTokenizer jwtTokenizer;
-
-    private final RedisTemplate<String,String> redisTemplate;
+    private final ReviewMapper reviewMapper;
 
     @PostMapping("/logout")
     public ResponseEntity logoutMember(@RequestHeader("Authorization") String Authorization) {
@@ -100,7 +100,10 @@ public class MemberController {
 
     @GetMapping("/{member-id}/subscribers")
     public ResponseEntity getSubScriberList(@PathVariable("member-id") long memberId) {
-        //글 들어오면 TODO..
+        //신청글 조회
+        //회원 정보 조회시 추가 API로 조회하는 본인(로그인 멤버)이 신청한리스트에 포함된 글 목록만 가져와야함.
+
+
         return ResponseEntity.ok(
         ).build();
     }
@@ -121,9 +124,11 @@ public class MemberController {
 
     @GetMapping("/{member-id}/reviews")
     public ResponseEntity getReviewList(@PathVariable("member-id") long memberId) {
-        //글 들어오면 TODO..
+        List<Review> findReviews = memberService.findAllReviewById(memberId);
+
         return ResponseEntity.ok(
-        ).build();
+                new SingleResponseDto<>(reviewMapper.reviewsToReviewResponses(findReviews))
+        );
     }
 
     @GetMapping

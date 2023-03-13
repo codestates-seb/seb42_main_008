@@ -20,6 +20,8 @@ import partypeople.server.member.entity.Follow;
 import partypeople.server.member.entity.Member;
 import partypeople.server.member.repository.FollowRepository;
 import partypeople.server.member.repository.MemberRepository;
+import partypeople.server.review.entity.Review;
+import partypeople.server.review.repository.ReviewRepository;
 import partypeople.server.utils.CustomBeanUtils;
 
 import java.util.List;
@@ -40,6 +42,8 @@ public class MemberService {
     private final CustomAuthorityUtils authorityUtils;
     private final JwtTokenizer jwtTokenizer;
     private final RedisTemplate<String, String> redisTemplate;
+
+    private final ReviewRepository reviewRepository;
 
 
     public Member createMember(Member member) {
@@ -156,5 +160,10 @@ public class MemberService {
         } catch (Exception e) {
             throw new BusinessLogicException(ExceptionCode.ACCESS_TOKEN_ERROR);
         }
+    }
+
+    public List<Review> findAllReviewById(Long memberId) {
+        Member findMember = findVerifiedMemberById(memberId);
+        return reviewRepository.findByMemberId(findMember.getMemberId());
     }
 }
