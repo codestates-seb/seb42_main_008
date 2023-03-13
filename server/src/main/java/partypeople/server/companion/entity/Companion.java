@@ -40,7 +40,7 @@ public class Companion extends Auditable {
 
     private boolean companionStatus;
 
-    @OneToMany(mappedBy = "companion", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "companion", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<CompanionTag> companionTags = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
