@@ -179,24 +179,28 @@ const NoteModal = styled.div`
       width: 160px;
       height: 45px;
       border-radius: 30px;
+      border: none;
     }
     .delete {
       background-color: #d9506a;
       width: 160px;
       height: 45px;
       border-radius: 30px;
+      border: none;
     }
     .submit {
       background-color: #feb35c;
       width: 160px;
       height: 45px;
       border-radius: 30px;
+      border: none;
     }
     .cancel {
       background-color: #bababa;
       width: 160px;
       height: 45px;
       border-radius: 30px;
+      border: none;
     }
   }
 `;
