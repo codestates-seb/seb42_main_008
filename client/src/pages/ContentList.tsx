@@ -1,7 +1,11 @@
-import ListTitle from 'components/ContinentList/ListTitle';
+import { useState } from 'react';
 import styled from 'styled-components';
+import { ListData } from 'interfaces/ContentList.interface';
+import ListTitle from 'components/ContinentList/ListTitle';
 
 const ContentList = () => {
+  const [companions, setCompanions] = useState<ListData[] | []>([]);
+
   return (
     <Container>
       <ListTitle />
