@@ -25,12 +25,12 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
     private final JwtTokenizer jwtTokenizer;
-
     private final RedisTemplate<String, String> redisTemplate;
 
     @SneakyThrows
@@ -89,14 +89,11 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(jwtTokenizer.getSecretKey());
         String refreshToken = jwtTokenizer.generateRefreshToken(subject, expiration, base64EncodedSecretKey);
 
+        Long refreshTokenExp = jwtTokenizer.getExpiration(refreshToken,base64EncodedSecretKey);
+        redisTemplate.opsForValue().set(refreshToken, subject, refreshTokenExp, TimeUnit.MILLISECONDS);
+
         return refreshToken;
     }
 
-//    private void validBlackListToken(String accessToken) {
-//
-//        String blackToken = (String) redisTemplate.opsForValue().get(accessToken);
-//        if(StringUtils.hasText(blackToken))
-//            throw new BusinessLogicException(ExceptionCode.BLACK_LIST_TOKEN);
-//    }
 
 }

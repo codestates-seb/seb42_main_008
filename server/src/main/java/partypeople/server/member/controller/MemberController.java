@@ -183,5 +183,13 @@ public class MemberController {
         return ResponseEntity.noContent().build();
     }
 
-//    @PostMapping("/reissue")
+    @PostMapping("/reissue")
+    public ResponseEntity reissueAccessToken(@RequestHeader("Refresh") String refreshToken) {
+        //리프레쉬 토큰 유효시간 확인
+        String reissueAT = memberService.reissueAT(refreshToken);
+        //확인 후 유효기간 안이면 AccessToken 재발급 전송
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + reissueAT);;
+        return ResponseEntity.ok().headers(headers).body("reissueAT");
+    }
 }

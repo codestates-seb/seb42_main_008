@@ -9,6 +9,7 @@ public enum ExceptionCode {
     PASSWORD_NOT_MATCH(403,"Password Not Match"),
 
     BLACK_LIST_TOKEN(401, "만료된 토큰 입니다."),
+    REFRESH_TOKEN_ERROR(401, "유효한 토큰이 아닙니다."),
 
     SIGNATURE_ERROR(401, "Token Signature Error"),
     EXPIRED_ERROR(401, "Token Expired Error"),

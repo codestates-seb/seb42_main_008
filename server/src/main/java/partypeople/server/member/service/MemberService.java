@@ -12,6 +12,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 import partypeople.server.auth.jwt.JwtTokenizer;
 import partypeople.server.auth.utils.CustomAuthorityUtils;
 import partypeople.server.companion.entity.Companion;
@@ -26,9 +27,7 @@ import partypeople.server.review.entity.Review;
 import partypeople.server.review.repository.ReviewRepository;
 import partypeople.server.utils.CustomBeanUtils;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -162,6 +161,42 @@ public class MemberService {
             throw new BusinessLogicException(ExceptionCode.EXPIRED_ERROR);
         } catch (Exception e) {
             throw new BusinessLogicException(ExceptionCode.ACCESS_TOKEN_ERROR);
+        }
+    }
+
+    public String reissueAT(String refreshToken) {
+        String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(jwtTokenizer.getSecretKey());
+
+        try{
+            Long expiration = jwtTokenizer.getExpiration(refreshToken,base64EncodedSecretKey);
+            //유효기간 안
+            //DB안의 발행토큰인지 확인
+            String value = redisTemplate.opsForValue().get(refreshToken);
+            if (ObjectUtils.isEmpty(value)) {
+                throw new BusinessLogicException(ExceptionCode.REFRESH_TOKEN_ERROR);
+            } else {
+                Member findmember = findMember(value);
+
+                Map<String, Object> claims = new HashMap<>();
+                claims.put("memberId", findmember.getMemberId());
+                claims.put("email", findmember.getEmail());
+                claims.put("profile", findmember.getProfile());
+                claims.put("gender", findmember.getGender());
+                claims.put("memberStatus", findmember.getMemberStatus());
+                claims.put("roles", findmember.getRoles());
+
+                String subject = findmember.getEmail();
+
+                Date expirationAT = jwtTokenizer.getTokenExpiration(jwtTokenizer.getAccessTokenExpirationMinutes());
+
+                return jwtTokenizer.generateAccessToken(claims, subject, expirationAT, base64EncodedSecretKey);
+            }
+        } catch (SignatureException se) {
+            throw new BusinessLogicException(ExceptionCode.SIGNATURE_ERROR);
+        } catch (ExpiredJwtException ee) {
+            throw new BusinessLogicException(ExceptionCode.EXPIRED_ERROR);
+        } catch (Exception e) {
+            throw new BusinessLogicException(ExceptionCode.REFRESH_TOKEN_ERROR);
         }
     }
 
