@@ -27,4 +27,14 @@ public class SubscriberController {
         return ResponseEntity.ok().build();
     }
 
+    @PatchMapping("/subscribers")
+    public ResponseEntity patchSubscriber(@PathVariable("companion-id") @Positive Long companionId,
+                                          @RequestBody SubscriberParticipantDto.Request requestBody) {
+        Long memberId = requestBody.getMemberId();
+
+        subscriberService.deleteSubscriber(memberId, companionId);
+        participantService.createParticipant(memberId, companionId);
+        return ResponseEntity.ok().build();
+    }
+
 }
