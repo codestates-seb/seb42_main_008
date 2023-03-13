@@ -4,8 +4,10 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { SectionWrapper } from './SectionWrapper';
 import FirstTitle from './FirstTitle';
+import { useEffect, useState } from 'react';
 
 const FirstSection = () => {
+  const [isShowButton, setIsShowButton] = useState(false);
   const settings = {
     dots: true,
     infinite: true,
@@ -20,9 +22,14 @@ const FirstSection = () => {
     draggable: true,
   };
 
+  useEffect(() => {
+    setTimeout(() => setIsShowButton(true), 5000);
+  }, []);
+
   return (
     <FirstWrapper>
       <FirstTitle />
+      {isShowButton && <FirstButton>동행자 구하러 가기</FirstButton>}
       <ImageFilter></ImageFilter>
       <Slider {...settings}>
         <SlideContent>
@@ -91,6 +98,33 @@ const SlideContent = styled.div`
   max-height: calc(100vh - 60px);
   > img {
     width: 100%;
+  }
+`;
+
+const FirstButton = styled.button`
+  position: absolute;
+  z-index: 5;
+  top: 60%;
+  padding: 15px 20px;
+  font-size: 1.2rem;
+  border-radius: 30px;
+  cursor: pointer;
+  color: #fff;
+  font-weight: 800;
+  background-color: #feb35c;
+  border: none;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+  animation: fadein 1s linear;
+
+  @keyframes fadein {
+    from {
+      opacity: 0;
+      transform: translateY(60px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 `;
 
