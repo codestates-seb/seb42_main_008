@@ -13,12 +13,12 @@ import javax.validation.constraints.Positive;
 @RestController
 @RequiredArgsConstructor
 @Validated
-@RequestMapping("/companions/{companion-id}")
+@RequestMapping("/companions/{companion-id}/subscribers")
 public class SubscriberController {
     private final SubscriberService subscriberService;
     private final ParticipantService participantService;
 
-    @PostMapping("/subscribers")
+    @PostMapping
     public ResponseEntity postSubscriber(@PathVariable("companion-id") @Positive Long companionId,
                                          @RequestBody SubscriberParticipantDto.Request requestBody) {
         Long memberId = requestBody.getMemberId();
@@ -27,7 +27,7 @@ public class SubscriberController {
         return ResponseEntity.ok().build();
     }
 
-    @PatchMapping("/subscribers")
+    @PatchMapping
     public ResponseEntity patchSubscriber(@PathVariable("companion-id") @Positive Long companionId,
                                           @RequestBody SubscriberParticipantDto.Request requestBody) {
         Long memberId = requestBody.getMemberId();
@@ -37,21 +37,12 @@ public class SubscriberController {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/subscribers")
+    @DeleteMapping
     public ResponseEntity deleteSubscriber(@PathVariable("companion-id") @Positive Long companionId,
                                            @RequestBody SubscriberParticipantDto.Request requestBody) {
         Long memberId = requestBody.getMemberId();
 
         subscriberService.deleteSubscriber(memberId, companionId);
-        return ResponseEntity.noContent().build();
-    }
-
-    @DeleteMapping("/participants")
-    public ResponseEntity deleteParticipation(@PathVariable("companion-id") @Positive Long companionId,
-                                           @RequestBody SubscriberParticipantDto.Request requestBody) {
-        Long memberId = requestBody.getMemberId();
-
-        participantService.deleteParticipant(memberId, companionId);
         return ResponseEntity.noContent().build();
     }
 }

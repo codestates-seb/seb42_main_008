@@ -1,0 +1,27 @@
+package partypeople.server.companion.controller;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+import partypeople.server.companion.dto.SubscriberParticipantDto;
+import partypeople.server.companion.service.ParticipantService;
+
+import javax.validation.constraints.Positive;
+
+@RestController
+@RequiredArgsConstructor
+@Validated
+@RequestMapping("/companions/{companion-id}/participants")
+public class ParticipantController {
+    private final ParticipantService participantService;
+
+    @DeleteMapping
+    public ResponseEntity deleteParticipation(@PathVariable("companion-id") @Positive Long companionId,
+                                              @RequestBody SubscriberParticipantDto.Request requestBody) {
+        Long memberId = requestBody.getMemberId();
+
+        participantService.deleteParticipant(memberId, companionId);
+        return ResponseEntity.noContent().build();
+    }
+}
