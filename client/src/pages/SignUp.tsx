@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
@@ -8,17 +8,98 @@ const SignUp = () => {
   const [nickname, setNickname] = useState('');
   const [password, setPassword] = useState('');
   const [pwcheck, setPwcheck] = useState('');
+
+  const [nicknameMessage, setNicknameMessage] = useState<string>('');
+  const [emailMessage, setEmailMessage] = useState('');
+  const [passwordMessage, setPasswordMessage] = useState('');
+  const [pwCheckMessage, setPwCheckMessage] = useState('');
+
+  const [isNickname, setIsNickname] = useState<boolean>(false);
+  const [isEmail, setIsEmail] = useState(false);
+  const [isPassword, setIsPassword] = useState(false);
+  const [isPwCheck, setIsPwCheck] = useState(false);
+
   const navigate = useNavigate();
 
-  const handleClick = () => {
-    if (email === '') {
-      Swal.fire('', '이메일을 입력해주세요!');
-    } else if (nickname === '') {
-      Swal.fire('', '닉네임을 입력해주세요!');
-    } else if (password === '') {
-      Swal.fire('', '비밀번호를 입력해주세요!');
-    } else if (pwcheck === '') {
-      Swal.fire('', '비밀번호 확인을 해주세요!');
+  // 이메일 유효성 검사
+  const handleChangeEmail = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const emailRegex =
+        /([\w-.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+      const emailCurrent = event.target.value;
+      setEmail(emailCurrent);
+
+      if (!emailRegex.test(emailCurrent)) {
+        setEmailMessage('이메일 형식이 올바르지 않습니다.');
+        setIsEmail(false);
+      } else {
+        setEmailMessage('올바른 이메일 형식입니다.');
+        setIsEmail(true);
+      }
+    },
+    []
+  );
+
+  // 닉네임 유효성 검사
+  const handleChangeNickame = useCallback<
+    (event: React.ChangeEvent<HTMLInputElement>) => void
+  >(event => {
+    setNickname(event.target.value);
+    if (event.target.value.length < 2 || event.target.value.length > 10) {
+      setNicknameMessage('2글자 이상 10글자 미만으로 입력해주세요.');
+      setIsNickname(false);
+    } else {
+      setNicknameMessage('');
+      setIsNickname(true);
+    }
+  }, []);
+
+  // 닉네임 중복확인 버튼
+  const handleCheckNickname = () => {
+    Swal.fire('', '추후 추가 예정입니다');
+  };
+
+  // 비밀번호 유효성 검사
+  const handleChangePassword = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const passwordRegex = /^(?=.*[a-zA-Z])(?=.*[0-9]).{8,25}$/;
+      const passwordCurrent = event.target.value;
+      setPassword(passwordCurrent);
+
+      if (!passwordRegex.test(passwordCurrent)) {
+        setPasswordMessage(
+          '1자 이상의 숫자와 1자 이상의 영문자 조합으로 8자리 이상 입력해주세요.'
+        );
+        setIsPassword(false);
+      } else {
+        setPasswordMessage('올바른 비밀번호 형식입니다.');
+        setIsPassword(true);
+      }
+    },
+    []
+  );
+
+  // 비밀번호 확인 유효성 검사
+  const handleChangePwCheck = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const passwordConfirmCurrent = event.target.value;
+      setPwcheck(passwordConfirmCurrent);
+
+      if (password === passwordConfirmCurrent) {
+        setPwCheckMessage('비밀번호가 일치합니다.');
+        setIsPwCheck(true);
+      } else {
+        setPwCheckMessage('비밀번호가 다릅니다.');
+        setIsPwCheck(false);
+      }
+    },
+    [password]
+  );
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (isNickname === false || isEmail === false) {
+      Swal.fire('', '양식을 다시 확인해주세요');
     } else {
       // 회원가입에 성공할 시 로그인 페이지로 이동 (추후 조건 추가하기)
       Swal.fire('Congratulation!', '가입을 축하합니다.');
@@ -30,46 +111,64 @@ const SignUp = () => {
     <Container>
       <SignUpBox>
         <h2>회원가입</h2>
-        <form>
+        <form onSubmit={handleSubmit}>
           <div className="group">
             <label htmlFor="email">이메일</label>
-            <input
-              type="text"
-              id="email"
-              onChange={event => setEmail(event.target.value)}
-            ></input>
+            <input type="text" id="email" onChange={handleChangeEmail}></input>
+            {email.length > 0 && (
+              <span className={`message ${isEmail ? 'success' : 'error'}`}>
+                {emailMessage}
+              </span>
+            )}
           </div>
           <div className="group">
             <div className="wrapper">
               <label htmlFor="nickname">닉네임</label>
-              <button id="nick-check">중복확인</button>
+              <button id="nick-check" onClick={handleCheckNickname}>
+                중복확인
+              </button>
             </div>
             <input
               type="text"
               id="nickname"
-              onChange={event => setNickname(event.target.value)}
+              onChange={handleChangeNickame}
             ></input>
+            {nickname.length > 0 && (
+              <span className={`message ${isNickname ? 'success' : 'error'}`}>
+                {nicknameMessage}
+              </span>
+            )}
           </div>
           <div className="group">
             <label htmlFor="pw">비밀번호</label>
             <input
               type="password"
               id="pw"
-              onChange={event => setPassword(event.target.value)}
+              onChange={handleChangePassword}
             ></input>
+            {password.length > 0 && (
+              <span className={`message ${isPassword ? 'success' : 'error'}`}>
+                {passwordMessage}
+              </span>
+            )}
           </div>
           <div className="group">
             <label htmlFor="pw-check">비밀번호 확인</label>
             <input
               type="password"
               id="pw-check"
-              onChange={event => setPwcheck(event.target.value)}
+              onChange={handleChangePwCheck}
             ></input>
+            {pwcheck.length > 0 && (
+              <span className={`message ${isPwCheck ? 'success' : 'error'}`}>
+                {pwCheckMessage}
+              </span>
+            )}
           </div>
+          <button id="join" type="submit">
+            가입하기
+          </button>
         </form>
-        <button id="join" type="submit" onClick={handleClick}>
-          가입하기
-        </button>
       </SignUpBox>
     </Container>
   );
@@ -102,6 +201,22 @@ const SignUpBox = styled.section`
     display: flex;
     flex-direction: column;
     margin-bottom: 25px;
+    position: relative;
+    .message {
+      font-weight: 500;
+      font-size: 0.7rem;
+      line-height: 24px;
+      letter-spacing: -1px;
+      position: absolute;
+      bottom: -20px;
+      left: 0;
+      &.success {
+        color: #8f8c8b;
+      }
+      &.error {
+        color: #ff2727;
+      }
+    }
   }
   .wrapper {
     display: flex;
