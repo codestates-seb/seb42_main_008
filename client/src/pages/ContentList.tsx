@@ -3,6 +3,7 @@ import styled from 'styled-components';
 // import { ListData } from 'interfaces/ContentList.interface';
 import ListTitle from 'components/ContinentList/ListTitle';
 import ListSearch from 'components/ContinentList/ListSearch';
+import ListItems from 'components/ContinentList/ListItems';
 
 const ContentList = () => {
   // const [companions, setCompanions] = useState<ListData[] | []>([]);
@@ -11,6 +12,7 @@ const ContentList = () => {
     <Container>
       <ListTitle />
       <ListSearch />
+      <ListItems />
     </Container>
   );
 };
