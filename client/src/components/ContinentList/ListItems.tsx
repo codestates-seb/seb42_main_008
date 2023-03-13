@@ -27,6 +27,7 @@ const ItemListsContainer = styled.section`
   }
   @media screen and (max-width: 768px) {
     grid-template-columns: repeat(2, 1fr);
+    padding-top: 80px;
   }
   @media screen and (max-width: 576px) {
     grid-template-columns: repeat(1, 1fr);

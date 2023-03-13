@@ -71,6 +71,15 @@ const SearchBox = styled.section`
   display: flex;
   align-items: center;
   justify-content: space-evenly;
+
+  @media screen and (max-width: 768px) {
+    flex-direction: column;
+    height: fit-content;
+    padding: 10px 30px;
+    gap: 5px;
+    top: 34vh;
+    align-items: flex-start;
+  }
 `;
 
 const DateSearch = styled.div`
@@ -127,6 +136,19 @@ const KeywordSearch = styled.div`
     color: #fff;
     font-size: 1rem;
     font-weight: 800;
+    :focus {
+      outline: none;
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    width: 100%;
+  }
+  @media screen and (max-width: 576px) {
+    > select {
+      width: 70px;
+      font-size: 1rem;
+    }
   }
 `;
 
@@ -171,6 +193,10 @@ const SearchInput = styled.div`
       outline: none;
       box-shadow: 0px 0px 10px #fff;
     }
+  }
+
+  @media screen and (max-width: 576px) {
+    width: calc(100% - 80px);
   }
 `;
 
