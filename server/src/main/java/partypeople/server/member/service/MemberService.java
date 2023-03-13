@@ -35,6 +35,8 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 @Slf4j
 public class MemberService {
+
+    private final static Integer MEMBER_DEFUALT_SCORE = 50;
     private final CompanionRepository companionRepository;
     private final MemberRepository memberRepository;
 
@@ -164,6 +166,24 @@ public class MemberService {
         }
     }
 
+    public Long followerCount(Member member) {
+        return followRepository.countByFollowerMemberId(member.getMemberId());
+    }
+
+    public Long followingCount(Member member) {
+        return followRepository.countByFollowingMemberId(member.getMemberId());
+    }
+
+    public int scoreCal(Member member) {
+        try {
+            return MEMBER_DEFUALT_SCORE + reviewRepository.sumScoreByMemberId(member.getMemberId());
+        } catch (Exception e) { //점수조회 안될때 (리뷰 없을때)
+            return MEMBER_DEFUALT_SCORE;
+        }
+    }
+
+
+
     public String reissueAT(String refreshToken) {
         String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(jwtTokenizer.getSecretKey());
 
@@ -177,19 +197,7 @@ public class MemberService {
             } else {
                 Member findmember = findMember(value);
 
-                Map<String, Object> claims = new HashMap<>();
-                claims.put("memberId", findmember.getMemberId());
-                claims.put("email", findmember.getEmail());
-                claims.put("profile", findmember.getProfile());
-                claims.put("gender", findmember.getGender());
-                claims.put("memberStatus", findmember.getMemberStatus());
-                claims.put("roles", findmember.getRoles());
-
-                String subject = findmember.getEmail();
-
-                Date expirationAT = jwtTokenizer.getTokenExpiration(jwtTokenizer.getAccessTokenExpirationMinutes());
-
-                return jwtTokenizer.generateAccessToken(claims, subject, expirationAT, base64EncodedSecretKey);
+                return jwtTokenizer.delegateAccessToken(findmember);
             }
         } catch (SignatureException se) {
             throw new BusinessLogicException(ExceptionCode.SIGNATURE_ERROR);

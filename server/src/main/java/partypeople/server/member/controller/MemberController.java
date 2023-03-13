@@ -75,9 +75,9 @@ public class MemberController {
     public ResponseEntity getMember(@PathVariable("member-id") long memberId) {
         Member member = memberService.findMember(memberId);
         //service
-        member.setScore(50);
-        member.setFollowerCount(0);
-        member.setFollowingCount(0);
+        member.setScore(memberService.scoreCal(member));
+        member.setFollowerCount(Math.toIntExact(memberService.followerCount(member)));
+        member.setFollowingCount(Math.toIntExact(memberService.followingCount(member)));
 
         return ResponseEntity.ok(
                 new SingleResponseDto<>(memberMapper.membertoMemberResponse(member)));
