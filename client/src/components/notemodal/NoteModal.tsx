@@ -28,20 +28,6 @@ const NoteModal = ({ setNoteModal }: Props) => {
         </div>
         <ul className="notes">
           <Message />
-          <Message />
-          <Message />
-          <Message />
-          <Message />
-          <Message />
-          <Message />
-          <Message />
-          <Message />
-          <Message />
-          <Message />
-          <Message />
-          <Message />
-
-          <Message />
         </ul>
       </div>
     </SideBar>
@@ -75,6 +61,7 @@ const SideBar = styled.nav`
     width: auto;
     border-bottom: 1px solid #555555;
     height: 40px;
+    font-size: 20px;
 
     .outmodal {
       margin-right: 10px;

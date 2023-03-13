@@ -27,7 +27,7 @@ const ContinentSelect = () => {
   return (
     <Container>
       <Title>
-        <h1>파티 구할 대륙 선택하기</h1>
+        <h1>파티 구하러 가기</h1>
       </Title>
       <MapContainer>
         <MapChart handleMarkerClick={handleMarkerClick} />

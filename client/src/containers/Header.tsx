@@ -25,7 +25,6 @@ const Header = () => {
         </Link>
         <Link to="/continents">파티 구하기</Link>
         <button onClick={LoginHandler}>임시 로그인</button>
-        <Link to="/:continent">나라선택</Link>
       </div>
 
       {isLogin ? (
@@ -51,7 +50,9 @@ const Header = () => {
       )}
 
       {noteModal ? (
-        <NoteModal noteModal={noteModal} setNoteModal={setNoteModal} />
+        <div className="overlay">
+          <NoteModal noteModal={noteModal} setNoteModal={setNoteModal} />
+        </div>
       ) : null}
     </HeaderBox>
   );
@@ -71,6 +72,14 @@ const HeaderBox = styled.header`
   padding: 10px;
   position: fixed;
   z-index: 999;
+  .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
   a {
     display: flex;
     align-items: center;
