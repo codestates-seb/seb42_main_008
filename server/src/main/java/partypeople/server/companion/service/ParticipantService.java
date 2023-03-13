@@ -10,6 +10,8 @@ import partypeople.server.companion.repository.ParticipantRepository;
 import partypeople.server.member.entity.Member;
 import partypeople.server.member.service.MemberService;
 
+import java.util.List;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -30,6 +32,10 @@ public class ParticipantService {
         participant.setMember(member);
         participant.setCompanion(companion);
         return participantRepository.save(participant);
+    }
+
+    public List<Participant> getParticipants(Long companionId) {
+        return participantRepository.findByCompanionCompanionId(companionId);
     }
 
     public void deleteParticipant(Long memberId, Long companionId) {
