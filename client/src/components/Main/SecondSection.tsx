@@ -1,10 +1,17 @@
 import { useScroll } from 'hooks/useScroll';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import ImageFilter from './ImageFilter';
 import { SectionWrapper } from './SectionWrapper';
 
 const SecondSection = () => {
+  const navigate = useNavigate();
   const scrollY = useScroll();
+
+  const handleButtonClick = () => {
+    navigate('/signup');
+    // ! 로그인 구현될 경우 만약 로그인 되어있으면 파티 구하기 페이지로 navigate
+  };
 
   return (
     <SecondWrapper>
@@ -35,6 +42,12 @@ const SecondSection = () => {
           alt="party"
         />
       </ImageWrapper>
+      <JoinButton
+        className={scrollY > 200 ? 'showDesc' : 'notShowDesc'}
+        onClick={handleButtonClick}
+      >
+        함께하기
+      </JoinButton>
     </SecondWrapper>
   );
 };
@@ -44,7 +57,8 @@ const SecondWrapper = styled(SectionWrapper)`
   justify-content: flex-end;
   align-items: flex-end;
 
-  div {
+  div,
+  button {
     transition: 0.7s;
   }
 
@@ -213,6 +227,31 @@ const ImageWrapper = styled.div`
 
   @media screen and (max-width: 768px) {
     display: none;
+  }
+`;
+
+const JoinButton = styled.button`
+  position: absolute;
+  z-index: 5;
+  padding: 15px 30px;
+  bottom: 5%;
+  right: 3%;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: #fff;
+  font-weight: 800;
+  background-color: #feb35c;
+  border: none;
+
+  @media screen and (max-width: 992px) {
+    bottom: 15%;
+  }
+  @media screen and (max-width: 768px) {
+    bottom: 10%;
+    right: 5%;
+  }
+  @media screen and (max-width: 576px) {
+    font-size: 0.9rem;
   }
 `;
 
