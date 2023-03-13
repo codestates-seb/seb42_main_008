@@ -62,6 +62,12 @@ const FirstWrapper = styled(SectionWrapper)`
   justify-content: center;
   position: relative;
   overflow: hidden;
+
+  div {
+    width: 100%;
+    height: 100%;
+  }
+
   .slick-slider {
     width: 100%;
     overflow: hidden;
@@ -82,26 +88,23 @@ const FirstWrapper = styled(SectionWrapper)`
   .slick-dots li button:before {
     color: #fff;
   }
+
+  @media screen and (max-width: 992px) {
+    height: 70vh;
+  }
 `;
 
 const Filter = styled(ImageFilter)`
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  top: 0;
-  background-color: #000650;
-  opacity: 0.25;
   z-index: 2;
-  @media screen and (max-width: 1080px) {
-    height: calc(100% - 10px);
-  }
 `;
 
 const SlideContent = styled.div`
   width: 100%;
   max-height: calc(100vh - 60px);
   > img {
-    width: 100%;
+    width: 110%;
+    height: 100%;
+    object-fit: cover;
   }
 `;
 
