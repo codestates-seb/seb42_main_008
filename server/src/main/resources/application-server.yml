@@ -6,8 +6,10 @@ spring:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     properties:
       hibernate.default_batch_fetch_size: 500
+      jdbc:
+        time_zone: Asia/Seoul
   datasource:
-    url: jdbc:mysql://${DATABASE_URL}/pre_project?useSSL=false&characterEncoding=UTF-8&serverTimezone=UTC
+    url: jdbc:mysql://${DATABASE_URL}/pre_project?useSSL=false&characterEncoding=UTF-8&serverTimezone=UTC&useLegacyDatetimeCode=false
     username: ${DATABASE_USERNAME}
     password: ${DATABASE_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
