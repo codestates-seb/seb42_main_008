@@ -5,6 +5,7 @@ import 'slick-carousel/slick/slick-theme.css';
 import { SectionWrapper } from './SectionWrapper';
 import FirstTitle from './FirstTitle';
 import { useEffect, useState } from 'react';
+import ImageFilter from './ImageFilter';
 
 const FirstSection = () => {
   const [isShowButton, setIsShowButton] = useState(false);
@@ -30,7 +31,7 @@ const FirstSection = () => {
     <FirstWrapper>
       <FirstTitle />
       {isShowButton && <FirstButton>동행자 구하러 가기</FirstButton>}
-      <ImageFilter></ImageFilter>
+      <Filter></Filter>
       <Slider {...settings}>
         <SlideContent>
           <img
@@ -83,7 +84,7 @@ const FirstWrapper = styled(SectionWrapper)`
   }
 `;
 
-const ImageFilter = styled.div`
+const Filter = styled(ImageFilter)`
   width: 100%;
   height: 100%;
   position: absolute;
