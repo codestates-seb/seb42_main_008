@@ -1,4 +1,4 @@
-import NoteModal from 'components/notemodal/NoteModal';
+import NoteModal from 'components/NoteModal/NoteModal';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';

@@ -14,6 +14,7 @@ const CountrySelect = () => {
     code: string;
   };
   let countries: Countries[] = [];
+  //대륙별 고정 국가
   if (continent === 'europe') {
     title = 'Europe';
     titleImg =
