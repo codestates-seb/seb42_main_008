@@ -4,8 +4,13 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { SectionWrapper } from './SectionWrapper';
 import FirstTitle from './FirstTitle';
+import { useEffect, useState } from 'react';
+import ImageFilter from './ImageFilter';
+import { useNavigate } from 'react-router-dom';
 
 const FirstSection = () => {
+  const navigate = useNavigate();
+  const [isShowButton, setIsShowButton] = useState(false);
   const settings = {
     dots: true,
     infinite: true,
@@ -17,13 +22,26 @@ const FirstSection = () => {
     cssEase: 'linear',
     pauseOnFocus: true,
     pauseOnHover: true,
-    draggable: true,
+    draggable: false,
   };
+
+  const handleButtonClick = () => {
+    navigate('/continents');
+  };
+
+  useEffect(() => {
+    setTimeout(() => setIsShowButton(true), 5000);
+  }, []);
 
   return (
     <FirstWrapper>
       <FirstTitle />
-      <ImageFilter></ImageFilter>
+      {isShowButton && (
+        <FirstButton onClick={handleButtonClick}>
+          동행자 구하러 가기
+        </FirstButton>
+      )}
+      <Filter></Filter>
       <Slider {...settings}>
         <SlideContent>
           <img
@@ -54,6 +72,12 @@ const FirstWrapper = styled(SectionWrapper)`
   justify-content: center;
   position: relative;
   overflow: hidden;
+
+  div {
+    width: 100%;
+    height: 100%;
+  }
+
   .slick-slider {
     width: 100%;
     overflow: hidden;
@@ -66,31 +90,65 @@ const FirstWrapper = styled(SectionWrapper)`
     right: 20px;
     z-index: 3;
   }
-  ul {
+  .slick-dots {
     position: absolute;
     bottom: 30px;
     z-index: 3;
   }
+  .slick-dots li button:before {
+    color: #fff;
+  }
+
+  @media screen and (max-width: 992px) {
+    height: 80vh;
+  }
 `;
 
-const ImageFilter = styled.div`
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  top: 0;
-  background-color: #000650;
-  opacity: 0.25;
+const Filter = styled(ImageFilter)`
   z-index: 2;
-  @media screen and (max-width: 1080px) {
-    height: calc(100% - 10px);
-  }
 `;
 
 const SlideContent = styled.div`
   width: 100%;
   max-height: calc(100vh - 60px);
   > img {
-    width: 100%;
+    width: 110%;
+    height: 100%;
+    object-fit: cover;
+  }
+`;
+
+const FirstButton = styled.button`
+  position: absolute;
+  z-index: 5;
+  top: 60%;
+  padding: 15px 20px;
+  font-size: 1.2rem;
+  border-radius: 30px;
+  cursor: pointer;
+  color: #fff;
+  font-weight: 800;
+  background-color: #feb35c;
+  border: none;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+  animation: fadein 0.5s linear;
+
+  @keyframes fadein {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media screen and (max-width: 992px) {
+    font-size: 1rem;
+  }
+  @media screen and (max-width: 576px) {
+    font-size: 0.8rem;
   }
 `;
 

@@ -9,7 +9,6 @@ const FirstTitle = () => {
       setInnerWidth(window.innerWidth);
     };
     window.addEventListener('resize', resizeListener);
-    console.log('innerWidth', innerWidth);
   });
 
   return (
@@ -60,7 +59,9 @@ const FirstTitle = () => {
 const TitleWrapper = styled.div`
   position: absolute;
   z-index: 5;
-  /* transform: translate(-50%, -50%); */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -73,7 +74,7 @@ const TitleWrapper = styled.div`
     fill: transparent;
     stroke-dashoffset: 750;
     stroke-dasharray: 750;
-    animation: stroke 1s linear;
+    animation: stroke 0.5s linear;
     animation-fill-mode: forwards;
   }
 
