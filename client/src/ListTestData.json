@@ -26,7 +26,7 @@
       "lat": 123.45678,
       "lng": 123.12345,
       "tags": ["내향", "테마파크"],
-      "companionStatus": false
+      "companionStatus": true
     },
     {
       "companionId": 3,
@@ -40,7 +40,7 @@
       "lat": 123.45678,
       "lng": 123.12345,
       "tags": ["내향", "테마파크"],
-      "companionStatus": false
+      "companionStatus": true
     },
     {
       "companionId": 4,
@@ -82,7 +82,7 @@
       "lat": 123.45678,
       "lng": 123.12345,
       "tags": ["내향", "테마파크"],
-      "companionStatus": false
+      "companionStatus": true
     }
   ]
 }
