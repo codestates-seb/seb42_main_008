@@ -19,10 +19,13 @@ interface firstModal {
 }
 
 interface secondModal {
+  setFirstModal: (newValue: boolean) => void;
   setSecondModal: (newValue: boolean) => void;
 }
 
 interface thirdModal {
+  setFirstModal: (newValue: boolean) => void;
+  setSecondModal: (newValue: boolean) => void;
   setThirdModal: (newValue: boolean) => void;
 }
 
