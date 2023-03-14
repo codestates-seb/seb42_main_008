@@ -1,9 +1,21 @@
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 const SearchMap = () => {
+  // 지도 자동 렌더
+  useEffect(() => {
+    const navigationEntries = window.performance.getEntriesByType('navigation');
+    const isFirstLoad =
+      navigationEntries.length &&
+      (navigationEntries[0].name === 'navigation' ||
+        !navigationEntries[0].name);
+
+    if (isFirstLoad) {
+      window.location.reload();
+    }
+  }, []);
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [searchInput, setSearchInput] = useState<string>('');
   const [selectPlace, setSelectPlace] =
@@ -24,7 +36,7 @@ const SearchMap = () => {
   ) => {
     event.preventDefault();
 
-    const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${searchInput}&key=${googlekey}`;
+    const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${searchInput}&key=${process.env.REACT_APP_API_KEY}`;
     try {
       const response = await axios.get(url);
       const data = response.data;
