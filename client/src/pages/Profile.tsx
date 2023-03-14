@@ -44,16 +44,18 @@ const Profile = () => {
 
 const Container = styled.div`
   width: 80%;
-  border: 3px dotted pink;
   position: relative;
   color: #222;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `;
 
 const TestButton = styled.button`
   width: 100px;
   height: 50px;
   position: absolute;
-  top: 100px;
+  top: 50px;
   left: 100px;
   z-index: 10;
 `;
