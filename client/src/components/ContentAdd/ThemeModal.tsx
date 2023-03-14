@@ -1,65 +1,57 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
-import ThemeModal from './ThemeModal';
 
 type Props = {
   setIsTendencyModal: (newValue: boolean) => void;
+  setIsThemeModal: (newValue: boolean) => void;
 };
-const TendencyModal = ({ setIsTendencyModal }: Props) => {
-  const handleModalClose = () => {
-    setIsTendencyModal(false);
+const ThemeModal = ({ setIsTendencyModal, setIsThemeModal }: Props) => {
+  const handleTendencyOpen = () => {
+    setIsTendencyModal(true);
+    setIsThemeModal(false);
   };
 
-  const tendencies: string[] = [
-    '계획적',
-    '즉흥적',
-    '외국어 가능',
-    '음주 선호',
-    '여행 초보',
-    '여행 고수',
-    '드라이버',
-    '대중교통 선호',
-    '관광',
-    '휴양',
+  const themes: string[] = [
+    '맛집',
+    '명소',
+    '공연/전시',
+    '스포츠 경기',
+    '액티비티',
+    '쇼핑',
+    '힐링',
+    '사진',
+    '파티',
+    '기타',
   ];
 
-  // 성향을 2개 골라야 다음 모달로 넘어가도록
-  const [isThemeModal, setIsThemeModal] = useState(false);
-  const handleTendencySubmit = () => {
-    if (selectedTendencies.length >= 1) {
-      setIsThemeModal(!isThemeModal);
-    } else {
-      alert('하나 이상 선택해주세요!');
-    }
-  };
-
-  const [selectedTendencies, setSelectedTendencies] = useState<string[]>([]);
+  // 테마 담기 // 최대개수
+  const [selectedThemes, setSelectedThemes] = useState<string[]>([]);
   const handleCheckboxClick = (event: React.MouseEvent<HTMLInputElement>) => {
     const target = event.currentTarget;
     const option = target.value;
     if (target.checked) {
-      if (selectedTendencies.length < 2) {
-        setSelectedTendencies(item => [...item, option]);
+      if (selectedThemes.length < 3) {
+        setSelectedThemes(item => [...item, option]);
       } else {
         target.checked = false;
       }
     } else {
-      const index = selectedTendencies.indexOf(option);
+      const index = selectedThemes.indexOf(option);
       if (index !== -1) {
-        setSelectedTendencies(item => item.filter(thing => thing !== option));
+        setSelectedThemes(item => item.filter(thing => thing !== option));
       }
     }
   };
   return (
-    <TendencyBox>
-      <div className="tendency-box">
-        <div className="tendency-top">
-          <h3>원하는 성향을 선택하세요</h3>
-          <p>1~2개의 키워드를 선택해주세요</p>
+    <ThemeBox>
+      <div className="theme-box">
+        <div className="theme-top">
+          <h3>원하는 테마를 선택하세요</h3>
+          <p>1~3개의 키워드를 선택해주세요</p>
         </div>
-        <label>성향</label>
-        <TendencyContent>
-          {tendencies.map((theme: string) => (
+        <label>테마</label>
+        <ThemeContent>
+          {themes.map((theme: string) => (
             <li key={theme}>
               <label>
                 <input
@@ -71,32 +63,24 @@ const TendencyModal = ({ setIsTendencyModal }: Props) => {
               </label>
             </li>
           ))}
-        </TendencyContent>
-        <div className="selected-tendency">
-          {selectedTendencies.map((tendency, index) => (
-            <div key={index}>{tendency}</div>
+        </ThemeContent>
+        <div className="selected-theme">
+          {selectedThemes.map((theme, index) => (
+            <div key={index}>{theme}</div>
           ))}
         </div>
-        <div className="tendency-bottom">
-          <button onClick={handleModalClose}>이전</button>
-          <button onClick={handleTendencySubmit}>다음</button>
+        <div className="theme-bottom">
+          <button onClick={handleTendencyOpen}>이전</button>
+          <button>다음</button>
         </div>
       </div>
-      {isThemeModal ? (
-        <div className="overlay">
-          <ThemeModal
-            setIsTendencyModal={setIsTendencyModal}
-            setIsThemeModal={setIsThemeModal}
-          />
-        </div>
-      ) : null}
-    </TendencyBox>
+    </ThemeBox>
   );
 };
 
-export default TendencyModal;
+export default ThemeModal;
 
-const TendencyBox = styled.div`
+const ThemeBox = styled.div`
   display: flex;
   width: 550px;
   height: 800px;
@@ -108,15 +92,7 @@ const TendencyBox = styled.div`
   transform: translate(50%, -50%);
   flex-direction: column;
   font-size: 24px;
-  .overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-  }
-  .tendency-box {
+  .theme-box {
     padding: 40px;
     width: 100%;
     height: 100%;
@@ -125,7 +101,7 @@ const TendencyBox = styled.div`
       font-size: 1.7rem;
     }
   }
-  .tendency-top {
+  .theme-top {
     display: flex;
     width: 100%;
     flex-direction: column;
@@ -141,7 +117,7 @@ const TendencyBox = styled.div`
       font-size: 1rem;
     }
   }
-  .tendency-bottom {
+  .theme-bottom {
     display: flex;
     width: 100%;
     justify-content: space-around;
@@ -167,7 +143,7 @@ const TendencyBox = styled.div`
       cursor: pointer;
     }
   }
-  .selected-tendency {
+  .selected-theme {
     display: flex;
     width: 100%;
     justify-content: space-around;
@@ -176,7 +152,7 @@ const TendencyBox = styled.div`
       align-items: center;
       justify-content: center;
       border-radius: 10px;
-      width: 130px;
+      width: 100px;
       height: 30px;
       background-color: #5d62a0;
       color: white;
@@ -185,7 +161,7 @@ const TendencyBox = styled.div`
   }
 `;
 
-const TendencyContent = styled.ul`
+const ThemeContent = styled.ul`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-template-rows: repeat(2, 1fr);
