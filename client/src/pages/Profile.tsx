@@ -1,19 +1,17 @@
-import Battery1 from 'assets/icons/battery1.svg';
-import Battery2 from 'assets/icons/battery2.svg';
-import Battery3 from 'assets/icons/battery3.svg';
-import Battery4 from 'assets/icons/battery4.svg';
-import Battery5 from 'assets/icons/battery5.svg';
+import MemberInfo from 'components/Profile/MemberInfo';
+import styled from 'styled-components';
 
 const Profile = () => {
   return (
-    <div>
-      <img src={Battery1} alt="af" />
-      <img src={Battery2} alt="af" />
-      <img src={Battery3} alt="af" />
-      <img src={Battery4} alt="af" />
-      <img src={Battery5} alt="af" />
-    </div>
+    <Container>
+      <MemberInfo />
+    </Container>
   );
 };
 
+const Container = styled.div`
+  width: 80%;
+  border: 3px dotted pink;
+  padding: 20px;
+`;
 export default Profile;
