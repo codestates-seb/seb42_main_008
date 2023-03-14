@@ -31,4 +31,20 @@ interface CountryNames {
   ko: string;
 }
 
-export type { ListData, QueryString, CountryData, CountryNames };
+interface ListItemProps {
+  listData: ListData[];
+}
+
+interface SortBy {
+  value: string;
+  fieldName: string;
+}
+
+export type {
+  ListData,
+  QueryString,
+  CountryData,
+  CountryNames,
+  ListItemProps,
+  SortBy,
+};
