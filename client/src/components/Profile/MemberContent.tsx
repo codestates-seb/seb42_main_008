@@ -40,13 +40,12 @@ const MemberContent = ({ user }: MemberInfoProps) => {
       </Tabs>
       {currentTab === 0 && <MemberReviews />}
       {currentTab === 1 && <MemberCompanoins member={member} user={user} />}
-      {currentTab === 2 && <MemberSettings />}
+      {currentTab === 2 && <MemberSettings member={member} />}
     </Container>
   );
 };
 
 const Container = styled.section`
-  border: 2px solid red;
   width: calc(100% - 40px);
   margin: 20px;
   display: flex;

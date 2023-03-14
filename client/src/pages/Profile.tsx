@@ -33,12 +33,14 @@ const Profile = () => {
   };
 
   return (
-    <Container>
-      <TestButton onClick={handleTestButtonClick}>로그인 테스트</TestButton>
+    <>
       <BackGroundImage />
-      <MemberInfo user={user} />
-      <MemberContent user={user} />
-    </Container>
+      <Container>
+        <TestButton onClick={handleTestButtonClick}>로그인 테스트</TestButton>
+        <MemberInfo user={user} />
+        <MemberContent user={user} />
+      </Container>
+    </>
   );
 };
 
@@ -49,6 +51,9 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  @media screen and (max-width: 992px) {
+    width: 90%;
+  }
 `;
 
 const TestButton = styled.button`

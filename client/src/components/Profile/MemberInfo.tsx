@@ -96,10 +96,11 @@ const ImageWrapper = styled.section`
   flex-direction: column;
   align-items: center;
   gap: 15px;
+  padding-right: 10px;
 
   > img {
     border-radius: 50%;
-    width: 60%;
+    width: 80%;
   }
   .score {
     display: flex;

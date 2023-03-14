@@ -16,7 +16,7 @@ const BackGroundImage = () => {
 };
 
 const BgWrapper = styled.section`
-  width: 100vw;
+  width: 100%;
   height: 30vh;
   display: flex;
   align-items: center;
