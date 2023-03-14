@@ -19,7 +19,7 @@
       "lat": 3.141592,
       "lng": 3.141592,
       "date": "2023-03-14",
-      "companionStatus": true
+      "companionStatus": false
     },
     {
       "compainonId": 2,
@@ -27,7 +27,7 @@
       "lat": 3.141592,
       "lng": 3.141592,
       "date": "2023-03-14",
-      "companionStatus": true
+      "companionStatus": false
     },
     {
       "compainonId": 3,
@@ -35,7 +35,7 @@
       "lat": 3.141592,
       "lng": 3.141592,
       "date": "2023-03-14",
-      "companionStatus": true
+      "companionStatus": false
     },
     {
       "compainonId": 4,
@@ -51,7 +51,7 @@
       "lat": 3.141592,
       "lng": 3.141592,
       "date": "2023-03-14",
-      "companionStatus": true
+      "companionStatus": false
     },
     {
       "compainonId": 6,
