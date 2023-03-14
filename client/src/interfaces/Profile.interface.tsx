@@ -10,6 +10,7 @@ interface MemberProfile {
   followerCount: number;
   followingCount: number;
   memberStatus: string;
+  followerStatus: boolean;
 }
 
 // * 신청/참여/작성한 글
