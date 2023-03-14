@@ -9,17 +9,36 @@ import { FaMapMarkerAlt } from 'react-icons/fa';
 import { getDateString } from 'utils/getDateString';
 import ImageFilter from 'components/Main/ImageFilter';
 import { ListComponentProps } from 'interfaces/Profile.interface';
+import { useWindowSize } from 'hooks/useWindowSize';
+import { useEffect, useState } from 'react';
 
 const ListComponent = ({ datas, titleHead, titleBody }: ListComponentProps) => {
+  const [slidesCount, setSlidesCount] = useState<number>(4);
+  const { windowWidth } = useWindowSize();
   const settings = {
     dots: false,
     infinite: false,
-    slidesToShow: 4,
-    slidesToScroll: 2,
+    slidesToShow: slidesCount,
+    slidesToScroll: 1,
     autoplay: false,
     speed: 500,
     draggable: true,
   };
+
+  const handleSlidesCount = () => {
+    if (windowWidth < 576) {
+      return 1;
+    } else if (windowWidth < 768) {
+      return 2;
+    } else if (windowWidth < 1200) {
+      return 3;
+    }
+    return 4;
+  };
+
+  useEffect(() => {
+    setSlidesCount(handleSlidesCount());
+  }, [windowWidth]);
 
   return (
     <ListWrapper>
@@ -73,6 +92,7 @@ const ListWrapper = styled.section`
 `;
 
 const MemberListItem = styled(ListItem)`
+  width: 20px;
   height: 150px;
   padding-left: 0;
 
@@ -84,6 +104,16 @@ const MemberListItem = styled(ListItem)`
     transform: translateY(-3px);
     box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
   }
+
+  .slick-slide {
+    > div {
+      background-color: red;
+    }
+  }
+
+  @media screen and (max-width: 576px) {
+    height: 150px;
+  }
 `;
 
 const ItemAddress = styled(Address)`
@@ -92,6 +122,8 @@ const ItemAddress = styled(Address)`
 `;
 
 const Flag = styled.div<{ isDone: boolean }>`
+  width: 0px;
+  height: 0px;
   border-bottom: 35px solid transparent;
   border-top: 35px solid ${props => (props.isDone ? '#D9506A' : '#9BB76A')};
   border-left: 35px solid ${props => (props.isDone ? '#D9506A' : '#9BB76A')};

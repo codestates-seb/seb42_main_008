@@ -56,7 +56,7 @@ const MemberCompanoins = ({ member, user }: MemberCompanionsProps) => {
 
 const CompanoinsWrapper = styled.section`
   width: 100%;
-  padding: 20px;
+  padding: 20px 0;
   padding-top: 10px;
   display: flex;
   flex-direction: column;

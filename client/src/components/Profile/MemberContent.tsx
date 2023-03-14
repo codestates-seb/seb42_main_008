@@ -89,6 +89,12 @@ const Tabs = styled.ul`
       filter: brightness(1);
     }
   }
+
+  @media screen and (max-width: 576px) {
+    > li {
+      font-size: 0.8rem;
+    }
+  }
 `;
 
 export default MemberContent;
