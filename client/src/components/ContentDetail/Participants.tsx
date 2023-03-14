@@ -1,8 +1,9 @@
+import ReviewModal1 from 'components/ContentDetail/ReviewModal1';
 import { participantList } from 'interfaces/ContentDetail.interface';
+import { useState } from 'react';
 import styled from 'styled-components';
 
 const Companion = () => {
-  // const [currentTab, setCurrentTab] = useState(0);
   const companionTabs: participantList[] = [
     {
       tabName: '참여자',
@@ -25,6 +26,12 @@ const Companion = () => {
     },
   ];
 
+  // 리뷰 작성 모달
+  const [reviewModal, setReviewModal] = useState(false);
+  const handleModal = () => {
+    setReviewModal(!reviewModal);
+  };
+
   return (
     <Container>
       <TabBox>
@@ -36,13 +43,21 @@ const Companion = () => {
             <div className="companion-info">
               <span>{el.picture}</span>
               <span>{el.name}</span>
+              {/* 작성자ID === 현재 로그인ID ? 탭 안에 리뷰작성 버튼 : (여행 참여자ID === 현재 로그인ID ? : 리뷰작성 버튼 : null) */}
               <div className="btn-wrapper">
-                <button className="btn">리뷰 작성</button>
+                <button className="btn" onClick={handleModal}>
+                  리뷰
+                </button>
               </div>
             </div>
-            {/* 작성자ID === 현재 로그인ID ? 리뷰작성 버튼 : (여행 참여자ID === 현재 로그인ID ? : 리뷰작성 버튼 : null) */}
           </li>
         ))}
+        {reviewModal ? (
+          <ReviewModal1
+            reviewModal={reviewModal}
+            setReviewModal={setReviewModal}
+          />
+        ) : null}
       </Content>
     </Container>
   );
@@ -101,13 +116,12 @@ const Content = styled.ul`
     width: 100%;
     border: 1px solid #cccccc;
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    justify-content: space-between;
-    align-items: center;
     font-size: 1.2rem;
     padding: 5px;
     .companion-info {
       width: 50%;
+      /* grid-template-columns: 1fr 1fr 1fr; */
+      grid-template-columns: repeat(auto-fill, minmax(34%, auto));
     }
     .btn-wrapper {
       padding: 5px;
