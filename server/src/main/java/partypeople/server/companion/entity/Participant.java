@@ -1,12 +1,14 @@
 package partypeople.server.companion.entity;
 
 import lombok.Getter;
+import lombok.Setter;
 import partypeople.server.member.entity.Member;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
+@Setter
 public class Participant {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

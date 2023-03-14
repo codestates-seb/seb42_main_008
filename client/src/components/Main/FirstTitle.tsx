@@ -72,9 +72,9 @@ const TitleWrapper = styled.div`
     stroke-width: 3px;
     stroke: #fff;
     fill: transparent;
-    stroke-dashoffset: 750;
-    stroke-dasharray: 750;
-    animation: stroke 0.5s linear;
+    stroke-dashoffset: 600;
+    stroke-dasharray: 600;
+    animation: stroke 0.7s linear;
     animation-fill-mode: forwards;
   }
 
@@ -83,34 +83,34 @@ const TitleWrapper = styled.div`
       animation-delay: 0s;
     }
     :nth-child(2) {
-      animation-delay: 0.5s;
+      animation-delay: 0.3s;
     }
     :nth-child(3) {
-      animation-delay: 1s;
+      animation-delay: 0.6s;
     }
     :nth-child(4) {
-      animation-delay: 1.5s;
+      animation-delay: 0.9s;
     }
     :nth-child(5) {
-      animation-delay: 2s;
+      animation-delay: 1.2s;
     }
     :nth-child(6) {
-      animation-delay: 2.5s;
+      animation-delay: 1.5s;
     }
     :nth-child(7) {
-      animation-delay: 3s;
+      animation-delay: 1.8s;
     }
     :nth-child(8) {
-      animation-delay: 3.5s;
+      animation-delay: 2.1s;
     }
     :nth-child(9) {
-      animation-delay: 4s;
+      animation-delay: 2.4s;
     }
     :nth-child(10) {
-      animation-delay: 4.5s;
+      animation-delay: 2.7s;
     }
     :nth-child(11) {
-      animation-delay: 5s;
+      animation-delay: 3s;
     }
   }
 

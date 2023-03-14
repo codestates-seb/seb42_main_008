@@ -35,7 +35,7 @@ public class MessageController {
 
     @GetMapping("/{message-id}")
     public ResponseEntity getMessage(@PathVariable("message-id") Long messageId) {
-        Message message = messageService.getMessage(messageId);
+        Message message = messageService.findMessage(messageId);
 
         return ResponseEntity.ok(
             new SingleResponseDto<>(mapper.messageToMessageResponse(message))
@@ -44,7 +44,7 @@ public class MessageController {
 
     @GetMapping
     public ResponseEntity getMessages(@RequestParam("memberId") Long memberId) {
-        List<Message> messages = messageService.getMessages(memberId);
+        List<Message> messages = messageService.findMessages(memberId);
 
         return ResponseEntity.ok(
             new SingleResponseDto<>(mapper.messagesToMessageResponses(messages))

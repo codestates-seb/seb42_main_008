@@ -4,15 +4,19 @@ import styled from 'styled-components';
 import ListTitle from 'components/ContinentList/ListTitle';
 import ListSearch from 'components/ContinentList/ListSearch';
 import ListItems from 'components/ContinentList/ListItems';
+import listTestData from 'listTestData.json';
+// import axios from 'axios';
+// import { useParams } from 'react-router-dom';
 
 const ContentList = () => {
-  // const [companions, setCompanions] = useState<ListData[] | []>([]);
+  // const { countryCode } = useParams();
+  // const [datas, setDatas] = useState<ListData[] | []>([]);
 
   return (
     <Container>
       <ListTitle />
       <ListSearch />
-      <ListItems />
+      <ListItems listData={listTestData.jpn} />
     </Container>
   );
 };
