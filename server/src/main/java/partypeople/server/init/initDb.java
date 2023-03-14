@@ -1,6 +1,7 @@
 package partypeople.server.init;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,6 +10,7 @@ import partypeople.server.companion.entity.Companion;
 import partypeople.server.companion.mapper.CompanionMapper;
 import partypeople.server.companion.service.CompanionService;
 import partypeople.server.member.entity.Member;
+import partypeople.server.member.service.MemberService;
 import partypeople.server.nation.entity.Nation;
 import partypeople.server.tag.entity.Tag;
 import partypeople.server.tag.service.TagService;
@@ -19,16 +21,19 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Component
 @RequiredArgsConstructor
 public class initDb {
     private final InitService initService;
 
+    private final RedisTemplate<String, String> redisTemplate;
     @PostConstruct
     public void init() {
         initService.dbInit1();
         initService.dbInit2();
+//        redisTemplate.opsForValue().set("1","1",1L, TimeUnit.MILLISECONDS);
     }
 
     @Component

@@ -1,5 +1,6 @@
 package partypeople.server.member.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,6 +14,7 @@ import java.util.List;
 
 public class MemberDto {
     @Getter
+    @AllArgsConstructor
     public static class Post {
         @Email
         private String email;
@@ -33,6 +35,7 @@ public class MemberDto {
         private String nickname;
         private String content;
         private String password;
+        private String gender;
     }
 
     @Getter
@@ -51,6 +54,11 @@ public class MemberDto {
     public static class Nickname {
         @NotBlank
         private String nickname;
+    }
+
+    @Getter
+    public static class MemberId {
+        private Long memberId;
     }
 
     @Getter
@@ -75,6 +83,8 @@ public class MemberDto {
         private String memberStatus;
 
         private Integer score;
+
+        private Boolean followerStatus;
     }
 
 }
