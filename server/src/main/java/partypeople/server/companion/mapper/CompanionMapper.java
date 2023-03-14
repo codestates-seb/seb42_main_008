@@ -141,7 +141,7 @@ public interface CompanionMapper {
         return companionTags;
     }
 
-    CompanionDto.Response companionToCompanionResponse(Companion companion);
+    CompanionDto.ResponseMember companionToCompanionResponse(Companion companion);
 
-    List<CompanionDto.Response> companionsToCompanionResponses(List<Companion> companions);
+    List<CompanionDto.ResponseMember> companionsToCompanionResponseMembers(List<Companion> companions);
 }

@@ -29,7 +29,9 @@ import partypeople.server.utils.UriCreator;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import java.net.URI;
+import java.security.SecureRandom;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -43,7 +45,6 @@ public class MemberController {
     private final MemberService memberService;
     private final MemberMapper memberMapper;
     private final ReviewMapper reviewMapper;
-
     private final CompanionMapper companionMapper;
 
     @PostMapping("/logout")
@@ -103,26 +104,28 @@ public class MemberController {
 
     @GetMapping("/{member-id}/subscribers")
     public ResponseEntity getSubScriberList(@PathVariable("member-id") long memberId) {
-        //신청글 조회
-        //회원 정보 조회시 추가 API로 조회하는 본인(로그인 멤버)이 신청한리스트에 포함된 글 목록만 가져와야함.
-
+        List<Companion> findCompanions = memberService.findAllSubscriberById(memberId);
 
         return ResponseEntity.ok(
-        ).build();
+                new SingleResponseDto<>(companionMapper.companionsToCompanionResponseMembers(findCompanions))
+        );
     }
 
     @GetMapping("/{member-id}/participants")
     public ResponseEntity getParticipantList(@PathVariable("member-id") long memberId) {
         //글 들어오면 TODO..
+        List<Companion> findCompanions = memberService.findAllParticipantById(memberId);
+
         return ResponseEntity.ok(
-        ).build();
+                new SingleResponseDto<>(companionMapper.companionsToCompanionResponseMembers(findCompanions))
+        );
     }
 
     @GetMapping("/{member-id}/writers")
     public ResponseEntity getWriterList(@PathVariable("member-id") long memberId) {
         List<Companion> findCompanions = memberService.findAllWriterById(memberId);
         return ResponseEntity.ok(
-                new SingleResponseDto<>(companionMapper.companionsToCompanionResponses(findCompanions))
+                new SingleResponseDto<>(companionMapper.companionsToCompanionResponseMembers(findCompanions))
         );
     }
 
@@ -179,7 +182,7 @@ public class MemberController {
     @DeleteMapping("/{member-id}")
     public ResponseEntity deleteMember(@PathVariable("member-id") long memberId,
                                        @RequestBody MemberDto.Password password) {
-        memberService.deleteMember(memberId,password.getPassword());
+        memberService.deleteMember(memberId, password.getPassword());
         return ResponseEntity.noContent().build();
     }
 
@@ -189,7 +192,23 @@ public class MemberController {
         String reissueAT = memberService.reissueAT(refreshToken);
         //확인 후 유효기간 안이면 AccessToken 재발급 전송
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + reissueAT);;
+        headers.add("Authorization", "Bearer " + reissueAT);
+        ;
         return ResponseEntity.ok().headers(headers).body("reissueAT");
     }
+
+    @PostMapping("/reissuePassword/{member-id}")
+    public ResponseEntity reissuePassword(@PathVariable("member-id") long memberId) {
+        try {
+            memberService.reissuePassword(memberId);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
+
+        return ResponseEntity.ok().build();
+    }
+
+
+
 }

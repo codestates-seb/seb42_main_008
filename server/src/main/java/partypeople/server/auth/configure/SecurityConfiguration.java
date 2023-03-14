@@ -37,13 +37,12 @@ public class SecurityConfiguration {
 
     private final JwtTokenizer jwtTokenizer;
     private final CustomAuthorityUtils authorityUtils;
-
     private final RedisTemplate<String, String> redisTemplate;
 //    private final MemberService memberService;
 
 //    @Value("${spring.security.oauth2.client.registration.google.clientId}")
 //    private String clientId;
-
+//
 //    @Value("${spring.security.oauth2.client.registration.google.clientSecret}")
 //    private String clientSecret;
 

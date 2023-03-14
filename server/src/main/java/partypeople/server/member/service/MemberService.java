@@ -3,12 +3,17 @@ package partypeople.server.member.service;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.security.SignatureException;
 import lombok.RequiredArgsConstructor;
+
 import lombok.extern.slf4j.Slf4j;
-import org.apache.tomcat.util.http.parser.Authorization;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +32,7 @@ import partypeople.server.review.entity.Review;
 import partypeople.server.review.repository.ReviewRepository;
 import partypeople.server.utils.CustomBeanUtils;
 
+import java.security.SecureRandom;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -34,9 +40,11 @@ import java.util.concurrent.TimeUnit;
 @Transactional
 @RequiredArgsConstructor
 @Slf4j
+@EnableAsync
 public class MemberService {
 
     private final static Integer MEMBER_DEFUALT_SCORE = 50;
+
     private final CompanionRepository companionRepository;
     private final MemberRepository memberRepository;
 
@@ -48,6 +56,8 @@ public class MemberService {
     private final RedisTemplate<String, String> redisTemplate;
 
     private final ReviewRepository reviewRepository;
+
+    private final JavaMailSender javaMailSender;
 
 
     public Member createMember(Member member) {
@@ -182,8 +192,6 @@ public class MemberService {
         }
     }
 
-
-
     public String reissueAT(String refreshToken) {
         String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(jwtTokenizer.getSecretKey());
 
@@ -216,5 +224,51 @@ public class MemberService {
     public List<Companion> findAllWriterById(long memberId) {
         Member findMember = findVerifiedMemberById(memberId);
         return companionRepository.findAllByMemberMemberId(findMember.getMemberId());
+    }
+
+    public List<Companion> findAllSubscriberById(long memberId) {
+        Member findMember = findVerifiedMemberById(memberId);
+        return companionRepository.findBySubscribersMemberMemberId(findMember.getMemberId());
+    }
+
+    public List<Companion> findAllParticipantById(long memberId) {
+        Member findMember = findVerifiedMemberById(memberId);
+        return companionRepository.findByParticipantsMemberMemberId(findMember.getMemberId());
+    }
+
+    public void reissuePassword(Long memberId) {
+        Member findMember = findVerifiedMemberById(memberId);
+
+
+        String subject = "임시 비밀번호 발급";
+        String password = generateRandomPassword();
+        String body = "다음은 당신의 임시 비밀번호 입니다 ! : " + password;
+
+        findMember.setPassword(passwordEncoder.encode(password));
+
+        sendEmail(findMember.getEmail(),subject,body);
+    }
+
+    @Async
+    public void sendEmail(String email, String subject, String body) {
+        System.out.println("Execute method asynchronously. " + Thread.currentThread().getName());
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(email);
+        message.setFrom("PARTYPEOPLE@partypeople.co.kr");
+        message.setSubject(subject);
+        message.setText(body);
+        javaMailSender.send(message);
+    }
+    private String generateRandomPassword() {
+        String upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        String lower = upper.toLowerCase(Locale.ROOT);
+        String digits = "0123456789";
+        String alphanum = upper + lower + digits;
+        SecureRandom random = new SecureRandom();
+        char[] password = new char[8];
+        for (int i = 0; i < 8; i++) {
+            password[i] = alphanum.charAt(random.nextInt(alphanum.length()));
+        }
+        return new String(password);
     }
 }
