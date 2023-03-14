@@ -15,4 +15,7 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 
     @Query("SELECT SUM(score) FROM Review r WHERE r.reviewedMember.memberId = :memberId")
     int sumScoreByMemberId(@Param("memberId") Long memberId);
+
+    @EntityGraph(attributePaths = {"companion", "member"})
+    List<Review> findByCompanionCompanionIdAndMemberMemberId(Long companionId, Long memberId);
 }

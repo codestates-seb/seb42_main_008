@@ -83,4 +83,12 @@ public class CompanionController {
 
         return ResponseEntity.ok(new SingleResponseDto<>(mapper.companionsToContinentResponseDtos(companions)));
     }
+
+    @GetMapping("/{companion-id}/reviewers")
+    public ResponseEntity getReviewedMember(@PathVariable("companion-id") @Positive Long companionId,
+                                            @RequestParam("memberId") Long memberId) {
+        List<CompanionDto.ReviewedMember> members = companionService.findReviewedMember(companionId, memberId);
+
+        return ResponseEntity.ok(new SingleResponseDto<>(members));
+    }
 }

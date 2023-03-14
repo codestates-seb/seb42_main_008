@@ -6,6 +6,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import partypeople.server.companion.dto.CompanionDto;
 import partypeople.server.companion.entity.Companion;
 import partypeople.server.companion.repository.CompanionRepository;
 import partypeople.server.companion.repository.CompanionTagRepository;
@@ -15,8 +16,11 @@ import partypeople.server.member.entity.Member;
 import partypeople.server.member.service.MemberService;
 import partypeople.server.nation.entity.Nation;
 import partypeople.server.nation.service.NationService;
+import partypeople.server.review.entity.Review;
+import partypeople.server.review.service.ReviewService;
 import partypeople.server.utils.CustomBeanUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,6 +32,7 @@ public class CompanionService {
     private final CompanionTagRepository companionTagRepository;
     private final MemberService memberService;
     private final NationService nationService;
+    private final ReviewService reviewService;
     private final CustomBeanUtils<Companion> beanUtils;
 
     public Companion createCompanion(Companion companion) {
@@ -74,6 +79,20 @@ public class CompanionService {
     @Transactional(readOnly = true)
     public List<Companion> findCompanionsByContinent(int continent) {
         return companionRepository.findByNationContinent(continent);
+    }
+
+    @Transactional(readOnly = true)
+    public List<CompanionDto.ReviewedMember> findReviewedMember(Long companionId, Long memberId) {
+        List<Review> reviews = reviewService.getReviewsByCompanionIdAndMemberId(companionId, memberId);
+        List<CompanionDto.ReviewedMember> reviewedMembers = new ArrayList<>();
+
+        for (Review review : reviews) {
+            CompanionDto.ReviewedMember reviewedMember = new CompanionDto.ReviewedMember();
+            reviewedMember.setMemberId(review.getReviewedMember().getMemberId());
+            reviewedMembers.add(reviewedMember);
+        }
+
+        return reviewedMembers;
     }
 
     private Companion findVerifiedCompanionById(Long companionId) {
