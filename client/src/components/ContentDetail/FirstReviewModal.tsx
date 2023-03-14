@@ -63,7 +63,6 @@ const ModalView = styled.div`
   align-items: center;
   flex-direction: column;
   background-color: white;
-  position: fixed;
   top: 0;
   bottom: 0;
   left: 0;
