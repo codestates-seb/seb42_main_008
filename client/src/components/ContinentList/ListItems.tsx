@@ -91,7 +91,7 @@ const ItemListsContainer = styled.section`
   }
 `;
 
-const ListItem = styled.article`
+export const ListItem = styled.article`
   width: 100%;
   height: 250px;
   padding: 20px 20px;
@@ -125,11 +125,12 @@ const ListItem = styled.article`
   }
 `;
 
-const Address = styled.div`
+export const Address = styled.div`
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: flex-end;
+  text-align: right;
 
   > span {
     display: flex;
@@ -173,7 +174,7 @@ const Flag = styled.div<{ isDone: boolean }>`
   z-index: 2;
 `;
 
-const FlagText = styled.p`
+export const FlagText = styled.p`
   position: absolute;
   top: 20px;
   left: 10px;
