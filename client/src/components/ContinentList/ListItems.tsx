@@ -71,7 +71,7 @@ const ListItems = ({ listData }: ListItemProps) => {
 const ItemListsContainer = styled.section`
   width: 80%;
   height: fit-content;
-  padding: 20px;
+  padding: 50px 20px;
   padding-top: 110px;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
