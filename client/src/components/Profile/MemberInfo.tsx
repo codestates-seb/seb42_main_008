@@ -3,12 +3,12 @@ import styled from 'styled-components';
 import { TbGenderFemale, TbGenderMale, TbMail } from 'react-icons/tb';
 import { SlUserFollow, SlUserFollowing } from 'react-icons/sl';
 import memberData from 'profileTestData.json';
-import { MemberProfile } from 'interfaces/Profile.interface';
+import { MemberInfoProps, MemberProfile } from 'interfaces/Profile.interface';
 import { useState } from 'react';
 import { getScoreIcon } from 'utils/getScoreIcon';
 import { toast } from 'react-toastify';
 
-const MemberInfo = () => {
+const MemberInfo = ({ user }: MemberInfoProps) => {
   const member: MemberProfile = memberData.members;
   const [isFollow, setIsFollow] = useState<boolean>(member.followerStatus);
 
@@ -42,20 +42,22 @@ const MemberInfo = () => {
               )}
             </span>
           </div>
-          <div className="buttons">
-            <Button status={isFollow} onClick={handleFollowClick}>
-              {isFollow ? (
-                <SlUserFollowing size={21} />
-              ) : (
-                <SlUserFollow size={21} />
-              )}
-              {isFollow ? '팔로잉' : '팔로우'}
-            </Button>
-            <Button status={false}>
-              <TbMail size={24} />
-              쪽지 보내기
-            </Button>
-          </div>
+          {user.memberId === member.memberId && (
+            <div className="buttons">
+              <Button status={isFollow} onClick={handleFollowClick}>
+                {isFollow ? (
+                  <SlUserFollowing size={21} />
+                ) : (
+                  <SlUserFollow size={21} />
+                )}
+                {isFollow ? '팔로잉' : '팔로우'}
+              </Button>
+              <Button status={false}>
+                <TbMail size={24} />
+                쪽지 보내기
+              </Button>
+            </div>
+          )}
         </section>
         <section className="follows">
           <p>팔로워 {member.followerCount}</p>
