@@ -31,7 +31,7 @@ const MemberInfo = ({ user }: MemberInfoProps) => {
         </div>
       </ImageWrapper>
       <ContentWrapper>
-        <section className="nameAndButton">
+        <section className="name-and-button">
           <div className="nickname">
             <p>{member.nickname}</p>
             <span>
@@ -132,7 +132,7 @@ const ContentWrapper = styled.section`
     align-items: center;
     justify-content: center;
   }
-  .nameAndButton {
+  .name-and-button {
     display: flex;
     justify-content: flex-start;
     width: 100%;
@@ -170,7 +170,7 @@ const ContentWrapper = styled.section`
   @media screen and (max-width: 768px) {
     width: 100%;
     gap: 10px;
-    .nameAndButton {
+    .name-and-button {
       flex-direction: column;
       gap: 10px;
     }
