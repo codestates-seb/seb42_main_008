@@ -1,13 +1,30 @@
 import styled from 'styled-components';
+import { ListData } from 'interfaces/ContentList.interface';
+import { getDateString } from 'utils/getDateString';
 
-const ListItems = () => {
+interface Props {
+  listData: ListData[];
+}
+
+const ListItems = ({ listData }: Props) => {
+  console.log(listData);
   return (
     <ItemListsContainer>
-      <ListItem>item</ListItem>
-      <ListItem>item</ListItem>
-      <ListItem>item</ListItem>
-      <ListItem>item</ListItem>
-      <ListItem>item</ListItem>
+      {listData.map(item => (
+        <ListItem key={item.companionId}>
+          <h1>{getDateString(item.date).shortDateStr}</h1>
+          <div>
+            <span></span>
+            <p>{item.address}</p>
+          </div>
+          <p>{item.title}</p>
+          <ul>
+            {item.tags.map((tag, idx) => (
+              <li key={idx}>{tag}</li>
+            ))}
+          </ul>
+        </ListItem>
+      ))}
     </ItemListsContainer>
   );
 };
@@ -37,6 +54,7 @@ const ItemListsContainer = styled.section`
 const ListItem = styled.article`
   width: 100%;
   border: 2px solid red;
+  transition: 0.5s;
 `;
 
 export default ListItems;

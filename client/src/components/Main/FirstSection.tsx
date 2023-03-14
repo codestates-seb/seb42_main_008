@@ -30,7 +30,7 @@ const FirstSection = () => {
   };
 
   useEffect(() => {
-    setTimeout(() => setIsShowButton(true), 5000);
+    setTimeout(() => setIsShowButton(true), 3000);
   }, []);
 
   return (

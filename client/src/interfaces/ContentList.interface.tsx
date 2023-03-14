@@ -10,7 +10,7 @@ interface ListData {
   date: string;
   tags: string[];
   companionStatus: boolean;
-  score: number;
+  score?: number | null;
 }
 
 interface QueryString {
