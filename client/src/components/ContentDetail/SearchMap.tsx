@@ -1,4 +1,4 @@
-import { GoogleMap, LoadScript } from '@react-google-maps/api';
+import { GoogleMap, LoadScript, MarkerF } from '@react-google-maps/api';
 import { MdLocationOn } from 'react-icons/md';
 import styled from 'styled-components';
 
@@ -8,14 +8,12 @@ const SearchMap = () => {
   return (
     <MapContent>
       <LoadScript googleMapsApiKey={googleMapKey}>
-        <GoogleMap
-          mapContainerStyle={containerStyle}
-          center={center}
-          zoom={10}
-        ></GoogleMap>
+        <GoogleMap mapContainerStyle={containerStyle} center={center} zoom={10}>
+          <MarkerF position={center} />
+        </GoogleMap>
         <MapPlace>
           <LocationPin />
-          장소 위치 렌더링할 곳
+          장소 위치 렌더링될 곳
         </MapPlace>
       </LoadScript>
     </MapContent>
@@ -26,7 +24,7 @@ export default SearchMap;
 
 const containerStyle = {
   width: '100%',
-  height: '300px',
+  height: '350px',
 };
 
 const center = {
