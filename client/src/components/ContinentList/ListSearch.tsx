@@ -115,7 +115,7 @@ const DateSearch = styled.div`
 
 const Stroke = styled.div`
   width: 1px;
-  height: 80%;
+  height: 70%;
   background-color: #fff;
 `;
 
