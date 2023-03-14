@@ -96,16 +96,16 @@ const ImageWrapper = styled.section`
 
   > img {
     border-radius: 50%;
-    width: 70%;
+    width: 60%;
   }
   .score {
     display: flex;
     align-items: center;
     gap: 10px;
-    font-size: 1.3rem;
+    font-size: 1.2rem;
     font-weight: 800;
     > img {
-      width: 50px;
+      width: 40px;
     }
   }
 `;
@@ -115,32 +115,41 @@ const ContentWrapper = styled.section`
   width: 80%;
   display: flex;
   flex-direction: column;
+  gap: 15px;
 
-  .nameAndButton {
-    * {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+  * {
     display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .nameAndButton {
+    display: flex;
+    justify-content: flex-start;
     width: 100%;
     gap: 20px;
+    .nickname {
+      gap: 10px;
+      > p {
+        font-size: 1.4rem;
+        font-weight: 800;
+      }
+      > span {
+        background-color: #888;
+        border-radius: 50%;
+        color: #fff;
+        padding: 2px;
+      }
+    }
+    .buttons {
+      gap: 10px;
+    }
   }
-  .nickname {
-    gap: 10px;
+  .follows {
+    justify-content: flex-start;
+    gap: 20px;
     > p {
-      font-size: 1.4rem;
-      font-weight: 800;
+      cursor: pointer;
     }
-    > span {
-      background-color: #888;
-      border-radius: 50%;
-      color: #fff;
-      padding: 2px;
-    }
-  }
-  .buttons {
-    gap: 10px;
   }
 `;
 
