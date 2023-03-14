@@ -141,7 +141,6 @@ const ContentAdd = () => {
             className="title-input"
             onChange={event => setTitleInput(event.target.value)}
           ></input>
-          {titleInput}
         </div>
         <div className="add-set">
           <label>여행 날짜</label>
