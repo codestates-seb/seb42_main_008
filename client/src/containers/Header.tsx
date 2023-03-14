@@ -1,4 +1,4 @@
-import NoteModal from 'components/notemodal/NoteModal';
+import NoteModal from 'components/NoteModal/NoteModal';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
@@ -50,7 +50,9 @@ const Header = () => {
       )}
 
       {noteModal ? (
-        <NoteModal noteModal={noteModal} setNoteModal={setNoteModal} />
+        <div className="overlay">
+          <NoteModal noteModal={noteModal} setNoteModal={setNoteModal} />
+        </div>
       ) : null}
     </HeaderBox>
   );
@@ -70,6 +72,14 @@ const HeaderBox = styled.header`
   padding: 10px;
   position: fixed;
   z-index: 999;
+  .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
   a {
     display: flex;
     align-items: center;

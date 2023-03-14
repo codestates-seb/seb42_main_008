@@ -3,6 +3,7 @@ package partypeople.server.companion.dto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotBlank;
@@ -52,12 +53,71 @@ public class CompanionDto {
     }
 
     @Getter
-    @Builder
+    @Setter
+    public static class Patch {
+        private Long companionId;
+
+        private String title;
+
+        private String content;
+
+        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+        private LocalDate date;
+
+        private String address;
+
+        private Double lat;
+
+        private Double lng;
+
+        private String nationName;
+
+        private String nationCode;
+
+        @Positive
+        private Integer continent;
+
+        @Size(min = 2, max = 5)
+        private List<String> tags;
+    }
+
+    @Getter
+    @Setter
     public static class Response {
         private Long companionId;
+
+        private Long memberId;
+
+        private String nickname;
+
+        private Integer score;
+
+        private String title;
+
+        private String content;
+
+        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+        private LocalDate date;
+
         private String address;
-//        private Double lat;
-//        private Double lng;
+
+        private Double lat;
+
+        private Double lng;
+
+        private List<String> tags;
+
+        private boolean companionStatus;
+    }
+
+
+    @Getter
+    @Builder
+    public static class ResponseMember {
+        private Long companionId;
+        private String address;
+        private Double lat;
+        private Double lng;
         private LocalDate date;
         private boolean companionStatus;
     }

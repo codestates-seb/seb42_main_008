@@ -15,7 +15,7 @@ public enum ExceptionCode {
     EXPIRED_ERROR(401, "Token Expired Error"),
     ACCESS_TOKEN_ERROR(401, "AccessToken Error"),
     FOLLOW_ERROR(400,"Follower - Following SAME ERROR"),
-
+    COMPANION_NOT_FOUND(404, "Companion Not Found"),
     MESSAGE_NOT_FOUND(404, "Message Not Found");
 
 
