@@ -1,6 +1,7 @@
 package partypeople.server.companion.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -8,6 +9,7 @@ import partypeople.server.companion.dto.CompanionDto;
 import partypeople.server.companion.entity.Companion;
 import partypeople.server.companion.mapper.CompanionMapper;
 import partypeople.server.companion.service.CompanionService;
+import partypeople.server.dto.MultiResponseDto;
 import partypeople.server.dto.SingleResponseDto;
 import partypeople.server.tag.entity.Tag;
 import partypeople.server.tag.service.TagService;
@@ -59,5 +61,26 @@ public class CompanionController {
         Companion companion = companionService.findCompanion(companionId);
 
         return ResponseEntity.ok(new SingleResponseDto<>(mapper.companionToCompanionResponseDto(companion)));
+    }
+
+    @GetMapping("/nations")
+    public ResponseEntity getCompanionsByNation(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                                @RequestParam(value = "size", required = false, defaultValue = "10") int size,
+                                                @RequestParam(value = "sortDir", required = false, defaultValue = "DESC") String sortDir,
+                                                @RequestParam(value = "sortBy", required = false, defaultValue = "createdAt") String sortBy,
+                                                @RequestParam("nationCode") String nationCode) {
+        Page<Companion> companionPage = companionService.findCompanionsByNation(page - 1, size, sortDir, sortBy, nationCode);
+        List<Companion> companions = companionPage.getContent();
+
+        return ResponseEntity.ok(
+                new MultiResponseDto<>(mapper.companionsToCompanionResponseDtos(companions), companionPage)
+        );
+    }
+
+    @GetMapping("/continents")
+    public ResponseEntity getCountsOfCompanionsByContinent(@RequestParam("continent") int continent) {
+        List<Companion> companions = companionService.findCompanionsByContinent(continent);
+
+        return ResponseEntity.ok(new SingleResponseDto<>(mapper.companionsToContinentResponseDtos(companions)));
     }
 }
