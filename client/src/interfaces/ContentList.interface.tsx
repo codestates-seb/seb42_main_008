@@ -1,3 +1,4 @@
+// * 국가별 조회, 키워드검색 Response data
 interface ListData {
   companionId: number;
   memberId: number;
@@ -13,6 +14,7 @@ interface ListData {
   score?: number | null;
 }
 
+// * 국가별 조회시 필요한 Query String
 interface ListQueryString {
   page: number;
   size: number;
@@ -21,6 +23,7 @@ interface ListQueryString {
   nationCode: string;
 }
 
+// * 키워드 검색시 필요한 Query String
 interface SearchQueryString {
   page: number;
   size: number;
@@ -31,20 +34,24 @@ interface SearchQueryString {
   date?: string | Date;
 }
 
+// * 국가 정보
 interface CountryData {
   name: string;
   code: string;
 }
 
+// * 국가 이름
 interface CountryNames {
   en: string;
   ko: string;
 }
 
+// * ListItems 컴포넌트 Props data
 interface ListItemProps {
   listData: ListData[];
 }
 
+// * 정렬 기준
 interface SortBy {
   value: string;
   sortBy: string;
