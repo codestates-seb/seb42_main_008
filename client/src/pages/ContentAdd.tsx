@@ -6,6 +6,9 @@ import DatePicker, { registerLocale } from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import ko from 'date-fns/locale/ko';
 import CountrySelectModal from 'components/ContentAdd/CountrySelectModal';
+import SearchMap from 'components/ContentAdd/SearchMap';
+import TendencyModal from 'components/ContentAdd/TendencyModal';
+
 registerLocale('ko', ko);
 
 const ContentAdd = () => {
@@ -39,6 +42,39 @@ const ContentAdd = () => {
   };
   // 대륙 선택 옵션
   const [continentSelect, setContinentSelect] = useState('');
+  let title = '대륙을 선택하세요!';
+  let titleImg =
+    'https://cdn.pixabay.com/photo/2022/10/22/19/11/travel-7539914__480.jpg';
+  if (continentSelect === '유럽') {
+    title = 'Europe';
+    titleImg =
+      'https://cdn.pixabay.com/photo/2020/07/12/16/40/paris-5397889_1280.jpg';
+  } else if (continentSelect === '아프리카') {
+    title = 'Africa';
+    titleImg =
+      'https://cdn.pixabay.com/photo/2019/03/02/21/25/morocco-4030733_1280.jpg';
+  } else if (continentSelect === '아시아') {
+    title = 'Asia';
+    titleImg =
+      'https://cdn.pixabay.com/photo/2020/07/23/01/16/heritage-5430081_1280.jpg';
+  } else if (continentSelect === '북아메리카') {
+    title = 'North America';
+    titleImg =
+      'https://cdn.pixabay.com/photo/2020/06/08/20/58/nyc-5276112__480.jpg';
+  } else if (continentSelect === '남아메리카') {
+    title = 'South America';
+    titleImg =
+      'https://cdn.pixabay.com/photo/2019/02/06/00/06/peru-3978148_1280.jpg';
+  } else if (continentSelect === '오세아니아') {
+    title = 'Oceania';
+    titleImg =
+      'https://cdn.pixabay.com/photo/2019/05/15/18/22/sydney-4205646_1280.jpg';
+  } else if (continentSelect === '대륙선택') {
+    title = '대륙을 선택하세요!';
+    titleImg =
+      'https://cdn.pixabay.com/photo/2022/10/22/19/11/travel-7539914__480.jpg';
+  }
+
   // 국가 선택 모달
   const [countryModal, setCountryModal] = useState(false);
   const handleCountryModal = () => {
@@ -49,10 +85,31 @@ const ContentAdd = () => {
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
 
+  const [isTendencyModal, setIsTendencyModal] = useState(false);
+  // const [isThemeModal, setIsThemeModal] = useState(false);
+
+  const handleContentSubmit = () => {
+    if (!titleInput) {
+      alert('글 제목을 입력해주세요!');
+      return;
+    }
+    if (!contentInput.replace(/<\/?p>/gi, '')) {
+      alert('글 내용을 작성해주세요!');
+      return;
+    }
+    if (!startDate || !endDate) {
+      alert('날짜를 입력해주세요!');
+      return;
+    }
+    if (titleInput && contentInput && startDate && endDate) {
+      setIsTendencyModal(!isTendencyModal);
+    }
+  };
+
   return (
     <ContentAddContainer>
-      <TitleBox>
-        <h1>대륙</h1>
+      <TitleBox style={{ backgroundImage: `url(${titleImg})` }}>
+        <h1>{title}</h1>
         <p>동행자를 모집하는 글을 작성해보세요!</p>
       </TitleBox>
       <ContentBox>
@@ -63,7 +120,7 @@ const ContentAdd = () => {
               value={continentSelect}
               onChange={event => setContinentSelect(event.target.value)}
             >
-              <option value="">대륙선택</option>
+              <option value="대륙선택">대륙선택</option>
               <option value="유럽">유럽</option>
               <option value="아시아">아시아</option>
               <option value="북아메리카">북아메리카</option>
@@ -96,6 +153,7 @@ const ContentAdd = () => {
               startDate={startDate}
               endDate={endDate}
               placeholderText="Start Date"
+              dateFormat="yyyy-MM-dd"
             />
             ~
             <DatePicker
@@ -106,13 +164,13 @@ const ContentAdd = () => {
               endDate={endDate}
               minDate={startDate}
               placeholderText="End Date"
+              dateFormat="yyyy-MM-dd"
             />
           </div>
         </div>
         <div className="add-set">
           <label>여행 장소</label>
-          <input className="place-input"></input>
-          <div>지도</div>
+          <SearchMap />
         </div>
         <div className="add-set">
           <label>모집 내용</label>
@@ -123,13 +181,19 @@ const ContentAdd = () => {
               setContentInput(event);
             }}
           />
-          <div dangerouslySetInnerHTML={{ __html: contentInput }} />
         </div>
-        <button className="add-form">다음</button>
+        <button className="add-form" onClick={handleContentSubmit}>
+          다음
+        </button>
       </ContentBox>
       {countryModal ? (
         <div className="overlay">
           <CountrySelectModal setCountryModal={setCountryModal} />
+        </div>
+      ) : null}
+      {isTendencyModal ? (
+        <div className="overlay">
+          <TendencyModal setIsTendencyModal={setIsTendencyModal} />
         </div>
       ) : null}
     </ContentAddContainer>
@@ -161,7 +225,10 @@ const TitleBox = styled.div`
   justify-content: center;
   width: 100%;
   height: 300px;
-  background-color: aliceblue;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  color: white;
+  font-weight: bold;
   > h1 {
     font-size: 4rem;
   }
@@ -194,7 +261,7 @@ const ContentBox = styled.div`
     color: white;
     width: 200px;
     height: 36px;
-    font-size: 24px;
+    font-size: 1.5rem;
     border-radius: 30px;
   }
   .location-select {
@@ -202,7 +269,7 @@ const ContentBox = styled.div`
     padding: 20px;
     width: 100%;
     justify-content: space-between;
-    font-size: 24px;
+    font-size: 1.5rem;
     align-items: center;
     border-bottom: 1px solid #dddddd;
     > div {
@@ -225,7 +292,7 @@ const ContentBox = styled.div`
         height: 36px;
         background-color: #feb35c;
         border-radius: 30px;
-        font-size: 24px;
+        font-size: 1.5rem;
         color: white;
       }
     }
@@ -235,7 +302,7 @@ const ContentBox = styled.div`
       color: white;
       width: 96px;
       height: 36px;
-      font-size: 24px;
+      font-size: 1.5rem;
       border-radius: 30px;
       cursor: pointer;
     }
@@ -246,7 +313,7 @@ const ContentBox = styled.div`
     width: 100%;
     margin-top: 10px;
     margin-bottom: 10px;
-    font-size: 20px;
+    font-size: 1.3rem;
   }
   .ql-container {
     box-sizing: border-box;
@@ -282,21 +349,14 @@ const ContentBox = styled.div`
     height: 30px;
     padding-left: 10px;
   }
-  .place-input {
-    border-radius: 20px;
-    border: 1px solid #555555;
-    outline: none;
-    width: 100%;
-    height: 30px;
-    padding-left: 10px;
-  }
+
   .add-form {
     border: none;
     background-color: #feb35c;
     color: white;
     width: 96px;
     height: 36px;
-    font-size: 24px;
+    font-size: 1.5rem;
     border-radius: 30px;
     cursor: pointer;
   }
