@@ -9,7 +9,7 @@ import partypeople.server.member.entity.Member;
 import partypeople.server.nation.entity.Nation;
 import partypeople.server.tag.entity.Tag;
 
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring")
@@ -98,6 +98,32 @@ public interface CompanionMapper {
         response.setTags(tags);
 
         return response;
+    }
+
+    List<CompanionDto.Response> companionsToCompanionResponseDtos(List<Companion> companions);
+
+    default List<CompanionDto.ContinentResponse> companionsToContinentResponseDtos(List<Companion> companions) {
+        if ( companions == null ) {
+            return null;
+        }
+
+        List<CompanionDto.ContinentResponse> list = new ArrayList<>();
+        Set<String> nationCodeSet = new HashSet<>();
+
+        for (Companion companion : companions) {
+            nationCodeSet.add(companion.getNation().getCode());
+        }
+
+        for (String nationCode : nationCodeSet) {
+           CompanionDto.ContinentResponse response = new CompanionDto.ContinentResponse();
+           response.setNationCode(nationCode);
+            long count = companions.stream()
+                    .filter(c -> c.getNation().getCode().equals(nationCode)).count();
+            response.setCompanionsCount((int) count);
+            list.add(response);
+        }
+
+        return list;
     }
 
     default List<CompanionTag> tagsToCompanionTags(Companion companion, List<Tag> tags) {

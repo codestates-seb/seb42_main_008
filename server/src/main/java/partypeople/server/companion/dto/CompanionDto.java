@@ -109,4 +109,11 @@ public class CompanionDto {
         private boolean companionStatus;
     }
 
+    @Getter
+    @Setter
+    public static class ContinentResponse {
+        private String nationCode;
+
+        private Integer companionsCount;
+    }
 }
