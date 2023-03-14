@@ -84,7 +84,7 @@ const ItemListsContainer = styled.section`
   }
   @media screen and (max-width: 768px) {
     grid-template-columns: repeat(2, 1fr);
-    padding-top: 80px;
+    padding-top: 140px;
   }
   @media screen and (max-width: 576px) {
     grid-template-columns: repeat(1, 1fr);
@@ -212,6 +212,10 @@ const Sort = styled.div`
     border-radius: 20px;
     border: 1px solid #888;
     color: #444;
+  }
+
+  @media screen and (max-width: 768px) {
+    top: 85px;
   }
 `;
 
