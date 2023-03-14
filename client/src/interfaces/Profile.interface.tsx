@@ -55,8 +55,22 @@ interface FollowRequest {
   followingId: number;
 }
 
+// * MemberInfo 컴포넌트 props
 interface MemberInfoProps {
   user: LoginUser;
+}
+
+// * MemberCompanions 컴포넌트 props
+interface MemberCompanionsProps {
+  member: MemberProfile | null;
+  user: LoginUser;
+}
+
+// * MemberCompanions -> ListComponent 컴포넌트 props
+interface ListComponentProps {
+  datas: MyCompanion[] | [];
+  titleHead: string;
+  titleBody: string;
 }
 
 // ! 전역 유저 정보
@@ -78,5 +92,7 @@ export type {
   ProfileEdit,
   FollowRequest,
   MemberInfoProps,
+  MemberCompanionsProps,
+  ListComponentProps,
   LoginUser,
 };
