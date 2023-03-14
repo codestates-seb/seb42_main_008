@@ -10,13 +10,16 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.web.util.UriComponentsBuilder;
 import partypeople.server.message.dto.MessageDto;
 import partypeople.server.message.entity.Message;
 import partypeople.server.message.mapper.MessageMapper;
 import partypeople.server.message.service.MessageService;
 
+import java.net.URI;
+import java.time.LocalDateTime;
+
 import static org.hamcrest.Matchers.*;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -58,11 +61,33 @@ class MessageControllerTest {
         //then
         actions
             .andExpect(status().isCreated())
-            .andExpect(header().string("location", is(startsWith("/messages"))));
+            .andExpect(header().string("location", is(startsWith("/messages/"))));
     }
 
     @Test
-    void getMessage() {
+    void getMessageTest() throws Exception {
+        //given
+        long messageId = 1L;
+        MessageDto.Response response = new MessageDto.Response(1L,
+            "Message Test", 1L,
+            new MessageDto.Response.Sender(2L, "test"), LocalDateTime.now(), true);
+
+        given(messageService.findMessage(Mockito.anyLong())).willReturn(new Message());
+        given(mapper.messageToMessageResponse(Mockito.any(Message.class))).willReturn(response);
+        URI uri = UriComponentsBuilder.newInstance().path("/messages/{message-Id}").buildAndExpand(messageId).toUri();
+
+        //when
+        ResultActions actions = mockMvc.perform(
+            get(uri)
+                .accept(MediaType.APPLICATION_JSON));
+
+        //then
+        actions
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.data.content").value(response.getContent()))
+            .andExpect(jsonPath("$.data.companionId").value(response.getCompanionId()))
+            .andExpect(jsonPath("$.data.sender.id").value(2L))
+            .andExpect(jsonPath("$.data.read").value(true));
     }
 
     @Test

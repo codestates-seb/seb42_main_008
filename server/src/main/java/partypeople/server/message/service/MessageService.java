@@ -25,14 +25,14 @@ public class MessageService {
         return messageRepository.save(message);
     }
 
-    public Message getMessage(Long messageId) {
+    public Message findMessage(Long messageId) {
         Message findMessage = findVerifiedMessage(messageId);
         findMessage.checkMessage();
         return findMessage;
     }
 
     @Transactional(readOnly = true)
-    public List<Message> getMessages(Long memberId) {
+    public List<Message> findMessages(Long memberId) {
         return messageRepository.findByReceiverMemberId(memberId);
     }
 
