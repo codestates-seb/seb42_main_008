@@ -13,14 +13,12 @@ const MemberContent = ({ user }: MemberInfoProps) => {
 
   useEffect(() => {
     setMember(memberData.members);
-    if (member) {
-      setTabList(
-        user.memberId === member.memberId
-          ? ['평가 모아보기', `${member.nickname}의 동행글`, '계정 관리']
-          : ['평가 모아보기', '내 동행글']
-      );
-    }
-  });
+    setTabList(
+      user.memberId === member?.memberId
+        ? ['평가 모아보기', `내 동행글`, '계정 관리']
+        : ['평가 모아보기', `${member?.nickname}의 동행글`]
+    );
+  }, []);
 
   const handleTabClick = (idx: number) => {
     setCurrentTab(idx);
@@ -41,13 +39,13 @@ const MemberContent = ({ user }: MemberInfoProps) => {
         ))}
       </Tabs>
       {currentTab === 0 && <MemberReviews />}
-      {currentTab === 1 && <MemberCompanoins />}
+      {currentTab === 1 && <MemberCompanoins member={member} user={user} />}
       {currentTab === 2 && <MemberSettings />}
     </Container>
   );
 };
 
-const Container = styled.div`
+const Container = styled.section`
   border: 2px solid red;
   width: calc(100% - 40px);
   margin: 20px;

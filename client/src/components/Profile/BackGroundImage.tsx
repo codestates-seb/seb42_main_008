@@ -15,7 +15,7 @@ const BackGroundImage = () => {
   );
 };
 
-const BgWrapper = styled.div`
+const BgWrapper = styled.section`
   width: 100%;
   height: 30vh;
   display: flex;
