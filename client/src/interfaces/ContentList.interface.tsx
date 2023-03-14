@@ -32,6 +32,7 @@ interface SearchQueryString {
   condition: string;
   keyword: string;
   date?: string | Date;
+  nationCode: string;
 }
 
 // * 국가 정보
