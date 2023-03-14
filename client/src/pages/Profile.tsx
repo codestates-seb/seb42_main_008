@@ -1,9 +1,11 @@
+import BackGroundImage from 'components/Profile/BackGroundImage';
 import MemberInfo from 'components/Profile/MemberInfo';
 import styled from 'styled-components';
 
 const Profile = () => {
   return (
     <Container>
+      <BackGroundImage />
       <MemberInfo />
     </Container>
   );
@@ -12,6 +14,6 @@ const Profile = () => {
 const Container = styled.div`
   width: 80%;
   border: 3px dotted pink;
-  padding: 20px;
+  position: relative;
 `;
 export default Profile;
