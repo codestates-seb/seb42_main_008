@@ -73,6 +73,11 @@ interface ListComponentProps {
   titleBody: string;
 }
 
+// * MemberSettings 컴포넌트 props
+interface MemberSettingsProps {
+  member: MemberProfile | null;
+}
+
 // ! 전역 유저 정보
 interface LoginUser {
   memberId: number;
@@ -93,6 +98,7 @@ export type {
   FollowRequest,
   MemberInfoProps,
   MemberCompanionsProps,
+  MemberSettingsProps,
   ListComponentProps,
   LoginUser,
 };
