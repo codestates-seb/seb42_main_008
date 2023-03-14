@@ -103,7 +103,7 @@ public class MemberController {
     }
 
     @GetMapping("/{member-id}/subscribers")
-    public ResponseEntity getSubScriberList(@PathVariable("member-id") long memberId) {
+    public ResponseEntity getSubscriberList(@PathVariable("member-id") long memberId) {
         List<Companion> findCompanions = memberService.findAllSubscriberById(memberId);
 
         return ResponseEntity.ok(
@@ -113,7 +113,6 @@ public class MemberController {
 
     @GetMapping("/{member-id}/participants")
     public ResponseEntity getParticipantList(@PathVariable("member-id") long memberId) {
-        //글 들어오면 TODO..
         List<Companion> findCompanions = memberService.findAllParticipantById(memberId);
 
         return ResponseEntity.ok(
@@ -193,11 +192,11 @@ public class MemberController {
         //확인 후 유효기간 안이면 AccessToken 재발급 전송
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + reissueAT);
-        ;
+
         return ResponseEntity.ok().headers(headers).body("reissueAT");
     }
 
-    @PostMapping("/reissuePassword/{member-id}")
+    @PostMapping("/reissue-password/{member-id}")
     public ResponseEntity reissuePassword(@PathVariable("member-id") long memberId) {
         try {
             memberService.reissuePassword(memberId);
@@ -208,7 +207,4 @@ public class MemberController {
 
         return ResponseEntity.ok().build();
     }
-
-
-
 }

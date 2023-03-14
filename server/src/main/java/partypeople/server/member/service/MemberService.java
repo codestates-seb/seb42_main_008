@@ -239,7 +239,6 @@ public class MemberService {
     public void reissuePassword(Long memberId) {
         Member findMember = findVerifiedMemberById(memberId);
 
-
         String subject = "임시 비밀번호 발급";
         String password = generateRandomPassword();
         String body = "다음은 당신의 임시 비밀번호 입니다 ! : " + password;
@@ -252,6 +251,7 @@ public class MemberService {
     @Async
     public void sendEmail(String email, String subject, String body) {
         System.out.println("Execute method asynchronously. " + Thread.currentThread().getName());
+
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(email);
         message.setFrom("PARTYPEOPLE@partypeople.co.kr");

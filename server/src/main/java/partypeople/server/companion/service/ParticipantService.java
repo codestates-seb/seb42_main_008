@@ -41,10 +41,6 @@ public class ParticipantService {
         return participantRepository.findByCompanionCompanionId(companionId);
     }
 
-    public List<Participant> findParticipantsByMember(Long memberId) {
-        return participantRepository.findByMemberMemberId(memberId);
-    }
-
     @Transactional
     public void deleteParticipant(Long memberId, Long companionId) {
         Participant participant = findVerifiedParticipant(memberId, companionId);
