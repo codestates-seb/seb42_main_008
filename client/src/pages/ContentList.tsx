@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import ListTitle from 'components/ContinentList/ListTitle';
 import ListSearch from 'components/ContinentList/ListSearch';
 import ListItems from 'components/ContinentList/ListItems';
-import listTestData from 'listTestData.json';
+import listTestData from 'ListTestData.json';
 // import axios from 'axios';
 // import { useParams } from 'react-router-dom';
 
