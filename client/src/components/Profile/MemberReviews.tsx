@@ -2,10 +2,9 @@ import styled from 'styled-components';
 import { BsEmojiSmile, BsEmojiNeutral, BsEmojiFrown } from 'react-icons/bs';
 import { GiSiren } from 'react-icons/gi';
 import { Review } from 'interfaces/Profile.interface';
-
-interface ReviewProps {
-  reviews: Review[] | [];
-}
+import Swal from 'sweetalert2';
+import memberData from 'profileTestData.json';
+import { useEffect, useState } from 'react';
 
 interface EmojiProps {
   score: number;
@@ -20,8 +19,20 @@ const Emoji = ({ score }: EmojiProps) => {
   return <span>{<BsEmojiSmile size={25} color="#9BB76A" />}</span>;
 };
 
-const MemberReviews = ({ reviews }: ReviewProps) => {
-  console.log(reviews);
+const MemberReviews = () => {
+  const [reviews, setReviews] = useState<Review[] | []>([]);
+
+  const handleSirenClick = () => {
+    Swal.fire({
+      icon: 'info',
+      text: '신고 기능은 추후에 추가될 예정입니다!',
+    });
+  };
+
+  useEffect(() => {
+    setReviews(memberData.reviews);
+  }, []);
+
   return (
     <ReviewWrapper>
       {reviews.length !== 0 ? (
@@ -30,7 +41,7 @@ const MemberReviews = ({ reviews }: ReviewProps) => {
             <p>{item.content}</p>
             <div className="icons">
               <Emoji score={item.score} />
-              <span className="siren">
+              <span className="siren" onClick={handleSirenClick}>
                 <GiSiren size={27} color="red" />
               </span>
             </div>

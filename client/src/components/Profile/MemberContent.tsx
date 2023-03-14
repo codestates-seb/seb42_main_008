@@ -1,18 +1,26 @@
 import styled from 'styled-components';
 import { MemberInfoProps, MemberProfile } from 'interfaces/Profile.interface';
 import memberData from 'profileTestData.json';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import MemberReviews from './MemberReviews';
 import MemberCompanoins from './MemberCompanoins';
 import MemberSettings from './MemberSettings';
 
 const MemberContent = ({ user }: MemberInfoProps) => {
-  const member: MemberProfile = memberData.members;
+  const [member, setMember] = useState<MemberProfile | null>(null);
+  const [tabList, setTabList] = useState<string[]>([]);
   const [currentTab, setCurrentTab] = useState(0);
-  const tabList =
-    user.memberId === member.memberId
-      ? ['평가 모아보기', '참여한 글', '계정 관리']
-      : ['평가 모아보기', '참여한 글', '계정 관리'];
+
+  useEffect(() => {
+    setMember(memberData.members);
+    if (member) {
+      setTabList(
+        user.memberId === member.memberId
+          ? ['평가 모아보기', `${member.nickname}의 동행글`, '계정 관리']
+          : ['평가 모아보기', '내 동행글']
+      );
+    }
+  });
 
   const handleTabClick = (idx: number) => {
     setCurrentTab(idx);
@@ -32,7 +40,7 @@ const MemberContent = ({ user }: MemberInfoProps) => {
           </li>
         ))}
       </Tabs>
-      {currentTab === 0 && <MemberReviews reviews={memberData.reviews} />}
+      {currentTab === 0 && <MemberReviews />}
       {currentTab === 1 && <MemberCompanoins />}
       {currentTab === 2 && <MemberSettings />}
     </Container>
