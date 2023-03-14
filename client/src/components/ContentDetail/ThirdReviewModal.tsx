@@ -1,15 +1,38 @@
 import { thirdModal } from 'interfaces/ContentDetail.interface';
+import { CiFaceFrown, CiFaceMeh, CiFaceSmile } from 'react-icons/ci';
 import styled from 'styled-components';
 
-const ThirdReviewModal = ({ setThirdModal }: thirdModal) => {
+const ThirdReviewModal = ({
+  setFirstModal,
+  setSecondModal,
+  setThirdModal,
+}: thirdModal) => {
   const handleThirdModal = () => {
     setThirdModal(false);
+    setSecondModal(false);
+    setFirstModal(false);
   };
   return (
     <Container>
       <BackGround>
         <ModalView onClick={event => event.stopPropagation()}>
-          <button onClick={handleThirdModal}>눌러봐</button>
+          <Score>
+            <BtnWrapper>
+              <button>
+                <CiFaceSmile />
+              </button>
+              <button>
+                <CiFaceMeh />
+              </button>
+              <button>
+                <CiFaceFrown />
+              </button>
+            </BtnWrapper>
+            <ReviewForm onSubmit={handleThirdModal}>
+              <textarea placeholder="리뷰를 작성해주세요..!"></textarea>
+              <button>리뷰 작성</button>
+            </ReviewForm>
+          </Score>
         </ModalView>
       </BackGround>
     </Container>
@@ -26,7 +49,7 @@ const BackGround = styled.section`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.2);
   position: fixed;
   top: 0;
   bottom: 0;
@@ -35,10 +58,7 @@ const BackGround = styled.section`
   width: 100%;
   height: 100%;
 `;
-
-export const ModalView = styled.div.attrs(() => ({
-  role: 'dialog',
-}))`
+const ModalView = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -46,4 +66,51 @@ export const ModalView = styled.div.attrs(() => ({
   width: 50%;
   height: 30%;
   text-align: center;
+  border-radius: 30px;
+  box-shadow: 5px 5px 10px 5px rgba(0, 0, 0, 0.25);
+`;
+const Score = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+`;
+const BtnWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 10px;
+  height: 50%;
+  button {
+    width: 100%;
+    background-color: transparent;
+    border: none;
+    > * {
+      font-size: 1.5rem;
+      font-weight: bold;
+      &:active {
+        color: green;
+      }
+    }
+  }
+`;
+const ReviewForm = styled.form`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  > * {
+    width: 80%;
+    padding: 10px;
+  }
+  > button {
+    margin-top: 10px;
+    background: #feb35c;
+    color: white;
+    border: none;
+    border-radius: 15px;
+  }
 `;
