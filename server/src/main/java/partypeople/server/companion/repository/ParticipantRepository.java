@@ -13,6 +13,4 @@ public interface ParticipantRepository extends JpaRepository<Participant, Long> 
     @EntityGraph(attributePaths = {"member"})
     List<Participant> findByCompanionCompanionId(Long companionId);
 
-    @EntityGraph(attributePaths = {"companion"})
-    List<Participant> findByMemberMemberId(Long memberId);
 }

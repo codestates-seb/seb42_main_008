@@ -41,10 +41,6 @@ public class SubscriberService {
         return subscriberRepository.findByCompanionCompanionId(companionId);
     }
 
-    public List<Subscriber> findSubscribersByMember(Long memberId) {
-        return subscriberRepository.findByMemberMemberId(memberId);
-    }
-
     @Transactional
     public void deleteSubscriber(Long memberId, Long companionId) {
         Subscriber subscriber = findVerifiedSubscriber(memberId, companionId);

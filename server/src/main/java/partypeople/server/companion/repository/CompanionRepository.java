@@ -14,5 +14,10 @@ public interface CompanionRepository extends JpaRepository<Companion, Long> {
 
     @EntityGraph(attributePaths = "nation")
     List<Companion> findByNationContinent(int continent);
+
+    List<Companion> findAllByMemberMemberId(Long memberId); //작성자
+
+    List<Companion> findByParticipantsMemberMemberId(Long memberId); //참여자
+
+    List<Companion> findBySubscribersMemberMemberId(Long memberId); //신청자
 }
-    

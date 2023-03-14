@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import partypeople.server.audit.Auditable;
+import partypeople.server.companion.entity.Participant;
+import partypeople.server.companion.entity.Subscriber;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -51,6 +53,12 @@ public class Member extends Auditable {
 
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> roles = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)    //
+    private List<Participant> participants = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)    //
+    private List<Subscriber> subscribers = new ArrayList<>();
 
     public enum MemberStatus{
         MEMBER_ACTIVE("활동중"),

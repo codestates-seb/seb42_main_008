@@ -123,6 +123,9 @@ public class initDb {
             member.setEmail(email);
             member.setNickname(nickname);
             member.setPassword(passwordEncoder.encode(password));
+            List<String> roles = new ArrayList<>();
+            roles.add("USER");
+            member.setRoles(roles);
             return member;
         }
     }

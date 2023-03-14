@@ -13,6 +13,4 @@ public interface SubscriberRepository extends JpaRepository<Subscriber, Long> {
     @EntityGraph(attributePaths = {"member"})
     List<Subscriber> findByCompanionCompanionId(Long companionId);
 
-    @EntityGraph(attributePaths = {"companion"})
-    List<Subscriber> findByMemberMemberId(Long memberId);
 }
