@@ -55,6 +55,20 @@ interface FollowRequest {
   followingId: number;
 }
 
+interface MemberInfoProps {
+  user: LoginUser;
+}
+
+// ! 전역 유저 정보
+interface LoginUser {
+  memberId: number;
+  nickname: string;
+  email: string;
+  profile: string;
+  memberStatus: string;
+  gender: string;
+}
+
 export type {
   MemberProfile,
   MyCompanion,
@@ -63,4 +77,6 @@ export type {
   Nickname,
   ProfileEdit,
   FollowRequest,
+  MemberInfoProps,
+  LoginUser,
 };
