@@ -42,7 +42,7 @@ const MemberInfo = ({ user }: MemberInfoProps) => {
               )}
             </span>
           </div>
-          {user.memberId === member.memberId && (
+          {user.memberId !== member.memberId && (
             <div className="buttons">
               <Button status={isFollow} onClick={handleFollowClick}>
                 {isFollow ? (
