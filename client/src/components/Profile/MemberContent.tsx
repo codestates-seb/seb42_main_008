@@ -18,7 +18,7 @@ const MemberContent = ({ user }: MemberInfoProps) => {
         ? ['평가 모아보기', `내 동행글`, '계정 관리']
         : ['평가 모아보기', `${member?.nickname}의 동행글`]
     );
-  }, []);
+  }, [user]);
 
   const handleTabClick = (idx: number) => {
     setCurrentTab(idx);
