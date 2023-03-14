@@ -9,7 +9,7 @@ export const getDateString = (date: Date | string): DateStringObj => {
   const month = inputDate.getMonth() + 1;
   const day = inputDate.getDate();
 
-  const shortDateStr = `${month}-${day}`;
+  const shortDateStr = `${month}/${day}`;
   let fullDateStr;
   if (month < 10) {
     fullDateStr = `${year}-0${month}-${day}`;
