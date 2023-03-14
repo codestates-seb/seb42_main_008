@@ -9,4 +9,9 @@ interface profileList {
   name: string;
 }
 
-export type { contentsTab, profileList };
+interface participantList {
+  tabName: string;
+  content: profileList[];
+}
+
+export type { contentsTab, profileList, participantList };

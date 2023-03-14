@@ -1,13 +1,11 @@
-import { contentsTab } from 'interfaces/ContentDetail.interface';
-import { useState } from 'react';
+import { participantList } from 'interfaces/ContentDetail.interface';
 import styled from 'styled-components';
 
 const Companion = () => {
-  const [currentTab, setCurrentTab] = useState(0);
-
-  const companionTabs: contentsTab[] = [
+  // const [currentTab, setCurrentTab] = useState(0);
+  const companionTabs: participantList[] = [
     {
-      tabName: '신청자',
+      tabName: '참여자',
       content: [
         { picture: '사진', name: '윤두준' },
         { picture: '사진', name: '양요섭' },
@@ -25,44 +23,24 @@ const Companion = () => {
         { picture: '사진', name: '양요섭' },
       ],
     },
-    {
-      tabName: '참여자',
-      content: [
-        { picture: '사진', name: '이기광' },
-        { picture: '사진', name: '손동운' },
-      ],
-    },
   ];
-
-  const handleSelectTab = (index: number) => {
-    setCurrentTab(index);
-  };
 
   return (
     <Container>
       <TabBox>
-        {companionTabs.map((el: contentsTab, index: number) => (
-          <li
-            key={index}
-            className={`${currentTab === index ? `menu focused` : `menu`}`}
-            onClick={() => handleSelectTab(index)}
-          >
-            {el.tabName}
-          </li>
-        ))}
+        <li className="menu focused">참여자</li>
       </TabBox>
       <Content>
-        {companionTabs[currentTab].content.map((el, index) => (
+        {companionTabs[0].content.map((el, index) => (
           <li key={index}>
             <div className="companion-info">
               <span>{el.picture}</span>
               <span>{el.name}</span>
+              <div className="btn-wrapper">
+                <button className="btn">리뷰 작성</button>
+              </div>
             </div>
-            {/* 작성자ID === 현재 로그인ID ? 수락, 거절 버튼 : (신청자ID === 현재 로그인ID ? 취소 버튼 : null) */}
-            <div className="btn-wrapper">
-              <button className="btn">수락</button>
-              <button className="btn">거절</button>
-            </div>
+            {/* 작성자ID === 현재 로그인ID ? 리뷰작성 버튼 : (여행 참여자ID === 현재 로그인ID ? : 리뷰작성 버튼 : null) */}
           </li>
         ))}
       </Content>
@@ -94,7 +72,7 @@ const TabBox = styled.ul`
   width: 100%;
   cursor: pointer;
   > li {
-    width: 50%;
+    width: 100%;
     text-align: center;
   }
   .menu {
@@ -122,7 +100,8 @@ const Content = styled.ul`
   li {
     width: 100%;
     border: 1px solid #cccccc;
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
     justify-content: space-between;
     align-items: center;
     font-size: 1.2rem;
@@ -135,12 +114,6 @@ const Content = styled.ul`
       width: 50%;
       display: flex;
       justify-content: space-around;
-      > :nth-child(1) {
-        background-color: #81d05b;
-      }
-      > :nth-child(2) {
-        background-color: #ff624d;
-      }
       .btn {
         cursor: pointer;
         padding: 5px 10px;
@@ -148,6 +121,7 @@ const Content = styled.ul`
         color: white;
         border: none;
         border-radius: 15px;
+        background-color: #feb35c;
       }
     }
   }
