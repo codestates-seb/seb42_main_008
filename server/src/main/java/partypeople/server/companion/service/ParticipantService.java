@@ -37,11 +37,11 @@ public class ParticipantService {
         return participantRepository.save(participant);
     }
 
-    public List<Participant> getParticipantsByCompanion(Long companionId) {
+    public List<Participant> findParticipantsByCompanion(Long companionId) {
         return participantRepository.findByCompanionCompanionId(companionId);
     }
 
-    public List<Participant> getParticipantsByMember(Long memberId) {
+    public List<Participant> findParticipantsByMember(Long memberId) {
         return participantRepository.findByMemberMemberId(memberId);
     }
 
@@ -52,6 +52,8 @@ public class ParticipantService {
     }
 
     private Participant findVerifiedParticipant(Long memberId, Long companionId) {
+        memberService.findMember(memberId);
+        companionService.findCompanion(companionId);
         Optional<Participant> optionalParticipant = participantRepository.findByMemberMemberIdAndCompanionCompanionId(memberId, companionId);
         return optionalParticipant.orElseThrow(() -> new BusinessLogicException(ExceptionCode.PARTICIPANT_NOT_FOUND));
     }

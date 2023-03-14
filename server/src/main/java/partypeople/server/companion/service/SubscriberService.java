@@ -37,11 +37,11 @@ public class SubscriberService {
         return subscriberRepository.save(subscriber);
     }
 
-    public List<Subscriber> getSubscribersByCompanion(Long companionId) {
+    public List<Subscriber> findSubscribersByCompanion(Long companionId) {
         return subscriberRepository.findByCompanionCompanionId(companionId);
     }
 
-    public List<Subscriber> getSubscribersByMember(Long memberId) {
+    public List<Subscriber> findSubscribersByMember(Long memberId) {
         return subscriberRepository.findByMemberMemberId(memberId);
     }
 
@@ -52,6 +52,8 @@ public class SubscriberService {
     }
 
     private Subscriber findVerifiedSubscriber(Long memberId, Long companionId) {
+        memberService.findMember(memberId);
+        companionService.findCompanion(companionId);
         Optional<Subscriber> optionalSubscriber = subscriberRepository.findByMemberMemberIdAndCompanionCompanionId(memberId, companionId);
         return optionalSubscriber.orElseThrow(() -> new BusinessLogicException(ExceptionCode.SUBSCRIBER_NOT_FOUND));
     }

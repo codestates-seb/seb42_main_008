@@ -34,7 +34,7 @@ public class SubscriberController {
 
     @GetMapping
     public ResponseEntity getSubscribers(@PathVariable("companion-id") @Positive Long companionId) {
-        List<Subscriber> subscribers = subscriberService.getSubscribersByCompanion(companionId);
+        List<Subscriber> subscribers = subscriberService.findSubscribersByCompanion(companionId);
 
         return ResponseEntity.ok(
             new SingleResponseDto<>(mapper.subscribersToSubscriberResponses(subscribers))
