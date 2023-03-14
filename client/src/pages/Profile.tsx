@@ -1,4 +1,5 @@
 import BackGroundImage from 'components/Profile/BackGroundImage';
+import MemberContent from 'components/Profile/MemberContent';
 import MemberInfo from 'components/Profile/MemberInfo';
 import { LoginUser } from 'interfaces/Profile.interface';
 import { useState } from 'react';
@@ -36,6 +37,7 @@ const Profile = () => {
       <TestButton onClick={handleTestButtonClick}>로그인 테스트</TestButton>
       <BackGroundImage />
       <MemberInfo user={user} />
+      <MemberContent user={user} />
     </Container>
   );
 };
@@ -44,6 +46,7 @@ const Container = styled.div`
   width: 80%;
   border: 3px dotted pink;
   position: relative;
+  color: #222;
 `;
 
 const TestButton = styled.button`
