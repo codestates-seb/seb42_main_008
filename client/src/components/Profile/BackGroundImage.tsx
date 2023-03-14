@@ -17,11 +17,11 @@ const BackGroundImage = () => {
 
 const BgWrapper = styled.div`
   width: 100%;
-  height: 40vh;
+  height: 30vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  position: relative;
+  position: absolute;
   > img {
     width: 100%;
     height: 100%;

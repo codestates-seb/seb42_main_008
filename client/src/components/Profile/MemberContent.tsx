@@ -41,11 +41,11 @@ const MemberContent = ({ user }: MemberInfoProps) => {
 const Container = styled.div`
   border: 2px solid red;
   width: calc(100% - 40px);
-  padding-top: 90px;
   margin: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-top: 18vh;
 `;
 
 const Tabs = styled.ul`

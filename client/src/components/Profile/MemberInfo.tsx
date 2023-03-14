@@ -80,9 +80,11 @@ const InfoContainer = styled.article`
   padding: 20px;
   margin: 20px;
   background-color: rgba(255, 255, 255, 1);
-  position: absolute;
+  /* position: absolute; */
+  position: relative;
   z-index: 1;
-  top: 20vh;
+  /* bottom: 20vh; */
+  top: 15vh;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
 
   @media screen and (max-width: 768px) {
