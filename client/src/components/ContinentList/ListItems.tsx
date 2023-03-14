@@ -174,7 +174,7 @@ const Flag = styled.div<{ isDone: boolean }>`
   z-index: 2;
 `;
 
-const FlagText = styled.p`
+export const FlagText = styled.p`
   position: absolute;
   top: 20px;
   left: 10px;
