@@ -13,12 +13,22 @@ interface ListData {
   score?: number | null;
 }
 
-interface QueryString {
+interface ListQueryString {
   page: number;
   size: number;
   sortDir: string;
   sortBy: string;
   nationCode: string;
+}
+
+interface SearchQueryString {
+  page: number;
+  size: number;
+  sortDir: string;
+  sortBy: string;
+  condition: string;
+  keyword: string;
+  date?: string | Date;
 }
 
 interface CountryData {
@@ -37,12 +47,14 @@ interface ListItemProps {
 
 interface SortBy {
   value: string;
-  fieldName: string;
+  sortBy: string;
+  sortDir: string;
 }
 
 export type {
   ListData,
-  QueryString,
+  ListQueryString,
+  SearchQueryString,
   CountryData,
   CountryNames,
   ListItemProps,
