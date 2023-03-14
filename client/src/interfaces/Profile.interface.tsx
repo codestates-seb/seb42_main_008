@@ -28,4 +28,38 @@ interface Review {
   content: string;
 }
 
-export type { MemberProfile, MyCompanion, Review };
+// * 팔로워, 팔로잉
+interface Follow {
+  memberID: number;
+  profile: string;
+  nickname: string;
+}
+
+// * 닉네임 중복체크용 body 데이터
+interface Nickname {
+  nickname: string;
+}
+
+// * 프로필 수정 body 데이터
+interface ProfileEdit {
+  proflie?: string;
+  nickname?: string;
+  content?: string;
+  password: string;
+}
+
+// * 팔로워 등록/취소용 body 데이터
+interface FollowRequest {
+  followerId: number;
+  followingId: number;
+}
+
+export type {
+  MemberProfile,
+  MyCompanion,
+  Review,
+  Follow,
+  Nickname,
+  ProfileEdit,
+  FollowRequest,
+};
