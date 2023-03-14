@@ -1,6 +1,12 @@
 import styled from 'styled-components';
+import { ListData } from 'interfaces/ContentList.interface';
 
-const ListItems = () => {
+interface Props {
+  listData: ListData[];
+}
+
+const ListItems = ({ listData }: Props) => {
+  console.log(listData);
   return (
     <ItemListsContainer>
       <ListItem>item</ListItem>
@@ -37,6 +43,7 @@ const ItemListsContainer = styled.section`
 const ListItem = styled.article`
   width: 100%;
   border: 2px solid red;
+  transition: 0.5s;
 `;
 
 export default ListItems;
