@@ -1,29 +1,48 @@
 import styled from 'styled-components';
-import { ListData } from 'interfaces/ContentList.interface';
+import { ListItemProps, SortBy } from 'interfaces/ContentList.interface';
 import { getDateString } from 'utils/getDateString';
+import { useNavigate } from 'react-router-dom';
+import { FaMapMarkerAlt } from 'react-icons/fa';
 
-interface Props {
-  listData: ListData[];
-}
+const ListItems = ({ listData }: ListItemProps) => {
+  const navigate = useNavigate();
 
-const ListItems = ({ listData }: Props) => {
-  console.log(listData);
+  const handleClickItem = (id: number) => {
+    navigate(`./${id}`);
+  };
+
   return (
     <ItemListsContainer>
+      <Sort>
+        <label htmlFor="sort">정렬 </label>
+        <select id="sort">
+          <option></option>
+        </select>
+      </Sort>
       {listData.map(item => (
-        <ListItem key={item.companionId}>
-          <h1>{getDateString(item.date).shortDateStr}</h1>
-          <div>
-            <span></span>
-            <p>{item.address}</p>
-          </div>
-          <p>{item.title}</p>
-          <ul>
-            {item.tags.map((tag, idx) => (
-              <li key={idx}>{tag}</li>
-            ))}
-          </ul>
-        </ListItem>
+        <>
+          <ListItem
+            key={item.companionId}
+            onClick={() => handleClickItem(item.companionId)}
+          >
+            <h1>{getDateString(item.date).shortDateStr}</h1>
+            <Address>
+              <span>
+                <FaMapMarkerAlt size={25} />
+              </span>
+              <p>{item.address}</p>
+            </Address>
+            <h2>{item.title}</h2>
+            <TagsList>
+              {item.tags.map((tag, idx) => (
+                <Tag key={idx}>{tag}</Tag>
+              ))}
+            </TagsList>
+            <Flag isDone={item.companionStatus}></Flag>
+            <FlagText>{item.companionStatus ? '모집완료' : '모집중'}</FlagText>
+            {item.companionStatus && <DoneItem></DoneItem>}
+          </ListItem>
+        </>
       ))}
     </ItemListsContainer>
   );
@@ -31,13 +50,14 @@ const ListItems = ({ listData }: Props) => {
 
 const ItemListsContainer = styled.section`
   width: 80%;
-  border: 3px dotted pink;
   height: fit-content;
   padding: 20px;
-  padding-top: 50px;
+  padding-top: 110px;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 30px;
+  color: #222;
+  position: relative;
 
   @media screen and (max-width: 992px) {
     grid-template-columns: repeat(3, 1fr);
@@ -53,8 +73,121 @@ const ItemListsContainer = styled.section`
 
 const ListItem = styled.article`
   width: 100%;
-  border: 2px solid red;
+  height: 250px;
+  padding: 20px 20px;
+  background-color: #f2f2f4;
+  border-radius: 10px;
+  box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: space-between;
+  position: relative;
   transition: 0.5s;
+  overflow: hidden;
+  cursor: pointer;
+
+  > h1 {
+    font-size: 2.3rem;
+  }
+  > h2 {
+    width: 100%;
+    font-size: 1.1rem;
+  }
+
+  :hover {
+    transform: scale(1.05);
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+  }
+
+  @media screen and (max-width: 576px) {
+    height: 200px;
+  }
+`;
+
+const Address = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  > span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 7px;
+  }
+  > p {
+    font-weight: 600;
+  }
+`;
+
+const TagsList = styled.ul`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 3px;
+`;
+
+const Tag = styled.li`
+  height: 20px;
+  font-size: 0.8rem;
+  background-color: #5d62a0;
+  border-radius: 10px;
+  color: #fff;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const Flag = styled.div<{ isDone: boolean }>`
+  border-bottom: 45px solid transparent;
+  border-top: 45px solid ${props => (props.isDone ? '#D9506A' : '#9BB76A')};
+  border-left: 45px solid ${props => (props.isDone ? '#D9506A' : '#9BB76A')};
+  border-right: 45px solid transparent;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+`;
+
+const FlagText = styled.p`
+  position: absolute;
+  top: 20px;
+  left: 10px;
+  color: #fff;
+  font-weight: 800;
+  -webkit-transform: rotate(-45deg);
+  -moz-transform: rotate(-45deg);
+  z-index: 3;
+`;
+
+const DoneItem = styled.div`
+  background-color: black;
+  opacity: 0.2;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+`;
+
+const Sort = styled.div`
+  position: absolute;
+  top: 55px;
+  right: 30px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  > select {
+    :focus {
+      outline: none;
+    }
+  }
 `;
 
 export default ListItems;
