@@ -1,5 +1,6 @@
-import Companion from 'components/ContentDetail/Companion';
+// import Companion from 'components/ContentDetail/Companion';
 import ContentWriter from 'components/ContentDetail/ContentWriter';
+import Participants from 'components/ContentDetail/Participants';
 import SearchMap from 'components/ContentDetail/SearchMap';
 
 import styled from 'styled-components';
@@ -59,7 +60,9 @@ const ContentDetail = () => {
         </LeftBox>
         <RightBox>
           <ContentWriter />
-          <Companion />
+          {/* 여행완료 ? Participants : Companion */}
+          {/* <Companion /> */}
+          <Participants />
         </RightBox>
       </ContentDetailBox>
     </Container>
@@ -161,5 +164,5 @@ const RightBox = styled.section`
 2. 지도 API
 3. 태그 리스트 불러오기
 4. 반응형
-5. 스크롤
+5. 스크롤 * 
 */
