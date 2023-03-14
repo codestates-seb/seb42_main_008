@@ -62,9 +62,8 @@ const ModalView = styled.div`
   align-items: center;
   flex-direction: column;
   background-color: white;
-  position: fixed;
   width: 50%;
-  height: 30%;
+  height: 40%;
   text-align: center;
   border-radius: 30px;
   padding: 30px;

@@ -64,7 +64,7 @@ const ModalView = styled.div`
   align-items: center;
   background-color: white;
   width: 50%;
-  height: 30%;
+  height: 40%;
   text-align: center;
   border-radius: 30px;
   box-shadow: 5px 5px 10px 5px rgba(0, 0, 0, 0.25);
@@ -114,3 +114,9 @@ const ReviewForm = styled.form`
     border-radius: 15px;
   }
 `;
+
+/* TODO:
+1. 모달 디자인 *
+2. 이모지 버튼 클릭 시 색깔 유지 
+3. submit 눌렀을 시 기능 추가 
+*/
