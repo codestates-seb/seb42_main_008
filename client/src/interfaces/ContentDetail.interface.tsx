@@ -14,9 +14,23 @@ interface participantList {
   content: profileList[];
 }
 
-interface modalProps {
-  reviewModal: boolean;
-  setReviewModal: (newValue: boolean) => void;
+interface firstModal {
+  setFirstModal: (newValue: boolean) => void;
 }
 
-export type { contentsTab, profileList, participantList, modalProps };
+interface secondModal {
+  setSecondModal: (newValue: boolean) => void;
+}
+
+interface thirdModal {
+  setThirdModal: (newValue: boolean) => void;
+}
+
+export type {
+  contentsTab,
+  profileList,
+  participantList,
+  firstModal,
+  secondModal,
+  thirdModal,
+};

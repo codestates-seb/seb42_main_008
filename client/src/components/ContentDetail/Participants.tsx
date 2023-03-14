@@ -1,4 +1,4 @@
-import ReviewModal1 from 'components/ContentDetail/ReviewModal1';
+import FirstReviewModal from 'components/ContentDetail/FirstReviewModal';
 import { participantList } from 'interfaces/ContentDetail.interface';
 import { useState } from 'react';
 import styled from 'styled-components';
@@ -27,9 +27,9 @@ const Companion = () => {
   ];
 
   // 리뷰 작성 모달
-  const [reviewModal, setReviewModal] = useState(false);
-  const handleModal = () => {
-    setReviewModal(!reviewModal);
+  const [firstModal, setFirstModal] = useState<boolean>(false);
+  const handleFirstModal = () => {
+    setFirstModal(!firstModal);
   };
 
   return (
@@ -41,23 +41,18 @@ const Companion = () => {
         {companionTabs[0].content.map((el, index) => (
           <li key={index}>
             <div className="companion-info">
-              <span>{el.picture}</span>
-              <span>{el.name}</span>
+              <div>{el.picture}</div>
+              <div>{el.name}</div>
               {/* 작성자ID === 현재 로그인ID ? 탭 안에 리뷰작성 버튼 : (여행 참여자ID === 현재 로그인ID ? : 리뷰작성 버튼 : null) */}
               <div className="btn-wrapper">
-                <button className="btn" onClick={handleModal}>
+                <button className="btn" onClick={handleFirstModal}>
                   리뷰
                 </button>
               </div>
             </div>
           </li>
         ))}
-        {reviewModal ? (
-          <ReviewModal1
-            reviewModal={reviewModal}
-            setReviewModal={setReviewModal}
-          />
-        ) : null}
+        {firstModal ? <FirstReviewModal setFirstModal={setFirstModal} /> : null}
       </Content>
     </Container>
   );
@@ -67,7 +62,6 @@ export default Companion;
 
 const Container = styled.section`
   display: flex;
-  /* justify-content: center; */
   align-items: center;
   flex-direction: column;
   padding: 10px;
@@ -104,28 +98,29 @@ const Content = styled.ul`
   list-style: none;
   width: 100%;
   height: 100%;
-  display: flex;
-  justify-content: flex-start;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  justify-items: center;
   align-items: center;
-  flex-direction: column;
   overflow: scroll;
   ::-webkit-scrollbar {
     display: none;
   }
   li {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 100%;
     border: 1px solid #cccccc;
-    display: grid;
     font-size: 1.2rem;
     padding: 5px;
     .companion-info {
       width: 50%;
-      /* grid-template-columns: 1fr 1fr 1fr; */
-      grid-template-columns: repeat(auto-fill, minmax(34%, auto));
+      text-align: center;
     }
     .btn-wrapper {
       padding: 5px;
-      width: 50%;
       display: flex;
       justify-content: space-around;
       .btn {
