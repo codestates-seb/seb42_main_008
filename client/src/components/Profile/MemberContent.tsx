@@ -17,6 +17,7 @@ const MemberContent = ({ user }: MemberInfoProps) => {
   const handleTabClick = (idx: number) => {
     setCurrentTab(idx);
   };
+
   return (
     <Container>
       <Tabs>
