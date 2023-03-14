@@ -5,7 +5,6 @@ import {
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import memberData from 'profileTestData.json';
-
 import ListComponent from './ListComponent';
 
 const MemberCompanoins = ({ member, user }: MemberCompanionsProps) => {
