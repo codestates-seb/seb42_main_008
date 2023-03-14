@@ -31,7 +31,7 @@ const MemberContent = ({ user }: MemberInfoProps) => {
           </li>
         ))}
       </Tabs>
-      {currentTab === 0 && <MemberReviews />}
+      {currentTab === 0 && <MemberReviews reviews={memberData.reviews} />}
       {currentTab === 1 && <MemberCompanoins />}
       {currentTab === 2 && <MemberSettings />}
     </Container>
