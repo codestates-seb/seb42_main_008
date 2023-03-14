@@ -1,0 +1,95 @@
+{
+  "members": {
+    "memberId": 1,
+    "email": "user@user.com",
+    "nickname": "De Bruyne",
+    "profile": "https://user-images.githubusercontent.com/6022883/45476027-e45c1a80-b778-11e8-9716-4e39c6d6e58e.png",
+    "content": "안녕하세요? 안녕하세요? 안녕하세요? 안녕하세요? 안녕하세요? 안녕하세요? ",
+    "gender": "male",
+    "score": 76,
+    "followerCount": 2,
+    "followingCount": 30,
+    "memberStatus": "..?"
+  },
+  "companions": [
+    {
+      "compainonId": 1,
+      "address": "Manchester, Etihad Stadium",
+      "lat": 3.141592,
+      "lng": 3.141592,
+      "date": "2023-03-14",
+      "companionStatus": true
+    },
+    {
+      "compainonId": 2,
+      "address": "Manchester, Etihad Stadium",
+      "lat": 3.141592,
+      "lng": 3.141592,
+      "date": "2023-03-14",
+      "companionStatus": true
+    },
+    {
+      "compainonId": 3,
+      "address": "Manchester, Etihad Stadium",
+      "lat": 3.141592,
+      "lng": 3.141592,
+      "date": "2023-03-14",
+      "companionStatus": true
+    },
+    {
+      "compainonId": 4,
+      "address": "Manchester, Etihad Stadium",
+      "lat": 3.141592,
+      "lng": 3.141592,
+      "date": "2023-03-14",
+      "companionStatus": true
+    },
+    {
+      "compainonId": 5,
+      "address": "Manchester, Etihad Stadium",
+      "lat": 3.141592,
+      "lng": 3.141592,
+      "date": "2023-03-14",
+      "companionStatus": true
+    },
+    {
+      "compainonId": 6,
+      "address": "Manchester, Etihad Stadium",
+      "lat": 3.141592,
+      "lng": 3.141592,
+      "date": "2023-03-14",
+      "companionStatus": true
+    }
+  ],
+  "follows": [
+    {
+      "memberID": 343,
+      "profile": "https://user-images.githubusercontent.com/6022883/45476027-e45c1a80-b778-11e8-9716-4e39c6d6e58e.png",
+      "nickname": "Foden"
+    },
+    {
+      "memberID": 313,
+      "profile": "https://user-images.githubusercontent.com/6022883/45476027-e45c1a80-b778-11e8-9716-4e39c6d6e58e.png",
+      "nickname": "테스트유저인디"
+    },
+    {
+      "memberID": 113,
+      "profile": "https://user-images.githubusercontent.com/6022883/45476027-e45c1a80-b778-11e8-9716-4e39c6d6e58e.png",
+      "nickname": "테스트유저인디"
+    }
+  ],
+  "reviews": [
+    {
+      "score": -1,
+      "content": "지각 좀 하지 말아주세요ㅠ"
+    },
+    {
+      "score": 0,
+      "content": "그냥 그랬습니다 그냥 그랬습니다 그냥 그랬습니다 그냥 그랬습니다"
+    },
+    {
+      "score": 1,
+      "content": "재미있었어요 !!!!재미있었어요 !!!!재미있었어요 !!!!"
+    }
+  ]
+}
