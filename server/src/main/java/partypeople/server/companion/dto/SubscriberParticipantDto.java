@@ -8,7 +8,6 @@ import javax.validation.constraints.Positive;
 
 public class SubscriberParticipantDto {
     @Getter
-    @AllArgsConstructor
     public static class Request {
         @Positive
         private Long memberId;
