@@ -22,6 +22,7 @@ const MemberSettings = ({ member }: MemberSettingsProps) => {
         <TextEdit setMemberData={setMemberData} member={member} />
       </EditWrapper>
       <SubmitButton>수정하기</SubmitButton>
+      <AccountDelete>회원탈퇴하기</AccountDelete>
     </SettingsWrapper>
   );
 };
@@ -31,6 +32,7 @@ const SettingsWrapper = styled.section`
   display: flex;
   flex-direction: column;
   align-items: center;
+  position: relative;
 `;
 
 const EditWrapper = styled.div`
@@ -102,6 +104,18 @@ const SubmitButton = styled.div`
     color: #222;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
     transition: 0.3s;
+  }
+`;
+
+const AccountDelete = styled.div`
+  position: absolute;
+  bottom: 40px;
+  right: 40px;
+  color: #888;
+  font-size: 0.9rem;
+  cursor: pointer;
+  :hover {
+    filter: brightness(0.8);
   }
 `;
 
