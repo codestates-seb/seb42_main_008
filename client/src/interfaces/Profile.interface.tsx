@@ -59,6 +59,7 @@ interface FollowRequest {
 // * MemberInfo 컴포넌트 props
 interface MemberInfoProps {
   user: LoginUser;
+  member: MemberProfile | null;
 }
 
 // * MemberCompanions 컴포넌트 props
