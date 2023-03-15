@@ -1,7 +1,6 @@
 // import Companion from 'components/ContentDetail/Companion';
 import ContentWriter from 'components/ContentDetail/ContentWriter';
 import Participants from 'components/ContentDetail/Participants';
-import SearchMap from 'components/ContentDetail/SearchMap';
 
 import styled from 'styled-components';
 
@@ -18,7 +17,7 @@ const ContentDetail = () => {
           <div className="bottom-box">
             <h2>하이라이트 응원하러 가실 분 구합니다!!</h2>
             <h4>작성날짜 : 2023/03/09</h4>
-            <SearchMap />
+            {/* <SearchMap /> */}
             <div id="content">
               하이라이트 최고입니다 나도 하이라이트랑 여행가고 싶어요 수료하고
               나면 여행갈거임하이라이트 최고입니다 나도 하이라이트랑 여행가고
