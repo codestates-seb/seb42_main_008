@@ -14,7 +14,7 @@ const ListItems = ({ listData }: ListItemProps) => {
   });
 
   const handleClickItem = (id: number) => {
-    navigate(`./${id}`);
+    navigate(`/companions/${id}`);
   };
 
   const sortByArr: SortBy[] = [

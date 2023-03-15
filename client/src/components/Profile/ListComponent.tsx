@@ -11,8 +11,10 @@ import ImageFilter from 'components/Main/ImageFilter';
 import { ListComponentProps } from 'interfaces/Profile.interface';
 import { useWindowSize } from 'hooks/useWindowSize';
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const ListComponent = ({ datas, titleHead, titleBody }: ListComponentProps) => {
+  const navigate = useNavigate();
   const [slidesCount, setSlidesCount] = useState<number>(4);
   const { windowWidth } = useWindowSize();
   const settings = {
@@ -23,6 +25,10 @@ const ListComponent = ({ datas, titleHead, titleBody }: ListComponentProps) => {
     autoplay: false,
     speed: 500,
     draggable: true,
+  };
+
+  const handleClickItem = (id: number) => {
+    navigate(`/companions/${id}`);
   };
 
   const handleSlidesCount = () => {
@@ -45,7 +51,10 @@ const ListComponent = ({ datas, titleHead, titleBody }: ListComponentProps) => {
       <h1>{titleHead + titleBody}동행</h1>
       <Slider {...settings}>
         {datas.map(item => (
-          <MemberListItem key={item.compainonId}>
+          <MemberListItem
+            key={item.compainonId}
+            onClick={() => handleClickItem(item.compainonId)}
+          >
             {item.companionStatus && <DoneItem></DoneItem>}
             <h1>{getDateString(item.date).shortDateStr}</h1>
             <ItemAddress>
