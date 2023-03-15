@@ -1,6 +1,8 @@
 import { thirdModal } from 'interfaces/ContentDetail.interface';
+import { useState } from 'react';
 import { CiFaceFrown, CiFaceMeh, CiFaceSmile } from 'react-icons/ci';
 import styled from 'styled-components';
+import Swal from 'sweetalert2';
 
 const ThirdReviewModal = ({
   setFirstModal,
@@ -12,19 +14,68 @@ const ThirdReviewModal = ({
     setSecondModal(false);
     setFirstModal(false);
   };
+
+  const [good, setGood] = useState<boolean>(false);
+  const [soso, setSoso] = useState<boolean>(false);
+  const [bad, setBad] = useState<boolean>(false);
+
+  // 1점
+  const handleGood = () => {
+    setGood(!good);
+  };
+  // 0점
+  const handleSoso = () => {
+    setSoso(!soso);
+  };
+  // -1점
+  const handleBad = () => {
+    setBad(!bad);
+  };
+
+  if (good && soso && bad) {
+    Swal.fire({
+      icon: 'error',
+      title: '하나만 선택해주세요',
+    });
+  } else if (good && soso) {
+    Swal.fire({
+      icon: 'error',
+      title: '하나만 선택해주세요',
+    });
+  } else if (good && bad) {
+    Swal.fire({
+      icon: 'error',
+      title: '하나만 선택해주세요',
+    });
+  } else if (soso && bad) {
+    Swal.fire({
+      icon: 'error',
+      title: '하나만 선택해주세요',
+    });
+  }
+
   return (
     <Container>
       <BackGround>
         <ModalView onClick={event => event.stopPropagation()}>
           <Score>
             <BtnWrapper>
-              <button>
+              <button
+                className={'btn-good' + (good ? ' good' : '')}
+                onClick={handleGood}
+              >
                 <CiFaceSmile />
               </button>
-              <button>
+              <button
+                className={'btn-soso' + (soso ? ' soso' : '')}
+                onClick={handleSoso}
+              >
                 <CiFaceMeh />
               </button>
-              <button>
+              <button
+                className={'btn-bad' + (bad ? ' bad' : '')}
+                onClick={handleBad}
+              >
                 <CiFaceFrown />
               </button>
             </BtnWrapper>
@@ -117,11 +168,17 @@ const BtnWrapper = styled.div`
     background-color: transparent;
     border: none;
     > * {
-      font-size: 1.5rem;
-      font-weight: bold;
-      &:active {
-        color: green;
-      }
+      font-size: 2.5rem;
+      font-weight: 800;
+    }
+    &.good {
+      color: green;
+    }
+    &.soso {
+      color: #feb35c;
+    }
+    &.bad {
+      color: red;
     }
   }
 `;
@@ -146,6 +203,6 @@ const ReviewForm = styled.form`
 
 /* TODO:
 1. 모달 디자인 *
-2. 이모지 버튼 클릭 시 색깔 유지 
+2. 이모지 버튼 클릭 시 색깔 유지 *
 3. submit 눌렀을 시 기능 추가 
 */
