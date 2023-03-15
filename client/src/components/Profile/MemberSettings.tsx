@@ -1,28 +1,39 @@
-import { MemberSettingsProps } from 'interfaces/Profile.interface';
-// import { useState } from 'react';
+import { MemberSettingsProps, ProfileEdit } from 'interfaces/Profile.interface';
+import { useState } from 'react';
 import styled from 'styled-components';
 import TextEdit from './TextEdit';
 
 const MemberSettings = ({ member }: MemberSettingsProps) => {
-  // const [memberData, setMemberData] = useState({});
+  const [memberData, setMemberData] = useState<ProfileEdit | any>({});
+  console.log(memberData);
   return (
     <SettingsWrapper>
-      <ImageUpload>
-        <div
-          className="uploaded-img"
-          style={{ backgroundImage: `url(${member?.profile})` }}
-        ></div>
-        <UploadButton>
-          <label htmlFor="file-input">사진 선택</label>
-          <input type="file" id="file-input" />
-        </UploadButton>
-      </ImageUpload>
-      <TextEdit />
+      <EditWrapper>
+        <ImageUpload>
+          <div
+            className="uploaded-img"
+            style={{ backgroundImage: `url(${member?.profile})` }}
+          ></div>
+          <UploadButton>
+            <label htmlFor="file-input">사진 선택</label>
+            <input type="file" id="file-input" />
+          </UploadButton>
+        </ImageUpload>
+        <TextEdit setMemberData={setMemberData} member={member} />
+      </EditWrapper>
+      <SubmitButton>수정하기</SubmitButton>
     </SettingsWrapper>
   );
 };
 
 const SettingsWrapper = styled.section`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const EditWrapper = styled.div`
   width: 100%;
   padding: 20px;
   padding-top: 10px;
@@ -69,6 +80,28 @@ const UploadButton = styled.div`
   }
   > input {
     display: none;
+  }
+`;
+
+const SubmitButton = styled.div`
+  padding: 10px 20px;
+  background-color: #feb35c;
+  color: #fff;
+  border-radius: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  margin-bottom: 30px;
+  transition: 0.3s;
+  cursor: pointer;
+
+  :hover,
+  :active {
+    background-color: #fff;
+    color: #222;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+    transition: 0.3s;
   }
 `;
 
