@@ -31,10 +31,7 @@ const App = () => {
           <Route path="/continents" element={<ContinentSelect />} />
           <Route path="/:continent" element={<CountrySelect />} />
           <Route path="/:continent/:countryCode" element={<ContentList />} />
-          <Route
-            path="/:continent/:countryCode/:contentId"
-            element={<ContentDetail />}
-          />
+          <Route path="/companions/:contentId" element={<ContentDetail />} />
           <Route path="/add" element={<ContentAdd />} />
           <Route path="/:contentId/edit" element={<ContentEdit />} />
           <Route path="/:memberId/profile" element={<Profile />} />

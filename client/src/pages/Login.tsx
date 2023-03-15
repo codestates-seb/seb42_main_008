@@ -39,10 +39,9 @@ const Login = () => {
 
 export default Login;
 
-const Container = styled.div`
+const Container = styled.main`
   background-color: #f6f6f6;
   width: 100vw;
-  height: calc(100vh - 60px);
   display: flex;
   align-items: center;
   justify-content: center;
