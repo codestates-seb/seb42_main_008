@@ -256,6 +256,21 @@ const CountryListContainer = styled.div`
     font-weight: bold;
     > h1 {
       font-size: 4rem;
+      @media screen and (max-width: 768px) {
+        font-size: 3rem;
+      }
+      @media screen and (max-width: 576px) {
+        font-size: 2rem;
+      }
+    }
+    > p {
+      font-size: 1rem;
+      @media screen and (max-width: 768px) {
+        font-size: 0.8rem;
+      }
+      @media screen and (max-width: 576px) {
+        font-size: 0.6rem;
+      }
     }
   }
   .list-top {
@@ -269,6 +284,13 @@ const CountryListContainer = styled.div`
     z-index: 500;
     width: 80%;
     padding: 0px 30px 0px 30px;
+    font-size: 1rem;
+    @media screen and (max-width: 768px) {
+      font-size: 0.8rem;
+    }
+    @media screen and (max-width: 576px) {
+      font-size: 0.6rem;
+    }
     > a {
       display: flex;
       justify-content: center;
@@ -289,24 +311,45 @@ const CountryListBox = styled.section`
   width: 100%;
   position: relative;
   margin-top: 20px;
+  margin-bottom: 20px;
 
   .countrybox {
     display: flex;
     width: 80%;
     min-height: 600px;
     margin-top: 20px;
+
+    @media screen and (max-width: 768px) {
+      display: flex;
+      flex-direction: column;
+      margin-top: 20px;
+      width: 100%;
+      align-items: center;
+    }
   }
   .hot-country {
     width: 70%;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: repeat(2, 1fr);
+
+    @media screen and (max-width: 768px) {
+      display: grid;
+      width: 80%;
+      flex-direction: column;
+      margin-top: 20px;
+      grid-template-columns: repeat(1, 1fr);
+    }
     > li {
       border: 0.5px solid black;
       display: flex;
       width: 100%;
       height: 100%;
       align-items: flex-end;
+      @media screen and (max-width: 768px) {
+        display: flex;
+        justify-content: flex-end;
+      }
 
       > div {
         display: flex;
@@ -318,6 +361,14 @@ const CountryListBox = styled.section`
         font-size: 1.5rem;
         color: white;
         background-color: rgba(0, 0, 0, 0.3);
+        @media screen and (max-width: 768px) {
+          display: flex;
+          align-items: center;
+          width: 50%;
+          height: 100%;
+          padding: 10px;
+          background-color: rgba(0, 0, 0, 0.3);
+        }
       }
     }
   }
@@ -325,6 +376,13 @@ const CountryListBox = styled.section`
     width: 30%;
     display: grid;
     grid-template-rows: repeat(7, 1fr);
+
+    @media screen and (max-width: 768px) {
+      display: grid;
+      flex-direction: column;
+      grid-template-columns: repeat(1, 1fr);
+      width: 80%;
+    }
 
     > li {
       border: 0.5px solid black;

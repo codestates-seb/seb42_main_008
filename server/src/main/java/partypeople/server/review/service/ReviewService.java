@@ -30,4 +30,9 @@ public class ReviewService {
         List<Review> reviews = reviewRepository.findByMemberId(memberId);
         return reviews;
     }
+
+    @Transactional(readOnly = true)
+    public List<Review> getReviewsByCompanionIdAndMemberId(Long companionId, Long memberId) {
+        return reviewRepository.findByCompanionCompanionIdAndMemberMemberId(companionId, memberId);
+    }
 }
