@@ -83,6 +83,18 @@ interface FollowModalProps {
   isFollower: boolean;
 }
 
+interface TextEditProps {
+  setMemberData: React.Dispatch<any>;
+  member: MemberProfile | null;
+}
+
+interface Validations {
+  nicknameValid: boolean | undefined;
+  contentValid: boolean | undefined;
+  passwordValid: boolean | undefined;
+  passwordCheckValid: boolean | undefined;
+}
+
 // ! 전역 유저 정보
 interface LoginUser {
   memberId: number;
@@ -106,5 +118,7 @@ export type {
   MemberSettingsProps,
   ListComponentProps,
   FollowModalProps,
+  TextEditProps,
+  Validations,
   LoginUser,
 };
