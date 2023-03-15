@@ -80,7 +80,7 @@ interface MemberSettingsProps {
 
 interface FollowModalProps {
   setIsShowModal: React.Dispatch<React.SetStateAction<boolean>>;
-  modalType: string;
+  isFollower: boolean;
 }
 
 // ! 전역 유저 정보
