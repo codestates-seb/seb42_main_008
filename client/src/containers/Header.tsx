@@ -4,10 +4,12 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { FaEnvelope } from 'react-icons/fa';
 import { RiLogoutBoxRLine } from 'react-icons/ri';
-
+import { GiHamburgerMenu } from 'react-icons/gi';
+import Menu from 'components/Header/Menu';
+import LogoutMenu from 'components/Header/LogoutMenu';
 const Header = () => {
   // 로그인 상태 임시
-  const [isLogin, setIsLogin] = useState(false);
+  const [isLogin, setIsLogin] = useState(true);
   const LoginHandler = () => {
     setIsLogin(!isLogin);
   };
@@ -17,13 +19,24 @@ const Header = () => {
     setNoteModal(!noteModal);
   };
 
+  // 햄버거 메뉴 반응형
+  const [isShowMenu, setIsShowMenu] = useState(false);
+  const handleMenuEnter = () => {
+    setIsShowMenu(true);
+  };
+  const handleMenuLeave = () => {
+    setIsShowMenu(false);
+  };
+
   return (
     <HeaderBox>
       <div className="header-left">
         <Link to="/" className="logo">
           Party People
         </Link>
-        <Link to="/continents">파티 구하기</Link>
+        <Link to="/continents" className="party-link">
+          파티 구하기
+        </Link>
         <button onClick={LoginHandler}>임시 로그인</button>
       </div>
 
@@ -37,14 +50,10 @@ const Header = () => {
           <Link to="/:memberId/profile">Profile</Link>
           <div className="nav-icon">
             <div className="message-icon">
-              <FaEnvelope onClick={NoteHandler} size="2rem" cursor="pointer" />
+              <FaEnvelope onClick={NoteHandler} cursor="pointer" />
               <div className="message-alert">1</div>
             </div>
-            <RiLogoutBoxRLine
-              onClick={LoginHandler}
-              size="2rem"
-              cursor="pointer"
-            />
+            <RiLogoutBoxRLine onClick={LoginHandler} cursor="pointer" />
           </div>
         </LoginNav>
       )}
@@ -53,6 +62,33 @@ const Header = () => {
         <div className="overlay">
           <NoteModal noteModal={noteModal} setNoteModal={setNoteModal} />
         </div>
+      ) : null}
+      <nav className="mobile-menu">
+        {isLogin ? (
+          <div className="envelope-alert">
+            <FaEnvelope
+              className="envelope"
+              onClick={NoteHandler}
+              cursor="pointer"
+            />
+            <div className="message-alert">1</div>
+          </div>
+        ) : null}
+
+        <div
+          className="burger-hover"
+          onMouseEnter={handleMenuEnter}
+          onMouseLeave={handleMenuLeave}
+        >
+          <GiHamburgerMenu className="burger-bar" />
+        </div>
+      </nav>
+      {isShowMenu ? (
+        isLogin ? (
+          <Menu setIsShowMenu={setIsShowMenu} setIsLogin={setIsLogin} />
+        ) : (
+          <LogoutMenu setIsShowMenu={setIsShowMenu} />
+        )
       ) : null}
     </HeaderBox>
   );
@@ -80,43 +116,128 @@ const HeaderBox = styled.header`
     bottom: 0;
     background-color: rgba(0, 0, 0, 0.5);
   }
-  a {
+
+  .header-left {
+    display: flex;
+    justify-content: space-around;
+    width: 50%;
+    height: 100%;
+    @media screen and (max-width: 768px) {
+      width: 70%;
+    }
+    > a:first-child {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      color: white;
+    }
+  }
+  .party-link {
     display: flex;
     align-items: center;
     text-decoration: none;
     color: white;
-  }
-  .header-left {
-    display: flex;
-    justify-content: space-around;
-    width: 40%;
-    height: 100%;
+    @media screen and (max-width: 768px) {
+      display: none;
+    }
   }
   .logo {
     font-size: 2rem;
     font-weight: bold;
+  }
+
+  .mobile-menu {
+    display: none;
+
+    @media screen and (max-width: 768px) {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      width: 20%;
+    }
+  }
+  .envelope-alert {
+    display: flex;
+    align-items: center;
+  }
+  .message-alert {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #d9506a;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    margin-left: 5px;
+    @media screen and (max-width: 768px) {
+      width: 15px;
+      height: 15px;
+      font-size: 0.5rem;
+    }
+  }
+  .burger-hover {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    height: 60px;
+    width: 40px;
+  }
+  .burger-bar {
+    width: 32px;
+    height: 32px;
+  }
+  .envelope {
+    width: 32px;
+    height: 32px;
   }
 `;
 
 const LogoutNav = styled.nav`
   display: flex;
   justify-content: space-around;
-  width: 40%;
+  width: 20%;
+  @media screen and (max-width: 768px) {
+    display: none;
+  }
+  > a {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: white;
+  }
 `;
 
 const LoginNav = styled.nav`
   display: flex;
   justify-content: space-around;
-  width: 40%;
+  width: 30%;
+  @media screen and (max-width: 768px) {
+    display: none;
+  }
+
+  > a {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: white;
+  }
   .nav-icon {
     display: flex;
-    width: 30%;
+    width: 50%;
     justify-content: space-around;
     align-items: center;
+    > svg {
+      width: 32px;
+      height: 32px;
+    }
   }
   .message-icon {
     display: flex;
     align-items: center;
+    > svg {
+      width: 32px;
+      height: 32px;
+    }
   }
   .message-alert {
     display: flex;
