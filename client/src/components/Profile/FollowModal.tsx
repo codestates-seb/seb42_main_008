@@ -1,11 +1,16 @@
-import { Follow, FollowModalProps } from 'interfaces/Profile.interface';
-import { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { useEffect, useState } from 'react';
+import { IoMdClose } from 'react-icons/io';
+import { Follow, FollowModalProps } from 'interfaces/Profile.interface';
 import memberData from 'profileTestData.json';
 
 const FollowModal = ({ setIsShowModal, isFollower }: FollowModalProps) => {
   const [followerList, setFollowerList] = useState<Follow[] | []>([]);
   const [followingList, setFollowingList] = useState<Follow[] | []>([]);
+
+  const handleModalClose = () => {
+    setIsShowModal(false);
+  };
 
   useEffect(() => {
     setFollowerList(memberData.follows);
@@ -25,13 +30,13 @@ const FollowModal = ({ setIsShowModal, isFollower }: FollowModalProps) => {
 
   return (
     <>
-      <ModalBG
-        className="MODAL"
-        onClick={() => setIsShowModal(false)}
-      ></ModalBG>
+      <ModalBG className="MODAL" onClick={handleModalClose}></ModalBG>
       <ModalContent>
         <div>
           <h1>{isFollower ? '팔로워' : '팔로잉'}</h1>
+          <CloseButton onClick={handleModalClose}>
+            <IoMdClose />
+          </CloseButton>
         </div>
         {isFollower ? (
           <FollowList>
@@ -72,7 +77,6 @@ const ModalBG = styled.div`
   z-index: 999;
   top: 0;
   left: 0;
-  overflow: hidden;
 `;
 
 const ModalContent = styled.div`
@@ -86,10 +90,15 @@ const ModalContent = styled.div`
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 1000;
-  padding: 30px;
+  padding-top: 30px;
+  overflow: hidden;
 
   > div {
+    width: 100%;
+    padding: 0 30px;
     margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
     > h1 {
       font-size: 1.4rem;
     }
@@ -102,16 +111,18 @@ const ModalContent = styled.div`
 
 const FollowList = styled.ul`
   width: 100%;
-  height: 100%;
+  height: calc(100% - 60px);
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 10px;
+  overflow: auto;
+  padding: 0 30px;
 `;
 
 const FollowUser = styled.li`
   width: 100%;
-  height: 50px;
+  padding: 5px;
   border-bottom: 1px solid #ddd;
   display: flex;
   align-items: center;
@@ -123,6 +134,26 @@ const FollowUser = styled.li`
     object-fit: cover;
     object-position: center;
     border-radius: 50%;
+  }
+`;
+
+const CloseButton = styled.div`
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: #fff;
+  border: 1px solid #666;
+  color: #666;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  :hover,
+  :active {
+    background-color: #666;
+    color: #fff;
   }
 `;
 
