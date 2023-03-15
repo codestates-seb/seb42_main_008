@@ -44,6 +44,7 @@ const Companion = () => {
               <div>{el.picture}</div>
               <div>{el.name}</div>
               {/* 작성자ID === 현재 로그인ID ? 탭 안에 리뷰작성 버튼 : (여행 참여자ID === 현재 로그인ID ? : 리뷰작성 버튼 : null) */}
+              {/* 리뷰 작성 완료 ? 완료 : 리뷰버튼 */}
               <div className="btn-wrapper">
                 <button className="btn" onClick={handleFirstModal}>
                   리뷰

@@ -1,5 +1,6 @@
 // import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { getScoreIcon } from 'utils/getScoreIcon';
 
 const ContentWriter = () => {
   // 클릭 시 수정페이지로 이동 추가
@@ -18,7 +19,9 @@ const ContentWriter = () => {
         </div>
         <div className="info-wrapper">
           <div id="nickname">하이라이트 짱팬</div>
-          <div id="battery">배터리 자리</div>
+          <div id="battery">
+            <img src={getScoreIcon(93)} alt="score" />
+          </div>
         </div>
       </WriterInfo>
       <ButtonBox>

@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import partypeople.server.companion.entity.Companion;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface CompanionRepository extends JpaRepository<Companion, Long> {
@@ -14,6 +15,9 @@ public interface CompanionRepository extends JpaRepository<Companion, Long> {
 
     @EntityGraph(attributePaths = "nation")
     List<Companion> findByNationContinent(int continent);
+
+    @EntityGraph(attributePaths = {"participants", "member"})
+    List<Companion> findByDateBeforeAndCompanionStatusFalse(LocalDate today);
 
     List<Companion> findAllByMemberMemberId(Long memberId); //작성자
 
