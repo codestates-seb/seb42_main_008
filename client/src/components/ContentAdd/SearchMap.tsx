@@ -2,8 +2,12 @@ import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { FaMapMarkerAlt } from 'react-icons/fa';
+interface LatLngWithAddress extends google.maps.LatLngLiteral {
+  address: string;
+}
 
-const SearchMap = () => {
+const SearchMap = ({ savedAddress, setSavedAddress }: any) => {
   // 지도 자동 렌더
   useEffect(() => {
     const navigationEntries = window.performance.getEntriesByType('navigation');
@@ -18,8 +22,9 @@ const SearchMap = () => {
   }, []);
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [searchInput, setSearchInput] = useState<string>('');
-  const [selectPlace, setSelectPlace] =
-    useState<google.maps.LatLngLiteral | null>(null);
+  const [selectPlace, setSelectPlace] = useState<LatLngWithAddress | null>(
+    null
+  );
 
   const onLoad = (map: google.maps.Map) => {
     setMap(map);
@@ -43,7 +48,13 @@ const SearchMap = () => {
       if (data.status === 'OK') {
         const result = data.results[0];
         const location = result.geometry.location;
-        setSelectPlace(location);
+        const formmatedAddress = result.formatted_address;
+        setSelectPlace({
+          lat: Number(location.lat),
+          lng: Number(location.lng),
+          address: formmatedAddress,
+        });
+        setSavedAddress(formmatedAddress);
         console.log(location);
         if (map) {
           map.panTo(location);
@@ -68,6 +79,12 @@ const SearchMap = () => {
       >
         {selectPlace && <Marker position={selectPlace} />}
       </GoogleMap>
+      {selectPlace && (
+        <AddressRender>
+          <FaMapMarkerAlt className="mark-icon" />
+          <div>{savedAddress}</div>
+        </AddressRender>
+      )}
     </LoadScript>
   );
 };
@@ -88,12 +105,38 @@ const SearchForm = styled.form`
   display: flex;
   width: 100%;
   margin-bottom: 10px;
+  justify-content: space-between;
   > input {
     border-radius: 20px;
     border: 1px solid #555555;
     outline: none;
-    width: 100%;
+    width: 80%;
     height: 30px;
     padding-left: 10px;
+  }
+  > button {
+    border: none;
+    color: white;
+    width: 20%;
+    background-color: #feb35c;
+    border-radius: 30px;
+  }
+`;
+
+const AddressRender = styled.div`
+  display: flex;
+  align-items: center;
+  border: 1px solid black;
+  border-top: none;
+  border-radius: 0px 0px 10px 10px;
+  font-size: 1.3rem;
+  @media screen and (max-width: 768px) {
+    font-size: 1rem;
+  }
+  @media screen and (max-width: 576px) {
+    font-size: 0.8rem;
+  }
+  .mark-icon {
+    width: 10%;
   }
 `;
