@@ -48,10 +48,8 @@ public class CompanionService {
     private final CustomBeanUtils<Companion> beanUtils;
 
     public Companion createCompanion(Companion companion) {
-        Member member = memberService.findMember(companion.getMember().getMemberId());
-        Nation nation = nationService.findNation(companion.getNation());
-        companion.setMember(member);
-        companion.setNation(nation);
+        memberService.findMember(companion.getMember().getMemberId());
+        nationService.findNation(companion.getNation());
 
         return companionRepository.save(companion);
     }
