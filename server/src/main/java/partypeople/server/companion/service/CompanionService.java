@@ -49,7 +49,8 @@ public class CompanionService {
 
     public Companion createCompanion(Companion companion) {
         memberService.findMember(companion.getMember().getMemberId());
-        nationService.findNation(companion.getNation());
+        Nation nation = nationService.findNation(companion.getNation());
+        companion.setNation(nation);
 
         return companionRepository.save(companion);
     }

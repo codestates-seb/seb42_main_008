@@ -13,6 +13,10 @@ const Header = () => {
   const LoginHandler = () => {
     setIsLogin(!isLogin);
   };
+  const handleLogout = () => {
+    window.confirm('로그아웃 하시겠습니까?');
+    setIsLogin(true);
+  };
   //쪽지 모달
   const [noteModal, setNoteModal] = useState(false);
   const NoteHandler = () => {
@@ -53,7 +57,7 @@ const Header = () => {
               <FaEnvelope onClick={NoteHandler} cursor="pointer" />
               <div className="message-alert">1</div>
             </div>
-            <RiLogoutBoxRLine onClick={LoginHandler} cursor="pointer" />
+            <RiLogoutBoxRLine onClick={handleLogout} cursor="pointer" />
           </div>
         </LoginNav>
       )}

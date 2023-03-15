@@ -91,7 +91,17 @@ const ThemeBox = styled.div`
   right: 50%;
   transform: translate(50%, -50%);
   flex-direction: column;
-  font-size: 24px;
+  font-size: 2rem;
+  @media screen and (max-width: 768px) {
+    width: 450px;
+    height: 720px;
+    font-size: 1.5rem;
+  }
+  @media screen and (max-width: 576px) {
+    width: 350px;
+    height: 560px;
+    font-size: 1.2rem;
+  }
   .theme-box {
     padding: 40px;
     width: 100%;
@@ -108,10 +118,21 @@ const ThemeBox = styled.div`
     justify-content: center;
     align-items: center;
     margin-bottom: 50px;
-
+    @media screen and (max-width: 768px) {
+      margin-bottom: 40px;
+    }
+    @media screen and (max-width: 576px) {
+      margin-bottom: 30px;
+    }
     > h3 {
       font-size: 2rem;
       font-weight: bold;
+      @media screen and (max-width: 768px) {
+        font-size: 1.8rem;
+      }
+      @media screen and (max-width: 576px) {
+        font-size: 1.5rem;
+      }
     }
     > p {
       font-size: 1rem;
@@ -157,6 +178,14 @@ const ThemeBox = styled.div`
       background-color: #5d62a0;
       color: white;
       font-size: 1.2rem;
+      @media screen and (max-width: 768px) {
+        width: 80px;
+        height: 30px;
+      }
+      @media screen and (max-width: 576px) {
+        width: 60px;
+        height: 25px;
+      }
     }
   }
 `;
@@ -175,6 +204,14 @@ const ThemeContent = styled.ul`
     height: 80px;
     background-color: #d9d9d9;
     margin-bottom: 10px;
+    @media screen and (max-width: 768px) {
+      width: 150px;
+      height: 60px;
+    }
+    @media screen and (max-width: 576px) {
+      width: 120px;
+      height: 36px;
+    }
     > label {
       display: flex;
       align-items: center;
