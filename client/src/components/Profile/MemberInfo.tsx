@@ -13,7 +13,7 @@ const MemberInfo = ({ user }: MemberInfoProps) => {
   const member: MemberProfile = memberData.members;
   const [isFollow, setIsFollow] = useState<boolean>(member.followerStatus);
   const [isShowModal, setIsShowModal] = useState<boolean>(false);
-  const [modalType, setModalType] = useState<string>('');
+  const [isFollower, setIsFollower] = useState<boolean>(true);
 
   const handleFollowButtonClick = () => {
     setIsFollow(cur => !cur);
@@ -24,15 +24,15 @@ const MemberInfo = ({ user }: MemberInfoProps) => {
     }
   };
 
-  const handleFollowListClick = (type: string) => {
+  const handleFollowListClick = (type: boolean) => {
     setIsShowModal(true);
-    setModalType(type);
+    setIsFollower(type);
   };
 
   return (
     <>
       {isShowModal && (
-        <FollowModal setIsShowModal={setIsShowModal} modalType={modalType} />
+        <FollowModal setIsShowModal={setIsShowModal} isFollower={isFollower} />
       )}
       <InfoContainer>
         <ImageWrapper>
@@ -72,10 +72,10 @@ const MemberInfo = ({ user }: MemberInfoProps) => {
             )}
           </section>
           <section className="follows">
-            <span onClick={() => handleFollowListClick('follower')}>
+            <span onClick={() => handleFollowListClick(true)}>
               팔로워 {member.followerCount}
             </span>
-            <span onClick={() => handleFollowListClick('following')}>
+            <span onClick={() => handleFollowListClick(false)}>
               팔로잉 {member.followingCount}
             </span>
           </section>
