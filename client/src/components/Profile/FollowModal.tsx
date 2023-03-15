@@ -3,12 +3,19 @@ import { useEffect, useState } from 'react';
 import { IoMdClose } from 'react-icons/io';
 import { Follow, FollowModalProps } from 'interfaces/Profile.interface';
 import customAxios from 'api/customAxios';
+import { useNavigate } from 'react-router-dom';
 
 const FollowModal = ({ setIsShowModal, isFollower }: FollowModalProps) => {
+  const navigate = useNavigate();
   const [followerList, setFollowerList] = useState<Follow[] | []>([]);
   const [followingList, setFollowingList] = useState<Follow[] | []>([]);
 
   const handleModalClose = () => {
+    setIsShowModal(false);
+  };
+
+  const handleUserClick = (memberId: number) => {
+    navigate(`/${memberId}/profile`);
     setIsShowModal(false);
   };
 
@@ -41,7 +48,7 @@ const FollowModal = ({ setIsShowModal, isFollower }: FollowModalProps) => {
 
   return (
     <>
-      <ModalBG className="MODAL" onClick={handleModalClose}></ModalBG>
+      <ModalBG onClick={handleModalClose}></ModalBG>
       <ModalContent>
         <div>
           <h1>{isFollower ? '팔로워' : '팔로잉'}</h1>
@@ -51,8 +58,12 @@ const FollowModal = ({ setIsShowModal, isFollower }: FollowModalProps) => {
         </div>
         {isFollower ? (
           <FollowList>
-            {followerList.map(follower => (
-              <FollowUser key={follower.memberID}>
+            {followerList.map((follower, idx) => (
+              <FollowUser
+                key={idx}
+                role="presentation"
+                onClick={() => handleUserClick(follower.memberId)}
+              >
                 <img
                   src={follower.profile}
                   alt={follower.nickname + 'profile'}
@@ -63,8 +74,12 @@ const FollowModal = ({ setIsShowModal, isFollower }: FollowModalProps) => {
           </FollowList>
         ) : (
           <FollowList>
-            {followingList.map(following => (
-              <FollowUser key={following.memberID}>
+            {followingList.map((following, idx) => (
+              <FollowUser
+                key={idx}
+                role="presentation"
+                onClick={() => handleUserClick(following.memberId)}
+              >
                 <img
                   src={following.profile}
                   alt={following.nickname + 'profile'}
@@ -126,18 +141,19 @@ const FollowList = styled.ul`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
   overflow: auto;
   padding: 0 30px;
 `;
 
 const FollowUser = styled.li`
   width: 100%;
-  padding: 5px;
+  padding: 10px 5px;
   border-bottom: 1px solid #ddd;
   display: flex;
   align-items: center;
   gap: 10px;
+  background-color: #fff;
+  cursor: pointer;
 
   > img {
     width: 40px;
@@ -145,6 +161,9 @@ const FollowUser = styled.li`
     object-fit: cover;
     object-position: center;
     border-radius: 50%;
+  }
+  :hover {
+    filter: brightness(0.9);
   }
 `;
 
