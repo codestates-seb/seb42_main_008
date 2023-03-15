@@ -128,4 +128,10 @@ public class CompanionDto {
 
         private Integer companionsCount;
     }
+
+    @Getter
+    @Setter
+    public static class ReviewedMember {
+        private Long memberId;
+    }
 }
