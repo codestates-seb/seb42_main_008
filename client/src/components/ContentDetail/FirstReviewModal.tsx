@@ -26,14 +26,14 @@ const FirstReviewModal = ({ setFirstModal }: firstModal) => {
               아니요. 참석하지 않았습니다.
             </button>
           </div>
-          {secondModal ? (
-            <SecondReviewModal
-              setFirstModal={setFirstModal}
-              setSecondModal={setSecondModal}
-            />
-          ) : null}
         </ModalView>
       </BackGround>
+      {secondModal ? (
+        <SecondReviewModal
+          setFirstModal={setFirstModal}
+          setSecondModal={setSecondModal}
+        />
+      ) : null}
     </Container>
   );
 };
@@ -63,10 +63,10 @@ const ModalView = styled.div`
   align-items: center;
   flex-direction: column;
   background-color: white;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   width: 50%;
   height: 40%;
   text-align: center;

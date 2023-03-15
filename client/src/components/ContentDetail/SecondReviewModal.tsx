@@ -24,15 +24,15 @@ const SecondReviewModal = ({ setFirstModal, setSecondModal }: secondModal) => {
               아니요. 참석하지 않았습니다.
             </button>
           </div>
-          {thirdModal ? (
-            <ThirdReviewModal
-              setFirstModal={setFirstModal}
-              setSecondModal={setSecondModal}
-              setThirdModal={setThirdModal}
-            />
-          ) : null}
         </ModalView>
       </BackGround>
+      {thirdModal ? (
+        <ThirdReviewModal
+          setFirstModal={setFirstModal}
+          setSecondModal={setSecondModal}
+          setThirdModal={setThirdModal}
+        />
+      ) : null}
     </Container>
   );
 };
