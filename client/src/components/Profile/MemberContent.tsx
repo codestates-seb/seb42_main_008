@@ -1,13 +1,17 @@
 import styled from 'styled-components';
-import { MemberInfoProps } from 'interfaces/Profile.interface';
+import { MemberContentProps } from 'interfaces/Profile.interface';
 import { useEffect, useState } from 'react';
 import MemberReviews from './MemberReviews';
 import MemberCompanoins from './MemberCompanoins';
 import MemberSettings from './MemberSettings';
 
-const MemberContent = ({ user, member }: MemberInfoProps) => {
+const MemberContent = ({
+  user,
+  member,
+  currentTab,
+  setCurrentTab,
+}: MemberContentProps) => {
   const [tabList, setTabList] = useState<string[]>([]);
-  const [currentTab, setCurrentTab] = useState(0);
 
   useEffect(() => {
     setTabList(

@@ -20,6 +20,7 @@ const Profile = () => {
   const [user, setUser] = useState<LoginUser>(userData);
   const [member, setMember] = useState<MemberProfile | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [currentTab, setCurrentTab] = useState<number>(0);
 
   const getMemberData = async () => {
     await customAxios.get('/members').then(resp => {
@@ -30,7 +31,7 @@ const Profile = () => {
 
   useEffect(() => {
     getMemberData();
-  }, [user]);
+  }, [user, currentTab]);
 
   const handleTestButtonClick = () => {
     setUser(cur => {
@@ -55,7 +56,12 @@ const Profile = () => {
         <Container>
           <TestButton onClick={handleTestButtonClick}>로그인 테스트</TestButton>
           <MemberInfo user={user} member={member} />
-          <MemberContent user={user} member={member} />
+          <MemberContent
+            user={user}
+            member={member}
+            currentTab={currentTab}
+            setCurrentTab={setCurrentTab}
+          />
         </Container>
       )}
     </>
