@@ -59,7 +59,7 @@ interface FollowRequest {
 // * MemberInfo 컴포넌트 props
 interface MemberInfoProps {
   user: LoginUser;
-  member: MemberProfile | null;
+  member: MemberProfile;
 }
 
 // * MemberCompanions 컴포넌트 props
@@ -81,11 +81,13 @@ interface MemberSettingsProps {
   setCurrentTab: React.Dispatch<React.SetStateAction<number>>;
 }
 
+// * 팔로워/팔로잉 모달 컴포넌트 props
 interface FollowModalProps {
   setIsShowModal: React.Dispatch<React.SetStateAction<boolean>>;
   isFollower: boolean;
 }
 
+// * 회원정보 수정 컴포넌트 props
 interface TextEditProps {
   setMemberData: React.Dispatch<any>;
   member: MemberProfile | null;
@@ -93,6 +95,7 @@ interface TextEditProps {
   setValidation: React.Dispatch<React.SetStateAction<Validations>>;
 }
 
+// * 회원정보 수정 유효성체크 타입
 interface Validations {
   nicknameValid: boolean | undefined;
   contentValid: boolean | undefined;
