@@ -62,6 +62,14 @@ interface MemberInfoProps {
   member: MemberProfile;
 }
 
+// * MemberContent 컴포넌트 props
+interface MemberContentProps {
+  user: LoginUser;
+  member: MemberProfile;
+  currentTab: number;
+  setCurrentTab: React.Dispatch<React.SetStateAction<number>>;
+}
+
 // * MemberCompanions 컴포넌트 props
 interface MemberCompanionsProps {
   member: MemberProfile | null;
@@ -124,6 +132,7 @@ export type {
   ProfileEdit,
   FollowRequest,
   MemberInfoProps,
+  MemberContentProps,
   MemberCompanionsProps,
   MemberSettingsProps,
   ListComponentProps,
