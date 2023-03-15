@@ -61,6 +61,27 @@ const FooterBox = styled.footer`
       padding: 5px;
     }
   }
+  @media screen and (max-width: 992px) {
+    > * {
+      font-size: 1rem;
+    }
+  }
+  @media screen and (max-width: 768px) {
+    > * {
+      font-size: 0.7rem;
+    }
+  }
+  @media screen and (max-width: 576px) {
+    > * {
+      font-size: 0.5rem;
+    }
+    p > a {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+  }
 `;
 const GitIcon = styled(GoMarkGithub)`
   font-size: 20px;
