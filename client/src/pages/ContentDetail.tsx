@@ -1,6 +1,7 @@
 // import Companion from 'components/ContentDetail/Companion';
 import ContentWriter from 'components/ContentDetail/ContentWriter';
 import Participants from 'components/ContentDetail/Participants';
+// import SearchMap from 'components/ContentDetail/SearchMap';
 
 import styled from 'styled-components';
 
@@ -60,6 +61,28 @@ const ContentDetailBox = styled.section`
   box-shadow: 5px 5px 10px 5px rgba(0, 0, 0, 0.25);
   border-radius: 10px;
   position: relative;
+  @media screen and (max-width: 992px) {
+    display: flex;
+    flex-direction: column;
+    overflow: scroll;
+    height: 100vh;
+    ::-webkit-scrollbar {
+      display: none;
+    }
+  }
+  @media screen and (max-width: 768px) {
+    display: flex;
+    flex-direction: column;
+    overflow: scroll;
+    height: 100vh;
+    ::-webkit-scrollbar {
+      display: none;
+    }
+  }
+  @media screen and (max-width: 576px) {
+    width: 100%;
+    height: 100vh;
+  }
 `;
 
 const LeftBox = styled.section`
@@ -128,17 +151,100 @@ const LeftBox = styled.section`
       }
     }
   }
+  @media screen and (max-width: 992px) {
+    width: 100%;
+    height: 100%;
+    border: none;
+    overflow: scroll;
+    ::-webkit-scrollbar {
+      display: none;
+    }
+  }
+  @media screen and (max-width: 768px) {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100vh;
+    border: none;
+    overflow: scroll;
+    ::-webkit-scrollbar {
+      display: none;
+    }
+  }
+  @media screen and (max-width: 576px) {
+    width: 100%;
+    height: 100vh;
+    border: none;
+    .top-box {
+      border-bottom: 10px solid #feb35c;
+      h1 {
+        font-size: 2rem;
+        padding-right: 30px;
+      }
+      h3 {
+        font-size: 1rem;
+      }
+    }
+    .bottom-box {
+      h2 {
+        font-size: 1.5rem;
+      }
+      h4 {
+        color: #666666;
+        font-weight: bold;
+        font-size: 0.8rem;
+      }
+      #content {
+        font-size: 1rem;
+      }
+      #tag-box {
+        li {
+          width: calc(100% / 5);
+          text-align: center;
+          font-size: 0.55rem;
+          padding: 5px;
+          color: white;
+        }
+      }
+    }
+  }
 `;
 
 const RightBox = styled.section`
   width: 34%;
   height: 100%;
+  @media screen and (max-width: 992px) {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100vh;
+    overflow: scroll;
+    ::-webkit-scrollbar {
+      display: none;
+    }
+  }
+  @media screen and (max-width: 768px) {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+    overflow: scroll;
+    ::-webkit-scrollbar {
+      display: none;
+    }
+  }
+  @media screen and (max-width: 576px) {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
 `;
 
 /* TODO:
-1. 기본 구조
-2. 지도 API
+1. 기본 구조 * 
+2. 지도 API * 
 3. 태그 리스트 불러오기
-4. 반응형
+4. 반응형 *
 5. 스크롤 * 
 */

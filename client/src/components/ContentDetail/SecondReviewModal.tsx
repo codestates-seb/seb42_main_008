@@ -61,6 +61,10 @@ const ModalView = styled.div`
   align-items: center;
   flex-direction: column;
   background-color: white;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   width: 50%;
   height: 40%;
   text-align: center;
@@ -90,6 +94,32 @@ const ModalView = styled.div`
     }
     > :nth-child(2) {
       background-color: #d9506a;
+    }
+  }
+  @media screen and (max-width: 992px) {
+    width: 500px;
+    height: 300px;
+    font-size: 20px;
+    .btn-wrapper {
+      button {
+        width: 80%;
+        font-size: 15px;
+      }
+    }
+  }
+  @media screen and (max-width: 768px) {
+    width: 500px;
+    height: 300px;
+  }
+  @media screen and (max-width: 576px) {
+    width: 300px;
+    height: 300px;
+    font-size: 15px;
+    .btn-wrapper {
+      button {
+        width: 90%;
+        font-size: 15px;
+      }
     }
   }
 `;
