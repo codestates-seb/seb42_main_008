@@ -86,7 +86,9 @@ const Container = styled.section`
   @media screen and (max-width: 768px) {
     height: 100%;
     @media (orientation: landscape) {
-      height: 100vh;
+      * {
+        font-size: 0.8rem;
+      }
     }
   }
   @media screen and (max-width: 576px) {
@@ -115,6 +117,11 @@ const TabBox = styled.ul`
   .focused {
     background-color: #d9506a;
     color: white;
+  }
+  @media screen and (max-width: 768px) {
+    .menu {
+      padding: 10px;
+    }
   }
   @media screen and (max-width: 576px) {
     .menu {
@@ -165,6 +172,16 @@ const Content = styled.ul`
         color: white;
         border: none;
         border-radius: 15px;
+      }
+    }
+  }
+  @media screen and (max-width: 768px) {
+    > li {
+      font-size: 0.8rem;
+      .btn-wrapper {
+        .btn {
+          font-size: 0.8rem;
+        }
       }
     }
   }

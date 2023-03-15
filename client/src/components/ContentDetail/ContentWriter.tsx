@@ -51,6 +51,7 @@ const Container = styled.section`
     }
   }
   @media screen and (max-width: 768px) {
+    margin-top: 10px;
     @media (orientation: landscape) {
       height: 100%;
     }
@@ -89,6 +90,28 @@ const WriterInfo = styled.section`
       font-size: 1.3rem;
     }
   }
+  @media screen and (max-width: 768px) {
+    .img-wrapper {
+      width: 150px;
+      height: 150px;
+    }
+    .info-wrapper {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      width: 100%;
+      padding: 10px 20px;
+      #nickname {
+        font-size: 1rem;
+      }
+      #battery {
+        > img {
+          width: 50px;
+          height: 40px;
+        }
+      }
+    }
+  }
   @media screen and (max-width: 576px) {
     font-size: 0.5rem;
     height: 100vh;
@@ -120,6 +143,17 @@ const ButtonBox = styled.section`
     border-radius: 30px;
     font-size: 1.2rem;
     cursor: pointer;
+  }
+  @media screen and (max-width: 768px) {
+    .btn {
+      background-color: #d9d9d9;
+      color: white;
+      border: none;
+      padding: 5px;
+      border-radius: 30px;
+      font-size: 0.7rem;
+      cursor: pointer;
+    }
   }
   @media screen and (max-width: 576px) {
     > * {
