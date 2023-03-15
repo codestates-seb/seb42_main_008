@@ -14,7 +14,8 @@ const Menu = ({ setIsShowMenu, setIsLogin }: Props) => {
     setIsShowMenu(false);
   };
   const handleLogout = () => {
-    setIsLogin(false);
+    window.confirm('로그아웃 하시겠습니까?');
+    setIsLogin(true);
   };
 
   return (

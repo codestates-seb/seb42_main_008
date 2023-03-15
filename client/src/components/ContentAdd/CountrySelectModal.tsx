@@ -82,7 +82,17 @@ const CountryBox = styled.div`
   right: 50%;
   transform: translate(50%, -50%);
   flex-direction: column;
-  font-size: 24px;
+  font-size: 2rem;
+  @media screen and (max-width: 768px) {
+    width: 400px;
+    height: 400px;
+    font-size: 1.5rem;
+  }
+  @media screen and (max-width: 576px) {
+    width: 300px;
+    height: 300px;
+    font-size: 1.2rem;
+  }
   .country-box {
     padding: 30px;
     overflow-y: auto;
@@ -116,14 +126,27 @@ const CountryBox = styled.div`
       display: flex;
       align-items: center;
       > button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
         width: 100px;
         height: 40px;
-        font-size: 20px;
+        font-size: 2rem;
         color: white;
         background-color: #feb35c;
         border-radius: 30px;
         border: none;
         cursor: pointer;
+        @media screen and (max-width: 768px) {
+          width: 80px;
+          height: 30px;
+          font-size: 1.5rem;
+        }
+        @media screen and (max-width: 576px) {
+          width: 60px;
+          height: 20px;
+          font-size: 1.2rem;
+        }
       }
     }
   }
@@ -131,7 +154,15 @@ const CountryBox = styled.div`
     width: 100%;
     height: 50px;
     border-radius: 30px;
-    font-size: 20px;
+    font-size: 2rem;
     padding-left: 15px;
+    @media screen and (max-width: 768px) {
+      height: 40px;
+      font-size: 1.5rem;
+    }
+    @media screen and (max-width: 576px) {
+      height: 30px;
+      font-size: 1rem;
+    }
   }
 `;
