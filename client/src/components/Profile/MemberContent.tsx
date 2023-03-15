@@ -1,22 +1,19 @@
 import styled from 'styled-components';
-import { MemberInfoProps, MemberProfile } from 'interfaces/Profile.interface';
-import memberData from 'profileTestData.json';
+import { MemberInfoProps } from 'interfaces/Profile.interface';
 import { useEffect, useState } from 'react';
 import MemberReviews from './MemberReviews';
 import MemberCompanoins from './MemberCompanoins';
 import MemberSettings from './MemberSettings';
 
-const MemberContent = ({ user }: MemberInfoProps) => {
-  const [member, setMember] = useState<MemberProfile | null>(null);
+const MemberContent = ({ user, member }: MemberInfoProps) => {
   const [tabList, setTabList] = useState<string[]>([]);
   const [currentTab, setCurrentTab] = useState(0);
 
   useEffect(() => {
-    setMember(memberData.members);
     setTabList(
       user.memberId === member?.memberId
         ? ['평가 모아보기', `내 동행글`, '계정 관리']
-        : ['평가 모아보기', `${member?.nickname}의 동행글`]
+        : ['평가 모아보기', `동행글 보기`]
     );
   }, [user]);
 

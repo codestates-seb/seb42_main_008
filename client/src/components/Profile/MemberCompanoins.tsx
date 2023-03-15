@@ -4,8 +4,8 @@ import {
 } from 'interfaces/Profile.interface';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import memberData from 'profileTestData.json';
 import ListComponent from './ListComponent';
+import customAxios from 'api/customAxios';
 
 const MemberCompanoins = ({ member, user }: MemberCompanionsProps) => {
   const [subscribers, setSubscribers] = useState<MyCompanion[] | []>([]);
@@ -13,10 +13,22 @@ const MemberCompanoins = ({ member, user }: MemberCompanionsProps) => {
   const [writters, setWritters] = useState<MyCompanion[] | []>([]);
   const [titleHead, setTitleHead] = useState<string>('');
 
+  const getData = async (dataType: string) => {
+    await customAxios.get(`/${dataType}`).then(resp => {
+      if (dataType === 'subscribers') {
+        setSubscribers(resp.data);
+      } else if (dataType === 'participants') {
+        setParticipants(resp.data);
+      } else {
+        setWritters(resp.data);
+      }
+    });
+  };
+
   useEffect(() => {
-    setSubscribers(memberData.companions);
-    setParticipants(memberData.companions);
-    setWritters(memberData.companions);
+    getData('subscribers');
+    getData('participants');
+    getData('writters');
     setTitleHead(cur => {
       if (member) {
         return member.memberId === user.memberId

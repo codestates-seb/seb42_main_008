@@ -1,8 +1,9 @@
+import customAxios from 'api/customAxios';
 import BackGroundImage from 'components/Profile/BackGroundImage';
 import MemberContent from 'components/Profile/MemberContent';
 import MemberInfo from 'components/Profile/MemberInfo';
-import { LoginUser } from 'interfaces/Profile.interface';
-import { useState } from 'react';
+import { LoginUser, MemberProfile } from 'interfaces/Profile.interface';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 const Profile = () => {
@@ -17,6 +18,17 @@ const Profile = () => {
   };
 
   const [user, setUser] = useState<LoginUser>(userData);
+  const [member, setMember] = useState<MemberProfile | null>(null);
+
+  const getMemberData = async () => {
+    await customAxios.get('/members').then(resp => {
+      setMember(resp.data);
+    });
+  };
+
+  useEffect(() => {
+    getMemberData();
+  }, [user]);
 
   const handleTestButtonClick = () => {
     setUser(cur => {
@@ -37,8 +49,8 @@ const Profile = () => {
       <BackGroundImage />
       <Container>
         <TestButton onClick={handleTestButtonClick}>로그인 테스트</TestButton>
-        <MemberInfo user={user} />
-        <MemberContent user={user} />
+        <MemberInfo user={user} member={member} />
+        <MemberContent user={user} member={member} />
       </Container>
     </>
   );

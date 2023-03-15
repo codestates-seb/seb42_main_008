@@ -1,6 +1,8 @@
+import customAxios from 'api/customAxios';
 import { TextEditProps } from 'interfaces/Profile.interface';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import Swal from 'sweetalert2';
 import { editValidationCheck } from 'utils/profileEditValidation';
 
 const TextEdit = ({
@@ -31,6 +33,32 @@ const TextEdit = ({
     setGender(genderStr);
   };
 
+  const handleUniqueCheck = async () => {
+    await customAxios
+      .post('/members/nickname', { nickname })
+      .then(resp => {
+        console.log(resp);
+        setValidation(cur => ({
+          ...cur,
+          nicknameUnique: true,
+        }));
+      })
+      .catch(err => {
+        console.log(err);
+        if (err.response.status === 404) {
+          Swal.fire({
+            icon: 'error',
+            title: '중복된 닉네임입니다',
+            text: '다른 닉네임을 입력해 주세요',
+          });
+          setValidation(cur => ({
+            ...cur,
+            nicknameUnique: false,
+          }));
+        }
+      });
+  };
+
   useEffect(() => {
     setMemberData((cur: any) => ({
       ...cur,
@@ -56,7 +84,7 @@ const TextEdit = ({
             value={nickname}
             onChange={event => handleChange(event, setNickname)}
           />
-          <div>중복확인</div>
+          <div onClick={handleUniqueCheck}>중복확인</div>
         </div>
         {!validation.nicknameValid && (
           <ValidMessage>2글자 이상 10글자 미만으로 입력해주세요.</ValidMessage>

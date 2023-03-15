@@ -3,8 +3,8 @@ import { BsEmojiSmile, BsEmojiNeutral, BsEmojiFrown } from 'react-icons/bs';
 import { GiSiren } from 'react-icons/gi';
 import { Review } from 'interfaces/Profile.interface';
 import Swal from 'sweetalert2';
-import memberData from 'profileTestData.json';
 import { useEffect, useState } from 'react';
+import customAxios from 'api/customAxios';
 
 interface EmojiProps {
   score: number;
@@ -29,8 +29,19 @@ const MemberReviews = () => {
     });
   };
 
+  const getReviewData = async () => {
+    await customAxios
+      .get(`/reviews`)
+      .then(resp => {
+        setReviews(resp.data);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
+
   useEffect(() => {
-    setReviews(memberData.reviews);
+    getReviewData();
   }, []);
 
   return (
