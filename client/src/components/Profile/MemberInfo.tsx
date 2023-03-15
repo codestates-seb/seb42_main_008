@@ -1,26 +1,35 @@
 import styled from 'styled-components';
 import { TbGenderFemale, TbGenderMale, TbMail } from 'react-icons/tb';
 import { SlUserFollow, SlUserFollowing } from 'react-icons/sl';
-import { MemberInfoProps } from 'interfaces/Profile.interface';
+import { FollowRequest, MemberInfoProps } from 'interfaces/Profile.interface';
 import { useState } from 'react';
 import { getScoreIcon } from 'utils/getScoreIcon';
 import { toast } from 'react-toastify';
 import FollowModal from './FollowModal';
+import customAxios from 'api/customAxios';
 
 const MemberInfo = ({ user, member }: MemberInfoProps) => {
-  const [isFollow, setIsFollow] = useState<boolean | null>(
-    member ? member.followerStatus : null
-  );
+  const [isFollow, setIsFollow] = useState<boolean>(member.followerStatus);
   const [isShowModal, setIsShowModal] = useState<boolean>(false);
   const [isFollower, setIsFollower] = useState<boolean>(true);
 
-  const handleFollowButtonClick = () => {
+  const handleFollowButtonClick = async () => {
     setIsFollow(cur => !cur);
-    if (isFollow) {
-      toast.success('팔로우가 취소되었습니다');
-    } else {
-      toast.success('팔로우가 완료되었습니다');
-    }
+
+    const data: FollowRequest = {
+      followerId: user.memberId,
+      followingId: member.memberId,
+    };
+
+    await customAxios.post('/members/follows', data).then(resp => {
+      console.log(resp.data);
+      setIsFollow(resp.data);
+      if (!resp.data) {
+        toast.success('팔로우가 취소되었습니다');
+      } else {
+        toast.success('팔로우가 완료되었습니다');
+      }
+    });
   };
 
   const handleFollowListClick = (type: boolean) => {

@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { useEffect, useState } from 'react';
 import { IoMdClose } from 'react-icons/io';
 import { Follow, FollowModalProps } from 'interfaces/Profile.interface';
-import memberData from 'profileTestData.json';
+import customAxios from 'api/customAxios';
 
 const FollowModal = ({ setIsShowModal, isFollower }: FollowModalProps) => {
   const [followerList, setFollowerList] = useState<Follow[] | []>([]);
@@ -12,9 +12,17 @@ const FollowModal = ({ setIsShowModal, isFollower }: FollowModalProps) => {
     setIsShowModal(false);
   };
 
+  const getFollowData = async () => {
+    await customAxios.get('/follows').then(resp => {
+      setFollowerList(resp.data);
+    });
+    await customAxios.get('/follows').then(resp => {
+      setFollowingList(resp.data);
+    });
+  };
+
   useEffect(() => {
-    setFollowerList(memberData.follows);
-    setFollowingList(memberData.follows);
+    getFollowData();
 
     document.body.style.cssText = `
       position: fixed; 
