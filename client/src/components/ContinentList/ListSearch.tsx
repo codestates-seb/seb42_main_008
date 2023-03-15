@@ -3,8 +3,13 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import React, { useState } from 'react';
 import { FaCalendarDay } from 'react-icons/fa';
-import { IoSearch } from 'react-icons/io5';
+// import { IoSearch } from 'react-icons/io5';
 import { HiOutlineX } from 'react-icons/hi';
+
+interface SearchOption {
+  value: string;
+  field: string;
+}
 
 const ListSearch = () => {
   const [startDate, setStartDate] = useState(new Date());
@@ -23,7 +28,18 @@ const ListSearch = () => {
     setInputValue('');
   };
 
-  const searchOptions: string[] = ['전체', '태그', '제목', '내용', '장소'];
+  const handleChangeOption = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const { value } = event.target;
+    console.log(value);
+  };
+
+  const searchOptions: SearchOption[] = [
+    { value: '전체', field: 'entire' },
+    { value: '태그', field: 'tags' },
+    { value: '제목', field: 'title' },
+    { value: '내용', field: 'content' },
+    { value: '장소', field: 'address' },
+  ];
 
   return (
     <SearchBox>
@@ -40,9 +56,11 @@ const ListSearch = () => {
       </DateSearch>
       <Stroke></Stroke>
       <KeywordSearch>
-        <select>
+        <select onChange={handleChangeOption}>
           {searchOptions.map((item, idx) => (
-            <option key={idx}>{item}</option>
+            <option key={idx} value={item.field}>
+              {item.value}
+            </option>
           ))}
         </select>
         <SearchInput>
@@ -52,10 +70,8 @@ const ListSearch = () => {
               <HiOutlineX size={19} />
             </span>
           )}
-          <span>
-            <IoSearch size={21} />
-          </span>
         </SearchInput>
+        <SearchButton>검색</SearchButton>
       </KeywordSearch>
     </SearchBox>
   );
@@ -86,6 +102,7 @@ const DateSearch = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 6;
   > label {
     display: flex;
     align-items: center;
@@ -120,6 +137,7 @@ const Stroke = styled.div`
 `;
 
 const KeywordSearch = styled.div`
+  z-index: 5;
   width: 70%;
   display: flex;
   align-items: center;
@@ -153,7 +171,7 @@ const KeywordSearch = styled.div`
 `;
 
 const SearchInput = styled.div`
-  width: calc(100% - 100px);
+  width: calc(100% - 170px);
   border-radius: 30px;
   border: 1px solid #fff;
   display: flex;
@@ -173,7 +191,7 @@ const SearchInput = styled.div`
   }
 
   .clear {
-    right: 35px;
+    right: 10px;
     opacity: 0.7;
   }
 
@@ -197,6 +215,25 @@ const SearchInput = styled.div`
 
   @media screen and (max-width: 576px) {
     width: calc(100% - 80px);
+  }
+`;
+
+const SearchButton = styled.div`
+  height: 100%;
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #222;
+  padding: 5px 20px;
+  border-radius: 30px;
+  cursor: pointer;
+
+  @media screen and (max-width: 768px) {
+    position: absolute;
+    right: 30px;
+    top: 15px;
+    height: fit-content;
   }
 `;
 
