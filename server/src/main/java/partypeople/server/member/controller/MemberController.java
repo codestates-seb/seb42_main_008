@@ -146,14 +146,15 @@ public class MemberController {
 
     @PatchMapping("/{member-id}")
     public ResponseEntity patchMember(@PathVariable("member-id") long memberId,
-                                      @RequestBody MemberDto.Patch requestBody) {
+                                      @Valid @RequestBody MemberDto.Patch requestBody) {
         requestBody.setMemberId(memberId);
         Member member = memberMapper.memberPatchToMember(requestBody);
 
         Member updatedMember = memberService.updateMember(member);
 
-        return ResponseEntity.ok(
-                new SingleResponseDto<>(memberMapper.memberToMemberResponse(updatedMember)));
+//        return ResponseEntity.ok(
+//                new SingleResponseDto<>(memberMapper.memberToMemberResponse(updatedMember)));
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/follows")

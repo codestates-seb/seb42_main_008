@@ -14,7 +14,7 @@ import java.util.List;
 
 public class MemberDto {
     @Getter
-    @AllArgsConstructor
+    @Builder
     public static class Post {
         @Email
         private String email;
@@ -28,12 +28,18 @@ public class MemberDto {
     }
 
     @Getter
+    @Builder
     public static class Patch {
         @Setter
         private Long memberId;
         private String profile;
+
+        @NotBlank
         private String nickname;
         private String content;
+
+        @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-zA-Z]).{8,}$",
+                message = "Passwords must contain at least eight characters, including at least 1 letter and 1 number.")
         private String password;
         private String gender;
     }
