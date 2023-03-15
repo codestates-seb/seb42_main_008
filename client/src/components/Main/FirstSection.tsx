@@ -8,6 +8,12 @@ import { useEffect, useState } from 'react';
 import ImageFilter from './ImageFilter';
 import { useNavigate } from 'react-router-dom';
 
+export const imgLinks = [
+  'https://i.esdrop.com/d/f/XWTMtUmtv1/U9cFP8N5cV.jpg',
+  'https://i.esdrop.com/d/f/XWTMtUmtv1/Dn3bXiThp1.jpg',
+  'https://i.esdrop.com/d/f/XWTMtUmtv1/xPUsj5Y6wu.jpg',
+];
+
 const FirstSection = () => {
   const navigate = useNavigate();
   const [isShowButton, setIsShowButton] = useState(false);
@@ -43,24 +49,11 @@ const FirstSection = () => {
       )}
       <Filter></Filter>
       <Slider {...settings}>
-        <SlideContent>
-          <img
-            src="https://i.esdrop.com/d/f/XWTMtUmtv1/U9cFP8N5cV.jpg"
-            alt="travel1"
-          />
-        </SlideContent>
-        <SlideContent>
-          <img
-            src="https://i.esdrop.com/d/f/XWTMtUmtv1/Dn3bXiThp1.jpg"
-            alt="travel2"
-          />
-        </SlideContent>
-        <SlideContent>
-          <img
-            src="https://i.esdrop.com/d/f/XWTMtUmtv1/xPUsj5Y6wu.jpg"
-            alt="travel3"
-          />
-        </SlideContent>
+        {imgLinks.map((url, idx) => (
+          <SlideContent key={idx}>
+            <img src={url} alt={`travel${idx}`} />
+          </SlideContent>
+        ))}
       </Slider>
     </FirstWrapper>
   );
