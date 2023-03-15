@@ -48,6 +48,7 @@ const MemberSettings = ({ member, setCurrentTab }: MemberSettingsProps) => {
           ...memberData,
         });
         setCurrentTab(0);
+        window.scrollTo(0, 0);
       } else {
         toast.info('취소되었습니다');
         console.log(memberData);
