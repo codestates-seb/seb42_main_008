@@ -80,6 +80,9 @@ const Container = styled.section`
   padding: 10px;
   width: 100%;
   height: 50%;
+  @media screen and (max-width: 992px) {
+    height: 100%;
+  }
   @media screen and (max-width: 768px) {
     height: 100%;
   }

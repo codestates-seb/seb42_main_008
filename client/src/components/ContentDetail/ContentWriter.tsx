@@ -43,6 +43,10 @@ const Container = styled.section`
   flex-direction: column;
   width: 100%;
   height: 50%;
+  @media screen and (max-width: 992px) {
+    width: 100%;
+    height: 100%;
+  }
   @media screen and (max-width: 768px) {
     height: 100%;
   }

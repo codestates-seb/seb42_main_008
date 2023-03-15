@@ -61,6 +61,15 @@ const ContentDetailBox = styled.section`
   box-shadow: 5px 5px 10px 5px rgba(0, 0, 0, 0.25);
   border-radius: 10px;
   position: relative;
+  @media screen and (max-width: 992px) {
+    display: flex;
+    flex-direction: column;
+    overflow: scroll;
+    height: 100vh;
+    ::-webkit-scrollbar {
+      display: none;
+    }
+  }
   @media screen and (max-width: 768px) {
     display: flex;
     flex-direction: column;
@@ -142,6 +151,15 @@ const LeftBox = styled.section`
       }
     }
   }
+  @media screen and (max-width: 992px) {
+    width: 100%;
+    height: 100%;
+    border: none;
+    overflow: scroll;
+    ::-webkit-scrollbar {
+      display: none;
+    }
+  }
   @media screen and (max-width: 768px) {
     display: flex;
     flex-direction: column;
@@ -195,6 +213,16 @@ const LeftBox = styled.section`
 const RightBox = styled.section`
   width: 34%;
   height: 100%;
+  @media screen and (max-width: 992px) {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100vh;
+    overflow: scroll;
+    ::-webkit-scrollbar {
+      display: none;
+    }
+  }
   @media screen and (max-width: 768px) {
     display: flex;
     flex-direction: row;
