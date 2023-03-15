@@ -1,6 +1,16 @@
+// import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { getScoreIcon } from 'utils/getScoreIcon';
 
 const ContentWriter = () => {
+  // 클릭 시 수정페이지로 이동 추가
+  // const navigate = useNavigate();
+  // const handleClick = () => {
+  //   navigate(`${}/edit`)
+  // }
+
+  // 클릭 시 글 삭제 추가
+
   return (
     <Container>
       <WriterInfo>
@@ -9,11 +19,13 @@ const ContentWriter = () => {
         </div>
         <div className="info-wrapper">
           <div id="nickname">하이라이트 짱팬</div>
-          <div id="battery">배터리 자리</div>
+          <div id="battery">
+            <img src={getScoreIcon(93)} alt="score" />
+          </div>
         </div>
       </WriterInfo>
       <ButtonBox>
-        {/* 작성자ID === 현재 로그인ID ?  수정, 삭제 버튼 : 동행신청, 프로필보기 버튼 */}
+        {/* 여행완료? 리뷰작성 버튼 : (작성자ID === 현재 로그인ID ?  수정, 삭제 버튼 : 동행신청, 프로필보기 버튼) */}
         {/* 참여자 탭에서는 버튼 안보이도록 수정하기 */}
         <button className="btn">동행글 수정</button>
         <button className="btn">동행글 삭제</button>
@@ -54,7 +66,7 @@ const WriterInfo = styled.section`
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    padding: 10px 50px;
+    padding: 10px 20px;
     #nickname {
       font-size: 1.3rem;
     }
@@ -71,7 +83,7 @@ const ButtonBox = styled.section`
     background-color: #d9d9d9;
     color: white;
     border: none;
-    padding: 10px 30px;
+    padding: 5px 10px;
     border-radius: 30px;
     font-size: 1.2rem;
     cursor: pointer;

@@ -1,6 +1,6 @@
-import Companion from 'components/ContentDetail/Companion';
+// import Companion from 'components/ContentDetail/Companion';
 import ContentWriter from 'components/ContentDetail/ContentWriter';
-import SearchMap from 'components/ContentDetail/SearchMap';
+import Participants from 'components/ContentDetail/Participants';
 
 import styled from 'styled-components';
 
@@ -17,38 +17,14 @@ const ContentDetail = () => {
           <div className="bottom-box">
             <h2>하이라이트 응원하러 가실 분 구합니다!!</h2>
             <h4>작성날짜 : 2023/03/09</h4>
-            <SearchMap />
+            {/* <SearchMap /> */}
             <div id="content">
               하이라이트 최고입니다 나도 하이라이트랑 여행가고 싶어요 수료하고
               나면 여행갈거임하이라이트 최고입니다 나도 하이라이트랑 여행가고
               싶어요 수료하고 나면 여행갈거임하이라이트 최고입니다 나도
               하이라이트랑 여행가고 싶어요 수료하고 나면 여행갈거임하이라이트
               최고입니다 나도 하이라이트랑 여행가고 싶어요 수료하고 나면
-              여행갈거임하이라이트 최고입니다 나도 하이라이트랑 여행가고 싶어요
-              수료하고 나면 여행갈거임하이라이트 최고입니다 나도 하이라이트랑
-              여행가고 싶어요 수료하고 나면 여행갈거임하이라이트 최고입니다 나도
-              하이라이트랑 여행가고 싶어요 수료하고 나면 여행갈거임하이라이트
-              최고입니다 나도 하이라이트랑 여행가고 싶어요 수료하고 나면
-              여행갈거임하이라이트 최고입니다 나도 하이라이트랑 여행가고 싶어요
-              수료하고 나면 여행갈거임하이라이트 최고입니다 나도 하이라이트랑
-              여행가고 싶어요 수료하고 나면 여행갈거임하이라이트 최고입니다 나도
-              하이라이트랑 여행가고 싶어요 수료하고 나면 여행갈거임하이라이트
-              최고입니다 나도 하이라이트랑 여행가고 싶어요 수료하고 나면
-              여행갈거임하이라이트 최고입니다 나도 하이라이트랑 여행가고 싶어요
-              수료하고 나면 여행갈거임나도 하이라이트랑 여행가고 싶어요 수료하고
-              나면 여행갈거임나도 하이라이트랑 여행가고 싶어요 수료하고 나면
-              여행갈거임나도 하이라이트랑 여행가고 싶어요 수료하고 나면
-              여행갈거임나도 하이라이트랑 여행가고 싶어요 수료하고 나면
-              여행갈거임나도 하이라이트랑 여행가고 싶어요 수료하고 나면
-              여행갈거임나도 하이라이트랑 여행가고 싶어요 수료하고 나면
-              여행갈거임나도 하이라이트랑 여행가고 싶어요 수료하고 나면
-              여행갈거임나도 하이라이트랑 여행가고 싶어요 수료하고 나면
-              여행갈거임나도 하이라이트랑 여행가고 싶어요 수료하고 나면
-              여행갈거임나도 하이라이트랑 여행가고 싶어요 수료하고 나면
-              여행갈거임나도 하이라이트랑 여행가고 싶어요 수료하고 나면
-              여행갈거임나도 하이라이트랑 여행가고 싶어요 수료하고 나면
-              여행갈거임나도 하이라이트랑 여행가고 싶어요 수료하고 나면
-              여행갈거임
+              여행갈거임하이라이트 최고
             </div>
             <div id="tag-box">
               {tags.map((el, index) => (
@@ -59,7 +35,9 @@ const ContentDetail = () => {
         </LeftBox>
         <RightBox>
           <ContentWriter />
-          <Companion />
+          {/* 여행완료 ? Participants : Companion */}
+          {/* <Companion /> */}
+          <Participants />
         </RightBox>
       </ContentDetailBox>
     </Container>
@@ -130,6 +108,7 @@ const LeftBox = styled.section`
       width: 100%;
       height: 100%;
       font-size: 1.3rem;
+      padding-bottom: 10px;
     }
     #tag-box {
       display: flex;
@@ -161,5 +140,5 @@ const RightBox = styled.section`
 2. 지도 API
 3. 태그 리스트 불러오기
 4. 반응형
-5. 스크롤
+5. 스크롤 * 
 */
