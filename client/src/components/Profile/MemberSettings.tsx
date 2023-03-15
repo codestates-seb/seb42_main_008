@@ -4,7 +4,7 @@ import {
   ProfileEdit,
   Validations,
 } from 'interfaces/Profile.interface';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
@@ -12,10 +12,40 @@ import { editValidationCheck } from 'utils/profileEditValidation';
 import TextEdit from './TextEdit';
 
 const MemberSettings = ({ member, setCurrentTab }: MemberSettingsProps) => {
-  const [memberData, setMemberData] = useState<ProfileEdit | any>({});
+  const [memberData, setMemberData] = useState<ProfileEdit | object>({});
+  // const [file, setFile] = useState<any>({});
+  const [profile, setProfile] = useState<string>(member.profile);
   const [validation, setValidation] = useState<Validations>(
     editValidationCheck({ ...memberData })
   );
+
+  const onFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const formData = new FormData();
+
+    if (event.target.files) {
+      formData.append('image', event.target.files[0]);
+
+      if (event.target.files[0].size < 3000000) {
+        axios
+          .post('https://api.imgur.com/3/image', formData, {
+            headers: {
+              Authorization: 'Client-ID 2dce0c293bfd544',
+              Accept: 'application/json',
+            },
+          })
+          .then(response => {
+            setProfile(response.data.data.link);
+          });
+      }
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: '파일 용량 초과',
+        text: '이미지 용량이 너무 큽니다!',
+      });
+      return;
+    }
+  };
 
   const handleSubmitClick = () => {
     if (!validation.totalValid) {
@@ -62,11 +92,11 @@ const MemberSettings = ({ member, setCurrentTab }: MemberSettingsProps) => {
         <ImageUpload>
           <div
             className="uploaded-img"
-            style={{ backgroundImage: `url(${member?.profile})` }}
+            style={{ backgroundImage: `url(${profile})` }}
           ></div>
           <UploadButton>
             <label htmlFor="file-input">사진 선택</label>
-            <input type="file" id="file-input" />
+            <input type="file" id="file-input" onChange={onFileChange} />
           </UploadButton>
         </ImageUpload>
         <TextEdit
