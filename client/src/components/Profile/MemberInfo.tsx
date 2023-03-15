@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-
 import { TbGenderFemale, TbGenderMale, TbMail } from 'react-icons/tb';
 import { SlUserFollow, SlUserFollowing } from 'react-icons/sl';
 import memberData from 'profileTestData.json';
