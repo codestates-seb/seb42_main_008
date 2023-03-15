@@ -78,6 +78,11 @@ interface MemberSettingsProps {
   member: MemberProfile | null;
 }
 
+interface FollowModalProps {
+  setIsShowModal: React.Dispatch<React.SetStateAction<boolean>>;
+  modalType: string;
+}
+
 // ! 전역 유저 정보
 interface LoginUser {
   memberId: number;
@@ -100,5 +105,6 @@ export type {
   MemberCompanionsProps,
   MemberSettingsProps,
   ListComponentProps,
+  FollowModalProps,
   LoginUser,
 };

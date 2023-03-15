@@ -7,12 +7,15 @@ import { MemberInfoProps, MemberProfile } from 'interfaces/Profile.interface';
 import { useState } from 'react';
 import { getScoreIcon } from 'utils/getScoreIcon';
 import { toast } from 'react-toastify';
+import FollowModal from './FollowModal';
 
 const MemberInfo = ({ user }: MemberInfoProps) => {
   const member: MemberProfile = memberData.members;
   const [isFollow, setIsFollow] = useState<boolean>(member.followerStatus);
+  const [isShowModal, setIsShowModal] = useState<boolean>(false);
+  const [modalType, setModalType] = useState<string>('');
 
-  const handleFollowClick = () => {
+  const handleFollowButtonClick = () => {
     setIsFollow(cur => !cur);
     if (isFollow) {
       toast.success('팔로우가 취소되었습니다');
@@ -21,53 +24,67 @@ const MemberInfo = ({ user }: MemberInfoProps) => {
     }
   };
 
+  const handleFollowListClick = (type: string) => {
+    setIsShowModal(true);
+    setModalType(type);
+  };
+
   return (
-    <InfoContainer>
-      <ImageWrapper>
-        <img src={member.profile} alt="profile" />
-        <div className="score">
-          <img src={getScoreIcon(member.score)} alt="score" />
-          <span>{member.score}%</span>
-        </div>
-      </ImageWrapper>
-      <ContentWrapper>
-        <section className="name-and-button">
-          <div className="nickname">
-            <p>{member.nickname}</p>
-            <span>
-              {member.gender === 'female' ? (
-                <TbGenderFemale size={24} />
-              ) : (
-                <TbGenderMale size={24} />
-              )}
-            </span>
+    <>
+      {isShowModal && (
+        <FollowModal setIsShowModal={setIsShowModal} modalType={modalType} />
+      )}
+      <InfoContainer>
+        <ImageWrapper>
+          <img src={member.profile} alt="profile" />
+          <div className="score">
+            <img src={getScoreIcon(member.score)} alt="score" />
+            <span>{member.score}%</span>
           </div>
-          {user.memberId !== member.memberId && (
-            <div className="buttons">
-              <Button status={isFollow} onClick={handleFollowClick}>
-                {isFollow ? (
-                  <SlUserFollowing size={21} />
+        </ImageWrapper>
+        <ContentWrapper>
+          <section className="name-and-button">
+            <div className="nickname">
+              <p>{member.nickname}</p>
+              <span>
+                {member.gender === 'female' ? (
+                  <TbGenderFemale size={24} />
                 ) : (
-                  <SlUserFollow size={21} />
+                  <TbGenderMale size={24} />
                 )}
-                {isFollow ? '팔로잉' : '팔로우'}
-              </Button>
-              <Button status={false}>
-                <TbMail size={24} />
-                쪽지 보내기
-              </Button>
+              </span>
             </div>
-          )}
-        </section>
-        <section className="follows">
-          <p>팔로워 {member.followerCount}</p>
-          <p>팔로잉 {member.followingCount}</p>
-        </section>
-        <section className="content">
-          <p>{member.content}</p>
-        </section>
-      </ContentWrapper>
-    </InfoContainer>
+            {user.memberId !== member.memberId && (
+              <div className="buttons">
+                <Button status={isFollow} onClick={handleFollowButtonClick}>
+                  {isFollow ? (
+                    <SlUserFollowing size={21} />
+                  ) : (
+                    <SlUserFollow size={21} />
+                  )}
+                  {isFollow ? '팔로잉' : '팔로우'}
+                </Button>
+                <Button status={false}>
+                  <TbMail size={24} />
+                  쪽지 보내기
+                </Button>
+              </div>
+            )}
+          </section>
+          <section className="follows">
+            <span onClick={() => handleFollowListClick('follower')}>
+              팔로워 {member.followerCount}
+            </span>
+            <span onClick={() => handleFollowListClick('following')}>
+              팔로잉 {member.followingCount}
+            </span>
+          </section>
+          <section className="content">
+            <p>{member.content}</p>
+          </section>
+        </ContentWrapper>
+      </InfoContainer>
+    </>
   );
 };
 
@@ -158,7 +175,7 @@ const ContentWrapper = styled.section`
   .follows {
     justify-content: flex-start;
     gap: 20px;
-    > p {
+    > span {
       cursor: pointer;
     }
   }
