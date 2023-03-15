@@ -2,16 +2,16 @@
   "members": {
     "memberId": 1,
     "email": "user@user.com",
-    "nickname": "King Kevv",
+    "nickname": "king Kev",
     "profile": "https://user-images.githubusercontent.com/6022883/45476027-e45c1a80-b778-11e8-9716-4e39c6d6e58e.png",
-    "content": "fwerfwefwefwef",
+    "content": "Hello !!?!!",
     "gender": "male",
     "score": 76,
     "followerCount": 2,
     "followingCount": 30,
     "memberStatus": "..?",
     "followerStatus": true,
-    "password": "qwer23456"
+    "password": "qwer1234"
   },
   "subscribers": [
     {
@@ -222,6 +222,135 @@
     {
       "score": 1,
       "content": "재미있었어요 !!!!재미있었어요 !!!!재미있었어요 !!!!"
+    }
+  ],
+
+  "companions": [
+    {
+      "companionId": 1,
+      "memberId": 2,
+      "nickname": "Joe2",
+      "score": null,
+      "title": "일본 유니버셜 같이 가요",
+      "content": "일본 유니버셜 가고싶은데 혼자라 부끄러워요ㅠ 같이 가실 분 구함~",
+      "date": "2023-03-20",
+      "address": "일본 유니버셜스튜디오",
+      "lat": 123.45678,
+      "lng": 123.12345,
+      "tags": ["내향", "테마파크"],
+      "companionStatus": false
+    },
+    {
+      "companionId": 2,
+      "memberId": 3,
+      "nickname": "Joe3",
+      "score": null,
+      "title": "일본 유니버셜 같이 가요",
+      "content": "일본 유니버셜 가고싶은데 혼자라 부끄러워요ㅠ 같이 가실 분 구함~",
+      "date": "2023-03-19",
+      "address": "일본 유니버셜스튜디오",
+      "lat": 123.45678,
+      "lng": 123.12345,
+      "tags": ["내향", "테마파크", "테마파크", "테마파크", "테마파크"],
+      "companionStatus": true
+    },
+    {
+      "companionId": 3,
+      "memberId": 3,
+      "nickname": "Joe3",
+      "score": null,
+      "title": "일본 유니버셜 같이 가요",
+      "content": "일본 유니버셜 가고싶은데 혼자라 부끄러워요ㅠ 같이 가실 분 구함~",
+      "date": "2023-03-19",
+      "address": "일본 유니버셜스튜디오",
+      "lat": 123.45678,
+      "lng": 123.12345,
+      "tags": ["내향", "테마파크"],
+      "companionStatus": true
+    },
+    {
+      "companionId": 4,
+      "memberId": 3,
+      "nickname": "Joe3",
+      "score": null,
+      "title": "일본 유니버셜 같이 가요",
+      "content": "일본 유니버셜 가고싶은데 혼자라 부끄러워요ㅠ 같이 가실 분 구함~",
+      "date": "2023-03-19",
+      "address": "일본 유니버셜스튜디오",
+      "lat": 123.45678,
+      "lng": 123.12345,
+      "tags": ["내향", "테마파크"],
+      "companionStatus": false
+    },
+    {
+      "companionId": 5,
+      "memberId": 3,
+      "nickname": "Joe3",
+      "score": null,
+      "title": "일본 유니버셜 같이 가요",
+      "content": "일본 유니버셜 가고싶은데 혼자라 부끄러워요ㅠ 같이 가실 분 구함~",
+      "date": "2023-03-19",
+      "address": "일본 유니버셜스튜디오",
+      "lat": 123.45678,
+      "lng": 123.12345,
+      "tags": ["내향", "테마파크", "테마파크", "테마파크", "테마파크"],
+      "companionStatus": false
+    },
+    {
+      "companionId": 6,
+      "memberId": 3,
+      "nickname": "Joe3",
+      "score": null,
+      "title": "일본 유니버셜 같이 가요",
+      "content": "일본 유니버셜 가고싶은데 혼자라 부끄러워요ㅠ 같이 가실 분 구함~",
+      "date": "2023-03-19",
+      "address": "일본 유니버셜스튜디오",
+      "lat": 123.45678,
+      "lng": 123.12345,
+      "tags": ["내향", "테마파크", "테마파크", "테마파크", "테마파크"],
+      "companionStatus": true
+    },
+    {
+      "companionId": 7,
+      "memberId": 3,
+      "nickname": "Joe3",
+      "score": null,
+      "title": "일본 유니버셜 같이 가요",
+      "content": "일본 유니버셜 가고싶은데 혼자라 부끄러워요ㅠ 같이 가실 분 구함~",
+      "date": "2023-03-19",
+      "address": "일본 유니버셜스튜디오",
+      "lat": 123.45678,
+      "lng": 123.12345,
+      "tags": ["내향", "테마파크"],
+      "companionStatus": true
+    },
+    {
+      "companionId": 8,
+      "memberId": 4,
+      "nickname": "Joe3",
+      "score": null,
+      "title": "일본 유니버셜 같이 가요",
+      "content": "일본 유니버셜 가고싶은데 혼자라 부끄러워요ㅠ 같이 가실 분 구함~",
+      "date": "2023-03-19",
+      "address": "일본 유니버셜스튜디오",
+      "lat": 123.45678,
+      "lng": 123.12345,
+      "tags": ["내향", "테마파크"],
+      "companionStatus": true
+    },
+    {
+      "companionId": 9,
+      "memberId": 3,
+      "nickname": "Joe3",
+      "score": null,
+      "title": "일본 유니버셜 같이 가요",
+      "content": "일본 유니버셜 가고싶은데 혼자라 부끄러워요ㅠ 같이 가실 분 구함~",
+      "date": "2023-03-19",
+      "address": "일본 유니버셜스튜디오",
+      "lat": 123.45678,
+      "lng": 123.12345,
+      "tags": ["내향", "테마파크"],
+      "companionStatus": true
     }
   ]
 }
