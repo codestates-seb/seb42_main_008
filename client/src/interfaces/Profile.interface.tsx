@@ -45,6 +45,7 @@ interface Nickname {
 interface ProfileEdit {
   proflie?: string;
   nickname?: string;
+  gender?: string;
   content?: string;
   password: string;
 }
@@ -76,6 +77,7 @@ interface ListComponentProps {
 // * MemberSettings 컴포넌트 props
 interface MemberSettingsProps {
   member: MemberProfile | null;
+  setCurrentTab: React.Dispatch<React.SetStateAction<number>>;
 }
 
 interface FollowModalProps {
@@ -86,6 +88,8 @@ interface FollowModalProps {
 interface TextEditProps {
   setMemberData: React.Dispatch<any>;
   member: MemberProfile | null;
+  validation: Validations;
+  setValidation: React.Dispatch<React.SetStateAction<Validations>>;
 }
 
 interface Validations {
@@ -93,6 +97,8 @@ interface Validations {
   contentValid: boolean | undefined;
   passwordValid: boolean | undefined;
   passwordCheckValid: boolean | undefined;
+  totalValid: boolean | undefined;
+  nicknameUnique?: boolean | undefined;
 }
 
 // ! 전역 유저 정보
