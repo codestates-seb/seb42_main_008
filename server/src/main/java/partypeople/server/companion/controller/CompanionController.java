@@ -19,6 +19,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/companions")
@@ -73,7 +74,7 @@ public class CompanionController {
         List<Companion> companions = companionPage.getContent();
 
         return ResponseEntity.ok(
-                new MultiResponseDto<>(mapper.companionsToCompanionResponseDtos(companions), companionPage)
+            new MultiResponseDto<>(mapper.companionsToCompanionResponseDtos(companions), companionPage)
         );
     }
 
@@ -90,5 +91,23 @@ public class CompanionController {
         List<CompanionDto.ReviewedMember> members = companionService.findReviewedMember(companionId, memberId);
 
         return ResponseEntity.ok(new SingleResponseDto<>(members));
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity getCompanion(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                       @RequestParam(value = "size", required = false, defaultValue = "10") int size,
+                                       @RequestParam(value = "sortDir", required = false, defaultValue = "DESC") String sortDir,
+                                       @RequestParam(value = "sortBy", required = false, defaultValue = "createdAt") String sortBy,
+                                       @RequestParam(value = "condition") String condition,
+                                       @RequestParam(value = "keyword") String keyword,
+                                       @RequestParam(value = "nationCode") String nationCode,
+                                       @RequestParam(value = "date") String date) {
+        Page<Companion> companionPage = companionService.findCompanionByKeyword(page - 1, size, sortDir, sortBy,
+            condition, keyword, nationCode, date);
+        List<Companion> companions = companionPage.getContent();
+
+        return ResponseEntity.ok(
+            new MultiResponseDto<>(mapper.companionsToCompanionResponseDtos(companions), companionPage)
+        );
     }
 }
