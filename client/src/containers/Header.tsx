@@ -84,7 +84,7 @@ const Header = () => {
         </div>
       </nav>
       {isShowMenu ? (
-        isLogin ? (
+        !isLogin ? (
           <Menu setIsShowMenu={setIsShowMenu} setIsLogin={setIsLogin} />
         ) : (
           <LogoutMenu setIsShowMenu={setIsShowMenu} />
