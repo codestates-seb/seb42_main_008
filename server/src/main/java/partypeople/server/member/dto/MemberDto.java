@@ -1,5 +1,6 @@
 package partypeople.server.member.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,6 +14,7 @@ import java.util.List;
 
 public class MemberDto {
     @Getter
+    @Builder
     public static class Post {
         @Email
         private String email;
@@ -26,13 +28,20 @@ public class MemberDto {
     }
 
     @Getter
+    @Builder
     public static class Patch {
         @Setter
         private Long memberId;
         private String profile;
+
+        @NotBlank
         private String nickname;
         private String content;
+
+        @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-zA-Z]).{8,}$",
+                message = "Passwords must contain at least eight characters, including at least 1 letter and 1 number.")
         private String password;
+        private String gender;
     }
 
     @Getter
@@ -51,6 +60,11 @@ public class MemberDto {
     public static class Nickname {
         @NotBlank
         private String nickname;
+    }
+
+    @Getter
+    public static class MemberId {
+        private Long memberId;
     }
 
     @Getter
@@ -75,6 +89,8 @@ public class MemberDto {
         private String memberStatus;
 
         private Integer score;
+
+        private Boolean followerStatus;
     }
 
 }

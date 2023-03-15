@@ -5,15 +5,10 @@ import io.jsonwebtoken.security.SignatureException;
 import lombok.RequiredArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +19,7 @@ import partypeople.server.companion.entity.Companion;
 import partypeople.server.companion.repository.CompanionRepository;
 import partypeople.server.exception.BusinessLogicException;
 import partypeople.server.exception.ExceptionCode;
+import partypeople.server.member.dto.MemberDto;
 import partypeople.server.member.entity.Follow;
 import partypeople.server.member.entity.Member;
 import partypeople.server.member.repository.FollowRepository;
@@ -32,6 +28,7 @@ import partypeople.server.review.entity.Review;
 import partypeople.server.review.repository.ReviewRepository;
 import partypeople.server.utils.CustomBeanUtils;
 
+import javax.validation.Valid;
 import java.security.SecureRandom;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -40,7 +37,6 @@ import java.util.concurrent.TimeUnit;
 @Transactional
 @RequiredArgsConstructor
 @Slf4j
-@EnableAsync
 public class MemberService {
 
     private final static Integer MEMBER_DEFUALT_SCORE = 50;
@@ -57,7 +53,7 @@ public class MemberService {
 
     private final ReviewRepository reviewRepository;
 
-    private final JavaMailSender javaMailSender;
+    private final MailService mailService;
 
 
     public Member createMember(Member member) {
@@ -184,14 +180,6 @@ public class MemberService {
         return followRepository.countByFollowingMemberId(member.getMemberId());
     }
 
-    public int scoreCal(Member member) {
-        try {
-            return MEMBER_DEFUALT_SCORE + reviewRepository.sumScoreByMemberId(member.getMemberId());
-        } catch (Exception e) { //점수조회 안될때 (리뷰 없을때)
-            return MEMBER_DEFUALT_SCORE;
-        }
-    }
-
     public String reissueAT(String refreshToken) {
         String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(jwtTokenizer.getSecretKey());
 
@@ -245,20 +233,10 @@ public class MemberService {
 
         findMember.setPassword(passwordEncoder.encode(password));
 
-        sendEmail(findMember.getEmail(),subject,body);
+        mailService.sendEmail(findMember.getEmail(),subject,body);
     }
 
-    @Async
-    public void sendEmail(String email, String subject, String body) {
-        System.out.println("Execute method asynchronously. " + Thread.currentThread().getName());
 
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(email);
-        message.setFrom("PARTYPEOPLE@partypeople.co.kr");
-        message.setSubject(subject);
-        message.setText(body);
-        javaMailSender.send(message);
-    }
     private String generateRandomPassword() {
         String upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         String lower = upper.toLowerCase(Locale.ROOT);
@@ -270,5 +248,16 @@ public class MemberService {
             password[i] = alphanum.charAt(random.nextInt(alphanum.length()));
         }
         return new String(password);
+    }
+
+
+    public Member followerStatusUpdate(Member member, Long loginMemberId) {
+        Optional<Follow> follow = followRepository.findByFollowerMemberIdAndFollowingMemberId(loginMemberId, member.getMemberId());
+
+        if(follow.isPresent()) {
+            member.setFollowerStatus(true);
+        }
+
+        return member;
     }
 }

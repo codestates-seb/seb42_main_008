@@ -1,15 +1,11 @@
 package partypeople.server.member.controller;
 
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.security.SignatureException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import partypeople.server.auth.jwt.JwtTokenizer;
 import partypeople.server.companion.entity.Companion;
 import partypeople.server.companion.mapper.CompanionMapper;
 import partypeople.server.dto.MultiResponseDto;
@@ -29,13 +25,8 @@ import partypeople.server.utils.UriCreator;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import java.net.URI;
-import java.security.SecureRandom;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
-@CrossOrigin
 @RestController
 @Validated
 @RequestMapping("/members")
@@ -73,15 +64,18 @@ public class MemberController {
     }
 
     @GetMapping("/{member-id}")
-    public ResponseEntity getMember(@PathVariable("member-id") long memberId) {
+    public ResponseEntity getMember(@PathVariable("member-id") long memberId,
+                                    @Valid @RequestBody MemberDto.MemberId loginMemberId
+                                    ) {
         Member member = memberService.findMember(memberId);
         //service
-        member.setScore(memberService.scoreCal(member));
+//        member.setScore(memberService.scoreCal(member));
         member.setFollowerCount(Math.toIntExact(memberService.followerCount(member)));
         member.setFollowingCount(Math.toIntExact(memberService.followingCount(member)));
+        Member updateMember = memberService.followerStatusUpdate(member,loginMemberId.getMemberId());
 
         return ResponseEntity.ok(
-                new SingleResponseDto<>(memberMapper.membertoMemberResponse(member)));
+                new SingleResponseDto<>(memberMapper.memberToMemberResponse(member)));
     }
 
     @GetMapping("/{member-id}/follower")
@@ -152,14 +146,15 @@ public class MemberController {
 
     @PatchMapping("/{member-id}")
     public ResponseEntity patchMember(@PathVariable("member-id") long memberId,
-                                      @RequestBody MemberDto.Patch requestBody) {
+                                      @Valid @RequestBody MemberDto.Patch requestBody) {
         requestBody.setMemberId(memberId);
         Member member = memberMapper.memberPatchToMember(requestBody);
 
         Member updatedMember = memberService.updateMember(member);
 
-        return ResponseEntity.ok(
-                new SingleResponseDto<>(memberMapper.membertoMemberResponse(updatedMember)));
+//        return ResponseEntity.ok(
+//                new SingleResponseDto<>(memberMapper.memberToMemberResponse(updatedMember)));
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/follows")

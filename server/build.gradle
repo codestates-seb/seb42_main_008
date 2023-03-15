@@ -13,6 +13,7 @@ configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
 	}
+	asciidoctorExtensions
 }
 
 repositories {
@@ -24,6 +25,8 @@ ext {
 }
 
 dependencies {
+
+
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
@@ -48,6 +51,8 @@ dependencies {
 	implementation 'com.google.code.gson:gson'
 	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.8.0'
 
+	asciidoctorExtensions 'org.springframework.restdocs:spring-restdocs-asciidoctor'
+
 //	implementation 'org.springframework.cloud:spring-cloud-starter-aws-parameter-store-config'
 }
 
@@ -63,6 +68,25 @@ tasks.named('test') {
 }
 
 tasks.named('asciidoctor') {
+	configurations "asciidoctorExtensions"
 	inputs.dir snippetsDir
 	dependsOn test
+}
+
+task copyDocument(type: Copy) {
+	dependsOn asciidoctor
+	println "asciidoctor output: ${asciidoctor.outputDir}"
+	from file("${asciidoctor.outputDir}")
+	into file("src/main/resources/static/docs")
+}
+
+build {
+	dependsOn copyDocument
+}
+
+bootJar {
+	dependsOn copyDocument
+	from ("${asciidoctor.outputDir}") {
+		into 'static/docs'
+	}
 }

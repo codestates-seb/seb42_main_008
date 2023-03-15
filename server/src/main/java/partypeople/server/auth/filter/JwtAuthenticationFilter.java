@@ -11,6 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.util.StringUtils;
+import partypeople.server.auth.AuthService;
 import partypeople.server.auth.jwt.JwtTokenizer;
 import partypeople.server.exception.BusinessLogicException;
 import partypeople.server.exception.ExceptionCode;
@@ -31,7 +32,7 @@ import java.util.concurrent.TimeUnit;
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
     private final JwtTokenizer jwtTokenizer;
-    private final RedisTemplate<String, String> redisTemplate;
+    private final AuthService authService;
 
     @SneakyThrows
     @Override
@@ -71,8 +72,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         String refreshToken = jwtTokenizer.generateRefreshToken(subject, expiration, base64EncodedSecretKey);
 
         Long refreshTokenExp = jwtTokenizer.getExpiration(refreshToken,base64EncodedSecretKey);
-        redisTemplate.opsForValue().set(refreshToken, subject, refreshTokenExp, TimeUnit.MILLISECONDS);
 
+        authService.redisSetRefreshToken(refreshTokenExp,refreshToken,subject);
         return refreshToken;
     }
 }

@@ -16,6 +16,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import partypeople.server.auth.AuthService;
 import partypeople.server.auth.filter.JwtAuthenticationFilter;
 import partypeople.server.auth.filter.JwtAuthorizationFilter;
 import partypeople.server.auth.handler.MemberAuthenticationEntryPoint;
@@ -38,6 +39,7 @@ public class SecurityConfiguration {
     private final JwtTokenizer jwtTokenizer;
     private final CustomAuthorityUtils authorityUtils;
     private final RedisTemplate<String, String> redisTemplate;
+    private final AuthService authService;
 //    private final MemberService memberService;
 
 //    @Value("${spring.security.oauth2.client.registration.google.clientId}")
@@ -117,7 +119,7 @@ public class SecurityConfiguration {
         public void configure(HttpSecurity builder) {
             AuthenticationManager authenticationManager = builder.getSharedObject(AuthenticationManager.class);
 
-            JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager, jwtTokenizer, redisTemplate);
+            JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager, jwtTokenizer,authService);
             jwtAuthenticationFilter.setFilterProcessesUrl("/members/login");
             jwtAuthenticationFilter.setAuthenticationSuccessHandler(new MemberAuthenticationSuccessHandler());
             jwtAuthenticationFilter.setAuthenticationFailureHandler(new MemberAuthenticationFailureHandler());
