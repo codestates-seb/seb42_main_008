@@ -80,6 +80,12 @@ const Container = styled.section`
   padding: 10px;
   width: 100%;
   height: 50%;
+  @media screen and (max-width: 768px) {
+    height: 100%;
+  }
+  @media screen and (max-width: 576px) {
+    height: 100%;
+  }
 `;
 
 const TabBox = styled.ul`
@@ -103,6 +109,11 @@ const TabBox = styled.ul`
   .focused {
     background-color: #d9506a;
     color: white;
+  }
+  @media screen and (max-width: 576px) {
+    .menu {
+      padding: 10px;
+    }
   }
 `;
 
@@ -148,6 +159,16 @@ const Content = styled.ul`
         color: white;
         border: none;
         border-radius: 15px;
+      }
+    }
+  }
+  @media screen and (max-width: 576px) {
+    > li {
+      font-size: 0.8rem;
+      .btn-wrapper {
+        .btn {
+          font-size: 0.8rem;
+        }
       }
     }
   }
