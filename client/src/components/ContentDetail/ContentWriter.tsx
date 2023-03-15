@@ -38,7 +38,7 @@ export default ContentWriter;
 
 const Container = styled.section`
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   flex-direction: column;
   width: 100%;
@@ -46,29 +46,35 @@ const Container = styled.section`
   @media screen and (max-width: 992px) {
     width: 100%;
     height: 100%;
+    @media (orientation: landscape) {
+      height: 70%;
+    }
   }
   @media screen and (max-width: 768px) {
-    height: 100%;
+    margin-top: 10px;
+    @media (orientation: landscape) {
+      height: 100%;
+    }
   }
   @media screen and (max-width: 576px) {
     width: 100%;
     height: 100%;
     display: flex;
     flex-direction: column;
+    margin-bottom: 10px;
   }
 `;
 
 const WriterInfo = styled.section`
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
   align-items: center;
   flex-direction: column;
   width: 100%;
-  height: 100%;
   .img-wrapper {
     background-color: #e7e7e7;
-    width: 50%;
-    height: 50%;
+    width: 200px;
+    height: 200px;
     border-radius: 100%;
     display: flex;
     justify-content: center;
@@ -82,6 +88,28 @@ const WriterInfo = styled.section`
     padding: 10px 20px;
     #nickname {
       font-size: 1.3rem;
+    }
+  }
+  @media screen and (max-width: 768px) {
+    .img-wrapper {
+      width: 150px;
+      height: 150px;
+    }
+    .info-wrapper {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      width: 100%;
+      padding: 10px 20px;
+      #nickname {
+        font-size: 1rem;
+      }
+      #battery {
+        > img {
+          width: 50px;
+          height: 40px;
+        }
+      }
     }
   }
   @media screen and (max-width: 576px) {
@@ -115,6 +143,17 @@ const ButtonBox = styled.section`
     border-radius: 30px;
     font-size: 1.2rem;
     cursor: pointer;
+  }
+  @media screen and (max-width: 768px) {
+    .btn {
+      background-color: #d9d9d9;
+      color: white;
+      border: none;
+      padding: 5px;
+      border-radius: 30px;
+      font-size: 0.7rem;
+      cursor: pointer;
+    }
   }
   @media screen and (max-width: 576px) {
     > * {
