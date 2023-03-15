@@ -1,11 +1,60 @@
-import { MemberSettingsProps, ProfileEdit } from 'interfaces/Profile.interface';
+import axios from 'axios';
+import {
+  MemberSettingsProps,
+  ProfileEdit,
+  Validations,
+} from 'interfaces/Profile.interface';
 import { useState } from 'react';
+import { toast } from 'react-toastify';
 import styled from 'styled-components';
+import Swal from 'sweetalert2';
+import { editValidationCheck } from 'utils/profileEditValidation';
 import TextEdit from './TextEdit';
 
-const MemberSettings = ({ member }: MemberSettingsProps) => {
+const MemberSettings = ({ member, setCurrentTab }: MemberSettingsProps) => {
   const [memberData, setMemberData] = useState<ProfileEdit | any>({});
-  console.log(memberData);
+  const [validation, setValidation] = useState<Validations>(
+    editValidationCheck({ ...memberData })
+  );
+
+  const handleSubmitClick = () => {
+    if (!validation.totalValid) {
+      Swal.fire({
+        icon: 'error',
+        title: '수정할 수 없습니다',
+        text: '모든 형식이 올바른지 확인해 주세요!',
+      });
+      return;
+    }
+    // if (!validation.nicknameUnique) {
+    //   Swal.fire({
+    //     icon: 'error',
+    //     title: '수정할 수 없습니다',
+    //     text: '닉네임 중복을 다시 확인해 주세요!',
+    //   });
+    //   return;
+    // }
+
+    Swal.fire({
+      text: '정말 수정하시겠습니까?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: '확인',
+    }).then(async result => {
+      if (result.isConfirmed) {
+        await axios.patch('http://localhost:3001/members', {
+          ...memberData,
+        });
+        setCurrentTab(0);
+      } else {
+        toast.info('취소되었습니다');
+        console.log(memberData);
+      }
+    });
+  };
+
   return (
     <SettingsWrapper>
       <EditWrapper>
@@ -19,9 +68,14 @@ const MemberSettings = ({ member }: MemberSettingsProps) => {
             <input type="file" id="file-input" />
           </UploadButton>
         </ImageUpload>
-        <TextEdit setMemberData={setMemberData} member={member} />
+        <TextEdit
+          setMemberData={setMemberData}
+          member={member}
+          validation={validation}
+          setValidation={setValidation}
+        />
       </EditWrapper>
-      <SubmitButton>수정하기</SubmitButton>
+      <SubmitButton onClick={handleSubmitClick}>수정하기</SubmitButton>
       <AccountDelete>회원탈퇴하기</AccountDelete>
     </SettingsWrapper>
   );

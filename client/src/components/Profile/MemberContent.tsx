@@ -40,7 +40,9 @@ const MemberContent = ({ user }: MemberInfoProps) => {
       </Tabs>
       {currentTab === 0 && <MemberReviews />}
       {currentTab === 1 && <MemberCompanoins member={member} user={user} />}
-      {currentTab === 2 && <MemberSettings member={member} />}
+      {currentTab === 2 && (
+        <MemberSettings member={member} setCurrentTab={setCurrentTab} />
+      )}
     </Container>
   );
 };

@@ -1,9 +1,14 @@
-import { TextEditProps, Validations } from 'interfaces/Profile.interface';
+import { TextEditProps } from 'interfaces/Profile.interface';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { editValidationCheck } from 'utils/profileEditValidation';
 
-const TextEdit = ({ setMemberData, member }: TextEditProps) => {
+const TextEdit = ({
+  setMemberData,
+  member,
+  validation,
+  setValidation,
+}: TextEditProps) => {
   const [nickname, setNickname] = useState<string | undefined>(
     member?.nickname
   );
@@ -11,9 +16,6 @@ const TextEdit = ({ setMemberData, member }: TextEditProps) => {
   const [content, setContent] = useState<string | undefined>(member?.content);
   const [password, setPassword] = useState<string>('');
   const [passwordCheck, setPasswordCheck] = useState<string>('');
-  const [validation, setValidation] = useState<Validations>(
-    editValidationCheck({ nickname, content, password, passwordCheck })
-  );
 
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -40,7 +42,6 @@ const TextEdit = ({ setMemberData, member }: TextEditProps) => {
     setValidation({
       ...editValidationCheck({ nickname, content, password, passwordCheck }),
     });
-    console.log(validation);
   }, [nickname, gender, content, password, passwordCheck]);
 
   return (
@@ -154,12 +155,12 @@ const TextEditWrapper = styled.section`
     display: flex;
     align-items: center;
     font-size: 1rem;
-    padding: 5px 10px;
     border-radius: 30px;
     border: 1px solid #888;
   }
   input,
   textarea {
+    padding: 5px 10px;
     :focus {
       :focus {
         outline: none;
