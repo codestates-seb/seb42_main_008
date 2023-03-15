@@ -13,12 +13,15 @@ const FollowModal = ({ setIsShowModal, isFollower }: FollowModalProps) => {
   };
 
   const getFollowData = async () => {
-    await customAxios.get('/follows').then(resp => {
-      setFollowerList(resp.data);
-    });
-    await customAxios.get('/follows').then(resp => {
-      setFollowingList(resp.data);
-    });
+    if (isFollower) {
+      await customAxios.get('/follows').then(resp => {
+        setFollowerList(resp.data);
+      });
+    } else {
+      await customAxios.get('/follows').then(resp => {
+        setFollowingList(resp.data);
+      });
+    }
   };
 
   useEffect(() => {
