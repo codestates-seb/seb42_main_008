@@ -1,13 +1,12 @@
-import { contentsTab } from 'interfaces/ContentDetail.interface';
+import FirstReviewModal from 'components/ContentDetail/FirstReviewModal';
+import { participantList } from 'interfaces/ContentDetail.interface';
 import { useState } from 'react';
 import styled from 'styled-components';
 
 const Companion = () => {
-  const [currentTab, setCurrentTab] = useState(0);
-
-  const companionTabs: contentsTab[] = [
+  const companionTabs: participantList[] = [
     {
-      tabName: '신청자',
+      tabName: '참여자',
       content: [
         { picture: '사진', name: '윤두준' },
         { picture: '사진', name: '양요섭' },
@@ -25,46 +24,35 @@ const Companion = () => {
         { picture: '사진', name: '양요섭' },
       ],
     },
-    {
-      tabName: '참여자',
-      content: [
-        { picture: '사진', name: '이기광' },
-        { picture: '사진', name: '손동운' },
-      ],
-    },
   ];
 
-  const handleSelectTab = (index: number) => {
-    setCurrentTab(index);
+  // 리뷰 작성 모달
+  const [firstModal, setFirstModal] = useState<boolean>(false);
+  const handleFirstModal = () => {
+    setFirstModal(!firstModal);
   };
 
   return (
     <Container>
       <TabBox>
-        {companionTabs.map((el: contentsTab, index: number) => (
-          <li
-            key={index}
-            className={`${currentTab === index ? `menu focused` : `menu`}`}
-            onClick={() => handleSelectTab(index)}
-          >
-            {el.tabName}
-          </li>
-        ))}
+        <li className="menu focused">참여자</li>
       </TabBox>
       <Content>
-        {companionTabs[currentTab].content.map((el, index) => (
+        {companionTabs[0].content.map((el, index) => (
           <li key={index}>
             <div className="companion-info">
-              <span>{el.picture}</span>
-              <span>{el.name}</span>
-            </div>
-            {/* 작성자ID === 현재 로그인ID ? 수락, 거절 버튼 : (신청자ID === 현재 로그인ID ? 취소 버튼 : null) */}
-            <div className="btn-wrapper">
-              <button className="btn">수락</button>
-              <button className="btn">거절</button>
+              <div>{el.picture}</div>
+              <div>{el.name}</div>
+              {/* 작성자ID === 현재 로그인ID ? 탭 안에 리뷰작성 버튼 : (여행 참여자ID === 현재 로그인ID ? : 리뷰작성 버튼 : null) */}
+              <div className="btn-wrapper">
+                <button className="btn" onClick={handleFirstModal}>
+                  리뷰
+                </button>
+              </div>
             </div>
           </li>
         ))}
+        {firstModal ? <FirstReviewModal setFirstModal={setFirstModal} /> : null}
       </Content>
     </Container>
   );
@@ -74,7 +62,6 @@ export default Companion;
 
 const Container = styled.section`
   display: flex;
-  /* justify-content: center; */
   align-items: center;
   flex-direction: column;
   padding: 10px;
@@ -94,7 +81,7 @@ const TabBox = styled.ul`
   width: 100%;
   cursor: pointer;
   > li {
-    width: 50%;
+    width: 100%;
     text-align: center;
   }
   .menu {
@@ -111,36 +98,31 @@ const Content = styled.ul`
   list-style: none;
   width: 100%;
   height: 100%;
-  display: flex;
-  justify-content: flex-start;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  justify-items: center;
   align-items: center;
-  flex-direction: column;
   overflow: scroll;
   ::-webkit-scrollbar {
     display: none;
   }
   li {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 100%;
     border: 1px solid #cccccc;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
     font-size: 1.2rem;
     padding: 5px;
     .companion-info {
       width: 50%;
+      text-align: center;
     }
     .btn-wrapper {
       padding: 5px;
-      width: 50%;
       display: flex;
       justify-content: space-around;
-      > :nth-child(1) {
-        background-color: #81d05b;
-      }
-      > :nth-child(2) {
-        background-color: #ff624d;
-      }
       .btn {
         cursor: pointer;
         padding: 5px 10px;
@@ -148,6 +130,7 @@ const Content = styled.ul`
         color: white;
         border: none;
         border-radius: 15px;
+        background-color: #feb35c;
       }
     }
   }
