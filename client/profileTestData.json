@@ -2,18 +2,18 @@
   "members": {
     "memberId": 1,
     "email": "user@user.com",
-    "nickname": "De Bruyne",
+    "nickname": "King Kevv",
     "profile": "https://user-images.githubusercontent.com/6022883/45476027-e45c1a80-b778-11e8-9716-4e39c6d6e58e.png",
-    "content": "안녕하세요? 안녕하세요? 안녕하세요? 안녕하세요? 안녕하세요? 안녕하세요? 안녕하세요? 안녕하세요? 안녕하세요? 안녕하세요? 안녕하세요? 안녕하세요? 안녕하세요? 안녕하세요? 안녕하세요? 안녕하세요? 안녕하세요? 안녕하세요? 안녕하세요? 안녕하세요? 안녕하세요? 안녕하세요? 안녕하세요? 안녕하세요? ",
+    "content": "fwerfwefwefwef",
     "gender": "male",
     "score": 76,
     "followerCount": 2,
     "followingCount": 30,
     "memberStatus": "..?",
     "followerStatus": true,
-    "password": "qwer1234"
+    "password": "qwer23456"
   },
-  "companions": [
+  "subscribers": [
     {
       "compainonId": 1,
       "address": "Manchester, Etihad Stadium",
@@ -29,6 +29,106 @@
       "lng": 3.141592,
       "date": "2023-03-14",
       "companionStatus": false
+    },
+    {
+      "compainonId": 3,
+      "address": "Manchester, Etihad Stadium",
+      "lat": 3.141592,
+      "lng": 3.141592,
+      "date": "2023-03-14",
+      "companionStatus": false
+    },
+    {
+      "compainonId": 4,
+      "address": "Manchester, Etihad Stadium",
+      "lat": 3.141592,
+      "lng": 3.141592,
+      "date": "2023-03-14",
+      "companionStatus": true
+    },
+    {
+      "compainonId": 5,
+      "address": "Manchester, Etihad Stadium",
+      "lat": 3.141592,
+      "lng": 3.141592,
+      "date": "2023-03-14",
+      "companionStatus": false
+    },
+    {
+      "compainonId": 6,
+      "address": "Manchester, Etihad Stadium",
+      "lat": 3.141592,
+      "lng": 3.141592,
+      "date": "2023-03-14",
+      "companionStatus": true
+    }
+  ],
+  "participants": [
+    {
+      "compainonId": 1,
+      "address": "Manchester, Etihad Stadium",
+      "lat": 3.141592,
+      "lng": 3.141592,
+      "date": "2023-03-14",
+      "companionStatus": true
+    },
+    {
+      "compainonId": 2,
+      "address": "Manchester, Etihad Stadium",
+      "lat": 3.141592,
+      "lng": 3.141592,
+      "date": "2023-03-14",
+      "companionStatus": false
+    },
+    {
+      "compainonId": 3,
+      "address": "Manchester, Etihad Stadium",
+      "lat": 3.141592,
+      "lng": 3.141592,
+      "date": "2023-03-14",
+      "companionStatus": false
+    },
+    {
+      "compainonId": 4,
+      "address": "Manchester, Etihad Stadium",
+      "lat": 3.141592,
+      "lng": 3.141592,
+      "date": "2023-03-14",
+      "companionStatus": true
+    },
+    {
+      "compainonId": 5,
+      "address": "Manchester, Etihad Stadium",
+      "lat": 3.141592,
+      "lng": 3.141592,
+      "date": "2023-03-14",
+      "companionStatus": false
+    },
+    {
+      "compainonId": 6,
+      "address": "Manchester, Etihad Stadium",
+      "lat": 3.141592,
+      "lng": 3.141592,
+      "date": "2023-03-14",
+      "companionStatus": true
+    }
+  ],
+  "writters": [
+    {
+      "compainonId": 1,
+      "address": "Manchester, Etihad Stadium",
+      "lat": 3.141592,
+      "lng": 3.141592,
+      "date": "2023-03-14",
+      "companionStatus": false
+    },
+    {
+      "compainonId": 2,
+      "address": "Manchester, Etihad Stadium",
+      "lat": 3.141592,
+      "lng": 3.141592,
+      "date": "2023-03-14",
+      "companionStatus": true
     },
     {
       "compainonId": 3,
