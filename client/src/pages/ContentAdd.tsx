@@ -6,8 +6,8 @@ import DatePicker, { registerLocale } from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import ko from 'date-fns/locale/ko';
 import CountrySelectModal from 'components/ContentAdd/CountrySelectModal';
-import SearchMap from 'components/ContentAdd/SearchMap';
 import TendencyModal from 'components/ContentAdd/TendencyModal';
+import SearchMap from 'components/ContentAdd/SearchMap';
 
 registerLocale('ko', ko);
 
@@ -84,10 +84,8 @@ const ContentAdd = () => {
   const [contentInput, setContentInput] = useState('');
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
-
   const [isTendencyModal, setIsTendencyModal] = useState(false);
-  // const [isThemeModal, setIsThemeModal] = useState(false);
-
+  const [savedAddress, setSavedAddress] = useState<string | null>(null);
   const handleContentSubmit = () => {
     if (!titleInput) {
       alert('글 제목을 입력해주세요!');
@@ -173,7 +171,10 @@ const ContentAdd = () => {
         </div>
         <div className="add-set">
           <label>여행 장소</label>
-          <SearchMap />
+          <SearchMap
+            savedAddress={savedAddress}
+            setSavedAddress={setSavedAddress}
+          />
         </div>
         <div className="add-set">
           <label>모집 내용</label>

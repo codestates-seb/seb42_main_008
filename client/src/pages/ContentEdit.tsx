@@ -6,8 +6,8 @@ import DatePicker, { registerLocale } from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import ko from 'date-fns/locale/ko';
 import CountrySelectModal from 'components/ContentAdd/CountrySelectModal';
-import SearchMap from 'components/ContentAdd/SearchMap';
 import TendencyModal from 'components/ContentAdd/TendencyModal';
+import SearchMap from 'components/ContentAdd/SearchMap';
 
 registerLocale('ko', ko);
 
@@ -84,10 +84,8 @@ const ContentEdit = () => {
   const [contentInput, setContentInput] = useState('');
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
-
   const [isTendencyModal, setIsTendencyModal] = useState(false);
-  // const [isThemeModal, setIsThemeModal] = useState(false);
-
+  const [savedAddress, setSavedAddress] = useState<string | null>(null);
   const handleContentSubmit = () => {
     if (!titleInput) {
       alert('글 제목을 입력해주세요!');
@@ -105,6 +103,7 @@ const ContentEdit = () => {
       setIsTendencyModal(!isTendencyModal);
     }
   };
+
   return (
     <ContentAddContainer>
       <TitleBox style={{ backgroundImage: `url(${titleImg})` }}>
@@ -114,25 +113,29 @@ const ContentEdit = () => {
       <ContentBox>
         <nav className="location-select">
           <div>
-            <label>대륙</label>
-            <select
-              value={continentSelect}
-              onChange={event => setContinentSelect(event.target.value)}
-            >
-              <option value="대륙선택">대륙선택</option>
-              <option value="유럽">유럽</option>
-              <option value="아시아">아시아</option>
-              <option value="북아메리카">북아메리카</option>
-              <option value="남아메리카">남아메리카</option>
-              <option value="아프리카">아프리카</option>
-              <option value="오세아니아">오세아니아</option>
-            </select>
+            <label>
+              대륙
+              <select
+                value={continentSelect}
+                onChange={event => setContinentSelect(event.target.value)}
+              >
+                <option value="대륙선택">대륙선택</option>
+                <option value="유럽">유럽</option>
+                <option value="아시아">아시아</option>
+                <option value="북아메리카">북아메리카</option>
+                <option value="남아메리카">남아메리카</option>
+                <option value="아프리카">아프리카</option>
+                <option value="오세아니아">오세아니아</option>
+              </select>
+            </label>
           </div>
           <div className="country-state">
-            <label>나라</label>
-            <div className="country-name">잉글랜드</div>
+            <label>
+              <div className="country-label">나라</div>
+              <div className="country-name">잉글랜드</div>
+              <button onClick={handleCountryModal}>선택</button>
+            </label>
           </div>
-          <button onClick={handleCountryModal}>선택</button>
         </nav>
         <div className="add-set">
           <label>제목</label>
@@ -168,7 +171,10 @@ const ContentEdit = () => {
         </div>
         <div className="add-set">
           <label>여행 장소</label>
-          <SearchMap />
+          <SearchMap
+            savedAddress={savedAddress}
+            setSavedAddress={setSavedAddress}
+          />
         </div>
         <div className="add-set">
           <label>모집 내용</label>
@@ -229,13 +235,25 @@ const TitleBox = styled.div`
   font-weight: bold;
   > h1 {
     font-size: 4rem;
+    @media screen and (max-width: 768px) {
+      font-size: 3rem;
+    }
+    @media screen and (max-width: 576px) {
+      font-size: 2.5rem;
+    }
+  }
+  > p {
+    font-size: 1rem;
+    @media screen and (max-width: 768px) {
+      font-size: 0.8rem;
+    }
   }
 `;
 
 const ContentBox = styled.div`
   display: flex;
   flex-direction: column;
-  width: 724px;
+  width: 70%;
   align-items: center;
   justify-content: center;
   padding-bottom: 30px;
@@ -253,14 +271,32 @@ const ContentBox = styled.div`
       }
     }
   }
+
+  .country-state {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    justify-content: space-around;
+    white-space: nowrap;
+
+    @media screen and (max-width: 768px) {
+      font-size: 1.3rem;
+    }
+  }
   .country-name {
+    display: flex;
     background-color: #cecece;
-    text-align: center;
+    align-items: center;
+    justify-content: center;
     color: white;
     width: 200px;
     height: 36px;
     font-size: 1.5rem;
     border-radius: 30px;
+    margin-left: 10px;
+    @media screen and (max-width: 768px) {
+      font-size: 1.3rem;
+    }
   }
   .location-select {
     display: flex;
@@ -269,40 +305,62 @@ const ContentBox = styled.div`
     justify-content: space-between;
     font-size: 1.5rem;
     align-items: center;
+    white-space: nowrap;
     border-bottom: 1px solid #dddddd;
+    @media screen and (max-width: 768px) {
+      flex-direction: column;
+    }
     > div {
       display: flex;
       align-items: center;
-      width: 40%;
+      width: 100%;
       justify-content: space-around;
-      > select {
-        -webkit-appearance: none;
-        -moz-appearance: none;
-        appearance: none;
-        display: flex;
-        border: none;
-        outline: none;
-        align-items: center;
-        justify-content: center;
-        border: none;
-        padding-left: 20px;
-        width: 200px;
-        height: 36px;
-        background-color: #feb35c;
-        border-radius: 30px;
-        font-size: 1.5rem;
-        color: white;
+      @media screen and (max-width: 768px) {
+        font-size: 1.3rem;
       }
-    }
-    > button {
-      border: none;
-      background-color: #feb35c;
-      color: white;
-      width: 96px;
-      height: 36px;
-      font-size: 1.5rem;
-      border-radius: 30px;
-      cursor: pointer;
+
+      > label {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        > select {
+          margin: 10px;
+          -webkit-appearance: none;
+          -moz-appearance: none;
+          appearance: none;
+          display: flex;
+          border: none;
+          outline: none;
+          align-items: center;
+          justify-content: center;
+          text-align: center;
+          border: none;
+          width: 190px;
+          height: 36px;
+          background-color: #feb35c;
+          border-radius: 30px;
+          font-size: 1.5rem;
+          color: white;
+          cursor: pointer;
+          @media screen and (max-width: 768px) {
+            font-size: 1.3rem;
+          }
+        }
+        > button {
+          border: none;
+          background-color: #feb35c;
+          color: white;
+          width: 60px;
+          height: 36px;
+          font-size: 1.5rem;
+          border-radius: 30px;
+          cursor: pointer;
+          margin-left: 10px;
+          @media screen and (max-width: 768px) {
+            font-size: 1.3rem;
+          }
+        }
+      }
     }
   }
   .add-set {
@@ -323,6 +381,7 @@ const ContentBox = styled.div`
     margin: 0px;
     position: relative;
   }
+
   .ql-editor {
     min-height: 15rem;
   }
