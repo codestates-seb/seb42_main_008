@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { FaRegEnvelope } from 'react-icons/fa';
-import { TbTrashXFilled } from 'react-icons/tb';
 import { GrClose } from 'react-icons/gr';
 const Message = () => {
   const [isNoteOpen, setIsNoteOpen] = useState(false);
@@ -27,12 +26,11 @@ const Message = () => {
     <MessageBox>
       <div className="message-info">
         <div className="info-left">
-          <FaRegEnvelope size="20px" />
+          <FaRegEnvelope className="envelope" />
           <div>2023/03/09</div>
         </div>
         <div className="info-right">
           <div>username</div>
-          <TbTrashXFilled size="20px" color="#d9506a" />
         </div>
       </div>
       <div className="message-content" onClick={handleOpenNote}>
@@ -47,7 +45,7 @@ const Message = () => {
                   <FaRegEnvelope />
                   보낸사람 | 닉네임
                 </div>
-                <div onClick={handleCloseNote}>
+                <div className="modal-out" onClick={handleCloseNote}>
                   <GrClose />
                 </div>
               </div>
@@ -100,28 +98,72 @@ const MessageBox = styled.div`
   background-color: #f4f4f4;
   border-radius: 5px;
   margin: 10px 0px 10px 0px;
+  @media screen and (max-width: 768px) {
+    height: 140px;
+  }
+  @media screen and (max-width: 576px) {
+    height: 140px;
+  }
+
   .message-info {
     display: flex;
     justify-content: space-between;
     border-bottom: 1px solid black;
+    height: 40%;
+    align-items: center;
+
+    @media screen and (max-width: 768px) {
+      font-size: 0.8rem;
+      flex-direction: column-reverse;
+      align-items: flex-start;
+    }
+    @media screen and (max-width: 576px) {
+      font-size: 0.8rem;
+      flex-direction: column-reverse;
+      align-items: flex-start;
+    }
+    .envelope {
+      width: 2rem;
+      height: 2rem;
+      @media screen and (max-width: 768px) {
+        width: 1.3rem;
+        height: 1.3rem;
+      }
+      @media screen and (max-width: 576px) {
+        width: 0.8rem;
+        height: 0.8rem;
+      }
+    }
   }
   .info-left {
     display: flex;
     width: 40%;
     justify-content: space-around;
     align-items: center;
+    height: 50%;
+    margin-left: 15px;
   }
   .info-right {
     display: flex;
     width: 30%;
     justify-content: space-around;
     align-items: center;
+    height: 50%;
+    margin-left: 15px;
   }
   .message-content {
     padding-top: 10px;
     display: flex;
     text-align: start;
     cursor: pointer;
+    height: 60%;
+    overflow: hidden;
+    @media screen and (max-width: 768px) {
+      font-size: 0.8rem;
+    }
+    @media screen and (max-width: 576px) {
+      font-size: 0.8rem;
+    }
   }
   .overlay {
     position: fixed;
@@ -144,35 +186,57 @@ const NoteModal = styled.div`
   right: 50%;
   transform: translate(50%, -50%);
   flex-direction: column;
+  @media screen and (max-width: 768px) {
+    width: 500px;
+    height: 360px;
+  }
+  @media screen and (max-width: 576px) {
+    width: 400px;
+    height: 300px;
+  }
 
   .note-box {
     padding: 30px;
+    height: 80%;
   }
   .note-top {
     display: flex;
     align-items: center;
     width: 100%;
+    height: 20%;
     border-bottom: 1px solid black;
     justify-content: space-between;
     padding-bottom: 15px;
+    font-size: 1.5rem;
+    @media screen and (max-width: 768px) {
+      font-size: 1.5rem;
+    }
+    @media screen and (max-width: 576px) {
+      font-size: 1.2rem;
+    }
   }
   .note-title {
     display: flex;
     align-items: center;
-    width: 30%;
+    width: 50%;
     justify-content: space-around;
+  }
+  .modal-out {
+    display: flex;
+    align-items: center;
   }
   .note-content {
     display: flex;
     background-color: #d9d9d9;
     margin-top: 15px;
-    height: 200px;
+    height: 80%;
     width: 100%;
     padding: 10px;
   }
   .note-button {
     display: flex;
     width: 100%;
+    height: 20%;
     justify-content: space-around;
     .reply {
       background-color: #9bb76a;
@@ -180,6 +244,14 @@ const NoteModal = styled.div`
       height: 45px;
       border-radius: 30px;
       border: none;
+      @media screen and (max-width: 768px) {
+        width: 120px;
+        height: 45px;
+      }
+      @media screen and (max-width: 576px) {
+        width: 120px;
+        height: 45px;
+      }
     }
     .delete {
       background-color: #d9506a;
@@ -187,6 +259,14 @@ const NoteModal = styled.div`
       height: 45px;
       border-radius: 30px;
       border: none;
+      @media screen and (max-width: 768px) {
+        width: 120px;
+        height: 45px;
+      }
+      @media screen and (max-width: 576px) {
+        width: 120px;
+        height: 45px;
+      }
     }
     .submit {
       background-color: #feb35c;
@@ -194,6 +274,14 @@ const NoteModal = styled.div`
       height: 45px;
       border-radius: 30px;
       border: none;
+      @media screen and (max-width: 768px) {
+        width: 120px;
+        height: 45px;
+      }
+      @media screen and (max-width: 576px) {
+        width: 120px;
+        height: 45px;
+      }
     }
     .cancel {
       background-color: #bababa;
@@ -201,6 +289,14 @@ const NoteModal = styled.div`
       height: 45px;
       border-radius: 30px;
       border: none;
+      @media screen and (max-width: 768px) {
+        width: 120px;
+        height: 45px;
+      }
+      @media screen and (max-width: 576px) {
+        width: 120px;
+        height: 45px;
+      }
     }
   }
 `;

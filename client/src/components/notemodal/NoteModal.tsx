@@ -58,7 +58,7 @@ const SideBar = styled.nav`
   .note-menu {
     display: flex;
     align-items: center;
-    width: auto;
+    width: 100%;
     border-bottom: 1px solid #555555;
     height: 40px;
     font-size: 20px;
