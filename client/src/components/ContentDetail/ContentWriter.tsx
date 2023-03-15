@@ -38,7 +38,7 @@ export default ContentWriter;
 
 const Container = styled.section`
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   flex-direction: column;
   width: 100%;
@@ -46,29 +46,34 @@ const Container = styled.section`
   @media screen and (max-width: 992px) {
     width: 100%;
     height: 100%;
+    @media (orientation: landscape) {
+      height: 70%;
+    }
   }
   @media screen and (max-width: 768px) {
-    height: 100%;
+    @media (orientation: landscape) {
+      height: 100%;
+    }
   }
   @media screen and (max-width: 576px) {
     width: 100%;
     height: 100%;
     display: flex;
     flex-direction: column;
+    margin-bottom: 10px;
   }
 `;
 
 const WriterInfo = styled.section`
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
   align-items: center;
   flex-direction: column;
   width: 100%;
-  height: 100%;
   .img-wrapper {
     background-color: #e7e7e7;
-    width: 50%;
-    height: 50%;
+    width: 200px;
+    height: 200px;
     border-radius: 100%;
     display: flex;
     justify-content: center;

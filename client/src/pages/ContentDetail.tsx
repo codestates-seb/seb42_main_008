@@ -69,6 +69,10 @@ const ContentDetailBox = styled.section`
     ::-webkit-scrollbar {
       display: none;
     }
+    @media (orientation: landscape) {
+      /* Landscape 모드일 때 적용할 CSS */
+      height: 100%;
+    }
   }
   @media screen and (max-width: 768px) {
     display: flex;
@@ -77,6 +81,10 @@ const ContentDetailBox = styled.section`
     height: 100vh;
     ::-webkit-scrollbar {
       display: none;
+    }
+    @media (orientation: landscape) {
+      /* Landscape 모드일 때 적용할 CSS */
+      height: 100%;
     }
   }
   @media screen and (max-width: 576px) {
@@ -164,11 +172,48 @@ const LeftBox = styled.section`
     display: flex;
     flex-direction: column;
     width: 100%;
-    height: 100vh;
+    /* height: 100vh; */
     border: none;
     overflow: scroll;
     ::-webkit-scrollbar {
       display: none;
+    }
+    @media (orientation: landscape) {
+      .top-box {
+        display: flex;
+        justify-content: flex-start;
+        align-items: flex-end;
+        width: 100%;
+        border-bottom: 30px solid #feb35c;
+        h1 {
+          font-size: 2rem;
+          padding-right: 30px;
+        }
+        h3 {
+          font-size: 1rem;
+        }
+      }
+      .bottom-box {
+      h2 {
+        font-size: 1.5rem;
+      }
+      h4 {
+        color: #666666;
+        font-weight: bold;
+        font-size: 0.8rem;
+      }
+      #content {
+        font-size: 1rem;
+      }
+      #tag-box {
+        li {
+          width: calc(100% / 5);
+          text-align: center;
+          font-size: 0.5rem;
+          padding: 5px;
+          color: white;
+        }
+      }
     }
   }
   @media screen and (max-width: 576px) {
