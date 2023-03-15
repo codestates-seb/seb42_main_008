@@ -85,7 +85,7 @@ interface ListComponentProps {
 
 // * MemberSettings 컴포넌트 props
 interface MemberSettingsProps {
-  member: MemberProfile | null;
+  member: MemberProfile;
   setCurrentTab: React.Dispatch<React.SetStateAction<number>>;
 }
 

@@ -60,7 +60,7 @@ const TextEdit = ({
   };
 
   useEffect(() => {
-    setMemberData((cur: any) => ({
+    setMemberData((cur: object) => ({
       ...cur,
       nickname,
       gender,
