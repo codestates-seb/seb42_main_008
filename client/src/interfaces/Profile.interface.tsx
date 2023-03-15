@@ -31,7 +31,7 @@ interface Review {
 
 // * 팔로워, 팔로잉
 interface Follow {
-  memberID: number;
+  memberId: number;
   profile: string;
   nickname: string;
 }
