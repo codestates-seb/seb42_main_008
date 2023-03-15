@@ -24,15 +24,15 @@ const SecondReviewModal = ({ setFirstModal, setSecondModal }: secondModal) => {
               아니요. 참석하지 않았습니다.
             </button>
           </div>
-          {thirdModal ? (
-            <ThirdReviewModal
-              setFirstModal={setFirstModal}
-              setSecondModal={setSecondModal}
-              setThirdModal={setThirdModal}
-            />
-          ) : null}
         </ModalView>
       </BackGround>
+      {thirdModal ? (
+        <ThirdReviewModal
+          setFirstModal={setFirstModal}
+          setSecondModal={setSecondModal}
+          setThirdModal={setThirdModal}
+        />
+      ) : null}
     </Container>
   );
 };
@@ -47,7 +47,6 @@ const BackGround = styled.section`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgba(0, 0, 0, 0.2);
   position: fixed;
   top: 0;
   bottom: 0;

@@ -49,7 +49,6 @@ const BackGround = styled.section`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgba(0, 0, 0, 0.2);
   position: fixed;
   top: 0;
   bottom: 0;
