@@ -50,5 +50,14 @@ export const editValidationCheck = ({
     }
   }
 
-  return { nicknameValid, contentValid, passwordValid, passwordCheckValid };
+  const totalValid =
+    nicknameValid && contentValid && passwordValid && passwordCheckValid;
+
+  return {
+    nicknameValid,
+    contentValid,
+    passwordValid,
+    passwordCheckValid,
+    totalValid,
+  };
 };
