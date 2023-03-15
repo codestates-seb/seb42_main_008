@@ -1,22 +1,23 @@
 import styled from 'styled-components';
-import { MemberInfoProps, MemberProfile } from 'interfaces/Profile.interface';
-import memberData from 'profileTestData.json';
+import { MemberContentProps } from 'interfaces/Profile.interface';
 import { useEffect, useState } from 'react';
 import MemberReviews from './MemberReviews';
 import MemberCompanoins from './MemberCompanoins';
 import MemberSettings from './MemberSettings';
 
-const MemberContent = ({ user }: MemberInfoProps) => {
-  const [member, setMember] = useState<MemberProfile | null>(null);
+const MemberContent = ({
+  user,
+  member,
+  currentTab,
+  setCurrentTab,
+}: MemberContentProps) => {
   const [tabList, setTabList] = useState<string[]>([]);
-  const [currentTab, setCurrentTab] = useState(0);
 
   useEffect(() => {
-    setMember(memberData.members);
     setTabList(
       user.memberId === member?.memberId
         ? ['평가 모아보기', `내 동행글`, '계정 관리']
-        : ['평가 모아보기', `${member?.nickname}의 동행글`]
+        : ['평가 모아보기', `동행글 보기`]
     );
   }, [user]);
 
@@ -40,7 +41,9 @@ const MemberContent = ({ user }: MemberInfoProps) => {
       </Tabs>
       {currentTab === 0 && <MemberReviews />}
       {currentTab === 1 && <MemberCompanoins member={member} user={user} />}
-      {currentTab === 2 && <MemberSettings member={member} />}
+      {currentTab === 2 && (
+        <MemberSettings member={member} setCurrentTab={setCurrentTab} />
+      )}
     </Container>
   );
 };
@@ -87,6 +90,12 @@ const Tabs = styled.ul`
     color: #fff;
     :hover {
       filter: brightness(1);
+    }
+  }
+
+  @media screen and (max-width: 576px) {
+    > li {
+      font-size: 0.8rem;
     }
   }
 `;

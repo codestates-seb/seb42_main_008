@@ -14,7 +14,7 @@ const ListItems = ({ listData }: ListItemProps) => {
   });
 
   const handleClickItem = (id: number) => {
-    navigate(`./${id}`);
+    navigate(`/companions/${id}`);
   };
 
   const sortByArr: SortBy[] = [
@@ -79,14 +79,14 @@ const ItemListsContainer = styled.section`
   color: #222;
   position: relative;
 
-  @media screen and (max-width: 992px) {
+  @media screen and (max-width: 1200px) {
     grid-template-columns: repeat(3, 1fr);
   }
-  @media screen and (max-width: 768px) {
+  @media screen and (max-width: 922px) {
     grid-template-columns: repeat(2, 1fr);
     padding-top: 140px;
   }
-  @media screen and (max-width: 576px) {
+  @media screen and (max-width: 620px) {
     grid-template-columns: repeat(1, 1fr);
   }
 `;
@@ -103,7 +103,7 @@ export const ListItem = styled.article`
   align-items: flex-end;
   justify-content: space-between;
   position: relative;
-  transition: 0.5s;
+  transition: 0.3s;
   overflow: hidden;
   cursor: pointer;
 

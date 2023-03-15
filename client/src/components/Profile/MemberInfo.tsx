@@ -1,73 +1,108 @@
 import styled from 'styled-components';
-
 import { TbGenderFemale, TbGenderMale, TbMail } from 'react-icons/tb';
 import { SlUserFollow, SlUserFollowing } from 'react-icons/sl';
-import memberData from 'profileTestData.json';
-import { MemberInfoProps, MemberProfile } from 'interfaces/Profile.interface';
+import { FollowRequest, MemberInfoProps } from 'interfaces/Profile.interface';
 import { useState } from 'react';
 import { getScoreIcon } from 'utils/getScoreIcon';
 import { toast } from 'react-toastify';
+import FollowModal from './FollowModal';
+import customAxios from 'api/customAxios';
 
-const MemberInfo = ({ user }: MemberInfoProps) => {
-  const member: MemberProfile = memberData.members;
+const MemberInfo = ({ user, member }: MemberInfoProps) => {
   const [isFollow, setIsFollow] = useState<boolean>(member.followerStatus);
+  const [isShowModal, setIsShowModal] = useState<boolean>(false);
+  const [isFollower, setIsFollower] = useState<boolean>(true);
 
-  const handleFollowClick = () => {
+  const handleFollowButtonClick = async () => {
     setIsFollow(cur => !cur);
-    if (isFollow) {
-      toast.success('팔로우가 취소되었습니다');
-    } else {
-      toast.success('팔로우가 완료되었습니다');
-    }
+
+    const data: FollowRequest = {
+      followerId: user.memberId,
+      followingId: member.memberId,
+    };
+
+    await customAxios.post('/members/follows', data).then(resp => {
+      console.log(resp.data);
+      setIsFollow(resp.data);
+      if (!resp.data) {
+        toast.success('팔로우가 취소되었습니다');
+      } else {
+        toast.success('팔로우가 완료되었습니다');
+      }
+    });
+  };
+
+  const handleFollowListClick = (type: boolean) => {
+    setIsShowModal(true);
+    setIsFollower(type);
   };
 
   return (
-    <InfoContainer>
-      <ImageWrapper>
-        <img src={member.profile} alt="profile" />
-        <div className="score">
-          <img src={getScoreIcon(member.score)} alt="score" />
-          <span>{member.score}%</span>
-        </div>
-      </ImageWrapper>
-      <ContentWrapper>
-        <section className="name-and-button">
-          <div className="nickname">
-            <p>{member.nickname}</p>
-            <span>
-              {member.gender === 'female' ? (
-                <TbGenderFemale size={24} />
-              ) : (
-                <TbGenderMale size={24} />
-              )}
-            </span>
-          </div>
-          {user.memberId !== member.memberId && (
-            <div className="buttons">
-              <Button status={isFollow} onClick={handleFollowClick}>
-                {isFollow ? (
-                  <SlUserFollowing size={21} />
-                ) : (
-                  <SlUserFollow size={21} />
-                )}
-                {isFollow ? '팔로잉' : '팔로우'}
-              </Button>
-              <Button status={false}>
-                <TbMail size={24} />
-                쪽지 보내기
-              </Button>
-            </div>
+    <>
+      {member && (
+        <>
+          {isShowModal && (
+            <FollowModal
+              setIsShowModal={setIsShowModal}
+              isFollower={isFollower}
+            />
           )}
-        </section>
-        <section className="follows">
-          <p>팔로워 {member.followerCount}</p>
-          <p>팔로잉 {member.followingCount}</p>
-        </section>
-        <section className="content">
-          <p>{member.content}</p>
-        </section>
-      </ContentWrapper>
-    </InfoContainer>
+          <InfoContainer>
+            <ImageWrapper>
+              <img src={member.profile} alt="profile" />
+              <div className="score">
+                <img src={getScoreIcon(member.score)} alt="score" />
+                <span>{member.score}%</span>
+              </div>
+            </ImageWrapper>
+            <ContentWrapper>
+              <section className="name-and-button">
+                <div className="nickname">
+                  <p>{member.nickname}</p>
+                  <span>
+                    {member.gender === 'female' ? (
+                      <TbGenderFemale size={24} />
+                    ) : (
+                      <TbGenderMale size={24} />
+                    )}
+                  </span>
+                </div>
+                {user.memberId !== member.memberId && (
+                  <div className="buttons">
+                    <Button
+                      status={isFollow ? isFollow : false}
+                      onClick={handleFollowButtonClick}
+                    >
+                      {isFollow ? (
+                        <SlUserFollowing size={21} />
+                      ) : (
+                        <SlUserFollow size={21} />
+                      )}
+                      {isFollow ? '팔로잉' : '팔로우'}
+                    </Button>
+                    <Button status={false}>
+                      <TbMail size={24} />
+                      쪽지 보내기
+                    </Button>
+                  </div>
+                )}
+              </section>
+              <section className="follows">
+                <span onClick={() => handleFollowListClick(true)}>
+                  팔로워 {member.followerCount}
+                </span>
+                <span onClick={() => handleFollowListClick(false)}>
+                  팔로잉 {member.followingCount}
+                </span>
+              </section>
+              <section className="content">
+                <p>{member.content}</p>
+              </section>
+            </ContentWrapper>
+          </InfoContainer>
+        </>
+      )}
+    </>
   );
 };
 
@@ -158,8 +193,16 @@ const ContentWrapper = styled.section`
   .follows {
     justify-content: flex-start;
     gap: 20px;
-    > p {
+    > span {
       cursor: pointer;
+    }
+  }
+  .content {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    > p {
+      text-align: left;
     }
   }
 

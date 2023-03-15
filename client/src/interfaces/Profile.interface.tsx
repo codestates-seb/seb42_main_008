@@ -45,6 +45,7 @@ interface Nickname {
 interface ProfileEdit {
   proflie?: string;
   nickname?: string;
+  gender?: string;
   content?: string;
   password: string;
 }
@@ -58,6 +59,15 @@ interface FollowRequest {
 // * MemberInfo 컴포넌트 props
 interface MemberInfoProps {
   user: LoginUser;
+  member: MemberProfile;
+}
+
+// * MemberContent 컴포넌트 props
+interface MemberContentProps {
+  user: LoginUser;
+  member: MemberProfile;
+  currentTab: number;
+  setCurrentTab: React.Dispatch<React.SetStateAction<number>>;
 }
 
 // * MemberCompanions 컴포넌트 props
@@ -76,6 +86,31 @@ interface ListComponentProps {
 // * MemberSettings 컴포넌트 props
 interface MemberSettingsProps {
   member: MemberProfile | null;
+  setCurrentTab: React.Dispatch<React.SetStateAction<number>>;
+}
+
+// * 팔로워/팔로잉 모달 컴포넌트 props
+interface FollowModalProps {
+  setIsShowModal: React.Dispatch<React.SetStateAction<boolean>>;
+  isFollower: boolean;
+}
+
+// * 회원정보 수정 컴포넌트 props
+interface TextEditProps {
+  setMemberData: React.Dispatch<any>;
+  member: MemberProfile | null;
+  validation: Validations;
+  setValidation: React.Dispatch<React.SetStateAction<Validations>>;
+}
+
+// * 회원정보 수정 유효성체크 타입
+interface Validations {
+  nicknameValid: boolean | undefined;
+  contentValid: boolean | undefined;
+  passwordValid: boolean | undefined;
+  passwordCheckValid: boolean | undefined;
+  totalValid: boolean | undefined;
+  nicknameUnique?: boolean | undefined;
 }
 
 // ! 전역 유저 정보
@@ -97,8 +132,12 @@ export type {
   ProfileEdit,
   FollowRequest,
   MemberInfoProps,
+  MemberContentProps,
   MemberCompanionsProps,
   MemberSettingsProps,
   ListComponentProps,
+  FollowModalProps,
+  TextEditProps,
+  Validations,
   LoginUser,
 };

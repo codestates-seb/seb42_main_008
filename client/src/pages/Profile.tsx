@@ -1,13 +1,14 @@
+import customAxios from 'api/customAxios';
 import BackGroundImage from 'components/Profile/BackGroundImage';
 import MemberContent from 'components/Profile/MemberContent';
 import MemberInfo from 'components/Profile/MemberInfo';
-import { LoginUser } from 'interfaces/Profile.interface';
-import { useState } from 'react';
+import { LoginUser, MemberProfile } from 'interfaces/Profile.interface';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 const Profile = () => {
   const userData: LoginUser = {
-    memberId: 1,
+    memberId: 3,
     nickname: 'TestUSER',
     email: 'test@user.com',
     profile:
@@ -17,6 +18,20 @@ const Profile = () => {
   };
 
   const [user, setUser] = useState<LoginUser>(userData);
+  const [member, setMember] = useState<MemberProfile | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [currentTab, setCurrentTab] = useState<number>(0);
+
+  const getMemberData = async () => {
+    await customAxios.get('/members').then(resp => {
+      setMember(resp.data);
+      setIsLoading(false);
+    });
+  };
+
+  useEffect(() => {
+    getMemberData();
+  }, [user, currentTab]);
 
   const handleTestButtonClick = () => {
     setUser(cur => {
@@ -35,11 +50,20 @@ const Profile = () => {
   return (
     <>
       <BackGroundImage />
-      <Container>
-        <TestButton onClick={handleTestButtonClick}>로그인 테스트</TestButton>
-        <MemberInfo user={user} />
-        <MemberContent user={user} />
-      </Container>
+      {isLoading || !member ? (
+        'Loading...'
+      ) : (
+        <Container>
+          <TestButton onClick={handleTestButtonClick}>로그인 테스트</TestButton>
+          <MemberInfo user={user} member={member} />
+          <MemberContent
+            user={user}
+            member={member}
+            currentTab={currentTab}
+            setCurrentTab={setCurrentTab}
+          />
+        </Container>
+      )}
     </>
   );
 };
