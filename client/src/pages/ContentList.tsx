@@ -1,22 +1,29 @@
-// import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
-// import { ListData } from 'interfaces/ContentList.interface';
+import { ListData } from 'interfaces/ContentList.interface';
 import ListTitle from 'components/ContinentList/ListTitle';
 import ListSearch from 'components/ContinentList/ListSearch';
 import ListItems from 'components/ContinentList/ListItems';
-import listTestData from 'ListTestData.json';
-// import axios from 'axios';
-// import { useParams } from 'react-router-dom';
+import customAxios from 'api/customAxios';
 
 const ContentList = () => {
-  // const { countryCode } = useParams();
-  // const [datas, setDatas] = useState<ListData[] | []>([]);
+  const [datas, setDatas] = useState<ListData[] | []>([]);
+
+  const getContentData = async () => {
+    await customAxios.get('/companions').then(resp => {
+      setDatas(resp.data);
+    });
+  };
+
+  useEffect(() => {
+    getContentData();
+  }, []);
 
   return (
     <Container>
       <ListTitle />
       <ListSearch />
-      <ListItems listData={listTestData.jpn} />
+      <ListItems listData={datas} />
     </Container>
   );
 };
