@@ -40,7 +40,7 @@ public class MessageDto {
         public Response(Long messageId, String content, Long companionId, Sender sender, LocalDateTime createdAt, Boolean isRead) {
             this.messageId = messageId;
             this.content = content;
-            this.companionId = companionId==1L? 0L:companionId;
+            this.companionId = companionId;
             this.sender = sender;
             this.createdAt = createdAt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
             this.isRead = isRead;
