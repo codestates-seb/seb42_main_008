@@ -1,16 +1,42 @@
+import axios from 'axios';
 import React, { useState } from 'react';
 import styled from 'styled-components';
+
+type LatLng = {
+  lat: number;
+  lng: number;
+};
 
 type Props = {
   setIsTendencyModal: (newValue: boolean) => void;
   setIsThemeModal: (newValue: boolean) => void;
+  titleInput: string;
+  contentInput: string;
+  startDate: Date | null;
+  savedAddress: string | null;
+  markerLocation: LatLng;
+  continentSelect: string;
+  countrySelect: string;
+  countryCode: string;
+  selectedTendencies: any;
 };
-const ThemeModal = ({ setIsTendencyModal, setIsThemeModal }: Props) => {
+const ThemeModal = ({
+  setIsTendencyModal,
+  setIsThemeModal,
+  titleInput,
+  contentInput,
+  startDate,
+  savedAddress,
+  markerLocation,
+  continentSelect,
+  countrySelect,
+  countryCode,
+  selectedTendencies,
+}: Props) => {
   const handleTendencyOpen = () => {
     setIsTendencyModal(true);
     setIsThemeModal(false);
   };
-
   const themes: string[] = [
     '맛집',
     '명소',
@@ -42,6 +68,41 @@ const ThemeModal = ({ setIsTendencyModal, setIsThemeModal }: Props) => {
       }
     }
   };
+  // 성향,테마 태그 종합
+  const allTags = selectedTendencies.concat(selectedThemes);
+
+  // 모든 양식 제출 post 요청
+  // 멤버아이디는 토큰받아 입력 // 대륙은 정수?
+  // const handleAllSubmit = async (event: any) => {
+  //   if (selectedThemes.length >= 1) {
+  //     event.preventDefault();
+  //     try {
+  //       await axios.post(
+  //         `/companions`,
+  //         {
+  //           title: titleInput,
+  //           content: contentInput,
+  //           date: startDate,
+  //           adrress: savedAddress,
+  //           lat: markerLocation.lat,
+  //           lng: markerLocation.lng,
+  //           nationName: countrySelect,
+  //           nationCode: countryCode,
+  //           continent: continentSelect,
+  //           tags: allTags,
+  //           memberId,
+  //         },
+  //         { headers: { Authorization: token } }
+  //       );
+  //       setIsThemeModal(false);
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   } else {
+  //     alert('하나 이상 선택해주세요!');
+  //   }
+  // };
+
   return (
     <ThemeBox>
       <div className="theme-box">
@@ -92,6 +153,7 @@ const ThemeBox = styled.div`
   transform: translate(50%, -50%);
   flex-direction: column;
   font-size: 2rem;
+  z-index: 50;
   @media screen and (max-width: 768px) {
     width: 450px;
     height: 720px;
@@ -181,10 +243,12 @@ const ThemeBox = styled.div`
       @media screen and (max-width: 768px) {
         width: 80px;
         height: 30px;
+        font-size: 0.8rem;
       }
       @media screen and (max-width: 576px) {
-        width: 60px;
+        width: 70px;
         height: 25px;
+        font-size: 0.6rem;
       }
     }
   }
