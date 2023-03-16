@@ -14,11 +14,13 @@ interface Props {
   setCountryModal: Dispatch<SetStateAction<boolean>>;
   continentSelect: string;
   setCountrySelect: Dispatch<SetStateAction<string>>;
+  setCountryCode: Dispatch<SetStateAction<string>>;
 }
 const CountrySelectModal = ({
   setCountryModal,
   setCountrySelect,
   continentSelect,
+  setCountryCode,
 }: Props) => {
   if (!continentSelect || continentSelect === '대륙선택') {
     setCountryModal(false);
@@ -29,11 +31,12 @@ const CountrySelectModal = ({
     setCountryModal(false);
   };
   // 고른 국가 상태 저장
-  const handleCountry = (country: string) => {
+  const handleCountry = (country: string, code: string) => {
     const koreanRegex = /[가-힣]+/g;
     const koreanMatches = country.match(koreanRegex);
     const koreanString = koreanMatches ? koreanMatches.join('') : '';
     setCountrySelect(koreanString);
+    setCountryCode(code);
     setCountryModal(false);
   };
   // 국가이름 한글만 골라내기
@@ -55,7 +58,10 @@ const CountrySelectModal = ({
         <ul className="country-content">
           {countriesPick[continentSelect].map((country, index: number) => {
             return (
-              <li key={index} onClick={() => handleCountry(country.name)}>
+              <li
+                key={index}
+                onClick={() => handleCountry(country.name, country.code)}
+              >
                 {country.name.match(koreanRegex)?.join('')}
               </li>
             );

@@ -9,6 +9,7 @@ import CountrySelectModal from 'components/ContentAdd/CountrySelectModal';
 import TendencyModal from 'components/ContentAdd/TendencyModal';
 import SearchMap from 'components/ContentAdd/SearchMap';
 import countries from '../assets/countries.json';
+import ThemeModal from 'components/ContentAdd/ThemeModal';
 
 registerLocale('ko', ko);
 
@@ -46,10 +47,15 @@ const ContentAdd = () => {
   const [continentSelect, setContinentSelect] = useState('');
   // 나라 선택
   const [countrySelect, setCountrySelect] = useState('국가선택');
-  // 대륙 초기화시 나라 리셋
+  // 나라 코드
+  const [countryCode, setCountryCode] = useState('');
+
+  // 대륙 초기화시 나라,코드리셋
   useEffect(() => {
     setCountrySelect('국가선택');
+    setCountryCode('');
   }, [continentSelect]);
+
   let title = '대륙을 선택하세요!';
   let titleImg =
     'https://cdn.pixabay.com/photo/2022/10/22/19/11/travel-7539914__480.jpg';
@@ -100,9 +106,17 @@ const ContentAdd = () => {
   // 세부 주소 정보
   const [savedAddress, setSavedAddress] = useState<string | null>(null);
   // lat, lng 위치 정보
-  const [markerLocation, setMarkerLocation] = useState({});
+  const [markerLocation, setMarkerLocation] = useState({
+    lat: 37.2635727,
+    lng: 127.0286009,
+  });
+  console.log(markerLocation);
+  // 선택한 성향 태그 배열
+  const [selectedTendencies, setSelectedTendencies] = useState<string[]>([]);
   // 성향 모달
   const [isTendencyModal, setIsTendencyModal] = useState(false);
+  // 테마 모달
+  const [isThemeModal, setIsThemeModal] = useState(false);
 
   const handleContentSubmit = () => {
     if (!titleInput) {
@@ -117,7 +131,26 @@ const ContentAdd = () => {
       alert('날짜를 입력해주세요!');
       return;
     }
-    if (titleInput && contentInput && startDate && endDate) {
+    if (!savedAddress) {
+      alert('위치를 입력해주세요!');
+      return;
+    }
+    if (continentSelect === '대륙선택') {
+      alert('대륙을 선택해주세요!');
+      return;
+    }
+    if (countrySelect === '국가선택') {
+      alert('나라를 선택해주세요!');
+    }
+    if (
+      titleInput &&
+      contentInput &&
+      startDate &&
+      endDate &&
+      savedAddress &&
+      continentSelect &&
+      countrySelect !== '국가선택'
+    ) {
       setIsTendencyModal(!isTendencyModal);
     }
   };
@@ -218,12 +251,35 @@ const ContentAdd = () => {
             setCountryModal={setCountryModal}
             setCountrySelect={setCountrySelect}
             continentSelect={continentSelect}
+            setCountryCode={setCountryCode}
           />
         </div>
       ) : null}
       {isTendencyModal ? (
         <div className="overlay">
-          <TendencyModal setIsTendencyModal={setIsTendencyModal} />
+          <TendencyModal
+            setIsTendencyModal={setIsTendencyModal}
+            setIsThemeModal={setIsThemeModal}
+            selectedTendencies={selectedTendencies}
+            setSelectedTendencies={setSelectedTendencies}
+          />
+        </div>
+      ) : null}
+      {isThemeModal ? (
+        <div className="overlay">
+          <ThemeModal
+            setIsTendencyModal={setIsTendencyModal}
+            setIsThemeModal={setIsThemeModal}
+            titleInput={titleInput}
+            contentInput={contentInput}
+            startDate={startDate}
+            savedAddress={savedAddress}
+            markerLocation={markerLocation}
+            continentSelect={continentSelect}
+            countrySelect={countrySelect}
+            countryCode={countryCode}
+            selectedTendencies={selectedTendencies}
+          />
         </div>
       ) : null}
     </ContentAddContainer>
