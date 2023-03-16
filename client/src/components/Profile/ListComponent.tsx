@@ -9,42 +9,45 @@ import { FaMapMarkerAlt } from 'react-icons/fa';
 import { getDateString } from 'utils/getDateString';
 import ImageFilter from 'components/Main/ImageFilter';
 import { ListComponentProps } from 'interfaces/Profile.interface';
-import { useWindowSize } from 'hooks/useWindowSize';
-import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const ListComponent = ({ datas, titleHead, titleBody }: ListComponentProps) => {
   const navigate = useNavigate();
-  const [slidesCount, setSlidesCount] = useState<number>(4);
-  const { windowWidth } = useWindowSize();
   const settings = {
     dots: false,
     infinite: false,
-    slidesToShow: slidesCount,
-    slidesToScroll: 1,
+    slidesToShow: 4,
+    slidesToScroll: 2,
     autoplay: false,
     speed: 500,
     draggable: true,
+    responsive: [
+      {
+        breakpoint: 1200,
+        settings: {
+          slidesToShow: 3,
+        },
+      },
+      {
+        breakpoint: 768,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 1,
+        },
+      },
+      {
+        breakpoint: 576,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+        },
+      },
+    ],
   };
 
   const handleClickItem = (id: number) => {
     navigate(`/companions/${id}`);
   };
-
-  const handleSlidesCount = () => {
-    if (windowWidth < 576) {
-      return 1;
-    } else if (windowWidth < 768) {
-      return 2;
-    } else if (windowWidth < 1200) {
-      return 3;
-    }
-    return 4;
-  };
-
-  useEffect(() => {
-    setSlidesCount(handleSlidesCount());
-  }, [windowWidth]);
 
   return (
     <ListWrapper>
