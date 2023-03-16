@@ -50,6 +50,7 @@ interface CountryNames {
 // * ListItems 컴포넌트 Props data
 interface ListItemProps {
   listData: ListData[];
+  setSortData: React.Dispatch<React.SetStateAction<SortBy>>;
 }
 
 // * 정렬 기준
