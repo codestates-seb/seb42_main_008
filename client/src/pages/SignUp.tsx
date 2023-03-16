@@ -21,7 +21,8 @@ const SignUp = () => {
   const [isPwCheck, setIsPwCheck] = useState(false);
 
   const navigate = useNavigate();
-  const url = process.env.REACT_APP_SERVER;
+  // const url = process.env.REACT_APP_SERVER;
+  const url = process.env.REACT_APP_TEST_SERVER;
 
   // 이메일 유효성 검사
   const handleChangeEmail = useCallback(
@@ -42,9 +43,9 @@ const SignUp = () => {
     []
   );
 
-  const handleCheckEmail = () => {
-    Swal.fire('', '추후 추가 예정입니다');
-  };
+  // const handleCheckEmail = () => {
+  //   Swal.fire('', '추후 추가 예정입니다');
+  // };
 
   // 닉네임 유효성 검사
   const handleChangeNickame = useCallback<
@@ -55,14 +56,26 @@ const SignUp = () => {
       setNicknameMessage('2글자 이상 10글자 미만으로 입력해주세요.');
       setIsNickname(false);
     } else {
-      setNicknameMessage('');
+      setNicknameMessage('올바른 닉네임 형식입니다.');
       setIsNickname(true);
     }
   }, []);
 
   // 닉네임 중복확인 버튼
-  const handleCheckNickname = () => {
-    Swal.fire('', '추후 추가 예정입니다');
+  const handleCheckNickname = async () => {
+    await axios
+      .post(`${url}/members/nickname`, {
+        nickname,
+      })
+      .then(res => {
+        if (res.status === 409) {
+          console.log('중복된 닉네임입니다.');
+          setIsNickname(false);
+        } else {
+          Swal.fire('', '사용가능한 닉네임 입니다.');
+        }
+      })
+      .catch(error => console.log(error));
   };
 
   // 비밀번호 유효성 검사
@@ -138,9 +151,7 @@ const SignUp = () => {
           <div className="group">
             <div className="wrapper">
               <label htmlFor="nickname">이메일</label>
-              <div className="btn-check" onClick={handleCheckEmail}>
-                중복확인
-              </div>
+              {/* <div className="btn-check">중복확인</div> */}
             </div>
             <input type="text" id="email" onChange={handleChangeEmail}></input>
             {email.length > 0 && (
