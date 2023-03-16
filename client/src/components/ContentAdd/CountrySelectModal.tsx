@@ -20,6 +20,11 @@ const CountrySelectModal = ({
   setCountrySelect,
   continentSelect,
 }: Props) => {
+  if (!continentSelect || continentSelect === '대륙선택') {
+    setCountryModal(false);
+    alert('대륙을 선택해주세요');
+  }
+
   const handleModal = () => {
     setCountryModal(false);
   };
@@ -33,12 +38,6 @@ const CountrySelectModal = ({
   };
   // 국가이름 한글만 골라내기
   const koreanRegex = /[가-힣]+/g;
-
-  // 현재 탭 되어있는 대륙의 국가들이 뜨도록
-  // const selectKey = Object.keys(countries)
-  //   .filter(country => country === continentSelect)
-  //   .join('');
-  // console.log(selectKey);
 
   return (
     <CountryBox>
@@ -123,6 +122,7 @@ const CountryBox = styled.div`
       justify-content: space-between;
       display: flex;
       align-items: center;
+      cursor: pointer;
       > button {
         display: flex;
         align-items: center;
