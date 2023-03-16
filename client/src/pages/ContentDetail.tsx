@@ -31,7 +31,7 @@ const ContentDetail = () => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:4000/companions`)
+      .get(`${process.env.REACT_APP_TEST_SERVER}/companions`)
       .then(res => {
         setDetail(res.data);
       })
