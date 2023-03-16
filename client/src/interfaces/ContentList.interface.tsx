@@ -20,7 +20,7 @@ interface ListQueryString {
   size: number;
   sortDir: string;
   sortBy: string;
-  nationCode: string;
+  nationCode: string | undefined;
 }
 
 // * 키워드 검색시 필요한 Query String
