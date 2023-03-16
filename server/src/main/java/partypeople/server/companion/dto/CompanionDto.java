@@ -99,6 +99,8 @@ public class CompanionDto {
         @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
         private LocalDate date;
 
+        private LocalDate createdAt;
+
         private String address;
 
         private Double lat;
