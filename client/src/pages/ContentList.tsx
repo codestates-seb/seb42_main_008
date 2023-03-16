@@ -41,6 +41,7 @@ const ContentList = () => {
         params,
       })
       .then(resp => {
+        setDatas(resp.data);
         console.log(resp.data);
         setPage(1);
         setSize(12);
