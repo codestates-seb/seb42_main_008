@@ -45,6 +45,7 @@ public class MemberDto {
     }
 
     @Getter
+    @Builder
     public static class Login {
         @Email
         private String email;

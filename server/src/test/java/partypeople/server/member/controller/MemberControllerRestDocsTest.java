@@ -1,11 +1,13 @@
 package partypeople.server.member.controller;
 
 import com.google.gson.Gson;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
@@ -13,8 +15,12 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.restdocs.payload.JsonFieldType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import partypeople.server.auth.configure.SecurityConfiguration;
 import partypeople.server.companion.mapper.CompanionMapper;
 import partypeople.server.config.SecurityConfigurationTest;
 import partypeople.server.dto.SingleResponseDto;
@@ -45,6 +51,9 @@ import static partypeople.server.util.ApiDocumentUtils.getResponsePreProcessor;
 @MockBean(JpaMetamodelMappingContext.class)
 @Import(SecurityConfigurationTest.class)
 @AutoConfigureRestDocs
+//@ContextConfiguration(classes = SecurityConfiguration.class)
+//@WebAppConfiguration
+//@SpringBootTest
 public class MemberControllerRestDocsTest {
     @Autowired
     private MockMvc mockMvc;
@@ -63,10 +72,9 @@ public class MemberControllerRestDocsTest {
 
     @Autowired
     private Gson gson;
-
-
 //    @WithMockUser(username= "zipcks1381@gmail2.com", password="a12345678", roles="USER")
     @Test
+    @DisplayName("멤버 등록")
     public void postMemberTest() throws Exception {
         // given
         MemberDto.Post post = MemberDto.Post.builder()
@@ -112,7 +120,7 @@ public class MemberControllerRestDocsTest {
                                 )
                         ),
                         responseHeaders(
-                                headerWithName(HttpHeaders.LOCATION).description("Location header. 등록된 리소스의 URI")
+                                headerWithName(HttpHeaders.LOCATION).description("Location header. 등록된 리소스의 URI (ex) /members/{member-id}")
                         )
 //                        responseFields(
 //                                fieldWithPath("status").description("응답 상태 코드").attributes(
@@ -132,15 +140,15 @@ public class MemberControllerRestDocsTest {
     }
 
     @Test
+    @DisplayName("멤버 수정")
     public void patchMemberTest() throws Exception {
         //given
         long memberId = 1L;
 
         MemberDto.Patch patch = MemberDto.Patch.builder()
-                .memberId(1L)
                 .profile("profile-patch")
                 .gender("gender-patch")
-                .password("password-patch")
+                .password("a123456789")
                 .nickname("nickname-patch")
                 .content("content-patch")
                 .build();
@@ -169,11 +177,12 @@ public class MemberControllerRestDocsTest {
                         getResponsePreProcessor(),
                         requestFields(
                                 List.of(
-                                        fieldWithPath("nickname").type(JsonFieldType.STRING).description("닉네임 변경 (선택)(중복 허용 안함)"),
-                                        fieldWithPath("profile").type(JsonFieldType.STRING).description("프로필 변경 (선택)"),
-                                        fieldWithPath("gender").type(JsonFieldType.STRING).description("성별 변경 (선택)"),
-                                        fieldWithPath("password").type(JsonFieldType.STRING).description("비밀번호 변경 (선택)"),
-                                        fieldWithPath("content").type(JsonFieldType.STRING).description("자기소개 글 변경 (선택)")
+                                        fieldWithPath("nickname").type(JsonFieldType.STRING).description("닉네임 변경").optional()
+                                                .attributes(key("constraints").value("중복 허용 안함")),
+                                        fieldWithPath("profile").type(JsonFieldType.STRING).description("프로필 변경").optional(),
+                                        fieldWithPath("gender").type(JsonFieldType.STRING).description("성별 변경").optional(),
+                                        fieldWithPath("password").type(JsonFieldType.STRING).description("비밀번호 변경").optional(),
+                                        fieldWithPath("content").type(JsonFieldType.STRING).description("자기소개 글 변경").optional()
 
                                 )
                         )
@@ -191,4 +200,42 @@ public class MemberControllerRestDocsTest {
 //                .score(50)
 //                .build();
     }
+
+    @Test
+    @DisplayName("멤버 로그인")
+    @WithMockUser(username= "zipcks1381@gmail2.com", password="a12345678", roles="USER")
+    public void loginMemberTest() throws Exception {
+        //given
+        MemberDto.Login login = MemberDto.Login.builder()
+                .email("zipcks1381@gmail2.com")
+                .password("a12345678")
+                .build();
+        String content = gson.toJson(login);
+
+        ResultActions actions =
+                mockMvc.perform(
+                        post("/members/login")
+                                .accept(MediaType.APPLICATION_JSON)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(content)
+                );
+
+        actions
+//                .andExpect(status().isOk())
+                .andDo(document(
+                        "login-member",
+                        getRequestPreProcessor(),
+                        getResponsePreProcessor(),
+                        requestFields(
+                                List.of(
+                                        fieldWithPath("email").type(JsonFieldType.STRING).description("로그인 아이디").optional()
+                                                .attributes(key("constraints").value("이메일 형식")),
+                                        fieldWithPath("password").type(JsonFieldType.STRING).description("비밀번호").optional()
+                                )
+                        )
+                        //응답데이터 아직 미정 TODO..
+
+                ));
+    }
+
 }

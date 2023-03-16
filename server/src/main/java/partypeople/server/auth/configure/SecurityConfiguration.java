@@ -27,6 +27,7 @@ import partypeople.server.auth.utils.CustomAuthorityUtils;
 import partypeople.server.member.service.MemberService;
 
 import java.util.Arrays;
+import java.util.logging.Filter;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 

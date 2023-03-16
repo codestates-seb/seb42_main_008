@@ -19,6 +19,7 @@ import partypeople.server.companion.entity.Companion;
 import partypeople.server.companion.repository.CompanionRepository;
 import partypeople.server.exception.BusinessLogicException;
 import partypeople.server.exception.ExceptionCode;
+import partypeople.server.member.dto.FollowDto;
 import partypeople.server.member.dto.MemberDto;
 import partypeople.server.member.entity.Follow;
 import partypeople.server.member.entity.Member;
@@ -69,14 +70,20 @@ public class MemberService {
         return savedMember;
     }
 
-    public void followExe(Follow follow) {
+    public FollowDto.FollowerStatus followExe(Follow follow) {
         //중복 확인 ** 등록 되어 있으면 취소 삭제?
         Optional<Follow> optionalFollow = followRepository.findByFollowerMemberIdAndFollowingMemberId(follow.getFollower().getMemberId(),follow.getFollowing().getMemberId());
+        FollowDto.FollowerStatus followerStatus = new FollowDto.FollowerStatus(false);
 
         optionalFollow.ifPresentOrElse(
                 followRepository::delete,
-                ()->followRepository.save(follow)
+                ()->{
+                    followerStatus.setFollowerStatus(true);
+                    followRepository.save(follow);
+                }
         );
+
+        return followerStatus;
     }
 
     @Transactional(readOnly = true)

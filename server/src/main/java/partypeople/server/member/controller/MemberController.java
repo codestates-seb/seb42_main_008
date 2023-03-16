@@ -27,6 +27,7 @@ import javax.validation.constraints.Positive;
 import java.net.URI;
 import java.util.List;
 
+@CrossOrigin
 @RestController
 @Validated
 @RequestMapping("/members")
@@ -65,14 +66,14 @@ public class MemberController {
 
     @GetMapping("/{member-id}")
     public ResponseEntity getMember(@PathVariable("member-id") long memberId,
-                                    @Valid @RequestBody MemberDto.MemberId loginMemberId
-                                    ) {
+                                    @RequestParam Long loginMemberId
+    ) {
         Member member = memberService.findMember(memberId);
         //service
 //        member.setScore(memberService.scoreCal(member));
         member.setFollowerCount(Math.toIntExact(memberService.followerCount(member)));
         member.setFollowingCount(Math.toIntExact(memberService.followingCount(member)));
-        Member updateMember = memberService.followerStatusUpdate(member,loginMemberId.getMemberId());
+        Member updateMember = memberService.followerStatusUpdate(member, loginMemberId);
 
         return ResponseEntity.ok(
                 new SingleResponseDto<>(memberMapper.memberToMemberResponse(member)));
@@ -168,9 +169,11 @@ public class MemberController {
         follow.setFollower(memberService.findMember(requestBody.getFollowerId()));
         follow.setFollowing(memberService.findMember(requestBody.getFollowingId()));
 
-        memberService.followExe(follow);
 
-        return ResponseEntity.ok().build();
+
+        return ResponseEntity.ok(
+                new SingleResponseDto<>(memberService.followExe(follow))
+        );
     }
 
     @DeleteMapping("/{member-id}")
@@ -200,6 +203,11 @@ public class MemberController {
         }
 
 
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/members/login")
+    public ResponseEntity loginMember(@RequestBody MemberDto.Login login) {
         return ResponseEntity.ok().build();
     }
 }
