@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaCalendarDay } from 'react-icons/fa';
 import { HiOutlineX } from 'react-icons/hi';
 import {
@@ -20,9 +20,12 @@ interface SearchOption {
 const ListSearch = ({
   searchDatas,
   setSearchDatas,
-  page,
   size,
   sortData,
+  searchPage,
+  isSearch,
+  setIsSearch,
+  endRef,
 }: ListSearchProps) => {
   const { countryCode } = useParams();
   const [date, setDate] = useState<Date>(new Date());
@@ -47,7 +50,8 @@ const ListSearch = ({
     setCondition(value);
   };
 
-  const handleSearchClick = async () => {
+  const handleSearchClick = async (page: number) => {
+    setIsSearch(true);
     const params: SearchQueryString = {
       page,
       size,
@@ -59,15 +63,33 @@ const ListSearch = ({
       nationCode: countryCode,
     };
     await customAxios.get('/companions/search', { params }).then(resp => {
-      console.log('searchData', resp.data);
-      setSearchDatas(resp.data.data);
+      console.log('searchData', resp.data, searchDatas);
+      setSearchDatas(cur => {
+        if (resp.data.pageInfo.totalPages === resp.data.pageInfo.page) {
+          // ! 마지막 페이지일 경우
+          console.log('last');
+          endRef.current = true;
+        }
+
+        if (cur !== undefined) {
+          return [...cur, ...resp.data.data];
+        }
+        return resp.data.data;
+      });
     });
   };
 
+  useEffect(() => {
+    if (searchDatas !== undefined) {
+      handleSearchClick(searchPage);
+    }
+  }, [searchPage]);
+
   const handleClearSearch = () => {
-    setSearchDatas(null);
+    setSearchDatas(undefined);
     setKeyword('');
     setDate(new Date());
+    setIsSearch(false);
   };
 
   const searchOptions: SearchOption[] = [
@@ -108,8 +130,10 @@ const ListSearch = ({
           )}
         </SearchInput>
         <Buttons>
-          <SearchButton onClick={handleSearchClick}>검색</SearchButton>
-          {searchDatas && (
+          <SearchButton onClick={() => handleSearchClick(searchPage)}>
+            검색
+          </SearchButton>
+          {isSearch && (
             <ClearButton onClick={handleClearSearch}>초기화</ClearButton>
           )}
         </Buttons>

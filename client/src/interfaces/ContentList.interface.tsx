@@ -55,11 +55,14 @@ interface ListItemProps {
 
 // * ListSearch 컴포넌트 props
 interface ListSearchProps {
-  searchDatas: ListData[] | null;
-  setSearchDatas: React.Dispatch<React.SetStateAction<ListData[] | null>>;
-  page: number;
+  searchDatas: ListData[] | undefined;
+  setSearchDatas: React.Dispatch<React.SetStateAction<ListData[] | undefined>>;
   size: number;
   sortData: SortBy;
+  searchPage: number;
+  isSearch: boolean;
+  setIsSearch: React.Dispatch<React.SetStateAction<boolean>>;
+  endRef: React.MutableRefObject<boolean>;
 }
 
 // * 정렬 기준
@@ -67,6 +70,14 @@ interface SortBy {
   value: string;
   sortBy: string;
   sortDir: string;
+}
+
+// * Api 호출시 response pageInfo
+interface PageInfo {
+  page: number;
+  size: number;
+  totalElements: number;
+  totalPages: number;
 }
 
 export type {
@@ -78,4 +89,5 @@ export type {
   ListItemProps,
   ListSearchProps,
   SortBy,
+  PageInfo,
 };

@@ -18,15 +18,37 @@ const ContentList = () => {
   const obsRef = useRef(null); //observer Element
   const endRef = useRef(false); //모든 글 로드 확인
   const [datas, setDatas] = useState<ListData[] | []>([]);
-  const [searchDatas, setSearchDatas] = useState<ListData[] | null>(null);
+  const [searchDatas, setSearchDatas] = useState<ListData[] | undefined>(
+    undefined
+  );
+  const [searchPage, setSearchPage] = useState<number>(1);
   const [sortData, setSortData] = useState<SortBy>({
     value: '작성날짜 (최신순)',
     sortBy: 'createdAt',
     sortDir: 'DESC',
   });
   const [page, setPage] = useState<number>(1);
-  const [size, setSize] = useState<number>(3);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isSearch, setIsSearch] = useState<boolean>(false);
+
+  const handleSize = () => {
+    const width = window.innerWidth;
+    if (width < 620) {
+      return 3;
+    } else if (width < 922) {
+      return 4;
+    } else if (width < 1200) {
+      return 6;
+    } else {
+      return 8;
+    }
+  };
+
+  const [size, setSize] = useState<number>(handleSize());
+
+  const handleWindowResize = () => {
+    setSize(handleSize());
+  };
 
   const getContentData = async (page: number, size: number) => {
     const params: ListQueryString = {
@@ -45,6 +67,7 @@ const ContentList = () => {
         setDatas([...datas, ...resp.data.data]);
         setIsLoading(false);
         preventRef.current = true;
+        console.log(resp.data);
 
         if (resp.data.pageInfo.totalPages === resp.data.pageInfo.page) {
           endRef.current = true;
@@ -52,45 +75,49 @@ const ContentList = () => {
       });
   };
 
-  const handleSize = () => {
-    const width = window.innerWidth;
-    if (width < 620) {
-      setSize(3);
-      setPage(1);
-    } else if (width < 922) {
-      setSize(3);
-    } else if (width < 1200) {
-      setSize(3);
-    } else {
-      setSize(3);
-    }
-  };
-
   useEffect(() => {
-    if (searchDatas !== null) {
-      setDatas(searchDatas);
+    console.log('render');
+    if (searchDatas !== undefined) {
+      console.log('search render');
+      endRef.current = false;
+      preventRef.current = true;
+      setDatas([...searchDatas]);
+      setPage(1);
     } else {
+      endRef.current = false;
+      if (searchPage !== 1) {
+        setSearchPage(1);
+        setDatas([]);
+        setIsLoading(true);
+      }
       getContentData(page, size);
     }
-  }, [sortData, searchDatas, page]);
+  }, [sortData, searchDatas, page, searchPage]);
 
   useEffect(() => {
-    window.addEventListener('resize', handleSize);
+    window.addEventListener('resize', handleWindowResize);
     handleSize();
     return () => {
-      window.removeEventListener('resize', handleSize);
+      window.removeEventListener('resize', handleWindowResize);
     };
   }, []);
 
   const obsHandler = (entries: any) => {
     const target = entries[0];
-    console.log('observer');
+    console.log('observer', isSearch);
     console.log(endRef.current, target.isIntersecting, preventRef.current);
 
     if (!endRef.current && target.isIntersecting && preventRef.current) {
       //옵저버 중복 실행 방지
-      preventRef.current = false; //옵저버 중복 실행 방지
-      setPage(prev => prev + 1); //페이지 값 증가
+      // preventRef.current = false; //옵저버 중복 실행 방지
+      if (!isSearch) {
+        preventRef.current = false; //옵저버 중복 실행 방지
+        setPage(prev => prev + 1); //페이지 값 증가
+      } else {
+        console.log('searchPage up');
+        preventRef.current = false; //옵저버 중복 실행 방지
+        setSearchPage(prev => prev + 1);
+      }
     }
   };
 
@@ -100,7 +127,7 @@ const ContentList = () => {
     return () => {
       observer.disconnect();
     };
-  }, []);
+  }, [isSearch]);
 
   return (
     <Container>
@@ -108,13 +135,16 @@ const ContentList = () => {
       <ListSearch
         searchDatas={searchDatas}
         setSearchDatas={setSearchDatas}
-        page={page}
         size={size}
         sortData={sortData}
+        searchPage={searchPage}
+        isSearch={isSearch}
+        setIsSearch={setIsSearch}
+        endRef={endRef}
       />
       <ListItems listData={datas} setSortData={setSortData} />
       {isLoading && <Loader />}
-      <div ref={obsRef}></div>
+      <Observer ref={obsRef}>OBSERVER</Observer>
     </Container>
   );
 };
@@ -125,6 +155,13 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
   position: relative;
+  min-height: calc(100vh - 60px);
+`;
+
+const Observer = styled.div`
+  position: absolute;
+  width: 100%;
+  bottom: -30px;
 `;
 
 export default ContentList;
