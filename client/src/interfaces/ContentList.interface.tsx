@@ -32,7 +32,7 @@ interface SearchQueryString {
   condition: string;
   keyword: string;
   date?: string | Date;
-  nationCode: string;
+  nationCode: string | undefined;
 }
 
 // * 국가 정보
@@ -55,7 +55,11 @@ interface ListItemProps {
 
 // * ListSearch 컴포넌트 props
 interface ListSearchProps {
+  searchDatas: ListData[] | null;
   setSearchDatas: React.Dispatch<React.SetStateAction<ListData[] | null>>;
+  page: number;
+  size: number;
+  sortData: SortBy;
 }
 
 // * 정렬 기준

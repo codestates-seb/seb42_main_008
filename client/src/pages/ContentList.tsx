@@ -61,9 +61,12 @@ const ContentList = () => {
   };
 
   useEffect(() => {
-    if (setDatas === null) {
+    if (searchDatas !== null) {
+      setDatas(searchDatas);
+    } else {
       getContentData();
     }
+
     window.addEventListener('resize', handleSize);
     handleSize();
     return () => window.removeEventListener('resize', handleSize);
@@ -72,7 +75,13 @@ const ContentList = () => {
   return (
     <Container>
       <ListTitle />
-      <ListSearch setSearchDatas={setSearchDatas} />
+      <ListSearch
+        searchDatas={searchDatas}
+        setSearchDatas={setSearchDatas}
+        page={page}
+        size={size}
+        sortData={sortData}
+      />
       <ListItems listData={datas} setSortData={setSortData} />
     </Container>
   );

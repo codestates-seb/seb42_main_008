@@ -4,33 +4,69 @@ import 'react-datepicker/dist/react-datepicker.css';
 import React, { useState } from 'react';
 import { FaCalendarDay } from 'react-icons/fa';
 import { HiOutlineX } from 'react-icons/hi';
-import { ListSearchProps } from 'interfaces/ContentList.interface';
+import {
+  ListSearchProps,
+  SearchQueryString,
+} from 'interfaces/ContentList.interface';
+import customAxios from 'api/customAxios';
+import { useParams } from 'react-router-dom';
+import { getDateString } from 'utils/getDateString';
 
 interface SearchOption {
   value: string;
   field: string;
 }
 
-const ListSearch = ({ setSearchDatas }: ListSearchProps) => {
-  const [startDate, setStartDate] = useState(new Date());
-  const [inputValue, setInputValue] = useState<string>('');
+const ListSearch = ({
+  searchDatas,
+  setSearchDatas,
+  page,
+  size,
+  sortData,
+}: ListSearchProps) => {
+  const { countryCode } = useParams();
+  const [date, setDate] = useState(new Date());
+  const [keyword, setKeyword] = useState<string>('');
+  const [condition, setCondition] = useState<string>('entire');
 
   const handleDateChange = (date: Date) => {
-    setStartDate(date);
+    setDate(date);
   };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
-    setInputValue(value);
+    setKeyword(value);
   };
 
   const handleClearClick = () => {
-    setInputValue('');
+    setKeyword('');
   };
 
   const handleChangeOption = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const { value } = event.target;
-    console.log(value);
+    setCondition(value);
+  };
+
+  const handleSearchClick = async () => {
+    const params: SearchQueryString = {
+      page,
+      size,
+      sortBy: sortData.sortBy,
+      sortDir: sortData.sortDir,
+      condition,
+      keyword,
+      date: getDateString(date).fullDateStr,
+      nationCode: countryCode,
+    };
+    await customAxios.get('/companions/search', { params }).then(resp => {
+      setSearchDatas(resp.data);
+    });
+  };
+
+  const handleClearSearch = () => {
+    setSearchDatas(null);
+    setKeyword('');
+    setDate(new Date());
   };
 
   const searchOptions: SearchOption[] = [
@@ -48,7 +84,7 @@ const ListSearch = ({ setSearchDatas }: ListSearchProps) => {
           <FaCalendarDay color="#fff" size={22} />
         </label>
         <DatePicker
-          selected={startDate}
+          selected={date}
           onChange={handleDateChange}
           selectsStart
           id="datePicker"
@@ -64,16 +100,18 @@ const ListSearch = ({ setSearchDatas }: ListSearchProps) => {
           ))}
         </select>
         <SearchInput>
-          <input type="text" value={inputValue} onChange={handleInputChange} />
-          {inputValue.length !== 0 && (
+          <input type="text" value={keyword} onChange={handleInputChange} />
+          {keyword.length !== 0 && (
             <span className="clear" onClick={handleClearClick}>
               <HiOutlineX size={19} />
             </span>
           )}
         </SearchInput>
         <Buttons>
-          <SearchButton>검색</SearchButton>
-          <ClearButton>초기화</ClearButton>
+          <SearchButton onClick={handleSearchClick}>검색</SearchButton>
+          {searchDatas && (
+            <ClearButton onClick={handleClearSearch}>초기화</ClearButton>
+          )}
         </Buttons>
       </KeywordSearch>
     </SearchBox>
