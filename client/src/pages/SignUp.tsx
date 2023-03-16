@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
@@ -20,6 +21,7 @@ const SignUp = () => {
   const [isPwCheck, setIsPwCheck] = useState(false);
 
   const navigate = useNavigate();
+  const url = process.env.REACT_APP_SERVER;
 
   // 이메일 유효성 검사
   const handleChangeEmail = useCallback(
@@ -100,7 +102,7 @@ const SignUp = () => {
     [password]
   );
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (
       isNickname === false ||
@@ -111,8 +113,20 @@ const SignUp = () => {
       Swal.fire('', '양식을 다시 확인해주세요');
     } else {
       // 회원가입에 성공할 시 로그인 페이지로 이동 (추후 조건 추가하기)
-      Swal.fire('Congratulation!', '가입을 축하합니다.');
-      navigate('/login');
+      await axios
+        .post(`${url}/members`, {
+          email,
+          nickname,
+          password,
+        })
+        .then(() => {
+          console.log(email, nickname, password);
+          Swal.fire('Congratulation!', '가입을 축하합니다.'),
+            navigate('/login');
+        })
+        .catch(error => {
+          console.log(error);
+        });
     }
   };
 
@@ -314,4 +328,5 @@ const SignUpBox = styled.section`
 2-5. 비밀번호 확인
 2-5-1. 비밀번호 확인란이 비어있는 경우
 2-5-1. 처음 입력한 비밀번호와 일치하지 않는 경우
+3. axios 추가
  */
