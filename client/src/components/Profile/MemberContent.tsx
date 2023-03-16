@@ -39,7 +39,7 @@ const MemberContent = ({
           </li>
         ))}
       </Tabs>
-      {currentTab === 0 && <MemberReviews />}
+      {currentTab === 0 && <MemberReviews member={member} />}
       {currentTab === 1 && <MemberCompanoins member={member} user={user} />}
       {currentTab === 2 && (
         <MemberSettings member={member} setCurrentTab={setCurrentTab} />

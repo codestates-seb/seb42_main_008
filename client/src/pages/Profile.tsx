@@ -8,7 +8,7 @@ import styled from 'styled-components';
 
 const Profile = () => {
   const userData: LoginUser = {
-    memberId: 3,
+    memberId: 2,
     nickname: 'TestUSER',
     email: 'test@user.com',
     profile:
@@ -22,24 +22,33 @@ const Profile = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [currentTab, setCurrentTab] = useState<number>(0);
 
-  const getMemberData = async () => {
-    await customAxios.get('/members').then(resp => {
-      setMember(resp.data);
+  const getMemberData = () => {
+    const memberId = 2;
+    const userId = 3;
+
+    const params = {
+      loginMemberId: userId,
+    };
+
+    // ! 실제 테스트용 코드
+    customAxios.get(`/members/${memberId}`, { params }).then(resp => {
+      console.log(resp.data.data);
+      setMember(resp.data.data);
       setIsLoading(false);
     });
   };
 
   useEffect(() => {
     getMemberData();
-  }, [user, currentTab]);
+  }, [user, currentTab, isLoading]);
 
   const handleTestButtonClick = () => {
     setUser(cur => {
       let memberId;
-      if (cur.memberId === 1) {
-        memberId = 2;
+      if (cur.memberId === 2) {
+        memberId = 3;
       } else {
-        memberId = 1;
+        memberId = 2;
       }
       return Object.assign({}, cur, {
         memberId,
@@ -50,12 +59,10 @@ const Profile = () => {
   return (
     <>
       <BackGroundImage />
-      {isLoading || !member ? (
-        'Loading...'
-      ) : (
+      {!isLoading && member ? (
         <Container>
           <TestButton onClick={handleTestButtonClick}>로그인 테스트</TestButton>
-          <MemberInfo user={user} member={member} />
+          <MemberInfo user={user} member={member} setMember={setMember} />
           <MemberContent
             user={user}
             member={member}
@@ -63,6 +70,8 @@ const Profile = () => {
             setCurrentTab={setCurrentTab}
           />
         </Container>
+      ) : (
+        <p>Loading...</p>
       )}
     </>
   );
