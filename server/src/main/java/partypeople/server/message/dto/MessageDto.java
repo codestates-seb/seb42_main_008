@@ -47,6 +47,10 @@ public class MessageDto {
         }
     }
 
-
+    @AllArgsConstructor
+    @Getter
+    public static class NotReadResponse {
+        private Long notReadCount;
+    }
 
 }
