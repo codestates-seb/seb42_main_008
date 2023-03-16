@@ -3,15 +3,15 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import React, { useState } from 'react';
 import { FaCalendarDay } from 'react-icons/fa';
-// import { IoSearch } from 'react-icons/io5';
 import { HiOutlineX } from 'react-icons/hi';
+import { ListSearchProps } from 'interfaces/ContentList.interface';
 
 interface SearchOption {
   value: string;
   field: string;
 }
 
-const ListSearch = () => {
+const ListSearch = ({ setSearchDatas }: ListSearchProps) => {
   const [startDate, setStartDate] = useState(new Date());
   const [inputValue, setInputValue] = useState<string>('');
 
@@ -71,7 +71,10 @@ const ListSearch = () => {
             </span>
           )}
         </SearchInput>
-        <SearchButton>검색</SearchButton>
+        <Buttons>
+          <SearchButton>검색</SearchButton>
+          <ClearButton>초기화</ClearButton>
+        </Buttons>
       </KeywordSearch>
     </SearchBox>
   );
@@ -91,7 +94,7 @@ const SearchBox = styled.section`
   @media screen and (max-width: 768px) {
     flex-direction: column;
     height: fit-content;
-    padding: 10px 30px;
+    padding: 10px;
     gap: 5px;
     top: 34vh;
     align-items: flex-start;
@@ -141,6 +144,7 @@ const KeywordSearch = styled.div`
   width: 70%;
   display: flex;
   align-items: center;
+  gap: 10px;
   justify-content: space-between;
   > select {
     width: 90px;
@@ -171,7 +175,7 @@ const KeywordSearch = styled.div`
 `;
 
 const SearchInput = styled.div`
-  width: calc(100% - 170px);
+  flex: 1;
   border-radius: 30px;
   border: 1px solid #fff;
   display: flex;
@@ -212,9 +216,18 @@ const SearchInput = styled.div`
       box-shadow: 0px 0px 10px #fff;
     }
   }
+`;
 
-  @media screen and (max-width: 576px) {
-    width: calc(100% - 80px);
+const Buttons = styled.div`
+  height: 100%;
+  display: flex;
+  gap: 10px;
+
+  @media screen and (max-width: 768px) {
+    position: absolute;
+    right: 10px;
+    top: 15px;
+    height: fit-content;
   }
 `;
 
@@ -230,11 +243,14 @@ const SearchButton = styled.div`
   cursor: pointer;
 
   @media screen and (max-width: 768px) {
-    position: absolute;
-    right: 30px;
-    top: 15px;
-    height: fit-content;
+    font-size: 0.9rem;
+    padding: 5px 10px;
   }
+`;
+
+const ClearButton = styled(SearchButton)`
+  background-color: #aaa;
+  color: #fff;
 `;
 
 export default ListSearch;

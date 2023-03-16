@@ -14,6 +14,7 @@ import { useParams } from 'react-router-dom';
 const ContentList = () => {
   const { countryCode } = useParams();
   const [datas, setDatas] = useState<ListData[] | []>([]);
+  const [searchDatas, setSearchDatas] = useState<ListData[] | null>(null);
   const [sortData, setSortData] = useState<SortBy>({
     value: '작성날짜 (최신순)',
     sortBy: 'createdAt',
@@ -60,16 +61,18 @@ const ContentList = () => {
   };
 
   useEffect(() => {
-    getContentData();
+    if (setDatas === null) {
+      getContentData();
+    }
     window.addEventListener('resize', handleSize);
     handleSize();
     return () => window.removeEventListener('resize', handleSize);
-  }, [sortData]);
+  }, [sortData, searchDatas]);
 
   return (
     <Container>
       <ListTitle />
-      <ListSearch />
+      <ListSearch setSearchDatas={setSearchDatas} />
       <ListItems listData={datas} setSortData={setSortData} />
     </Container>
   );

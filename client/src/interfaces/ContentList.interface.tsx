@@ -53,6 +53,11 @@ interface ListItemProps {
   setSortData: React.Dispatch<React.SetStateAction<SortBy>>;
 }
 
+// * ListSearch 컴포넌트 props
+interface ListSearchProps {
+  setSearchDatas: React.Dispatch<React.SetStateAction<ListData[] | null>>;
+}
+
 // * 정렬 기준
 interface SortBy {
   value: string;
@@ -67,5 +72,6 @@ export type {
   CountryData,
   CountryNames,
   ListItemProps,
+  ListSearchProps,
   SortBy,
 };
