@@ -1,7 +1,7 @@
 import ReactQuill from 'react-quill';
 import styled from 'styled-components';
 import 'react-quill/dist/quill.snow.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import DatePicker, { registerLocale } from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import ko from 'date-fns/locale/ko';
@@ -41,12 +41,15 @@ const ContentAdd = () => {
       ],
     },
   };
-  // 대륙 정보 받아오기
 
   // 대륙 선택 옵션
   const [continentSelect, setContinentSelect] = useState('');
   // 나라 선택
-  const [countrySelect, setCountrySelect] = useState('국가 선택');
+  const [countrySelect, setCountrySelect] = useState('국가선택');
+  // 대륙 초기화시 나라 리셋
+  useEffect(() => {
+    setCountrySelect('국가선택');
+  }, [continentSelect]);
   let title = '대륙을 선택하세요!';
   let titleImg =
     'https://cdn.pixabay.com/photo/2022/10/22/19/11/travel-7539914__480.jpg';

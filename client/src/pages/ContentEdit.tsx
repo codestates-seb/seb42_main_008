@@ -46,7 +46,7 @@ const ContentEdit = () => {
   // 대륙 선택 옵션
   const [continentSelect, setContinentSelect] = useState('');
   // 나라 선택
-  const [countrySelect, setCountrySelect] = useState('');
+  const [countrySelect, setCountrySelect] = useState('국가 선택');
   let title = '대륙을 선택하세요!';
   let titleImg =
     'https://cdn.pixabay.com/photo/2022/10/22/19/11/travel-7539914__480.jpg';
