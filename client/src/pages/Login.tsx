@@ -1,11 +1,13 @@
 import axios from 'axios';
 import { useState } from 'react';
 import { FcGoogle } from 'react-icons/fc';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
   const handleChangeEmail = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
@@ -14,15 +16,19 @@ const Login = () => {
     setPassword(event.target.value);
   };
 
-  const handleSubmitLogin = async () => {
+  const handleLogin = async (event: any) => {
+    event.preventDefault();
     await axios
-      .post(`${process.env.REACT_APP_SERVER}/members/login`, {
+      .post(`${process.env.REACT_APP_TEST_SERVER}/members/login`, {
         email,
         password,
       })
       .then(res => {
         // 응답헤더에서 토큰 확인
-        console.log(res);
+        console.log(res.headers);
+        console.log(res.headers.authorization);
+        // base64 로 복호화하면 정보가 나옴
+        navigate('/');
       })
       .catch(error => {
         console.log(error);
@@ -42,7 +48,7 @@ const Login = () => {
             <label htmlFor="pw">비밀번호</label>
             <input type="password" id="pw" onChange={handleChangePw}></input>
           </div>
-          <button id="btn-login" type="submit" onSubmit={handleSubmitLogin}>
+          <button id="btn-login" onClick={handleLogin}>
             로그인
           </button>
         </form>
