@@ -68,11 +68,14 @@ const SignUp = () => {
         nickname,
       })
       .then(res => {
-        if (res.status === 409) {
-          console.log('중복된 닉네임입니다.');
-          setIsNickname(false);
-        } else {
+        if (res.status === 200) {
           Swal.fire('', '사용가능한 닉네임 입니다.');
+          console.log(res.status);
+        } else if (res.status === 409) {
+          // 팝업창... 왜안돼... 수정예정....
+          Swal.fire('', '중복된 닉네임 입니다.');
+          setIsNickname(false);
+          console.log(res.status);
         }
       })
       .catch(error => console.log(error));
