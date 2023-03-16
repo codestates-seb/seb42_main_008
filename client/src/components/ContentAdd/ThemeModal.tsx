@@ -1,4 +1,4 @@
-import axios from 'axios';
+// import axios from 'axios';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 
@@ -23,16 +23,16 @@ type Props = {
 const ThemeModal = ({
   setIsTendencyModal,
   setIsThemeModal,
-  titleInput,
-  contentInput,
-  startDate,
-  savedAddress,
-  markerLocation,
-  continentSelect,
-  countrySelect,
-  countryCode,
-  selectedTendencies,
-}: Props) => {
+}: // titleInput,
+// contentInput,
+// startDate,
+// savedAddress,
+// markerLocation,
+// continentSelect,
+// countrySelect,
+// countryCode,
+// selectedTendencies,
+Props) => {
   const handleTendencyOpen = () => {
     setIsTendencyModal(true);
     setIsThemeModal(false);
@@ -69,7 +69,7 @@ const ThemeModal = ({
     }
   };
   // 성향,테마 태그 종합
-  const allTags = selectedTendencies.concat(selectedThemes);
+  // const allTags = selectedTendencies.concat(selectedThemes);
 
   // 모든 양식 제출 post 요청
   // 멤버아이디는 토큰받아 입력 // 대륙은 정수?
