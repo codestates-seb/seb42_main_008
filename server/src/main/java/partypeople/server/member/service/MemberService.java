@@ -5,6 +5,7 @@ import io.jsonwebtoken.security.SignatureException;
 import lombok.RequiredArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.util.http.parser.Authorization;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -39,9 +40,6 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 @Slf4j
 public class MemberService {
-
-    private final static Integer MEMBER_DEFUALT_SCORE = 50;
-
     private final CompanionRepository companionRepository;
     private final MemberRepository memberRepository;
 
@@ -116,6 +114,9 @@ public class MemberService {
         Member findMember = findVerifiedMemberById(member.getMemberId());
         Member updatedMember = beanUtils.copyNonNullProperties(member, findMember);
 
+        Optional.ofNullable(member.getPassword())
+                .ifPresent(password -> updatedMember.setPassword(passwordEncoder.encode(password)));
+
         return updatedMember;
     }
 
@@ -134,6 +135,7 @@ public class MemberService {
         Optional<Member> optionalMember = memberRepository.findByEmail(email);
         Member findMember = optionalMember
             .orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
+
         return findMember;
     }
 
@@ -141,6 +143,10 @@ public class MemberService {
         Optional<Member> optionalMember = memberRepository.findById(memberId);
         Member findMember = optionalMember
             .orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
+
+        if(findMember.getMemberStatus().equals(Member.MemberStatus.MEMBER_QUIT)) {
+            throw new BusinessLogicException(ExceptionCode.WITHDRAWAL_MEMBER);
+        }
         return findMember;
     }
 

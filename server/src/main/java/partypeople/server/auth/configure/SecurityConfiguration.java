@@ -70,7 +70,7 @@ public class SecurityConfiguration {
             .apply(new CustomFilterConfigurer())
             .and()
             .authorizeHttpRequests(authorize -> authorize
-                .antMatchers(HttpMethod.PATCH, "/members/*").hasRole("USER")
+//                .antMatchers(HttpMethod.PATCH, "/members/*").hasRole("USER")
                 .anyRequest().permitAll()
             );
 //            .oauth2Login(oAuth2 -> oAuth2

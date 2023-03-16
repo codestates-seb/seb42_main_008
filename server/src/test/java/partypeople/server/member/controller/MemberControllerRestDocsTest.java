@@ -1,39 +1,38 @@
 package partypeople.server.member.controller;
 
 import com.google.gson.Gson;
+import org.aspectj.lang.annotation.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.restdocs.payload.JsonFieldType;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import partypeople.server.auth.configure.SecurityConfiguration;
+import org.springframework.web.context.WebApplicationContext;
 import partypeople.server.companion.mapper.CompanionMapper;
 import partypeople.server.config.SecurityConfigurationTest;
-import partypeople.server.dto.SingleResponseDto;
+import partypeople.server.controller.MemberControllerTest;
 import partypeople.server.member.dto.MemberDto;
 import partypeople.server.member.entity.Member;
 import partypeople.server.member.mapper.MemberMapper;
+import partypeople.server.member.repository.MemberRepository;
 import partypeople.server.member.service.MemberService;
 import partypeople.server.review.mapper.ReviewMapper;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.startsWith;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.responseHeaders;
@@ -49,7 +48,7 @@ import static partypeople.server.util.ApiDocumentUtils.getResponsePreProcessor;
 
 @WebMvcTest(MemberController.class)
 @MockBean(JpaMetamodelMappingContext.class)
-@Import(SecurityConfigurationTest.class)
+@Import({SecurityConfigurationTest.class, MemberControllerTest.class})
 @AutoConfigureRestDocs
 //@ContextConfiguration(classes = SecurityConfiguration.class)
 //@WebAppConfiguration
@@ -58,6 +57,8 @@ public class MemberControllerRestDocsTest {
     @Autowired
     private MockMvc mockMvc;
 
+//    @MockBean
+//    private initDb initDb2;
     @MockBean
     private MemberService memberService;
 
@@ -70,6 +71,24 @@ public class MemberControllerRestDocsTest {
     @MockBean
     private CompanionMapper companionMapper;
 
+//    @Autowired
+//    private WebApplicationContext context;
+//    @MockBean
+//    private PasswordEncoder passwordEncoder;
+//    @MockBean
+//    private MemberRepository memberRepository;
+//    @BeforeEach
+//    public void setUp() {
+////        MemberRepository memberRepository = context.getBean(MemberRepository.class);
+//        Member member = new Member();
+//        member.setEmail("zipcks1381@gamil2.com");
+//        member.setNickname("Joe2");
+//        member.setPassword(passwordEncoder.encode("a12345678"));
+//        List<String> roles = new ArrayList<>();
+//        roles.add("USER");
+//        member.setRoles(roles);
+//        memberRepository.save(member);
+//    }
     @Autowired
     private Gson gson;
 //    @WithMockUser(username= "zipcks1381@gmail2.com", password="a12345678", roles="USER")
@@ -203,13 +222,11 @@ public class MemberControllerRestDocsTest {
 
     @Test
     @DisplayName("멤버 로그인")
-    @WithMockUser(username= "zipcks1381@gmail2.com", password="a12345678", roles="USER")
     public void loginMemberTest() throws Exception {
         //given
-        MemberDto.Login login = MemberDto.Login.builder()
-                .email("zipcks1381@gmail2.com")
-                .password("a12345678")
-                .build();
+        MemberDto.Login login = new MemberDto.Login();
+        login.setEmail("zipcks1381@gmail2.com");
+        login.setPassword("a12345678");
         String content = gson.toJson(login);
 
         ResultActions actions =
@@ -221,7 +238,7 @@ public class MemberControllerRestDocsTest {
                 );
 
         actions
-//                .andExpect(status().isOk())
+                .andExpect(status().isOk())
                 .andDo(document(
                         "login-member",
                         getRequestPreProcessor(),
@@ -237,5 +254,6 @@ public class MemberControllerRestDocsTest {
 
                 ));
     }
+
 
 }

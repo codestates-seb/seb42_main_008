@@ -34,7 +34,6 @@ public class MemberDto {
         private Long memberId;
         private String profile;
 
-        @NotBlank
         private String nickname;
         private String content;
 
@@ -45,7 +44,9 @@ public class MemberDto {
     }
 
     @Getter
-    @Builder
+//    @Builder
+//    @AllArgsConstructor
+    @Setter
     public static class Login {
         @Email
         private String email;
@@ -78,6 +79,10 @@ public class MemberDto {
         private String email;
 
         private String profile;
+
+        private String content;
+
+        private String gender;
 
         private String createdAt;
 

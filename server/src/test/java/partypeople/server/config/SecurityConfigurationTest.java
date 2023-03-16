@@ -30,16 +30,13 @@ import static org.springframework.security.config.Customizer.withDefaults;
 //@Import({JwtAuthenticationFilter.class})
 @EnableWebSecurity
 public class SecurityConfigurationTest {
-
-//    @Autowired
+//    @MockBean
 //    private JwtTokenizer jwtTokenizer;
-//
-//    @Autowired
+//    @MockBean
 //    private CustomAuthorityUtils authorityUtils;
-//
-//    @Autowired
+//    @MockBean
 //    private RedisTemplate<String, String> redisTemplate;
-//    @Autowired
+//    @MockBean
 //    private AuthService authService;
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -50,9 +47,9 @@ public class SecurityConfigurationTest {
             .cors(withDefaults())
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
-            .formLogin()
-                .loginPage("/members/login")
-                .and()
+            .formLogin().disable()
+//                .loginPage("/members/login")
+//                .and()
             .httpBasic().disable()  //UsernamePasswordAuthenticationFilter 필터 끊기?
             .exceptionHandling()
             .authenticationEntryPoint(new MemberAuthenticationEntryPoint())
@@ -77,11 +74,11 @@ public class SecurityConfigurationTest {
 //            jwtAuthenticationFilter.setFilterProcessesUrl("/members/login");
 //            jwtAuthenticationFilter.setAuthenticationSuccessHandler(new MemberAuthenticationSuccessHandler());
 //            jwtAuthenticationFilter.setAuthenticationFailureHandler(new MemberAuthenticationFailureHandler());
-////            JwtAuthorizationFilter jwtAuthorizationFilter = new JwtAuthorizationFilter(jwtTokenizer, authorityUtils, redisTemplate);
+//            JwtAuthorizationFilter jwtAuthorizationFilter = new JwtAuthorizationFilter(jwtTokenizer, authorityUtils, redisTemplate);
 //
 //            builder
-//                    .addFilter(jwtAuthenticationFilter);
-////                    .addFilterAfter(jwtAuthorizationFilter, JwtAuthenticationFilter.class);
+//                    .addFilter(jwtAuthenticationFilter)
+//                    .addFilterAfter(jwtAuthorizationFilter, JwtAuthenticationFilter.class);
 //        }
 //    }
 }
