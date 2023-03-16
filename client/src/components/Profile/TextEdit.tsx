@@ -49,7 +49,6 @@ const TextEdit = ({
       })
       .catch(error => {
         console.log(error);
-        // if (error.response.status === 409) {
         Swal.fire({
           icon: 'error',
           title: '중복된 닉네임입니다',
@@ -59,7 +58,6 @@ const TextEdit = ({
           ...cur,
           nicknameUnique: false,
         }));
-        // }
       });
   };
 
@@ -71,9 +69,10 @@ const TextEdit = ({
       content,
       password,
     }));
-    setValidation({
+    setValidation(cur => ({
+      ...cur,
       ...editValidationCheck({ nickname, content, password, passwordCheck }),
-    });
+    }));
   }, [nickname, gender, content, password, passwordCheck]);
 
   return (
