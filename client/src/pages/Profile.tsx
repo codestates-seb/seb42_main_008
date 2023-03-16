@@ -23,7 +23,21 @@ const Profile = () => {
   const [currentTab, setCurrentTab] = useState<number>(0);
 
   const getMemberData = async () => {
+    // ^ json server 테스트용 코드
     await customAxios.get('/members').then(resp => {
+      setMember(resp.data);
+      setIsLoading(false);
+    });
+
+    const memberId = 1;
+    const userId = 2;
+
+    const params = {
+      memberId: userId,
+    };
+
+    // ! 실제 테스트용 코드
+    await customAxios.get(`/members/${memberId}`, { params }).then(resp => {
       setMember(resp.data);
       setIsLoading(false);
     });

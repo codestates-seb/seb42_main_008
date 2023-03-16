@@ -43,9 +43,9 @@ const TextEdit = ({
           nicknameUnique: true,
         }));
       })
-      .catch(err => {
-        console.log(err);
-        if (err.response.status === 404) {
+      .catch(error => {
+        console.log(error);
+        if (error.response.status === 409) {
           Swal.fire({
             icon: 'error',
             title: '중복된 닉네임입니다',

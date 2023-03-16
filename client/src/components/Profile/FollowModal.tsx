@@ -5,7 +5,11 @@ import { Follow, FollowModalProps } from 'interfaces/Profile.interface';
 import customAxios from 'api/customAxios';
 import { useNavigate } from 'react-router-dom';
 
-const FollowModal = ({ setIsShowModal, isFollower }: FollowModalProps) => {
+const FollowModal = ({
+  setIsShowModal,
+  isFollower,
+  member,
+}: FollowModalProps) => {
   const navigate = useNavigate();
   const [followerList, setFollowerList] = useState<Follow[] | []>([]);
   const [followingList, setFollowingList] = useState<Follow[] | []>([]);
@@ -20,6 +24,7 @@ const FollowModal = ({ setIsShowModal, isFollower }: FollowModalProps) => {
   };
 
   const getFollowData = async () => {
+    // ^ json-server 테스트용 코드
     if (isFollower) {
       await customAxios.get('/follows').then(resp => {
         setFollowerList(resp.data);
@@ -28,6 +33,21 @@ const FollowModal = ({ setIsShowModal, isFollower }: FollowModalProps) => {
       await customAxios.get('/follows').then(resp => {
         setFollowingList(resp.data);
       });
+    }
+
+    // ! 실제 테스트용 코드
+    if (isFollower) {
+      await customAxios
+        .get(`/members/${member.memberId}/follower`)
+        .then(resp => {
+          setFollowerList(resp.data);
+        });
+    } else {
+      await customAxios
+        .get(`/members/${member.memberId}/following`)
+        .then(resp => {
+          setFollowingList(resp.data);
+        });
     }
   };
 

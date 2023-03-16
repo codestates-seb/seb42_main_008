@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { BsEmojiSmile, BsEmojiNeutral, BsEmojiFrown } from 'react-icons/bs';
 import { GiSiren } from 'react-icons/gi';
-import { Review } from 'interfaces/Profile.interface';
+import { MemberReviewProps, Review } from 'interfaces/Profile.interface';
 import Swal from 'sweetalert2';
 import { useEffect, useState } from 'react';
 import customAxios from 'api/customAxios';
@@ -19,7 +19,7 @@ const Emoji = ({ score }: EmojiProps) => {
   return <span>{<BsEmojiSmile size={25} color="#9BB76A" />}</span>;
 };
 
-const MemberReviews = () => {
+const MemberReviews = ({ member }: MemberReviewProps) => {
   const [reviews, setReviews] = useState<Review[] | []>([]);
 
   const handleSirenClick = () => {
@@ -30,13 +30,24 @@ const MemberReviews = () => {
   };
 
   const getReviewData = async () => {
+    // ^ json-server
     await customAxios
       .get(`/reviews`)
       .then(resp => {
         setReviews(resp.data);
       })
-      .catch(err => {
-        console.log(err);
+      .catch(error => {
+        console.log(error);
+      });
+
+    // ! test
+    await customAxios
+      .get(`/members/${member.memberId}/reviews`)
+      .then(resp => {
+        setReviews(resp.data);
+      })
+      .catch(error => {
+        console.log(error);
       });
   };
 

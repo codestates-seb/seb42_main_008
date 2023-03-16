@@ -1,3 +1,4 @@
+import customAxios from 'api/customAxios';
 import axios from 'axios';
 import {
   MemberSettingsProps,
@@ -13,7 +14,6 @@ import TextEdit from './TextEdit';
 
 const MemberSettings = ({ member, setCurrentTab }: MemberSettingsProps) => {
   const [memberData, setMemberData] = useState<ProfileEdit | object>({});
-  // const [file, setFile] = useState<any>({});
   const [profile, setProfile] = useState<string>(member.profile);
   const [validation, setValidation] = useState<Validations>(
     editValidationCheck({ ...memberData })
@@ -35,6 +35,10 @@ const MemberSettings = ({ member, setCurrentTab }: MemberSettingsProps) => {
           })
           .then(response => {
             setProfile(response.data.data.link);
+            setMemberData(cur => ({
+              ...cur,
+              profile: response.data.data.link,
+            }));
           });
       }
     } else {
@@ -56,14 +60,14 @@ const MemberSettings = ({ member, setCurrentTab }: MemberSettingsProps) => {
       });
       return;
     }
-    // if (!validation.nicknameUnique) {
-    //   Swal.fire({
-    //     icon: 'error',
-    //     title: '수정할 수 없습니다',
-    //     text: '닉네임 중복을 다시 확인해 주세요!',
-    //   });
-    //   return;
-    // }
+    if (!validation.nicknameUnique) {
+      Swal.fire({
+        icon: 'error',
+        title: '수정할 수 없습니다',
+        text: '닉네임 중복을 다시 확인해 주세요!',
+      });
+      return;
+    }
 
     Swal.fire({
       text: '정말 수정하시겠습니까?',
@@ -74,7 +78,7 @@ const MemberSettings = ({ member, setCurrentTab }: MemberSettingsProps) => {
       confirmButtonText: '확인',
     }).then(async result => {
       if (result.isConfirmed) {
-        await axios.patch('http://localhost:3001/members', {
+        await customAxios.patch(`/members/${member.memberId}`, {
           ...memberData,
         });
         setCurrentTab(0);

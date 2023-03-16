@@ -23,8 +23,8 @@ const MemberInfo = ({ user, member }: MemberInfoProps) => {
 
     await customAxios.post('/members/follows', data).then(resp => {
       console.log(resp.data);
-      setIsFollow(resp.data);
-      if (!resp.data) {
+      setIsFollow(resp.data.followerStatus);
+      if (!resp.data.followerStatus) {
         toast.success('팔로우가 취소되었습니다');
       } else {
         toast.success('팔로우가 완료되었습니다');
@@ -45,6 +45,7 @@ const MemberInfo = ({ user, member }: MemberInfoProps) => {
             <FollowModal
               setIsShowModal={setIsShowModal}
               isFollower={isFollower}
+              member={member}
             />
           )}
           <InfoContainer>

@@ -72,8 +72,13 @@ interface MemberContentProps {
 
 // * MemberCompanions 컴포넌트 props
 interface MemberCompanionsProps {
-  member: MemberProfile | null;
+  member: MemberProfile;
   user: LoginUser;
+}
+
+// * MemberReview 컴포넌트 props
+interface MemberReviewProps {
+  member: MemberProfile;
 }
 
 // * MemberCompanions -> ListComponent 컴포넌트 props
@@ -93,6 +98,7 @@ interface MemberSettingsProps {
 interface FollowModalProps {
   setIsShowModal: React.Dispatch<React.SetStateAction<boolean>>;
   isFollower: boolean;
+  member: MemberProfile;
 }
 
 // * 회원정보 수정 컴포넌트 props
@@ -135,6 +141,7 @@ export type {
   MemberContentProps,
   MemberCompanionsProps,
   MemberSettingsProps,
+  MemberReviewProps,
   ListComponentProps,
   FollowModalProps,
   TextEditProps,
