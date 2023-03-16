@@ -16,7 +16,7 @@ const Login = () => {
     setPassword(event.target.value);
   };
 
-  const handleLogin = async (event: any) => {
+  const handleSubmtiLogin = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     await axios
       .post(`${process.env.REACT_APP_TEST_SERVER}/members/login`, {
@@ -39,7 +39,7 @@ const Login = () => {
       <h1>PartyPeople</h1>
       <LoginBox>
         <h2>로그인</h2>
-        <form>
+        <form onSubmit={handleSubmtiLogin}>
           <div className="group">
             <label htmlFor="email">이메일</label>
             <input type="text" id="email" onChange={handleChangeEmail}></input>
@@ -48,9 +48,7 @@ const Login = () => {
             <label htmlFor="pw">비밀번호</label>
             <input type="password" id="pw" onChange={handleChangePw}></input>
           </div>
-          <button id="btn-login" onClick={handleLogin}>
-            로그인
-          </button>
+          <button id="btn-login">로그인</button>
         </form>
         <OauthLoginBox>
           <div className="divider">
