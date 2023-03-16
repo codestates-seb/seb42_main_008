@@ -1,14 +1,11 @@
 package partypeople.server.companion.mapper;
 
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import partypeople.server.companion.dto.CompanionDto;
 import partypeople.server.companion.entity.Companion;
 import partypeople.server.companion.entity.CompanionTag;
 import partypeople.server.member.entity.Member;
 import partypeople.server.nation.entity.Nation;
-import partypeople.server.review.dto.ReviewDto;
-import partypeople.server.review.entity.Review;
 import partypeople.server.tag.entity.Tag;
 
 import java.util.*;
@@ -89,6 +86,7 @@ public interface CompanionMapper {
         response.setTitle( companion.getTitle() );
         response.setContent( companion.getContent() );
         response.setDate( companion.getDate() );
+        response.setCreatedAt(companion.getCreatedAt().toLocalDate());
         response.setAddress( companion.getAddress() );
         response.setLat( companion.getLat() );
         response.setLng( companion.getLng() );

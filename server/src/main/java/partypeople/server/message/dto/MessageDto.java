@@ -2,6 +2,7 @@ package partypeople.server.message.dto;
 
 import lombok.*;
 
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Positive;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -10,12 +11,13 @@ public class MessageDto {
     @Getter
     @AllArgsConstructor
     public static class Post {
-        @Positive
+        @NotEmpty
         private String content;
         @Positive
         private Long senderId;
         @Positive
         private Long receiverId;
+        @Positive
         private Long companionId;
     }
 

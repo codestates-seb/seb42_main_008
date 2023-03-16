@@ -20,7 +20,7 @@ interface ListQueryString {
   size: number;
   sortDir: string;
   sortBy: string;
-  nationCode: string;
+  nationCode: string | undefined;
 }
 
 // * 키워드 검색시 필요한 Query String
@@ -32,7 +32,7 @@ interface SearchQueryString {
   condition: string;
   keyword: string;
   date?: string | Date;
-  nationCode: string;
+  nationCode: string | undefined;
 }
 
 // * 국가 정보
@@ -50,6 +50,19 @@ interface CountryNames {
 // * ListItems 컴포넌트 Props data
 interface ListItemProps {
   listData: ListData[];
+  setSortData: React.Dispatch<React.SetStateAction<SortBy>>;
+}
+
+// * ListSearch 컴포넌트 props
+interface ListSearchProps {
+  searchDatas: ListData[] | undefined;
+  setSearchDatas: React.Dispatch<React.SetStateAction<ListData[] | undefined>>;
+  size: number;
+  sortData: SortBy;
+  searchPage: number;
+  isSearch: boolean;
+  setIsSearch: React.Dispatch<React.SetStateAction<boolean>>;
+  endRef: React.MutableRefObject<boolean>;
 }
 
 // * 정렬 기준
@@ -59,6 +72,14 @@ interface SortBy {
   sortDir: string;
 }
 
+// * Api 호출시 response pageInfo
+interface PageInfo {
+  page: number;
+  size: number;
+  totalElements: number;
+  totalPages: number;
+}
+
 export type {
   ListData,
   ListQueryString,
@@ -66,5 +87,7 @@ export type {
   CountryData,
   CountryNames,
   ListItemProps,
+  ListSearchProps,
   SortBy,
+  PageInfo,
 };
