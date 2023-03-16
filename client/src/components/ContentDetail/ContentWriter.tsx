@@ -1,15 +1,49 @@
-// import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { detailProps } from 'interfaces/ContentDetail.interface';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { getScoreIcon } from 'utils/getScoreIcon';
 
-const ContentWriter = () => {
+const ContentWriter = ({ detail }: detailProps) => {
+  // const params = useParams();
+  // const { id } = params;
   // 클릭 시 수정페이지로 이동 추가
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   // const handleClick = () => {
   //   navigate(`${}/edit`)
   // }
 
   // 클릭 시 글 삭제 추가
+  // const handleDelete = () => {
+  //   Swal.fire({
+  //     title: '삭제하시겠습니까?',
+  //     icon: 'warning',
+  //     showCancelButton: true,
+  //     confirmButtonColor: '#3085d6',
+  //     cancelButtonColor: '#d33',
+  //     confirmButtonText: 'Yes, delete it!',
+  //   }).then(async result => {
+  //     if (result.isConfirmed) {
+  //       await axios
+  //         .delete(`http://localhost:4000/companions/${detail.companionId}`)
+  //         .then(() => {
+  //           Swal.fire('Deleted!', 'Your file has been deleted.', 'success');
+  //           console.log('delete!');
+  //         })
+  //         .catch(error => console.log(error));
+  //       navigate(`/asia/jpn`);
+  //     }
+  //   });
+  // };
+  const handleDelete = async () => {
+    await axios
+      .delete(`http://localhost:4000/companions/${detail.companionId}`)
+      .then(() => {
+        console.log('delete!');
+      })
+      .catch(error => console.log(error));
+    navigate(`/asia/jpn`);
+  };
 
   return (
     <Container>
@@ -18,7 +52,7 @@ const ContentWriter = () => {
           <div>프로필 사진 자리</div>
         </div>
         <div className="info-wrapper">
-          <div id="nickname">하이라이트 짱팬</div>
+          <div id="nickname">{detail.nickname}</div>
           <div id="battery">
             <img src={getScoreIcon(93)} alt="score" />
           </div>
@@ -28,7 +62,9 @@ const ContentWriter = () => {
         {/* 여행완료? 리뷰작성 버튼 : (작성자ID === 현재 로그인ID ?  수정, 삭제 버튼 : 동행신청, 프로필보기 버튼) */}
         {/* 참여자 탭에서는 버튼 안보이도록 수정하기 */}
         <button className="btn">동행글 수정</button>
-        <button className="btn">동행글 삭제</button>
+        <button className="btn" onClick={handleDelete}>
+          동행글 삭제
+        </button>
       </ButtonBox>
     </Container>
   );
