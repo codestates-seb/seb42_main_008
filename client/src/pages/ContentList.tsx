@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import {
   ListData,
@@ -10,9 +10,13 @@ import ListSearch from 'components/ContinentList/ListSearch';
 import ListItems from 'components/ContinentList/ListItems';
 import customAxios from 'api/customAxios';
 import { useParams } from 'react-router-dom';
+import Loader from 'components/Loader';
 
 const ContentList = () => {
   const { countryCode } = useParams();
+  const preventRef = useRef(true); //중복 실행 방지
+  const obsRef = useRef(null); //observer Element
+  const endRef = useRef(false); //모든 글 로드 확인
   const [datas, setDatas] = useState<ListData[] | []>([]);
   const [searchDatas, setSearchDatas] = useState<ListData[] | null>(null);
   const [sortData, setSortData] = useState<SortBy>({
@@ -21,9 +25,10 @@ const ContentList = () => {
     sortDir: 'DESC',
   });
   const [page, setPage] = useState<number>(1);
-  const [size, setSize] = useState<number>(12);
+  const [size, setSize] = useState<number>(3);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  const getContentData = async () => {
+  const getContentData = async (page: number, size: number) => {
     const params: ListQueryString = {
       page,
       size,
@@ -32,19 +37,18 @@ const ContentList = () => {
       nationCode: countryCode,
     };
 
-    await customAxios.get('/companions').then(resp => {
-      setDatas(resp.data);
-    });
-
     await customAxios
       .get('/companions/nations', {
         params,
       })
       .then(resp => {
-        setDatas(resp.data);
-        console.log(resp.data);
-        setPage(1);
-        setSize(12);
+        setDatas([...datas, ...resp.data.data]);
+        setIsLoading(false);
+        preventRef.current = true;
+
+        if (resp.data.pageInfo.totalPages === resp.data.pageInfo.page) {
+          endRef.current = true;
+        }
       });
   };
 
@@ -52,12 +56,13 @@ const ContentList = () => {
     const width = window.innerWidth;
     if (width < 620) {
       setSize(3);
+      setPage(1);
     } else if (width < 922) {
-      setSize(6);
+      setSize(3);
     } else if (width < 1200) {
-      setSize(9);
+      setSize(3);
     } else {
-      setSize(12);
+      setSize(3);
     }
   };
 
@@ -65,13 +70,37 @@ const ContentList = () => {
     if (searchDatas !== null) {
       setDatas(searchDatas);
     } else {
-      getContentData();
+      getContentData(page, size);
     }
+  }, [sortData, searchDatas, page]);
 
+  useEffect(() => {
     window.addEventListener('resize', handleSize);
     handleSize();
-    return () => window.removeEventListener('resize', handleSize);
-  }, [sortData, searchDatas]);
+    return () => {
+      window.removeEventListener('resize', handleSize);
+    };
+  }, []);
+
+  const obsHandler = (entries: any) => {
+    const target = entries[0];
+    console.log('observer');
+    console.log(endRef.current, target.isIntersecting, preventRef.current);
+
+    if (!endRef.current && target.isIntersecting && preventRef.current) {
+      //옵저버 중복 실행 방지
+      preventRef.current = false; //옵저버 중복 실행 방지
+      setPage(prev => prev + 1); //페이지 값 증가
+    }
+  };
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(obsHandler, { threshold: 0.5 });
+    if (obsRef.current) observer.observe(obsRef.current);
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
 
   return (
     <Container>
@@ -84,6 +113,8 @@ const ContentList = () => {
         sortData={sortData}
       />
       <ListItems listData={datas} setSortData={setSortData} />
+      {isLoading && <Loader />}
+      <div ref={obsRef}></div>
     </Container>
   );
 };

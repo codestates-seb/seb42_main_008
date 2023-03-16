@@ -25,7 +25,7 @@ const ListSearch = ({
   sortData,
 }: ListSearchProps) => {
   const { countryCode } = useParams();
-  const [date, setDate] = useState(new Date());
+  const [date, setDate] = useState<Date>(new Date());
   const [keyword, setKeyword] = useState<string>('');
   const [condition, setCondition] = useState<string>('entire');
 
@@ -59,7 +59,8 @@ const ListSearch = ({
       nationCode: countryCode,
     };
     await customAxios.get('/companions/search', { params }).then(resp => {
-      setSearchDatas(resp.data);
+      console.log('searchData', resp.data);
+      setSearchDatas(resp.data.data);
     });
   };
 
@@ -86,7 +87,6 @@ const ListSearch = ({
         <DatePicker
           selected={date}
           onChange={handleDateChange}
-          selectsStart
           id="datePicker"
         />
       </DateSearch>
