@@ -13,4 +13,6 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
 
     @EntityGraph(attributePaths = {"sender"})
     Optional<Message> findById(Long messageId);
+
+    Long countByReceiverMemberIdAndIsReadFalse(Long receiverId);
 }
