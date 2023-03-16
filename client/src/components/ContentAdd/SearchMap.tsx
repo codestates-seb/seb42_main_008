@@ -1,25 +1,18 @@
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { FaMapMarkerAlt } from 'react-icons/fa';
 interface LatLngWithAddress extends google.maps.LatLngLiteral {
   address: string;
 }
 
-const SearchMap = ({ savedAddress, setSavedAddress }: any) => {
-  // 지도 자동 렌더
-  useEffect(() => {
-    const navigationEntries = window.performance.getEntriesByType('navigation');
-    const isFirstLoad =
-      navigationEntries.length &&
-      (navigationEntries[0].name === 'navigation' ||
-        !navigationEntries[0].name);
-
-    if (isFirstLoad) {
-      window.location.reload();
-    }
-  }, []);
+const SearchMap = ({
+  savedAddress,
+  setSavedAddress,
+  markerLocation,
+  setMarkerLocation,
+}: any) => {
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [searchInput, setSearchInput] = useState<string>('');
   const [selectPlace, setSelectPlace] = useState<LatLngWithAddress | null>(
@@ -55,13 +48,14 @@ const SearchMap = ({ savedAddress, setSavedAddress }: any) => {
           address: formmatedAddress,
         });
         setSavedAddress(formmatedAddress);
-        console.log(location);
+        setMarkerLocation(location);
         if (map) {
           map.panTo(location);
         }
       }
     } catch (error) {
       console.log(error);
+      console.log(markerLocation);
     }
   };
 

@@ -86,6 +86,8 @@ const ContentAdd = () => {
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [isTendencyModal, setIsTendencyModal] = useState(false);
   const [savedAddress, setSavedAddress] = useState<string | null>(null);
+  const [markerLocation, setMarkerLocation] = useState({});
+
   const handleContentSubmit = () => {
     if (!titleInput) {
       alert('글 제목을 입력해주세요!');
@@ -103,7 +105,6 @@ const ContentAdd = () => {
       setIsTendencyModal(!isTendencyModal);
     }
   };
-
   return (
     <ContentAddContainer>
       <TitleBox style={{ backgroundImage: `url(${titleImg})` }}>
@@ -174,6 +175,8 @@ const ContentAdd = () => {
           <SearchMap
             savedAddress={savedAddress}
             setSavedAddress={setSavedAddress}
+            markerLocation={markerLocation}
+            setMarkerLocation={setMarkerLocation}
           />
         </div>
         <div className="add-set">
