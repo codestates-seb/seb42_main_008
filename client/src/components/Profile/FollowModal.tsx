@@ -3,8 +3,14 @@ import { useEffect, useState } from 'react';
 import { IoMdClose } from 'react-icons/io';
 import { Follow, FollowModalProps } from 'interfaces/Profile.interface';
 import customAxios from 'api/customAxios';
+import { useNavigate } from 'react-router-dom';
 
-const FollowModal = ({ setIsShowModal, isFollower }: FollowModalProps) => {
+const FollowModal = ({
+  setIsShowModal,
+  isFollower,
+  member,
+}: FollowModalProps) => {
+  const navigate = useNavigate();
   const [followerList, setFollowerList] = useState<Follow[] | []>([]);
   const [followingList, setFollowingList] = useState<Follow[] | []>([]);
 
@@ -12,13 +18,37 @@ const FollowModal = ({ setIsShowModal, isFollower }: FollowModalProps) => {
     setIsShowModal(false);
   };
 
+  const handleUserClick = (memberId: number) => {
+    navigate(`/${memberId}/profile`);
+    setIsShowModal(false);
+  };
+
   const getFollowData = async () => {
-    await customAxios.get('/follows').then(resp => {
-      setFollowerList(resp.data);
-    });
-    await customAxios.get('/follows').then(resp => {
-      setFollowingList(resp.data);
-    });
+    // ^ json-server 테스트용 코드
+    // if (isFollower) {
+    //   await customAxios.get('/follows').then(resp => {
+    //     setFollowerList(resp.data);
+    //   });
+    // } else {
+    //   await customAxios.get('/follows').then(resp => {
+    //     setFollowingList(resp.data);
+    //   });
+    // }
+
+    // ! 실제 테스트용 코드
+    if (isFollower) {
+      await customAxios
+        .get(`/members/${member.memberId}/follower`)
+        .then(resp => {
+          setFollowerList(resp.data.data);
+        });
+    } else {
+      await customAxios
+        .get(`/members/${member.memberId}/following`)
+        .then(resp => {
+          setFollowingList(resp.data.data);
+        });
+    }
   };
 
   useEffect(() => {
@@ -38,7 +68,7 @@ const FollowModal = ({ setIsShowModal, isFollower }: FollowModalProps) => {
 
   return (
     <>
-      <ModalBG className="MODAL" onClick={handleModalClose}></ModalBG>
+      <ModalBG onClick={handleModalClose}></ModalBG>
       <ModalContent>
         <div>
           <h1>{isFollower ? '팔로워' : '팔로잉'}</h1>
@@ -47,21 +77,33 @@ const FollowModal = ({ setIsShowModal, isFollower }: FollowModalProps) => {
           </CloseButton>
         </div>
         {isFollower ? (
+          followerList.length !== 0 ? (
+            <FollowList>
+              {followerList.map((follower, idx) => (
+                <FollowUser
+                  key={idx}
+                  role="presentation"
+                  onClick={() => handleUserClick(follower.memberId)}
+                >
+                  <img
+                    src={follower.profile}
+                    alt={follower.nickname + 'profile'}
+                  />
+                  <span>{follower.nickname}</span>
+                </FollowUser>
+              ))}
+            </FollowList>
+          ) : (
+            <EmptyFollowList>팔로워 리스트가 비어있습니다.</EmptyFollowList>
+          )
+        ) : followingList.length !== 0 ? (
           <FollowList>
-            {followerList.map(follower => (
-              <FollowUser key={follower.memberID}>
-                <img
-                  src={follower.profile}
-                  alt={follower.nickname + 'profile'}
-                />
-                <span>{follower.nickname}</span>
-              </FollowUser>
-            ))}
-          </FollowList>
-        ) : (
-          <FollowList>
-            {followingList.map(following => (
-              <FollowUser key={following.memberID}>
+            {followingList.map((following, idx) => (
+              <FollowUser
+                key={idx}
+                role="presentation"
+                onClick={() => handleUserClick(following.memberId)}
+              >
                 <img
                   src={following.profile}
                   alt={following.nickname + 'profile'}
@@ -70,6 +112,8 @@ const FollowModal = ({ setIsShowModal, isFollower }: FollowModalProps) => {
               </FollowUser>
             ))}
           </FollowList>
+        ) : (
+          <EmptyFollowList>팔로잉 리스트가 비어있습니다.</EmptyFollowList>
         )}
       </ModalContent>
     </>
@@ -123,18 +167,19 @@ const FollowList = styled.ul`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
   overflow: auto;
   padding: 0 30px;
 `;
 
 const FollowUser = styled.li`
   width: 100%;
-  padding: 5px;
+  padding: 10px 5px;
   border-bottom: 1px solid #ddd;
   display: flex;
   align-items: center;
   gap: 10px;
+  background-color: #fff;
+  cursor: pointer;
 
   > img {
     width: 40px;
@@ -142,6 +187,9 @@ const FollowUser = styled.li`
     object-fit: cover;
     object-position: center;
     border-radius: 50%;
+  }
+  :hover {
+    filter: brightness(0.9);
   }
 `;
 
@@ -162,6 +210,19 @@ const CloseButton = styled.div`
   :active {
     background-color: #666;
     color: #fff;
+  }
+`;
+
+const EmptyFollowList = styled.p`
+  width: fit-content;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #666;
+
+  @media screen and (max-width: 576px) {
+    font-size: 0.9rem;
   }
 `;
 

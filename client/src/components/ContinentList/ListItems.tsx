@@ -3,15 +3,10 @@ import { ListItemProps, SortBy } from 'interfaces/ContentList.interface';
 import { getDateString } from 'utils/getDateString';
 import { useNavigate } from 'react-router-dom';
 import { FaMapMarkerAlt } from 'react-icons/fa';
-import React, { useState } from 'react';
+import React from 'react';
 
-const ListItems = ({ listData }: ListItemProps) => {
+const ListItems = ({ listData, setSortData }: ListItemProps) => {
   const navigate = useNavigate();
-  const [sortData, setSortData] = useState<SortBy>({
-    value: '작성날짜 (최신순)',
-    sortBy: 'createdAt',
-    sortDir: 'DESC',
-  });
 
   const handleClickItem = (id: number) => {
     navigate(`/companions/${id}`);
@@ -26,7 +21,6 @@ const ListItems = ({ listData }: ListItemProps) => {
     const { value } = event.target;
     const findIdx = sortByArr.findIndex(item => item.value === value);
     setSortData({ ...sortByArr[findIdx] });
-    console.log(sortData);
   };
 
   return (
@@ -41,11 +35,8 @@ const ListItems = ({ listData }: ListItemProps) => {
           ))}
         </select>
       </Sort>
-      {listData.map(item => (
-        <ListItem
-          key={item.companionId}
-          onClick={() => handleClickItem(item.companionId)}
-        >
+      {listData.map((item, idx) => (
+        <ListItem key={idx} onClick={() => handleClickItem(item.companionId)}>
           <h1>{getDateString(item.date).shortDateStr}</h1>
           <Address>
             <span>
@@ -71,6 +62,7 @@ const ListItems = ({ listData }: ListItemProps) => {
 const ItemListsContainer = styled.section`
   width: 80%;
   height: fit-content;
+  min-height: calc(100% - 40vh);
   padding: 50px 20px;
   padding-top: 110px;
   display: grid;
