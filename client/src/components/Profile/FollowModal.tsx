@@ -25,28 +25,28 @@ const FollowModal = ({
 
   const getFollowData = async () => {
     // ^ json-server 테스트용 코드
-    if (isFollower) {
-      await customAxios.get('/follows').then(resp => {
-        setFollowerList(resp.data);
-      });
-    } else {
-      await customAxios.get('/follows').then(resp => {
-        setFollowingList(resp.data);
-      });
-    }
+    // if (isFollower) {
+    //   await customAxios.get('/follows').then(resp => {
+    //     setFollowerList(resp.data);
+    //   });
+    // } else {
+    //   await customAxios.get('/follows').then(resp => {
+    //     setFollowingList(resp.data);
+    //   });
+    // }
 
     // ! 실제 테스트용 코드
     if (isFollower) {
       await customAxios
         .get(`/members/${member.memberId}/follower`)
         .then(resp => {
-          setFollowerList(resp.data);
+          setFollowerList(resp.data.data);
         });
     } else {
       await customAxios
         .get(`/members/${member.memberId}/following`)
         .then(resp => {
-          setFollowingList(resp.data);
+          setFollowingList(resp.data.data);
         });
     }
   };

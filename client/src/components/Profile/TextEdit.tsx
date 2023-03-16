@@ -1,6 +1,7 @@
 import customAxios from 'api/customAxios';
 import { TextEditProps } from 'interfaces/Profile.interface';
 import React, { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
 import { editValidationCheck } from 'utils/profileEditValidation';
@@ -11,11 +12,13 @@ const TextEdit = ({
   validation,
   setValidation,
 }: TextEditProps) => {
-  const [nickname, setNickname] = useState<string | undefined>(
-    member?.nickname
+  const [nickname, setNickname] = useState<string | undefined>(member.nickname);
+  const [gender, setGender] = useState<string | undefined>(
+    member.gender ? member.gender : undefined
   );
-  const [gender, setGender] = useState<string | undefined>(member?.gender);
-  const [content, setContent] = useState<string | undefined>(member?.content);
+  const [content, setContent] = useState<string | undefined>(
+    member.content ? member.content : undefined
+  );
   const [password, setPassword] = useState<string>('');
   const [passwordCheck, setPasswordCheck] = useState<string>('');
 
@@ -38,6 +41,7 @@ const TextEdit = ({
       .post('/members/nickname', { nickname })
       .then(resp => {
         console.log(resp);
+        toast.success('사용 가능한 닉네임입니다.');
         setValidation(cur => ({
           ...cur,
           nicknameUnique: true,
@@ -45,17 +49,17 @@ const TextEdit = ({
       })
       .catch(error => {
         console.log(error);
-        if (error.response.status === 409) {
-          Swal.fire({
-            icon: 'error',
-            title: '중복된 닉네임입니다',
-            text: '다른 닉네임을 입력해 주세요',
-          });
-          setValidation(cur => ({
-            ...cur,
-            nicknameUnique: false,
-          }));
-        }
+        // if (error.response.status === 409) {
+        Swal.fire({
+          icon: 'error',
+          title: '중복된 닉네임입니다',
+          text: '다른 닉네임을 입력해 주세요',
+        });
+        setValidation(cur => ({
+          ...cur,
+          nicknameUnique: false,
+        }));
+        // }
       });
   };
 

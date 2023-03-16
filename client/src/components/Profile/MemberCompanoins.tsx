@@ -6,43 +6,42 @@ import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import ListComponent from './ListComponent';
 import customAxios from 'api/customAxios';
+import { useParams } from 'react-router-dom';
 
 const MemberCompanoins = ({ member, user }: MemberCompanionsProps) => {
+  const { memberId } = useParams();
   const [subscribers, setSubscribers] = useState<MyCompanion[] | []>([]);
   const [participants, setParticipants] = useState<MyCompanion[] | []>([]);
-  const [writters, setWritters] = useState<MyCompanion[] | []>([]);
+  const [writers, setWriters] = useState<MyCompanion[] | []>([]);
   const [titleHead, setTitleHead] = useState<string>('');
 
   const getData = async (dataType: string) => {
     // ^ json-server
-    await customAxios.get(`/${dataType}`).then(resp => {
+    // await customAxios.get(`/${dataType}`).then(resp => {
+    //   if (dataType === 'subscribers') {
+    //     setSubscribers(resp.data);
+    //   } else if (dataType === 'participants') {
+    //     setParticipants(resp.data);
+    //   } else {
+    //     setWritters(resp.data);
+    //   }
+    // });
+    // !!!
+    await customAxios.get(`members/${memberId}/${dataType}`).then(resp => {
       if (dataType === 'subscribers') {
-        setSubscribers(resp.data);
+        setSubscribers(resp.data.data);
       } else if (dataType === 'participants') {
-        setParticipants(resp.data);
+        setParticipants(resp.data.data);
       } else {
-        setWritters(resp.data);
+        setWriters(resp.data.data);
       }
     });
-
-    // !!!
-    await customAxios
-      .get(`members/${member.memberId}/${dataType}`)
-      .then(resp => {
-        if (dataType === 'subscribers') {
-          setSubscribers(resp.data);
-        } else if (dataType === 'participants') {
-          setParticipants(resp.data);
-        } else {
-          setWritters(resp.data);
-        }
-      });
   };
 
   useEffect(() => {
     getData('subscribers');
     getData('participants');
-    getData('writters');
+    getData('writers');
     setTitleHead(cur => {
       if (member) {
         return member.memberId === user.memberId
@@ -55,27 +54,21 @@ const MemberCompanoins = ({ member, user }: MemberCompanionsProps) => {
 
   return (
     <CompanoinsWrapper>
-      {writters.length !== 0 && (
-        <ListComponent
-          datas={writters}
-          titleHead={titleHead}
-          titleBody="작성한 "
-        />
-      )}
-      {participants.length !== 0 && (
-        <ListComponent
-          datas={participants}
-          titleHead={titleHead}
-          titleBody="참여한 "
-        />
-      )}
-      {subscribers.length !== 0 && (
-        <ListComponent
-          datas={subscribers}
-          titleHead={titleHead}
-          titleBody="신청한 "
-        />
-      )}
+      <ListComponent
+        datas={writers}
+        titleHead={titleHead}
+        titleBody="작성한 "
+      />
+      <ListComponent
+        datas={participants}
+        titleHead={titleHead}
+        titleBody="참여한 "
+      />
+      <ListComponent
+        datas={subscribers}
+        titleHead={titleHead}
+        titleBody="신청한 "
+      />
     </CompanoinsWrapper>
   );
 };

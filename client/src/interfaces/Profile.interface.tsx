@@ -60,6 +60,7 @@ interface FollowRequest {
 interface MemberInfoProps {
   user: LoginUser;
   member: MemberProfile;
+  setMember: React.Dispatch<React.SetStateAction<MemberProfile | null>>;
 }
 
 // * MemberContent 컴포넌트 props
@@ -104,7 +105,7 @@ interface FollowModalProps {
 // * 회원정보 수정 컴포넌트 props
 interface TextEditProps {
   setMemberData: React.Dispatch<any>;
-  member: MemberProfile | null;
+  member: MemberProfile;
   validation: Validations;
   setValidation: React.Dispatch<React.SetStateAction<Validations>>;
 }

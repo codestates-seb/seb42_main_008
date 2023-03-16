@@ -52,27 +52,31 @@ const ListComponent = ({ datas, titleHead, titleBody }: ListComponentProps) => {
   return (
     <ListWrapper>
       <h1>{titleHead + titleBody}동행</h1>
-      <Slider {...settings}>
-        {datas.map(item => (
-          <MemberListItem
-            key={item.compainonId}
-            onClick={() => handleClickItem(item.compainonId)}
-          >
-            {item.companionStatus && <DoneItem></DoneItem>}
-            <h1>{getDateString(item.date).shortDateStr}</h1>
-            <ItemAddress>
-              <span>
-                <FaMapMarkerAlt size={25} />
-              </span>
-              <p>{item.address}</p>
-            </ItemAddress>
-            <Flag isDone={item.companionStatus}></Flag>
-            <ItemFlagText>
-              {item.companionStatus ? '모집완료' : '모집중'}
-            </ItemFlagText>
-          </MemberListItem>
-        ))}
-      </Slider>
+      {datas.length !== 0 ? (
+        <Slider {...settings}>
+          {datas.map((item, idx) => (
+            <MemberListItem
+              key={idx}
+              onClick={() => handleClickItem(item.compainonId)}
+            >
+              {item.companionStatus && <DoneItem></DoneItem>}
+              <h1>{getDateString(item.date).shortDateStr}</h1>
+              <ItemAddress>
+                <span>
+                  <FaMapMarkerAlt size={25} />
+                </span>
+                <p>{item.address}</p>
+              </ItemAddress>
+              <Flag isDone={item.companionStatus}></Flag>
+              <ItemFlagText>
+                {item.companionStatus ? '모집완료' : '모집중'}
+              </ItemFlagText>
+            </MemberListItem>
+          ))}
+        </Slider>
+      ) : (
+        <EmptyList>{titleBody} 동행이 없습니다.</EmptyList>
+      )}
     </ListWrapper>
   );
 };
@@ -100,6 +104,10 @@ const ListWrapper = styled.section`
 
   .slick-slide {
     padding: 12px;
+  }
+
+  .slick-track {
+    margin-left: 0;
   }
 `;
 
@@ -155,6 +163,15 @@ const ItemFlagText = styled(FlagText)`
 const DoneItem = styled(ImageFilter)`
   background-color: black;
   opacity: 0.2;
+`;
+
+const EmptyList = styled.div`
+  width: 100%;
+  height: 50px;
+  font-size: 0.9rem;
+  color: #666;
+  display: flex;
+  align-items: center;
 `;
 
 export default ListComponent;

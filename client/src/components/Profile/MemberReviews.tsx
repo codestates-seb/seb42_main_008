@@ -31,20 +31,20 @@ const MemberReviews = ({ member }: MemberReviewProps) => {
 
   const getReviewData = async () => {
     // ^ json-server
-    await customAxios
-      .get(`/reviews`)
-      .then(resp => {
-        setReviews(resp.data);
-      })
-      .catch(error => {
-        console.log(error);
-      });
+    // await customAxios
+    //   .get(`/reviews`)
+    //   .then(resp => {
+    //     setReviews(resp.data);
+    //   })
+    //   .catch(error => {
+    //     console.log(error);
+    //   });
 
     // ! test
     await customAxios
-      .get(`/members/${member.memberId}/reviews`)
+      .get(`/members/2/reviews`)
       .then(resp => {
-        setReviews(resp.data);
+        setReviews(resp.data.data);
       })
       .catch(error => {
         console.log(error);
@@ -53,26 +53,31 @@ const MemberReviews = ({ member }: MemberReviewProps) => {
 
   useEffect(() => {
     getReviewData();
+    console.log(member);
   }, []);
 
   return (
-    <ReviewWrapper>
-      {reviews.length !== 0 ? (
-        reviews.map((item, idx) => (
-          <ReviewItem key={idx}>
-            <p>{item.content}</p>
-            <div className="icons">
-              <Emoji score={item.score} />
-              <span className="siren" onClick={handleSirenClick}>
-                <GiSiren size={27} color="red" />
-              </span>
-            </div>
-          </ReviewItem>
-        ))
-      ) : (
-        <p>아직 작성된 리뷰가 없습니다!</p>
+    <>
+      {reviews && (
+        <ReviewWrapper>
+          {reviews.length !== 0 ? (
+            reviews.map((item, idx) => (
+              <ReviewItem key={idx}>
+                <p>{item.content}</p>
+                <div className="icons">
+                  <Emoji score={item.score} />
+                  <span className="siren" onClick={handleSirenClick}>
+                    <GiSiren size={27} color="red" />
+                  </span>
+                </div>
+              </ReviewItem>
+            ))
+          ) : (
+            <p>아직 작성된 리뷰가 없습니다!</p>
+          )}
+        </ReviewWrapper>
       )}
-    </ReviewWrapper>
+    </>
   );
 };
 

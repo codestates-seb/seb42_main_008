@@ -80,6 +80,8 @@ const MemberSettings = ({ member, setCurrentTab }: MemberSettingsProps) => {
       if (result.isConfirmed) {
         await customAxios.patch(`/members/${member.memberId}`, {
           ...memberData,
+          profile:
+            'https://user-images.githubusercontent.com/6022883/45476027-e45c1a80-b778-11e8-9716-4e39c6d6e58e.png',
         });
         setCurrentTab(0);
         window.scrollTo(0, 0);
