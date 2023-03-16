@@ -4,28 +4,41 @@ import com.google.gson.Gson;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
+import org.springframework.boot.test.autoconfigure.restdocs.RestDocsProperties;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
+import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.payload.JsonFieldType;
+import org.springframework.restdocs.payload.PayloadDocumentation;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.web.util.UriComponentsBuilder;
+import partypeople.server.config.SecurityConfigurationTest;
 import partypeople.server.message.dto.MessageDto;
 import partypeople.server.message.entity.Message;
 import partypeople.server.message.mapper.MessageMapper;
 import partypeople.server.message.service.MessageService;
+import partypeople.server.util.ApiDocumentUtils;
 
 import java.net.URI;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.hamcrest.Matchers.*;
 import static org.mockito.BDDMockito.given;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static partypeople.server.util.ApiDocumentUtils.*;
 
-@SpringBootTest
-@AutoConfigureMockMvc
+@WebMvcTest(MessageController.class)
+@MockBean(JpaMetamodelMappingContext.class)
+@Import(SecurityConfigurationTest.class)
+@AutoConfigureRestDocs
 class MessageControllerTest {
     @Autowired
     private MockMvc mockMvc;
@@ -61,7 +74,18 @@ class MessageControllerTest {
         //then
         actions
             .andExpect(status().isCreated())
-            .andExpect(header().string("location", is(startsWith("/messages/"))));
+            .andExpect(header().string("location", is(startsWith("/messages/"))))
+            .andDo(document("post-message",
+                getRequestPreProcessor(),
+                getResponsePreProcessor(),
+                requestFields(
+                    List.of(
+                        fieldWithPath("content").type(JsonFieldType.STRING).description("쪽지 내용"),
+                        fieldWithPath("senderId").type(JsonFieldType.NUMBER).description("보내는 회원 식별자"),
+                        fieldWithPath("receiverId").type(JsonFieldType.NUMBER).description("받는 회원 식별자"),
+                        fieldWithPath("companionId").type(JsonFieldType.NUMBER).description("동행글 번호")
+                    )
+                )));
     }
 
     @Test

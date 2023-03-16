@@ -1,13 +1,14 @@
 import ReactQuill from 'react-quill';
 import styled from 'styled-components';
 import 'react-quill/dist/quill.snow.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import DatePicker, { registerLocale } from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import ko from 'date-fns/locale/ko';
 import CountrySelectModal from 'components/ContentAdd/CountrySelectModal';
 import TendencyModal from 'components/ContentAdd/TendencyModal';
 import SearchMap from 'components/ContentAdd/SearchMap';
+import countries from '../assets/countries.json';
 
 registerLocale('ko', ko);
 
@@ -40,32 +41,40 @@ const ContentAdd = () => {
       ],
     },
   };
+
   // 대륙 선택 옵션
   const [continentSelect, setContinentSelect] = useState('');
+  // 나라 선택
+  const [countrySelect, setCountrySelect] = useState('국가선택');
+  // 대륙 초기화시 나라 리셋
+  useEffect(() => {
+    setCountrySelect('국가선택');
+  }, [continentSelect]);
   let title = '대륙을 선택하세요!';
   let titleImg =
     'https://cdn.pixabay.com/photo/2022/10/22/19/11/travel-7539914__480.jpg';
-  if (continentSelect === '유럽') {
+
+  if (continentSelect === 'europe') {
     title = 'Europe';
     titleImg =
       'https://cdn.pixabay.com/photo/2020/07/12/16/40/paris-5397889_1280.jpg';
-  } else if (continentSelect === '아프리카') {
+  } else if (continentSelect === 'africa') {
     title = 'Africa';
     titleImg =
       'https://cdn.pixabay.com/photo/2019/03/02/21/25/morocco-4030733_1280.jpg';
-  } else if (continentSelect === '아시아') {
+  } else if (continentSelect === 'asia') {
     title = 'Asia';
     titleImg =
       'https://cdn.pixabay.com/photo/2020/07/23/01/16/heritage-5430081_1280.jpg';
-  } else if (continentSelect === '북아메리카') {
+  } else if (continentSelect === 'northAmerica') {
     title = 'North America';
     titleImg =
       'https://cdn.pixabay.com/photo/2020/06/08/20/58/nyc-5276112__480.jpg';
-  } else if (continentSelect === '남아메리카') {
+  } else if (continentSelect === 'southAmerica') {
     title = 'South America';
     titleImg =
       'https://cdn.pixabay.com/photo/2019/02/06/00/06/peru-3978148_1280.jpg';
-  } else if (continentSelect === '오세아니아') {
+  } else if (continentSelect === 'oceania') {
     title = 'Oceania';
     titleImg =
       'https://cdn.pixabay.com/photo/2019/05/15/18/22/sydney-4205646_1280.jpg';
@@ -80,12 +89,21 @@ const ContentAdd = () => {
   const handleCountryModal = () => {
     setCountryModal(!countryModal);
   };
+  // 제목
   const [titleInput, setTitleInput] = useState('');
+  // 내용
   const [contentInput, setContentInput] = useState('');
+  // 여행 시작일
   const [startDate, setStartDate] = useState<Date | null>(null);
+  // 여행 종료일
   const [endDate, setEndDate] = useState<Date | null>(null);
-  const [isTendencyModal, setIsTendencyModal] = useState(false);
+  // 세부 주소 정보
   const [savedAddress, setSavedAddress] = useState<string | null>(null);
+  // lat, lng 위치 정보
+  const [markerLocation, setMarkerLocation] = useState({});
+  // 성향 모달
+  const [isTendencyModal, setIsTendencyModal] = useState(false);
+
   const handleContentSubmit = () => {
     if (!titleInput) {
       alert('글 제목을 입력해주세요!');
@@ -120,19 +138,21 @@ const ContentAdd = () => {
                 onChange={event => setContinentSelect(event.target.value)}
               >
                 <option value="대륙선택">대륙선택</option>
-                <option value="유럽">유럽</option>
-                <option value="아시아">아시아</option>
-                <option value="북아메리카">북아메리카</option>
-                <option value="남아메리카">남아메리카</option>
-                <option value="아프리카">아프리카</option>
-                <option value="오세아니아">오세아니아</option>
+
+                {Object.keys(countries).map((country, index) => {
+                  return (
+                    <option key={index} value={country}>
+                      {country}
+                    </option>
+                  );
+                })}
               </select>
             </label>
           </div>
           <div className="country-state">
             <label>
               <div className="country-label">나라</div>
-              <div className="country-name">잉글랜드</div>
+              <div className="country-name">{countrySelect}</div>
               <button onClick={handleCountryModal}>선택</button>
             </label>
           </div>
@@ -174,6 +194,8 @@ const ContentAdd = () => {
           <SearchMap
             savedAddress={savedAddress}
             setSavedAddress={setSavedAddress}
+            markerLocation={markerLocation}
+            setMarkerLocation={setMarkerLocation}
           />
         </div>
         <div className="add-set">
@@ -192,7 +214,11 @@ const ContentAdd = () => {
       </ContentBox>
       {countryModal ? (
         <div className="overlay">
-          <CountrySelectModal setCountryModal={setCountryModal} />
+          <CountrySelectModal
+            setCountryModal={setCountryModal}
+            setCountrySelect={setCountrySelect}
+            continentSelect={continentSelect}
+          />
         </div>
       ) : null}
       {isTendencyModal ? (

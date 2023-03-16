@@ -1,14 +1,44 @@
-import React from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
 import styled from 'styled-components';
 import { GrClose } from 'react-icons/gr';
-
-type Props = {
-  setCountryModal: (newValue: boolean) => void;
+import countries from '../../assets/countries.json';
+const countriesPick: Countries = countries;
+type Countries = {
+  [key: string]: {
+    name: string;
+    code: string;
+  }[];
 };
-const CountrySelectModal = ({ setCountryModal }: Props) => {
+
+interface Props {
+  setCountryModal: Dispatch<SetStateAction<boolean>>;
+  continentSelect: string;
+  setCountrySelect: Dispatch<SetStateAction<string>>;
+}
+const CountrySelectModal = ({
+  setCountryModal,
+  setCountrySelect,
+  continentSelect,
+}: Props) => {
+  if (!continentSelect || continentSelect === '대륙선택') {
+    setCountryModal(false);
+    alert('대륙을 선택해주세요');
+  }
+
   const handleModal = () => {
     setCountryModal(false);
   };
+  // 고른 국가 상태 저장
+  const handleCountry = (country: string) => {
+    const koreanRegex = /[가-힣]+/g;
+    const koreanMatches = country.match(koreanRegex);
+    const koreanString = koreanMatches ? koreanMatches.join('') : '';
+    setCountrySelect(koreanString);
+    setCountryModal(false);
+  };
+  // 국가이름 한글만 골라내기
+  const koreanRegex = /[가-힣]+/g;
+
   return (
     <CountryBox>
       <div className="country-box">
@@ -23,46 +53,13 @@ const CountrySelectModal = ({ setCountryModal }: Props) => {
           placeholder="나라를 입력해주세요.."
         ></input>
         <ul className="country-content">
-          <li>
-            <div>잉글랜드</div>
-            <button>선택</button>
-          </li>
-          <li>
-            <div>잉글랜드</div>
-            <button>선택</button>
-          </li>
-          <li>
-            <div>잉글랜드</div>
-            <button>선택</button>
-          </li>
-          <li>
-            <div>잉글랜드</div>
-            <button>선택</button>
-          </li>
-          <li>
-            <div>잉글랜드</div>
-            <button>선택</button>
-          </li>
-          <li>
-            <div>잉글랜드</div>
-            <button>선택</button>
-          </li>
-          <li>
-            <div>잉글랜드</div>
-            <button>선택</button>
-          </li>
-          <li>
-            <div>잉글랜드</div>
-            <button>선택</button>
-          </li>
-          <li>
-            <div>잉글랜드</div>
-            <button>선택</button>
-          </li>
-          <li>
-            <div>잉글랜드</div>
-            <button>선택</button>
-          </li>
+          {countriesPick[continentSelect].map((country, index: number) => {
+            return (
+              <li key={index} onClick={() => handleCountry(country.name)}>
+                {country.name.match(koreanRegex)?.join('')}
+              </li>
+            );
+          })}
         </ul>
       </div>
     </CountryBox>
@@ -125,6 +122,7 @@ const CountryBox = styled.div`
       justify-content: space-between;
       display: flex;
       align-items: center;
+      cursor: pointer;
       > button {
         display: flex;
         align-items: center;
