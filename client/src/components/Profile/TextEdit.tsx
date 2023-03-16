@@ -17,7 +17,7 @@ const TextEdit = ({
     member.gender ? member.gender : undefined
   );
   const [content, setContent] = useState<string | undefined>(
-    member.content ? member.content : undefined
+    member.content ? member.content : ''
   );
   const [password, setPassword] = useState<string>('');
   const [passwordCheck, setPasswordCheck] = useState<string>('');
@@ -140,7 +140,7 @@ const TextEdit = ({
         )}
       </ContentEdit>
       <PasswordEdit>
-        <h1>비밀번호</h1>
+        <h1>비밀번호 수정</h1>
         <section
           className={!validation.passwordValid ? 'valid-false' : undefined}
         >
