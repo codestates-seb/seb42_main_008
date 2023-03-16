@@ -104,7 +104,25 @@ public class CompanionControllerTest {
         // then
         actions
                 .andExpect(status().isCreated())
-                .andExpect(header().string("location", is(startsWith("/companions"))));
+                .andExpect(header().string("location", is(startsWith("/companions"))))
+                .andDo(document("post-companion",
+                        getRequestPreProcessor(),
+                        getResponsePreProcessor(),
+                        requestFields(
+                                List.of(
+                                        fieldWithPath("title").type(JsonFieldType.STRING).description("동행글 제목"),
+                                        fieldWithPath("content").type(JsonFieldType.STRING).description("동행글 내용"),
+                                        fieldWithPath("date").type(JsonFieldType.STRING).description("동행 날짜"),
+                                        fieldWithPath("address").type(JsonFieldType.STRING).description("동행 주소"),
+                                        fieldWithPath("lat").type(JsonFieldType.NUMBER).description("위도"),
+                                        fieldWithPath("lng").type(JsonFieldType.NUMBER).description("경도"),
+                                        fieldWithPath("nationName").type(JsonFieldType.STRING).description("국가"),
+                                        fieldWithPath("nationCode").type(JsonFieldType.STRING).description("국가 코드"),
+                                        fieldWithPath("continent").type(JsonFieldType.NUMBER).description("대륙 코드"),
+                                        fieldWithPath("tags").type(JsonFieldType.ARRAY).description("태그"),
+                                        fieldWithPath("memberId").type(JsonFieldType.NUMBER).description("작성한 회원 식별자")
+                                )
+                        )));
     }
 
     private static class Post {
