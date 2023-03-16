@@ -77,22 +77,26 @@ const FollowModal = ({
           </CloseButton>
         </div>
         {isFollower ? (
-          <FollowList>
-            {followerList.map((follower, idx) => (
-              <FollowUser
-                key={idx}
-                role="presentation"
-                onClick={() => handleUserClick(follower.memberId)}
-              >
-                <img
-                  src={follower.profile}
-                  alt={follower.nickname + 'profile'}
-                />
-                <span>{follower.nickname}</span>
-              </FollowUser>
-            ))}
-          </FollowList>
-        ) : (
+          followerList.length !== 0 ? (
+            <FollowList>
+              {followerList.map((follower, idx) => (
+                <FollowUser
+                  key={idx}
+                  role="presentation"
+                  onClick={() => handleUserClick(follower.memberId)}
+                >
+                  <img
+                    src={follower.profile}
+                    alt={follower.nickname + 'profile'}
+                  />
+                  <span>{follower.nickname}</span>
+                </FollowUser>
+              ))}
+            </FollowList>
+          ) : (
+            <EmptyFollowList>팔로워 리스트가 비어있습니다.</EmptyFollowList>
+          )
+        ) : followingList.length !== 0 ? (
           <FollowList>
             {followingList.map((following, idx) => (
               <FollowUser
@@ -108,6 +112,8 @@ const FollowModal = ({
               </FollowUser>
             ))}
           </FollowList>
+        ) : (
+          <EmptyFollowList>팔로잉 리스트가 비어있습니다.</EmptyFollowList>
         )}
       </ModalContent>
     </>
@@ -204,6 +210,19 @@ const CloseButton = styled.div`
   :active {
     background-color: #666;
     color: #fff;
+  }
+`;
+
+const EmptyFollowList = styled.p`
+  width: fit-content;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #666;
+
+  @media screen and (max-width: 576px) {
+    font-size: 0.9rem;
   }
 `;
 
