@@ -56,7 +56,7 @@ const SignUp = () => {
       setNicknameMessage('2글자 이상 10글자 미만으로 입력해주세요.');
       setIsNickname(false);
     } else {
-      setNicknameMessage('올바른 닉네임 형식입니다.');
+      setNicknameMessage('');
       setIsNickname(true);
     }
   }, []);
@@ -71,14 +71,13 @@ const SignUp = () => {
         if (res.status === 200) {
           Swal.fire('', '사용가능한 닉네임 입니다.');
           console.log(res.status);
-        } else if (res.status === 409) {
-          // 팝업창... 왜안돼... 수정예정....
-          Swal.fire('', '중복된 닉네임 입니다.');
-          setIsNickname(false);
-          console.log(res.status);
         }
       })
-      .catch(error => console.log(error));
+      .catch(error => {
+        Swal.fire('', '중복된 닉네임 입니다.');
+        setIsNickname(false);
+        console.log(error);
+      });
   };
 
   // 비밀번호 유효성 검사
@@ -136,7 +135,6 @@ const SignUp = () => {
           password,
         })
         .then(() => {
-          console.log(email, nickname, password);
           Swal.fire('Congratulation!', '가입을 축하합니다.'),
             navigate('/login');
         })
