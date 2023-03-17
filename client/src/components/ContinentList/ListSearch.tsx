@@ -6,16 +6,12 @@ import { FaCalendarDay } from 'react-icons/fa';
 import { HiOutlineX } from 'react-icons/hi';
 import {
   ListSearchProps,
+  SearchOption,
   SearchQueryString,
 } from 'interfaces/ContentList.interface';
 import customAxios from 'api/customAxios';
 import { useParams } from 'react-router-dom';
 import { getDateString } from 'utils/getDateString';
-
-interface SearchOption {
-  value: string;
-  field: string;
-}
 
 const ListSearch = ({
   searchDatas,
@@ -25,7 +21,7 @@ const ListSearch = ({
   searchPage,
   isSearch,
   setIsSearch,
-  endRef,
+  setIsLast,
 }: ListSearchProps) => {
   const { countryCode } = useParams();
   const [date, setDate] = useState<Date>(new Date());
@@ -65,10 +61,10 @@ const ListSearch = ({
     await customAxios.get('/companions/search', { params }).then(resp => {
       console.log('searchData', resp.data, searchDatas);
       setSearchDatas(cur => {
-        if (resp.data.pageInfo.totalPages === resp.data.pageInfo.page) {
+        if (resp.data.pageInfo.totalPages <= resp.data.pageInfo.page) {
           // ! 마지막 페이지일 경우
           console.log('last');
-          endRef.current = true;
+          setIsLast(true);
         }
 
         if (cur !== undefined) {
