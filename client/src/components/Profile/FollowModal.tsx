@@ -5,7 +5,7 @@ import { Follow, FollowModalProps } from 'interfaces/Profile.interface';
 import customAxios from 'api/customAxios';
 import { useNavigate } from 'react-router-dom';
 import ModalScrollDisable from 'utils/ModalScrollDisable';
-import { ModalBG, ModalContent } from './ModalStyles';
+import { CloseButton, ModalBG, ModalContent } from './ModalStyles';
 
 const FollowModal = ({
   setIsShowModal,
@@ -49,7 +49,7 @@ const FollowModal = ({
     <>
       <ModalScrollDisable />
       <ModalBG onClick={handleModalClose}></ModalBG>
-      <FollowModalContent>
+      <ModalContent>
         <div>
           <h1>{isFollower ? '팔로워' : '팔로잉'}</h1>
           <CloseButton onClick={handleModalClose}>
@@ -95,23 +95,10 @@ const FollowModal = ({
         ) : (
           <EmptyFollowList>팔로잉 리스트가 비어있습니다.</EmptyFollowList>
         )}
-      </FollowModalContent>
+      </ModalContent>
     </>
   );
 };
-
-const FollowModalContent = styled(ModalContent)`
-  > div {
-    width: 100%;
-    padding: 0 30px;
-    margin-bottom: 20px;
-    display: flex;
-    justify-content: space-between;
-    > h1 {
-      font-size: 1.4rem;
-    }
-  }
-`;
 
 const FollowList = styled.ul`
   width: 100%;
@@ -142,26 +129,6 @@ const FollowUser = styled.li`
   }
   :hover {
     filter: brightness(0.9);
-  }
-`;
-
-const CloseButton = styled.div`
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  background-color: #fff;
-  border: 1px solid #666;
-  color: #666;
-  font-size: 1.1rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-
-  :hover,
-  :active {
-    background-color: #666;
-    color: #fff;
   }
 `;
 

@@ -25,7 +25,38 @@ export const ModalContent = styled.div`
   padding-top: 30px;
   overflow: hidden;
 
+  > div {
+    width: 100%;
+    padding: 0 30px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    > h1 {
+      font-size: 1.4rem;
+    }
+  }
+
   @media screen and (max-width: 576px) {
     width: 80%;
+  }
+`;
+
+export const CloseButton = styled.div`
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: #fff;
+  border: 1px solid #666;
+  color: #666;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  :hover,
+  :active {
+    background-color: #666;
+    color: #fff;
   }
 `;
