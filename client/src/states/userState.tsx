@@ -39,6 +39,7 @@ export const userInfo = atom({
     iat: 1679033173,
     exp: 1679033773,
   },
+  effects_UNSTABLE: [persistAtom],
 });
 
 // export type { userInfoTypes, userInfoType };
