@@ -7,6 +7,7 @@ import { userInfo } from 'states/userState';
 import styled from 'styled-components';
 import { StyledButton } from 'styles/StyledButton';
 import Swal from 'sweetalert2';
+import ModalScrollDisable from 'utils/ModalScrollDisable';
 
 interface Props {
   setIsShowModal: React.Dispatch<React.SetStateAction<boolean>>;
@@ -65,6 +66,7 @@ const GenderSelect = ({ setIsShowModal }: Props) => {
 
   return (
     <>
+      <ModalScrollDisable />
       <ModalBG></ModalBG>
       <SelectModalContent>
         <div>
