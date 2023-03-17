@@ -10,7 +10,7 @@ import styled from 'styled-components';
 
 const Profile = () => {
   const userData: LoginUser = {
-    memberId: 2,
+    memberId: 7,
     nickname: 'TestUSER',
     email: 'test@user.com',
     profile:
@@ -26,10 +26,8 @@ const Profile = () => {
   const [currentTab, setCurrentTab] = useState<number>(0);
 
   const getMemberData = () => {
-    const userId = 3;
-
     const params = {
-      loginMemberId: userId,
+      loginMemberId: userData.memberId,
     };
 
     // ! 실제 테스트용 코드
@@ -60,7 +58,11 @@ const Profile = () => {
   return (
     <>
       <BackGroundImage />
-      {isLoading && <Loader></Loader>}
+      {isLoading && (
+        <LoaderContainer>
+          <Loader></Loader>
+        </LoaderContainer>
+      )}
       {!isLoading && member && (
         <Container>
           <TestButton onClick={handleTestButtonClick}>로그인 테스트</TestButton>
@@ -87,6 +89,16 @@ const Container = styled.div`
   @media screen and (max-width: 992px) {
     width: 90%;
   }
+`;
+
+const LoaderContainer = styled.div`
+  z-index: 2;
+  width: 100%;
+  top: 50vh;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 const TestButton = styled.button`
