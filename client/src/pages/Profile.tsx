@@ -32,7 +32,6 @@ const Profile = () => {
 
     // ! 실제 테스트용 코드
     customAxios.get(`/members/${memberId}`, { params }).then(resp => {
-      console.log(resp.data.data);
       setMember(resp.data.data);
       setIsLoading(false);
     });

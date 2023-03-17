@@ -6,16 +6,12 @@ import { FaCalendarDay } from 'react-icons/fa';
 import { HiOutlineX } from 'react-icons/hi';
 import {
   ListSearchProps,
+  SearchOption,
   SearchQueryString,
 } from 'interfaces/ContentList.interface';
 import customAxios from 'api/customAxios';
 import { useParams } from 'react-router-dom';
 import { getDateString } from 'utils/getDateString';
-
-interface SearchOption {
-  value: string;
-  field: string;
-}
 
 const ListSearch = ({
   searchDatas,
@@ -25,7 +21,9 @@ const ListSearch = ({
   searchPage,
   isSearch,
   setIsSearch,
-  endRef,
+  setIsLast,
+  setSearchPage,
+  setIsLoading,
 }: ListSearchProps) => {
   const { countryCode } = useParams();
   const [date, setDate] = useState<Date>(new Date());
@@ -50,8 +48,18 @@ const ListSearch = ({
     setCondition(value);
   };
 
-  const handleSearchClick = async (page: number) => {
+  const handleSearchClick = (page: number) => {
+    if (isSearch) {
+      // ! 이미 검색된 상태에서 검색 버튼을 누른 경우
+      setSearchDatas([]);
+      setSearchPage(1);
+    }
     setIsSearch(true);
+    getSearchData(page);
+  };
+
+  const getSearchData = async (page: number) => {
+    setIsLoading(true);
     const params: SearchQueryString = {
       page,
       size,
@@ -65,12 +73,11 @@ const ListSearch = ({
     await customAxios.get('/companions/search', { params }).then(resp => {
       console.log('searchData', resp.data, searchDatas);
       setSearchDatas(cur => {
-        if (resp.data.pageInfo.totalPages === resp.data.pageInfo.page) {
+        if (resp.data.pageInfo.totalPages <= resp.data.pageInfo.page) {
           // ! 마지막 페이지일 경우
-          console.log('last');
-          endRef.current = true;
+          setIsLast(true);
         }
-
+        setIsLoading(false);
         if (cur !== undefined) {
           return [...cur, ...resp.data.data];
         }
@@ -81,7 +88,7 @@ const ListSearch = ({
 
   useEffect(() => {
     if (searchDatas !== undefined) {
-      handleSearchClick(searchPage);
+      getSearchData(searchPage);
     }
   }, [searchPage]);
 
