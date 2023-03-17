@@ -29,6 +29,26 @@ interface thirdModal {
   setThirdModal: (newValue: boolean) => void;
 }
 
+interface detailInfo {
+  companionId: number;
+  memberId: number;
+  nickname: string;
+  score: number;
+  title: string;
+  content: string;
+  date: string;
+  address: string;
+  lat: number;
+  lng: number;
+  tags: string[];
+  createdAt: string;
+  companionStatus: boolean;
+}
+
+interface detailProps {
+  detail: detailInfo;
+}
+
 export type {
   contentsTab,
   profileList,
@@ -36,4 +56,6 @@ export type {
   firstModal,
   secondModal,
   thirdModal,
+  detailInfo,
+  detailProps,
 };
