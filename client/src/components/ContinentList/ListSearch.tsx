@@ -12,18 +12,19 @@ import {
 import customAxios from 'api/customAxios';
 import { useParams } from 'react-router-dom';
 import { getDateString } from 'utils/getDateString';
+import { StyledButton } from 'styles/StyledButton';
 
 const ListSearch = ({
   searchDatas,
   setSearchDatas,
   size,
-  sortData,
   searchPage,
   isSearch,
   setIsSearch,
   setIsLast,
   setSearchPage,
   setIsLoading,
+  setDatas,
 }: ListSearchProps) => {
   const { countryCode } = useParams();
   const [date, setDate] = useState<Date>(new Date());
@@ -63,15 +64,14 @@ const ListSearch = ({
     const params: SearchQueryString = {
       page,
       size,
-      sortBy: sortData.sortBy,
-      sortDir: sortData.sortDir,
+      sortBy: 'createdAt',
+      sortDir: 'DESC',
       condition,
       keyword,
       date: getDateString(date).fullDateStr,
       nationCode: countryCode,
     };
     await customAxios.get('/companions/search', { params }).then(resp => {
-      console.log('searchData', resp.data, searchDatas);
       setSearchDatas(cur => {
         if (resp.data.pageInfo.totalPages <= resp.data.pageInfo.page) {
           // ! 마지막 페이지일 경우
@@ -97,6 +97,7 @@ const ListSearch = ({
     setKeyword('');
     setDate(new Date());
     setIsSearch(false);
+    setDatas([]);
   };
 
   const searchOptions: SearchOption[] = [
@@ -300,16 +301,19 @@ const Buttons = styled.div`
   }
 `;
 
-const SearchButton = styled.div`
+const SearchButton = styled(StyledButton)`
   height: 100%;
   background-color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   color: #222;
   padding: 5px 20px;
-  border-radius: 30px;
-  cursor: pointer;
+  font-size: 1rem;
+
+  :hover,
+  :active {
+    background-color: #feb35c;
+    color: #fff;
+    box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.7);
+  }
 
   @media screen and (max-width: 768px) {
     font-size: 0.9rem;

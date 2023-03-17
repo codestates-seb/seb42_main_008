@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import ImageFilter from 'components/Main/ImageFilter';
+import ImageFilter from 'styles/ImageFilter';
 import { useParams } from 'react-router-dom';
 import countries from 'assets/countries.json';
 import { CountryData, CountryNames } from 'interfaces/ContentList.interface';
