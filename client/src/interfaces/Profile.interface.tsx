@@ -123,6 +123,11 @@ interface LoginUser {
   gender: string;
 }
 
+// * 회원탈퇴 모달 Props
+interface AccountDeleteModalProps extends MemberReviewProps {
+  setIsShowDeleteModal: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
 export type {
   MemberProfile,
   MyCompanion,
@@ -141,4 +146,5 @@ export type {
   TextEditProps,
   Validations,
   LoginUser,
+  AccountDeleteModalProps,
 };
