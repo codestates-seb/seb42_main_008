@@ -26,26 +26,12 @@ const NoteModal = ({ setNoteModal }: Props) => {
     setNoteModal(false);
   };
 
-  // data : [{
-  //   Long messageId
-  //   String content
-  //   Long companionId
-  //   Object sender: {
-  //   Long id
-  //   String nickname
-  //   },
-  //   String createdAt
-  //   Boolean read
-  //   },{},{}]
-
-  // 쪽지 전체 조회
-  // 멤버아이디 헤더로 보내기
   const [allNotes, setAllNotes] = useState<NoteMessage[]>([]);
   useEffect(() => {
     axios
-      .get(`${process.env.REACT_APP_TEST_SERVER}/messages`)
+      .get(`${process.env.REACT_APP_TEST_SERVER}/messages?memberId=8`)
       .then(response => {
-        setAllNotes(response.data);
+        setAllNotes(response.data.data);
       })
       .catch(error => console.log(error));
   }, []);

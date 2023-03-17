@@ -1,7 +1,9 @@
 package partypeople.server.member.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -34,4 +36,12 @@ public class FollowDto {
 
         private String nickname;
     }
+
+    @Getter
+    @AllArgsConstructor
+    public static class FollowerStatus {
+        @Setter
+        private Boolean followerStatus;
+    }
+
 }

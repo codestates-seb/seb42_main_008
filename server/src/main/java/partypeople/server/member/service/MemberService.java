@@ -5,6 +5,7 @@ import io.jsonwebtoken.security.SignatureException;
 import lombok.RequiredArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.util.http.parser.Authorization;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -19,16 +20,12 @@ import partypeople.server.companion.entity.Companion;
 import partypeople.server.companion.repository.CompanionRepository;
 import partypeople.server.exception.BusinessLogicException;
 import partypeople.server.exception.ExceptionCode;
-import partypeople.server.member.dto.MemberDto;
-import partypeople.server.member.entity.Follow;
 import partypeople.server.member.entity.Member;
-import partypeople.server.member.repository.FollowRepository;
 import partypeople.server.member.repository.MemberRepository;
 import partypeople.server.review.entity.Review;
 import partypeople.server.review.repository.ReviewRepository;
 import partypeople.server.utils.CustomBeanUtils;
 
-import javax.validation.Valid;
 import java.security.SecureRandom;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -38,23 +35,15 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 @Slf4j
 public class MemberService {
-
-    private final static Integer MEMBER_DEFUALT_SCORE = 50;
-
     private final CompanionRepository companionRepository;
     private final MemberRepository memberRepository;
-
-    private final FollowRepository followRepository;
     private final CustomBeanUtils<Member> beanUtils;
     private final PasswordEncoder passwordEncoder;
     private final CustomAuthorityUtils authorityUtils;
     private final JwtTokenizer jwtTokenizer;
     private final RedisTemplate<String, String> redisTemplate;
-
     private final ReviewRepository reviewRepository;
-
     private final MailService mailService;
-
 
     public Member createMember(Member member) {
         verifyExistsMember(member);
@@ -68,27 +57,6 @@ public class MemberService {
         Member savedMember = memberRepository.save(member);
         return savedMember;
     }
-
-    public void followExe(Follow follow) {
-        //중복 확인 ** 등록 되어 있으면 취소 삭제?
-        Optional<Follow> optionalFollow = followRepository.findByFollowerMemberIdAndFollowingMemberId(follow.getFollower().getMemberId(),follow.getFollowing().getMemberId());
-
-        optionalFollow.ifPresentOrElse(
-                followRepository::delete,
-                ()->followRepository.save(follow)
-        );
-    }
-
-    @Transactional(readOnly = true)
-    public List<Follow> findFollowers(Long memberId) {
-        return followRepository.findAllByFollowerMemberId(memberId);
-    }
-
-    @Transactional(readOnly = true)
-    public List<Follow> findFollowings(Long memberId) {
-        return followRepository.findAllByFollowingMemberId(memberId);
-    }
-
     @Transactional(readOnly = true)
     public Member findMember(Long memberId) {
         return findVerifiedMemberById(memberId);
@@ -109,6 +77,9 @@ public class MemberService {
         Member findMember = findVerifiedMemberById(member.getMemberId());
         Member updatedMember = beanUtils.copyNonNullProperties(member, findMember);
 
+        Optional.ofNullable(member.getPassword())
+                .ifPresent(password -> updatedMember.setPassword(passwordEncoder.encode(password)));
+
         return updatedMember;
     }
 
@@ -127,6 +98,7 @@ public class MemberService {
         Optional<Member> optionalMember = memberRepository.findByEmail(email);
         Member findMember = optionalMember
             .orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
+
         return findMember;
     }
 
@@ -134,6 +106,10 @@ public class MemberService {
         Optional<Member> optionalMember = memberRepository.findById(memberId);
         Member findMember = optionalMember
             .orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
+
+        if(findMember.getMemberStatus().equals(Member.MemberStatus.MEMBER_QUIT)) {
+            throw new BusinessLogicException(ExceptionCode.WITHDRAWAL_MEMBER);
+        }
         return findMember;
     }
 
@@ -159,10 +135,11 @@ public class MemberService {
     public void logout(String Authorization) {
         String accessToken = Authorization.replace("Bearer ", "");
 
-        String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(jwtTokenizer.getSecretKey());
         try{
-            Long expiration = jwtTokenizer.getExpiration(accessToken,base64EncodedSecretKey);
+            Long expiration = jwtTokenizer.getExpiration(accessToken);
+            String email = jwtTokenizer.extractEmail(accessToken);
             redisTemplate.opsForValue().set(accessToken, "logout", expiration, TimeUnit.MILLISECONDS);
+            redisTemplate.delete(email);
         } catch (SignatureException se) {
             throw new BusinessLogicException(ExceptionCode.SIGNATURE_ERROR);
         } catch (ExpiredJwtException ee) {
@@ -172,28 +149,18 @@ public class MemberService {
         }
     }
 
-    public Long followerCount(Member member) {
-        return followRepository.countByFollowerMemberId(member.getMemberId());
-    }
-
-    public Long followingCount(Member member) {
-        return followRepository.countByFollowingMemberId(member.getMemberId());
-    }
-
     public String reissueAT(String refreshToken) {
-        String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(jwtTokenizer.getSecretKey());
-
         try{
-            Long expiration = jwtTokenizer.getExpiration(refreshToken,base64EncodedSecretKey);
+            Long expiration = jwtTokenizer.getExpiration(refreshToken);
             //유효기간 안
             //DB안의 발행토큰인지 확인
             String value = redisTemplate.opsForValue().get(refreshToken);
             if (ObjectUtils.isEmpty(value)) {
                 throw new BusinessLogicException(ExceptionCode.REFRESH_TOKEN_ERROR);
             } else {
-                Member findmember = findMember(value);
+                Member member = findMember(value);
 
-                return jwtTokenizer.delegateAccessToken(findmember);
+                return jwtTokenizer.delegateAccessToken(member);
             }
         } catch (SignatureException se) {
             throw new BusinessLogicException(ExceptionCode.SIGNATURE_ERROR);
@@ -235,8 +202,6 @@ public class MemberService {
 
         mailService.sendEmail(findMember.getEmail(),subject,body);
     }
-
-
     private String generateRandomPassword() {
         String upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         String lower = upper.toLowerCase(Locale.ROOT);
@@ -248,16 +213,5 @@ public class MemberService {
             password[i] = alphanum.charAt(random.nextInt(alphanum.length()));
         }
         return new String(password);
-    }
-
-
-    public Member followerStatusUpdate(Member member, Long loginMemberId) {
-        Optional<Follow> follow = followRepository.findByFollowerMemberIdAndFollowingMemberId(loginMemberId, member.getMemberId());
-
-        if(follow.isPresent()) {
-            member.setFollowerStatus(true);
-        }
-
-        return member;
     }
 }

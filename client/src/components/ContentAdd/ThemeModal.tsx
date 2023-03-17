@@ -1,5 +1,6 @@
-// import axios from 'axios';
+import axios from 'axios';
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 type LatLng = {
@@ -19,24 +20,28 @@ type Props = {
   countrySelect: string;
   countryCode: string;
   selectedTendencies: any;
+  formattedDate: string;
 };
 const ThemeModal = ({
   setIsTendencyModal,
   setIsThemeModal,
-}: // titleInput,
-// contentInput,
-// startDate,
-// savedAddress,
-// markerLocation,
-// continentSelect,
-// countrySelect,
-// countryCode,
-// selectedTendencies,
-Props) => {
+  titleInput,
+  contentInput,
+  startDate,
+  formattedDate,
+  savedAddress,
+  markerLocation,
+  continentSelect,
+  countrySelect,
+  countryCode,
+  selectedTendencies,
+}: Props) => {
   const handleTendencyOpen = () => {
     setIsTendencyModal(true);
     setIsThemeModal(false);
   };
+  const navigate = useNavigate();
+
   const themes: string[] = [
     '맛집',
     '명소',
@@ -69,39 +74,44 @@ Props) => {
     }
   };
   // 성향,테마 태그 종합
-  // const allTags = selectedTendencies.concat(selectedThemes);
+  const allTags = selectedTendencies.concat(selectedThemes);
 
   // 모든 양식 제출 post 요청
   // 멤버아이디는 토큰받아 입력 // 대륙은 정수?
-  // const handleAllSubmit = async (event: any) => {
-  //   if (selectedThemes.length >= 1) {
-  //     event.preventDefault();
-  //     try {
-  //       await axios.post(
-  //         `/companions`,
-  //         {
-  //           title: titleInput,
-  //           content: contentInput,
-  //           date: startDate,
-  //           adrress: savedAddress,
-  //           lat: markerLocation.lat,
-  //           lng: markerLocation.lng,
-  //           nationName: countrySelect,
-  //           nationCode: countryCode,
-  //           continent: continentSelect,
-  //           tags: allTags,
-  //           memberId,
-  //         },
-  //         { headers: { Authorization: token } }
-  //       );
-  //       setIsThemeModal(false);
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   } else {
-  //     alert('하나 이상 선택해주세요!');
-  //   }
-  // };
+  const handleAllSubmit = async (event: any) => {
+    if (selectedThemes.length >= 1) {
+      event.preventDefault();
+      try {
+        const response = await axios.post(
+          `${process.env.REACT_APP_TEST_SERVER}/companions`,
+          {
+            title: titleInput,
+            content: contentInput,
+            date: formattedDate,
+            address: savedAddress,
+            lat: markerLocation.lat,
+            lng: markerLocation.lng,
+            nationName: countrySelect,
+            nationCode: countryCode,
+            continent: 2,
+            tags: allTags,
+            memberId: 8,
+          }
+        );
+        setIsThemeModal(false);
+        console.log(response.headers);
+        navigate(`/${continentSelect}/${countryCode}`);
+      } catch (error) {
+        console.log(error);
+        console.log(continentSelect);
+        console.log(typeof contentInput);
+        console.log(startDate);
+        console.log(formattedDate);
+      }
+    } else {
+      alert('하나 이상 선택해주세요!');
+    }
+  };
 
   return (
     <ThemeBox>
@@ -132,7 +142,7 @@ Props) => {
         </div>
         <div className="theme-bottom">
           <button onClick={handleTendencyOpen}>이전</button>
-          <button>다음</button>
+          <button onClick={handleAllSubmit}>다음</button>
         </div>
       </div>
     </ThemeBox>
