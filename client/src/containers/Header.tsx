@@ -20,7 +20,7 @@ const Header = () => {
         `${process.env.REACT_APP_TEST_SERVER}/members/logout`,
         null,
         {
-          headers: { Authorization: `Bearer ${token}` },
+          headers: { Authorization: token },
         }
       );
       setToken('');

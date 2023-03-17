@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { FcGoogle } from 'react-icons/fc';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilState, useSetRecoilState } from 'recoil';
-import { loginState, userInfo } from 'states/userState';
+import { loginState, userInfo, userToken } from 'states/userState';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
 
@@ -12,7 +12,7 @@ const Login = () => {
   const [password, setPassword] = useState('');
 
   const [isLogin, setIsLogin] = useRecoilState(loginState);
-  // const [token, setToken] = useRecoilState(userToken);
+  const setToken = useSetRecoilState(userToken);
   const setUser = useSetRecoilState(userInfo);
 
   const navigate = useNavigate();
@@ -32,7 +32,7 @@ const Login = () => {
         password,
       })
       .then(res => {
-        // setToken(res.headers.authorization.split(' ')[1].split('.')[1]);
+        setToken(res.headers.authorization);
         const decodeToken = res.headers.authorization
           .split(' ')[1]
           .split('.')[1];

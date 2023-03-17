@@ -2,7 +2,7 @@ import customAxios from 'api/customAxios';
 import { AccountDeleteModalProps } from 'interfaces/Profile.interface';
 import React, { useState } from 'react';
 import { IoMdClose } from 'react-icons/io';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
 import ModalScrollDisable from 'utils/ModalScrollDisable';
@@ -11,6 +11,7 @@ import { CloseButton, ModalBG, ModalContent } from './ModalStyles';
 const AccountDeleteModal = ({
   setIsShowDeleteModal,
 }: AccountDeleteModalProps) => {
+  const navigate = useNavigate();
   const { memberId } = useParams();
   const [password, setPassword] = useState<string>('');
 
@@ -59,8 +60,8 @@ const AccountDeleteModal = ({
           password,
         },
       })
-      .then(resp => {
-        console.log(resp);
+      .then(() => {
+        navigate('/');
       })
       .catch(error => {
         console.log(error);

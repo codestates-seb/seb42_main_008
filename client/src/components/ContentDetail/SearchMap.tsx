@@ -2,7 +2,11 @@ import { GoogleMap, LoadScript, MarkerF } from '@react-google-maps/api';
 import { MdLocationOn } from 'react-icons/md';
 import styled from 'styled-components';
 
-const SearchMap = () => {
+const SearchMap = ({ detail }: any) => {
+  const center = {
+    lat: detail.lat,
+    lng: detail.lng,
+  };
   // googleMapKey 타입
   const googleMapKey: any = process.env.REACT_APP_API_KEY;
   return (
@@ -13,7 +17,7 @@ const SearchMap = () => {
         </GoogleMap>
         <MapPlace>
           <LocationPin />
-          장소 위치 렌더링될 곳
+          {detail.address}
         </MapPlace>
       </LoadScript>
     </MapContent>
@@ -25,11 +29,6 @@ export default SearchMap;
 const containerStyle = {
   width: '100%',
   height: '350px',
-};
-
-const center = {
-  lat: 37.566535,
-  lng: 126.9779692,
 };
 
 const MapContent = styled.section`
