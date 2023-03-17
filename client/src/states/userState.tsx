@@ -17,20 +17,28 @@ export const userToken = atom({
   effects_UNSTABLE: [persistAtom],
 });
 
+// 로그인 토큰 디코딩 정보
+export const userDecodeToken = atom({
+  key: 'userTokenLoading',
+  default: false,
+  effects_UNSTABLE: [persistAtom],
+});
+
 // 유저 정보
 export const userInfo = atom({
   key: 'userInfo',
   default: {
-    roles: ['USER'],
     gender: '',
     profile: '',
+    roles: ['USER'],
     nickname: '',
     memberStatus: '',
     email: '',
     memberId: 0,
     sub: '',
-    iat: 0,
-    exp: 0,
+    iat: 1679033173,
+    exp: 1679033773,
   },
-  effects_UNSTABLE: [persistAtom],
 });
+
+// export type { userInfoTypes, userInfoType };
