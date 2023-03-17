@@ -44,7 +44,6 @@ interface Follow {
 interface ProfileEdit {
   proflie?: string;
   nickname?: string;
-  gender?: string;
   content?: string;
   password: string;
 }

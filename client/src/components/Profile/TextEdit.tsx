@@ -14,9 +14,6 @@ const TextEdit = ({
   setValidation,
 }: TextEditProps) => {
   const [nickname, setNickname] = useState<string | undefined>(member.nickname);
-  const [gender, setGender] = useState<string | undefined>(
-    member.gender ? member.gender : undefined
-  );
   const [content, setContent] = useState<string | undefined>(
     member.content ? member.content : ''
   );
@@ -31,10 +28,6 @@ const TextEdit = ({
   ) => {
     const { value } = event.target;
     setValue(value);
-  };
-
-  const handleTabClick = (genderStr: string) => {
-    setGender(genderStr);
   };
 
   const handleUniqueCheck = async () => {
@@ -64,7 +57,6 @@ const TextEdit = ({
     setMemberData((cur: object) => ({
       ...cur,
       nickname,
-      gender,
       content,
       password,
     }));
@@ -72,7 +64,7 @@ const TextEdit = ({
       ...cur,
       ...editValidationCheck({ nickname, content, password, passwordCheck }),
     }));
-  }, [nickname, gender, content, password, passwordCheck]);
+  }, [nickname, content, password, passwordCheck]);
 
   return (
     <TextEditWrapper>
@@ -94,23 +86,6 @@ const TextEdit = ({
           <ValidMessage>2글자 이상 10글자 미만으로 입력해주세요.</ValidMessage>
         )}
       </NicknameEdit>
-      <GenderEdit>
-        <h1>성별</h1>
-        <ul>
-          <li
-            className={gender === 'male' ? 'active' : undefined}
-            onClick={() => handleTabClick('male')}
-          >
-            남성
-          </li>
-          <li
-            className={gender === 'female' ? 'active' : undefined}
-            onClick={() => handleTabClick('female')}
-          >
-            여성
-          </li>
-        </ul>
-      </GenderEdit>
       <ContentEdit
         className={
           !validation.contentValid && content?.length !== 0
@@ -239,49 +214,6 @@ const UniqueCheckButton = styled(StyledButton)`
   border-radius: 20px;
   background-color: #666;
   font-size: 0.9rem;
-`;
-
-const GenderEdit = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  > ul {
-    width: 40%;
-    display: flex;
-    > li {
-      width: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background-color: #fff;
-      border: 1px solid #feb35c;
-      padding: 5px 10px;
-      cursor: pointer;
-      :first-of-type {
-        border-radius: 30px 0px 0px 30px;
-      }
-      :last-of-type {
-        border-radius: 0px 30px 30px 0px;
-        border-left: none;
-      }
-      :hover {
-        filter: brightness(0.9);
-      }
-    }
-    .active {
-      background-color: #feb35c;
-      color: #fff;
-      :hover {
-        filter: brightness(1);
-      }
-    }
-  }
-  @media screen and (max-width: 768px) {
-    > ul {
-      width: 80%;
-    }
-  }
 `;
 
 const ContentEdit = styled.div`
