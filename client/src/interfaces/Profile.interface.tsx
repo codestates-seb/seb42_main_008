@@ -1,15 +1,19 @@
-// * 회원 정보
-interface MemberProfile {
+// ! 전역 유저 정보
+interface LoginUser {
   memberId: number;
-  email: string;
   nickname: string;
+  email: string;
   profile: string;
-  content: string;
+  memberStatus: string;
   gender: string;
+}
+
+// * 회원 정보
+interface MemberProfile extends LoginUser {
+  content: string;
   score: number;
   followerCount: number;
   followingCount: number;
-  memberStatus: string;
   followerStatus: boolean;
 }
 
@@ -111,16 +115,6 @@ interface Validations {
   passwordCheckValid: boolean | undefined;
   totalValid: boolean | undefined;
   nicknameUnique?: boolean | undefined;
-}
-
-// ! 전역 유저 정보
-interface LoginUser {
-  memberId: number;
-  nickname: string;
-  email: string;
-  profile: string;
-  memberStatus: string;
-  gender: string;
 }
 
 // * 회원탈퇴 모달 Props
