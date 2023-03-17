@@ -12,6 +12,7 @@ import {
 import customAxios from 'api/customAxios';
 import { useParams } from 'react-router-dom';
 import { getDateString } from 'utils/getDateString';
+import { StyledButton } from 'styles/StyledButton';
 
 const ListSearch = ({
   searchDatas,
@@ -300,16 +301,19 @@ const Buttons = styled.div`
   }
 `;
 
-const SearchButton = styled.div`
+const SearchButton = styled(StyledButton)`
   height: 100%;
   background-color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   color: #222;
   padding: 5px 20px;
-  border-radius: 30px;
-  cursor: pointer;
+  font-size: 1rem;
+
+  :hover,
+  :active {
+    background-color: #feb35c;
+    color: #fff;
+    box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.7);
+  }
 
   @media screen and (max-width: 768px) {
     font-size: 0.9rem;
