@@ -31,7 +31,6 @@ const Profile = () => {
 
   useEffect(() => {
     getMemberData();
-    console.log(loginUser);
   }, [currentTab, isLoading]);
 
   return (
