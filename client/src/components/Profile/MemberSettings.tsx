@@ -10,6 +10,7 @@ import { toast } from 'react-toastify';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
 import { editValidationCheck } from 'utils/profileEditValidation';
+import AccountDeleteModal from './AccountDeleteModal';
 import TextEdit from './TextEdit';
 
 const MemberSettings = ({ member, setCurrentTab }: MemberSettingsProps) => {
@@ -18,6 +19,7 @@ const MemberSettings = ({ member, setCurrentTab }: MemberSettingsProps) => {
   const [validation, setValidation] = useState<Validations>(
     editValidationCheck({ ...memberData })
   );
+  const [isShowDeleteModal, setIsShowDeleteModal] = useState<boolean>(false);
 
   const onFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const formData = new FormData();
@@ -85,13 +87,22 @@ const MemberSettings = ({ member, setCurrentTab }: MemberSettingsProps) => {
         window.scrollTo(0, 0);
       } else {
         toast.info('취소되었습니다');
-        console.log(memberData);
       }
     });
   };
 
+  const handleAccountDeleteClick = () => {
+    setIsShowDeleteModal(true);
+  };
+
   return (
     <SettingsWrapper>
+      {isShowDeleteModal && (
+        <AccountDeleteModal
+          member={member}
+          setIsShowDeleteModal={setIsShowDeleteModal}
+        />
+      )}
       <EditWrapper>
         <ImageUpload>
           <div
@@ -111,7 +122,9 @@ const MemberSettings = ({ member, setCurrentTab }: MemberSettingsProps) => {
         />
       </EditWrapper>
       <SubmitButton onClick={handleSubmitClick}>수정하기</SubmitButton>
-      <AccountDelete>회원탈퇴하기</AccountDelete>
+      <AccountDelete onClick={handleAccountDeleteClick}>
+        회원탈퇴하기
+      </AccountDelete>
     </SettingsWrapper>
   );
 };

@@ -30,17 +30,6 @@ const MemberReviews = ({ member }: MemberReviewProps) => {
   };
 
   const getReviewData = async () => {
-    // ^ json-server
-    // await customAxios
-    //   .get(`/reviews`)
-    //   .then(resp => {
-    //     setReviews(resp.data);
-    //   })
-    //   .catch(error => {
-    //     console.log(error);
-    //   });
-
-    // ! test
     await customAxios
       .get(`/members/2/reviews`)
       .then(resp => {

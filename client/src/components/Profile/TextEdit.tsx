@@ -39,16 +39,14 @@ const TextEdit = ({
   const handleUniqueCheck = async () => {
     await customAxios
       .post('/members/nickname', { nickname })
-      .then(resp => {
-        console.log(resp);
+      .then(() => {
         toast.success('사용 가능한 닉네임입니다.');
         setValidation(cur => ({
           ...cur,
           nicknameUnique: true,
         }));
       })
-      .catch(error => {
-        console.log(error);
+      .catch(() => {
         Swal.fire({
           icon: 'error',
           title: '중복된 닉네임입니다',

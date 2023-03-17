@@ -21,7 +21,6 @@ const MemberInfo = ({ user, member, setMember }: MemberInfoProps) => {
 
     await customAxios.post('/members/follows', data).then(resp => {
       setIsFollow(resp.data.data.followerStatus);
-      console.log(resp.data.data.followerStatus);
 
       if (!resp.data.data.followerStatus) {
         toast.success('팔로우가 취소되었습니다');
