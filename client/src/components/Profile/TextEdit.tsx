@@ -3,6 +3,7 @@ import { TextEditProps } from 'interfaces/Profile.interface';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import styled from 'styled-components';
+import { StyledButton } from 'styles/StyledButton';
 import Swal from 'sweetalert2';
 import { editValidationCheck } from 'utils/profileEditValidation';
 
@@ -39,16 +40,14 @@ const TextEdit = ({
   const handleUniqueCheck = async () => {
     await customAxios
       .post('/members/nickname', { nickname })
-      .then(resp => {
-        console.log(resp);
+      .then(() => {
         toast.success('사용 가능한 닉네임입니다.');
         setValidation(cur => ({
           ...cur,
           nicknameUnique: true,
         }));
       })
-      .catch(error => {
-        console.log(error);
+      .catch(() => {
         Swal.fire({
           icon: 'error',
           title: '중복된 닉네임입니다',
@@ -87,7 +86,9 @@ const TextEdit = ({
             value={nickname}
             onChange={event => handleChange(event, setNickname)}
           />
-          <div onClick={handleUniqueCheck}>중복확인</div>
+          <UniqueCheckButton onClick={handleUniqueCheck}>
+            중복확인
+          </UniqueCheckButton>
         </div>
         {!validation.nicknameValid && (
           <ValidMessage>2글자 이상 10글자 미만으로 입력해주세요.</ValidMessage>
@@ -229,28 +230,15 @@ const NicknameEdit = styled.div`
     > input {
       width: calc(100% - 100px);
     }
-    > div {
-      width: 90px;
-      padding: 5px;
-      border-radius: 20px;
-      background-color: #666;
-      font-size: 0.9rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #fff;
-      transition: 0.3s;
-      cursor: pointer;
-
-      :hover,
-      :active {
-        background-color: #fff;
-        color: #222;
-        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
-        transition: 0.3s;
-      }
-    }
   }
+`;
+
+const UniqueCheckButton = styled(StyledButton)`
+  width: 90px;
+  padding: 5px;
+  border-radius: 20px;
+  background-color: #666;
+  font-size: 0.9rem;
 `;
 
 const GenderEdit = styled.div`

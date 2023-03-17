@@ -1,14 +1,16 @@
 import customAxios from 'api/customAxios';
+import Loader from 'components/Loader';
 import BackGroundImage from 'components/Profile/BackGroundImage';
 import MemberContent from 'components/Profile/MemberContent';
 import MemberInfo from 'components/Profile/MemberInfo';
 import { LoginUser, MemberProfile } from 'interfaces/Profile.interface';
 import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 
 const Profile = () => {
   const userData: LoginUser = {
-    memberId: 2,
+    memberId: 7,
     nickname: 'TestUSER',
     email: 'test@user.com',
     profile:
@@ -17,22 +19,19 @@ const Profile = () => {
     gender: 'male',
   };
 
+  const { memberId } = useParams();
   const [user, setUser] = useState<LoginUser>(userData);
   const [member, setMember] = useState<MemberProfile | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [currentTab, setCurrentTab] = useState<number>(0);
 
   const getMemberData = () => {
-    const memberId = 2;
-    const userId = 3;
-
     const params = {
-      loginMemberId: userId,
+      loginMemberId: userData.memberId,
     };
 
     // ! 실제 테스트용 코드
     customAxios.get(`/members/${memberId}`, { params }).then(resp => {
-      console.log(resp.data.data);
       setMember(resp.data.data);
       setIsLoading(false);
     });
@@ -59,7 +58,12 @@ const Profile = () => {
   return (
     <>
       <BackGroundImage />
-      {!isLoading && member ? (
+      {isLoading && (
+        <LoaderContainer>
+          <Loader></Loader>
+        </LoaderContainer>
+      )}
+      {!isLoading && member && (
         <Container>
           <TestButton onClick={handleTestButtonClick}>로그인 테스트</TestButton>
           <MemberInfo user={user} member={member} setMember={setMember} />
@@ -70,8 +74,6 @@ const Profile = () => {
             setCurrentTab={setCurrentTab}
           />
         </Container>
-      ) : (
-        <p>Loading...</p>
       )}
     </>
   );
@@ -89,6 +91,16 @@ const Container = styled.div`
   }
 `;
 
+const LoaderContainer = styled.div`
+  z-index: 2;
+  width: 100%;
+  top: 50vh;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
 const TestButton = styled.button`
   width: 100px;
   height: 50px;
@@ -97,4 +109,5 @@ const TestButton = styled.button`
   left: 100px;
   z-index: 10;
 `;
+
 export default Profile;

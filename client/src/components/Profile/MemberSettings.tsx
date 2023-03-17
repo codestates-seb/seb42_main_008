@@ -8,8 +8,10 @@ import {
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import styled from 'styled-components';
+import { StyledButton } from 'styles/StyledButton';
 import Swal from 'sweetalert2';
 import { editValidationCheck } from 'utils/profileEditValidation';
+import AccountDeleteModal from './AccountDeleteModal';
 import TextEdit from './TextEdit';
 
 const MemberSettings = ({ member, setCurrentTab }: MemberSettingsProps) => {
@@ -18,6 +20,7 @@ const MemberSettings = ({ member, setCurrentTab }: MemberSettingsProps) => {
   const [validation, setValidation] = useState<Validations>(
     editValidationCheck({ ...memberData })
   );
+  const [isShowDeleteModal, setIsShowDeleteModal] = useState<boolean>(false);
 
   const onFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const formData = new FormData();
@@ -85,13 +88,19 @@ const MemberSettings = ({ member, setCurrentTab }: MemberSettingsProps) => {
         window.scrollTo(0, 0);
       } else {
         toast.info('취소되었습니다');
-        console.log(memberData);
       }
     });
   };
 
+  const handleAccountDeleteClick = () => {
+    setIsShowDeleteModal(true);
+  };
+
   return (
     <SettingsWrapper>
+      {isShowDeleteModal && (
+        <AccountDeleteModal setIsShowDeleteModal={setIsShowDeleteModal} />
+      )}
       <EditWrapper>
         <ImageUpload>
           <div
@@ -111,7 +120,9 @@ const MemberSettings = ({ member, setCurrentTab }: MemberSettingsProps) => {
         />
       </EditWrapper>
       <SubmitButton onClick={handleSubmitClick}>수정하기</SubmitButton>
-      <AccountDelete>회원탈퇴하기</AccountDelete>
+      <AccountDelete onClick={handleAccountDeleteClick}>
+        회원탈퇴하기
+      </AccountDelete>
     </SettingsWrapper>
   );
 };
@@ -167,33 +178,23 @@ const UploadButton = styled.div`
     background-color: #feb35c;
     color: #fff;
     border-radius: 50px;
+    transition: 0.3s;
     cursor: pointer;
+    :hover,
+    :active {
+      background-color: #fff;
+      color: #222;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+      transition: 0.3s;
+    }
   }
   > input {
     display: none;
   }
 `;
 
-const SubmitButton = styled.div`
-  padding: 10px 20px;
-  background-color: #feb35c;
-  color: #fff;
-  border-radius: 50px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.2rem;
+const SubmitButton = styled(StyledButton)`
   margin-bottom: 30px;
-  transition: 0.3s;
-  cursor: pointer;
-
-  :hover,
-  :active {
-    background-color: #fff;
-    color: #222;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
-    transition: 0.3s;
-  }
 `;
 
 const AccountDelete = styled.div`

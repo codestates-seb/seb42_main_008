@@ -6,26 +6,25 @@ import { FaCalendarDay } from 'react-icons/fa';
 import { HiOutlineX } from 'react-icons/hi';
 import {
   ListSearchProps,
+  SearchOption,
   SearchQueryString,
 } from 'interfaces/ContentList.interface';
 import customAxios from 'api/customAxios';
 import { useParams } from 'react-router-dom';
 import { getDateString } from 'utils/getDateString';
-
-interface SearchOption {
-  value: string;
-  field: string;
-}
+import { StyledButton } from 'styles/StyledButton';
 
 const ListSearch = ({
   searchDatas,
   setSearchDatas,
   size,
-  sortData,
   searchPage,
   isSearch,
   setIsSearch,
-  endRef,
+  setIsLast,
+  setSearchPage,
+  setIsLoading,
+  setDatas,
 }: ListSearchProps) => {
   const { countryCode } = useParams();
   const [date, setDate] = useState<Date>(new Date());
@@ -50,27 +49,35 @@ const ListSearch = ({
     setCondition(value);
   };
 
-  const handleSearchClick = async (page: number) => {
+  const handleSearchClick = (page: number) => {
+    if (isSearch) {
+      // ! 이미 검색된 상태에서 검색 버튼을 누른 경우
+      setSearchDatas([]);
+      setSearchPage(1);
+    }
     setIsSearch(true);
+    getSearchData(page);
+  };
+
+  const getSearchData = async (page: number) => {
+    setIsLoading(true);
     const params: SearchQueryString = {
       page,
       size,
-      sortBy: sortData.sortBy,
-      sortDir: sortData.sortDir,
+      sortBy: 'createdAt',
+      sortDir: 'DESC',
       condition,
       keyword,
       date: getDateString(date).fullDateStr,
       nationCode: countryCode,
     };
     await customAxios.get('/companions/search', { params }).then(resp => {
-      console.log('searchData', resp.data, searchDatas);
       setSearchDatas(cur => {
-        if (resp.data.pageInfo.totalPages === resp.data.pageInfo.page) {
+        if (resp.data.pageInfo.totalPages <= resp.data.pageInfo.page) {
           // ! 마지막 페이지일 경우
-          console.log('last');
-          endRef.current = true;
+          setIsLast(true);
         }
-
+        setIsLoading(false);
         if (cur !== undefined) {
           return [...cur, ...resp.data.data];
         }
@@ -81,7 +88,7 @@ const ListSearch = ({
 
   useEffect(() => {
     if (searchDatas !== undefined) {
-      handleSearchClick(searchPage);
+      getSearchData(searchPage);
     }
   }, [searchPage]);
 
@@ -90,6 +97,7 @@ const ListSearch = ({
     setKeyword('');
     setDate(new Date());
     setIsSearch(false);
+    setDatas([]);
   };
 
   const searchOptions: SearchOption[] = [
@@ -293,16 +301,19 @@ const Buttons = styled.div`
   }
 `;
 
-const SearchButton = styled.div`
+const SearchButton = styled(StyledButton)`
   height: 100%;
   background-color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   color: #222;
   padding: 5px 20px;
-  border-radius: 30px;
-  cursor: pointer;
+  font-size: 1rem;
+
+  :hover,
+  :active {
+    background-color: #feb35c;
+    color: #fff;
+    box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.7);
+  }
 
   @media screen and (max-width: 768px) {
     font-size: 0.9rem;

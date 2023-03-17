@@ -4,6 +4,8 @@ import { IoMdClose } from 'react-icons/io';
 import { Follow, FollowModalProps } from 'interfaces/Profile.interface';
 import customAxios from 'api/customAxios';
 import { useNavigate } from 'react-router-dom';
+import ModalScrollDisable from 'utils/ModalScrollDisable';
+import { CloseButton, ModalBG, ModalContent } from './ModalStyles';
 
 const FollowModal = ({
   setIsShowModal,
@@ -24,18 +26,6 @@ const FollowModal = ({
   };
 
   const getFollowData = async () => {
-    // ^ json-server 테스트용 코드
-    // if (isFollower) {
-    //   await customAxios.get('/follows').then(resp => {
-    //     setFollowerList(resp.data);
-    //   });
-    // } else {
-    //   await customAxios.get('/follows').then(resp => {
-    //     setFollowingList(resp.data);
-    //   });
-    // }
-
-    // ! 실제 테스트용 코드
     if (isFollower) {
       await customAxios
         .get(`/members/${member.memberId}/follower`)
@@ -53,21 +43,11 @@ const FollowModal = ({
 
   useEffect(() => {
     getFollowData();
-
-    document.body.style.cssText = `
-      position: fixed; 
-      top: -${window.scrollY}px;
-      overflow-y: scroll;
-      width: 100%;`;
-    return () => {
-      const scrollY = document.body.style.top;
-      document.body.style.cssText = '';
-      window.scrollTo(0, parseInt(scrollY || '0', 10) * -1);
-    };
   }, []);
 
   return (
     <>
+      <ModalScrollDisable />
       <ModalBG onClick={handleModalClose}></ModalBG>
       <ModalContent>
         <div>
@@ -120,47 +100,6 @@ const FollowModal = ({
   );
 };
 
-const ModalBG = styled.div`
-  width: 100vw;
-  height: 100vh;
-  position: fixed;
-  background-color: black;
-  opacity: 0.5;
-  z-index: 999;
-  top: 0;
-  left: 0;
-`;
-
-const ModalContent = styled.div`
-  width: 500px;
-  height: 70vh;
-  background-color: #fff;
-  border-radius: 20px;
-  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3);
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 1000;
-  padding-top: 30px;
-  overflow: hidden;
-
-  > div {
-    width: 100%;
-    padding: 0 30px;
-    margin-bottom: 20px;
-    display: flex;
-    justify-content: space-between;
-    > h1 {
-      font-size: 1.4rem;
-    }
-  }
-
-  @media screen and (max-width: 576px) {
-    width: 80%;
-  }
-`;
-
 const FollowList = styled.ul`
   width: 100%;
   height: calc(100% - 60px);
@@ -190,26 +129,6 @@ const FollowUser = styled.li`
   }
   :hover {
     filter: brightness(0.9);
-  }
-`;
-
-const CloseButton = styled.div`
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  background-color: #fff;
-  border: 1px solid #666;
-  color: #666;
-  font-size: 1.1rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-
-  :hover,
-  :active {
-    background-color: #666;
-    color: #fff;
   }
 `;
 
