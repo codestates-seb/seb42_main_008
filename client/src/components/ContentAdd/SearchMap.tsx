@@ -36,7 +36,7 @@ const SearchMap = ({
 
     const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${searchInput}&key=${process.env.REACT_APP_API_KEY}`;
     try {
-      const response = await axios.get(url);
+      const response = await axios.get(url, { withCredentials: true });
       const data = response.data;
       if (data.status === 'OK') {
         const result = data.results[0];
