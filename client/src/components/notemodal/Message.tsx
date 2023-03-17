@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { FaRegEnvelope } from 'react-icons/fa';
-import { GrClose } from 'react-icons/gr';
 import axios from 'axios';
+import ReadNote from './ReadNote';
+import ReplyNote from './ReplyNote';
 
 interface NoteMessage {
   messageId: number;
@@ -37,13 +37,19 @@ const Message = ({ note }: Props) => {
     setIsReplyOpen(!isReplyOpen);
   };
 
-  const handelDeleteNote = async () => {
-    try {
-      await axios.delete(
-        `${process.env.REACT_APP_TEST_SERVER}/messages/${note.messageId}`
-      );
-    } catch (error) {
-      console.log(error);
+  const handelDeleteNote = async (event: any) => {
+    event.preventDefault();
+    if (window.confirm('쪽지를 삭제하시겠습니까?')) {
+      try {
+        await axios.delete(
+          `${process.env.REACT_APP_TEST_SERVER}/messages/${note.messageId}`
+        );
+        alert('쪽지가 삭제되었어요');
+        setIsNoteOpen(false);
+        window.location.reload();
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
@@ -51,7 +57,6 @@ const Message = ({ note }: Props) => {
     <MessageBox>
       <div className="message-info">
         <div className="info-left">
-          <FaRegEnvelope className="envelope" />
           <div>{note.createdAt}</div>
         </div>
         <div className="info-right">
@@ -63,52 +68,23 @@ const Message = ({ note }: Props) => {
       </div>
       {isNoteOpen ? (
         <div className="overlay">
-          <NoteModal onClick={handleOverlayClick}>
-            <div className="note-box">
-              <div className="note-top">
-                <div className="note-title">
-                  <FaRegEnvelope />
-                  보낸사람 | {note.sender.nickname}
-                </div>
-                <div className="modal-out" onClick={handleCloseNote}>
-                  <GrClose />
-                </div>
-              </div>
-              <div className="note-content">{note.content}</div>
-            </div>
-            <div className="note-button">
-              <button className="reply" onClick={handleReplyModal}>
-                답장하기
-              </button>
-              <button className="delete" onClick={handelDeleteNote}>
-                쪽지 삭제
-              </button>
-            </div>
-          </NoteModal>
+          <ReadNote
+            note={note}
+            handleCloseNote={handleCloseNote}
+            handleReplyModal={handleReplyModal}
+            handelDeleteNote={handelDeleteNote}
+            handleOverlayClick={handleOverlayClick}
+          />
         </div>
       ) : null}
       {isReplyOpen ? (
         <div className="overlay">
-          <NoteModal onClick={handleOverlayClick}>
-            <div className="note-box">
-              <div className="note-top">
-                <div className="note-title">
-                  <FaRegEnvelope />
-                  받는사람 | 닉네임
-                </div>
-                <div onClick={handleReplyModal}>
-                  <GrClose />
-                </div>
-              </div>
-              <textarea className="note-content" />
-            </div>
-            <div className="note-button">
-              <button className="submit">전송</button>
-              <button className="cancel" onClick={handleReplyModal}>
-                취소
-              </button>
-            </div>
-          </NoteModal>
+          <ReplyNote
+            note={note}
+            handleOverlayClick={handleOverlayClick}
+            handleReplyModal={handleReplyModal}
+            setIsReplyOpen={setIsReplyOpen}
+          />
         </div>
       ) : null}
     </MessageBox>
@@ -138,6 +114,7 @@ const MessageBox = styled.div`
     border-bottom: 1px solid black;
     height: 40%;
     align-items: center;
+    width: 100%;
 
     @media screen and (max-width: 768px) {
       font-size: 0.8rem;
@@ -164,19 +141,31 @@ const MessageBox = styled.div`
   }
   .info-left {
     display: flex;
-    width: 40%;
-    justify-content: space-around;
+    width: 60%;
+    justify-content: flex-start;
     align-items: center;
     height: 50%;
-    margin-left: 15px;
+
+    @media screen and (max-width: 768px) {
+      width: 100%;
+    }
+    @media screen and (max-width: 576px) {
+      width: 100%;
+    }
   }
   .info-right {
     display: flex;
     width: 30%;
-    justify-content: space-around;
+    justify-content: flex-start;
     align-items: center;
     height: 50%;
-    margin-left: 15px;
+
+    @media screen and (max-width: 768px) {
+      width: 100%;
+    }
+    @media screen and (max-width: 576px) {
+      width: 100%;
+    }
   }
   .message-content {
     padding-top: 10px;
@@ -199,132 +188,6 @@ const MessageBox = styled.div`
     right: 0;
     bottom: 0;
     background-color: rgba(0, 0, 0, 0.5);
-  }
-`;
-
-const NoteModal = styled.div`
-  display: flex;
-  width: 600px;
-  height: 400px;
-  border-radius: 20px;
-  background-color: white;
-  position: fixed;
-  top: 50%;
-  right: 50%;
-  transform: translate(50%, -50%);
-  flex-direction: column;
-  @media screen and (max-width: 768px) {
-    width: 500px;
-    height: 360px;
-  }
-  @media screen and (max-width: 576px) {
-    width: 400px;
-    height: 300px;
-  }
-
-  .note-box {
-    padding: 30px;
-    height: 80%;
-  }
-  .note-top {
-    display: flex;
-    align-items: center;
-    width: 100%;
-    height: 20%;
-    border-bottom: 1px solid black;
-    justify-content: space-between;
-    padding-bottom: 15px;
-    font-size: 1.5rem;
-    @media screen and (max-width: 768px) {
-      font-size: 1.5rem;
-    }
-    @media screen and (max-width: 576px) {
-      font-size: 1.2rem;
-    }
-  }
-  .note-title {
-    display: flex;
-    align-items: center;
-    width: 50%;
-    justify-content: space-around;
-  }
-  .modal-out {
-    display: flex;
-    align-items: center;
-  }
-  .note-content {
-    display: flex;
-    background-color: #d9d9d9;
-    margin-top: 15px;
-    height: 80%;
-    width: 100%;
-    padding: 10px;
-  }
-  .note-button {
-    display: flex;
-    width: 100%;
-    height: 20%;
-    justify-content: space-around;
-    .reply {
-      background-color: #9bb76a;
-      width: 160px;
-      height: 45px;
-      border-radius: 30px;
-      border: none;
-      @media screen and (max-width: 768px) {
-        width: 120px;
-        height: 45px;
-      }
-      @media screen and (max-width: 576px) {
-        width: 120px;
-        height: 45px;
-      }
-    }
-    .delete {
-      background-color: #d9506a;
-      width: 160px;
-      height: 45px;
-      border-radius: 30px;
-      border: none;
-      @media screen and (max-width: 768px) {
-        width: 120px;
-        height: 45px;
-      }
-      @media screen and (max-width: 576px) {
-        width: 120px;
-        height: 45px;
-      }
-    }
-    .submit {
-      background-color: #feb35c;
-      width: 160px;
-      height: 45px;
-      border-radius: 30px;
-      border: none;
-      @media screen and (max-width: 768px) {
-        width: 120px;
-        height: 45px;
-      }
-      @media screen and (max-width: 576px) {
-        width: 120px;
-        height: 45px;
-      }
-    }
-    .cancel {
-      background-color: #bababa;
-      width: 160px;
-      height: 45px;
-      border-radius: 30px;
-      border: none;
-      @media screen and (max-width: 768px) {
-        width: 120px;
-        height: 45px;
-      }
-      @media screen and (max-width: 576px) {
-        width: 120px;
-        height: 45px;
-      }
-    }
   }
 `;
 

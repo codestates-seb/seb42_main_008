@@ -1,41 +1,67 @@
 // import Companion from 'components/ContentDetail/Companion';
+import axios from 'axios';
 import ContentWriter from 'components/ContentDetail/ContentWriter';
 import Participants from 'components/ContentDetail/Participants';
 // import SearchMap from 'components/ContentDetail/SearchMap';
-
+import { detailInfo } from 'interfaces/ContentDetail.interface';
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
+import { getDateString } from 'utils/getDateString';
 
 const ContentDetail = () => {
-  const tags = ['계획적', '음주선호', '맛집', '쇼핑', '힐링'];
+  const params = useParams();
+  const { contentId } = params;
+
+  const [detail, setDetail] = useState<detailInfo>({
+    companionId: 0,
+    memberId: 0,
+    nickname: '',
+    score: 0,
+    title: '',
+    content: '',
+    date: '',
+    address: '',
+    lat: 37,
+    lng: 126,
+    tags: [],
+    createdAt: '',
+    companionStatus: false,
+  });
+
+  useEffect(() => {
+    axios
+      .get(`${process.env.REACT_APP_TEST_SERVER}/companions/${contentId}`)
+      .then(res => {
+        setDetail(res.data.data);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }, []);
   return (
     <Container>
       <ContentDetailBox>
         <LeftBox>
           <div className="top-box">
-            <h1>3/9 ~ 3/30</h1>
-            <h3>음악방송</h3>
+            <h1>{getDateString(detail.date).shortDateStr}</h1>
+            <h3>{detail.address}</h3>
           </div>
           <div className="bottom-box">
-            <h2>하이라이트 응원하러 가실 분 구합니다!!</h2>
-            <h4>작성날짜 : 2023/03/09</h4>
-            {/* <SearchMap /> */}
-            <div id="content">
-              하이라이트 최고입니다 나도 하이라이트랑 여행가고 싶어요 수료하고
-              나면 여행갈거임하이라이트 최고입니다 나도 하이라이트랑 여행가고
-              싶어요 수료하고 나면 여행갈거임하이라이트 최고입니다 나도
-              하이라이트랑 여행가고 싶어요 수료하고 나면 여행갈거임하이라이트
-              최고입니다 나도 하이라이트랑 여행가고 싶어요 수료하고 나면
-              여행갈거임하이라이트 최고
-            </div>
+            <h2>{detail.title}</h2>
+            <h4>작성날짜: {detail.createdAt}</h4>
+            {/* <SearchMap detail={detail} /> */}
+            <div id="content">{detail.content}</div>
             <div id="tag-box">
-              {tags.map((el, index) => (
-                <li key={index}>{el}</li>
-              ))}
+              {detail &&
+                detail.tags.map((el, index: number) => (
+                  <li key={index}>{el}</li>
+                ))}
             </div>
           </div>
         </LeftBox>
         <RightBox>
-          <ContentWriter />
+          <ContentWriter detail={detail} />
           {/* 여행완료 ? Participants : Companion */}
           {/* <Companion /> */}
           <Participants />
