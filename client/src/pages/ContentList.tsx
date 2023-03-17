@@ -137,7 +137,7 @@ const ContentList = () => {
         setIsLoading={setIsLoading}
         setDatas={setDatas}
       />
-      <ListItems listData={datas} />
+      <ListItems listData={datas} isLoading={isLoading} />
       {isLoading && <Loader />}
       {datas.length !== 0 && (
         <Observer ref={obsRef}>{/* 무한스크롤용 옵저버 */}</Observer>

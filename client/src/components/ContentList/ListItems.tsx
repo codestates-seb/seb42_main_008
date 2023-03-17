@@ -1,10 +1,10 @@
 import styled from 'styled-components';
 import { ListItemProps } from 'interfaces/ContentList.interface';
 import { getDateString } from 'utils/getDateString';
-import { useNavigate } from 'react-router-dom';
-import { FaMapMarkerAlt } from 'react-icons/fa';
+import { Link, useNavigate } from 'react-router-dom';
+import { FaLongArrowAltRight, FaMapMarkerAlt } from 'react-icons/fa';
 
-const ListItems = ({ listData }: ListItemProps) => {
+const ListItems = ({ listData, isLoading }: ListItemProps) => {
   const navigate = useNavigate();
 
   const handleClickItem = (id: number) => {
@@ -13,26 +13,43 @@ const ListItems = ({ listData }: ListItemProps) => {
 
   return (
     <ItemListsContainer>
-      {listData.map((item, idx) => (
-        <ListItem key={idx} onClick={() => handleClickItem(item.companionId)}>
-          <h1>{getDateString(item.date).shortDateStr}</h1>
-          <Address>
-            <span>
-              <FaMapMarkerAlt size={25} />
-            </span>
-            <p>{item.address}</p>
-          </Address>
-          <h2>{item.title}</h2>
-          <TagsList>
-            {item.tags.map((tag, idx) => (
-              <Tag key={idx}>{tag}</Tag>
-            ))}
-          </TagsList>
-          <Flag isDone={item.companionStatus}></Flag>
-          <FlagText>{item.companionStatus ? '모집완료' : '모집중'}</FlagText>
-          {item.companionStatus && <DoneItem></DoneItem>}
-        </ListItem>
-      ))}
+      {listData.length !== 0
+        ? listData.map((item, idx) => (
+            <ListItem
+              key={idx}
+              onClick={() => handleClickItem(item.companionId)}
+            >
+              <h1>{getDateString(item.date).shortDateStr}</h1>
+              <Address>
+                <span>
+                  <FaMapMarkerAlt size={25} />
+                </span>
+                <p>{item.address}</p>
+              </Address>
+              <h2>{item.title}</h2>
+              <TagsList>
+                {item.tags.map((tag, idx) => (
+                  <Tag key={idx}>{tag}</Tag>
+                ))}
+              </TagsList>
+              <Flag isDone={item.companionStatus}></Flag>
+              <FlagText>
+                {item.companionStatus ? '모집완료' : '모집중'}
+              </FlagText>
+              {item.companionStatus && <DoneItem></DoneItem>}
+            </ListItem>
+          ))
+        : !isLoading && (
+            <EmptyList>
+              아직 아무도 동행을 찾고있지 않아요 😢
+              <Link to="/add">
+                직접 작성해 보세요!
+                <span>
+                  <FaLongArrowAltRight />
+                </span>
+              </Link>
+            </EmptyList>
+          )}
     </ItemListsContainer>
   );
 };
@@ -166,6 +183,35 @@ const DoneItem = styled.div`
   width: 100%;
   height: 100%;
   z-index: 1;
+`;
+
+const EmptyList = styled.div`
+  height: 20vh;
+  width: 100%;
+  grid-column: 1/5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.2rem;
+  * {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  > a {
+    color: #5d62a0;
+    gap: 3px;
+    :hover {
+      span {
+        position: relative;
+        left: 5px;
+      }
+    }
+  }
+  @media screen and (max-width: 768px) {
+    flex-direction: column;
+  }
 `;
 
 export default ListItems;
