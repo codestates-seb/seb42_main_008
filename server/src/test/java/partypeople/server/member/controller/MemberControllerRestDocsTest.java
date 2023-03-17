@@ -3,7 +3,7 @@ package partypeople.server.member.controller;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
@@ -13,18 +13,16 @@ import org.springframework.context.annotation.Import;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.payload.JsonFieldType;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import partypeople.server.auth.jwt.JwtTokenizer;
 import partypeople.server.companion.mapper.CompanionMapper;
 import partypeople.server.config.SecurityConfigurationTest;
 import partypeople.server.controller.MemberControllerTest;
 import partypeople.server.member.dto.MemberDto;
 import partypeople.server.member.entity.Member;
 import partypeople.server.member.mapper.MemberMapper;
+import partypeople.server.member.service.FollowService;
 import partypeople.server.member.service.MemberService;
 import partypeople.server.review.mapper.ReviewMapper;
 
@@ -32,7 +30,6 @@ import java.util.List;
 
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.headers.HeaderDocumentation.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
@@ -57,6 +54,9 @@ public class MemberControllerRestDocsTest {
 
     @MockBean
     private MemberMapper memberMapper;
+
+    @MockBean
+    private FollowService followService;
 
     @MockBean
     private ReviewMapper reviewMapper;
@@ -295,9 +295,26 @@ public class MemberControllerRestDocsTest {
 
     }
 
-    @Test
-    @DisplayName("회원조회")
-    public void getMemberTest() throws Exception {
-
-    }
+//    @Test
+//    @DisplayName("회원조회")
+//    public void getMemberTest() throws Exception {
+//        // given
+//        MemberDto.Response response = MemberDto.Response.builder()
+//                .email("postmember@gmail.com")
+//                .nickname("nickname")
+//                .profile("profile")
+//                .content("content")
+//                .gender("male/fema")
+//
+//                .build();
+//
+//        String content = gson.toJson(post);
+//
+//        Member mockResultMember = new Member();
+//        mockResultMember.setMemberId(1L);
+//
+//        given(memberMapper.memberPostToMember(Mockito.any(MemberDto.Post.class))).willReturn(new Member());
+//        given(memberService.createMember(Mockito.any(Member.class))).willReturn(mockResultMember);
+//
+//    }
 }
