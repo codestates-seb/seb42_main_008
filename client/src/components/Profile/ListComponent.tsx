@@ -7,7 +7,7 @@ import {
 } from 'components/ContinentList/ListItems';
 import { FaMapMarkerAlt } from 'react-icons/fa';
 import { getDateString } from 'utils/getDateString';
-import ImageFilter from 'components/Main/ImageFilter';
+import ImageFilter from 'styles/ImageFilter';
 import { ListComponentProps } from 'interfaces/Profile.interface';
 import { useNavigate } from 'react-router-dom';
 

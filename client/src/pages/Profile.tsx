@@ -1,4 +1,5 @@
 import customAxios from 'api/customAxios';
+import Loader from 'components/Loader';
 import BackGroundImage from 'components/Profile/BackGroundImage';
 import MemberContent from 'components/Profile/MemberContent';
 import MemberInfo from 'components/Profile/MemberInfo';
@@ -58,7 +59,8 @@ const Profile = () => {
   return (
     <>
       <BackGroundImage />
-      {!isLoading && member ? (
+      {isLoading && <Loader></Loader>}
+      {!isLoading && member && (
         <Container>
           <TestButton onClick={handleTestButtonClick}>로그인 테스트</TestButton>
           <MemberInfo user={user} member={member} setMember={setMember} />
@@ -69,8 +71,6 @@ const Profile = () => {
             setCurrentTab={setCurrentTab}
           />
         </Container>
-      ) : (
-        <p>Loading...</p>
       )}
     </>
   );
@@ -96,4 +96,5 @@ const TestButton = styled.button`
   left: 100px;
   z-index: 10;
 `;
+
 export default Profile;
