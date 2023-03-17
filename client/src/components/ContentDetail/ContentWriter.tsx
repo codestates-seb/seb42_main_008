@@ -1,9 +1,14 @@
 import axios from 'axios';
+import { detailProps } from 'interfaces/ContentDetail.interface';
 import { useNavigate } from 'react-router-dom';
+import { useRecoilValue } from 'recoil';
+import { userInfo } from 'states/userState';
 import styled from 'styled-components';
+import Swal from 'sweetalert2';
 import { getScoreIcon } from 'utils/getScoreIcon';
 
-const ContentWriter = () => {
+const ContentWriter = ({ detail }: detailProps) => {
+  const { profile } = useRecoilValue(userInfo);
   // const params = useParams();
   // const { id } = params;
   // 클릭 시 수정페이지로 이동 추가
@@ -13,45 +18,37 @@ const ContentWriter = () => {
   // }
 
   // 클릭 시 글 삭제 추가
-  // const handleDelete = () => {
-  //   Swal.fire({
-  //     title: '삭제하시겠습니까?',
-  //     icon: 'warning',
-  //     showCancelButton: true,
-  //     confirmButtonColor: '#3085d6',
-  //     cancelButtonColor: '#d33',
-  //     confirmButtonText: 'Yes, delete it!',
-  //   }).then(async result => {
-  //     if (result.isConfirmed) {
-  //       await axios
-  //         .delete(`http://localhost:4000/companions/${detail.companionId}`)
-  //         .then(() => {
-  //           Swal.fire('Deleted!', 'Your file has been deleted.', 'success');
-  //           console.log('delete!');
-  //         })
-  //         .catch(error => console.log(error));
-  //       navigate(`/asia/jpn`);
-  //     }
-  //   });
-  // };
-  const handleDelete = async () => {
-    await axios
-      .delete(`${process.env.REACT_APP_TEST_SERVER}/companions`)
-      .then(() => {
-        console.log('delete!');
-      })
-      .catch(error => console.log(error));
-    navigate(`/asia/jpn`);
+  const handleDelete = () => {
+    Swal.fire({
+      title: '삭제하시겠습니까?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!',
+    }).then(async result => {
+      if (result.isConfirmed) {
+        await axios
+          .delete(
+            `${process.env.REACT_APP_TEST_SERVER}/companions/${detail.companionId}`
+          )
+          .then(() => {
+            Swal.fire('Deleted!', 'Your file has been deleted.', 'success');
+            console.log('delete!');
+          })
+          .catch(error => console.log(error));
+        navigate(`/asia/jpn`);
+      }
+    });
   };
-
   return (
     <Container>
       <WriterInfo>
         <div className="img-wrapper">
-          <div>프로필 사진 자리</div>
+          <div>{profile}</div>
         </div>
         <div className="info-wrapper">
-          <div id="nickname">이기구왕</div>
+          <div id="nickname">{detail.nickname}</div>
           <div id="battery">
             <img src={getScoreIcon(93)} alt="score" />
           </div>

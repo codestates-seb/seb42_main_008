@@ -7,6 +7,7 @@ import { detailInfo } from 'interfaces/ContentDetail.interface';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
+import { getDateString } from 'utils/getDateString';
 
 const ContentDetail = () => {
   const params = useParams();
@@ -32,38 +33,35 @@ const ContentDetail = () => {
     axios
       .get(`${process.env.REACT_APP_TEST_SERVER}/companions/${contentId}`)
       .then(res => {
-        setDetail(res.data);
+        setDetail(res.data.data);
       })
       .catch(error => {
         console.log(error);
       });
-  }, [detail]);
-
-  console.log(detail);
-  console.log(params);
-
+  }, []);
   return (
     <Container>
       <ContentDetailBox>
         <LeftBox>
           <div className="top-box">
-            <h1>{detail.date}</h1>
+            <h1>{getDateString(detail.date).shortDateStr}</h1>
             <h3>{detail.address}</h3>
           </div>
           <div className="bottom-box">
             <h2>{detail.title}</h2>
             <h4>작성날짜: {detail.createdAt}</h4>
-            {/* <SearchMap /> */}
+            {/* <SearchMap detail={detail} /> */}
             <div id="content">{detail.content}</div>
             <div id="tag-box">
-              {detail.tags.map((el, index) => (
-                <li key={index}>{el}</li>
-              ))}
+              {detail &&
+                detail.tags.map((el, index: number) => (
+                  <li key={index}>{el}</li>
+                ))}
             </div>
           </div>
         </LeftBox>
         <RightBox>
-          <ContentWriter />
+          <ContentWriter detail={detail} />
           {/* 여행완료 ? Participants : Companion */}
           {/* <Companion /> */}
           <Participants />
