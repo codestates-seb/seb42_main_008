@@ -174,7 +174,7 @@ public class CompanionControllerTest {
 
         // when
         ResultActions actions = mockMvc.perform(
-                patch("/companions/" + companion.getCompanionId())
+                patch("/companions/{companion-id}", companion.getCompanionId())
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(content));
