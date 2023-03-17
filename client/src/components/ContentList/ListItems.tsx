@@ -1,13 +1,38 @@
 import styled from 'styled-components';
-import { ListItemProps } from 'interfaces/ContentList.interface';
-import { getDateString } from 'utils/getDateString';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaLongArrowAltRight, FaMapMarkerAlt } from 'react-icons/fa';
+import Swal from 'sweetalert2';
+import { ListItemProps } from 'interfaces/ContentList.interface';
+import { getDateString } from 'utils/getDateString';
+import { useRecoilValue } from 'recoil';
+import { loginState } from 'states/userState';
 
 const ListItems = ({ listData, isLoading }: ListItemProps) => {
   const navigate = useNavigate();
+  const isLogin = useRecoilValue(loginState);
 
   const handleClickItem = (id: number) => {
+    console.log(isLogin);
+    if (!isLogin) {
+      Swal.fire({
+        icon: 'question',
+        title: '아직 로그인하지 않으셨나요?',
+        text: '동행글을 자세히 보시고싶다면 로그인 해주세요🥲',
+        showDenyButton: true,
+        showCloseButton: true,
+        confirmButtonText: '로그인 하러가기',
+        denyButtonText: `회원가입 하러가기`,
+        denyButtonColor: '#FEB35C',
+        confirmButtonColor: '#5D62A0',
+      }).then(result => {
+        if (result.isConfirmed) {
+          navigate('/login');
+        } else if (result.isDenied) {
+          navigate('/signup');
+        }
+      });
+      return;
+    }
     navigate(`/companions/${id}`);
   };
 
