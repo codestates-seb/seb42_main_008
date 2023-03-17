@@ -2,11 +2,26 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { FaRegEnvelope } from 'react-icons/fa';
 import { GrClose } from 'react-icons/gr';
-const Message = () => {
+import axios from 'axios';
+
+interface NoteMessage {
+  messageId: number;
+  content: string;
+  companionId: number;
+  createdAt: string;
+  read: boolean;
+  sender: {
+    id: number;
+    nickname: string;
+  };
+}
+interface Props {
+  note: NoteMessage;
+}
+
+const Message = ({ note }: Props) => {
   const [isNoteOpen, setIsNoteOpen] = useState(false);
   const [isReplyOpen, setIsReplyOpen] = useState(false);
-  const noteContent =
-    '저도 참여하고 싶습니다!저도 참여하고 싶습니다!저도 참여하고 싶습니다!저도 참여하고 싶습니다!저도 참여하고 싶습니다!저도 참여하고 싶습니다!';
 
   const handleOpenNote = () => {
     setIsNoteOpen(!isNoteOpen);
@@ -22,19 +37,29 @@ const Message = () => {
     setIsReplyOpen(!isReplyOpen);
   };
 
+  const handelDeleteNote = async () => {
+    try {
+      await axios.delete(
+        `${process.env.REACT_APP_TEST_SERVER}/messages/${note.messageId}`
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <MessageBox>
       <div className="message-info">
         <div className="info-left">
           <FaRegEnvelope className="envelope" />
-          <div>2023/03/09</div>
+          <div>{note.createdAt}</div>
         </div>
         <div className="info-right">
-          <div>username</div>
+          <div>{note.sender.nickname}</div>
         </div>
       </div>
       <div className="message-content" onClick={handleOpenNote}>
-        {noteContent}
+        {note.content}
       </div>
       {isNoteOpen ? (
         <div className="overlay">
@@ -43,19 +68,21 @@ const Message = () => {
               <div className="note-top">
                 <div className="note-title">
                   <FaRegEnvelope />
-                  보낸사람 | 닉네임
+                  보낸사람 | {note.sender.nickname}
                 </div>
                 <div className="modal-out" onClick={handleCloseNote}>
                   <GrClose />
                 </div>
               </div>
-              <div className="note-content">{noteContent}</div>
+              <div className="note-content">{note.content}</div>
             </div>
             <div className="note-button">
               <button className="reply" onClick={handleReplyModal}>
                 답장하기
               </button>
-              <button className="delete">쪽지 삭제</button>
+              <button className="delete" onClick={handelDeleteNote}>
+                쪽지 삭제
+              </button>
             </div>
           </NoteModal>
         </div>
