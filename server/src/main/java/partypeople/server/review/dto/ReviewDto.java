@@ -8,6 +8,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
 public class ReviewDto {
+    @AllArgsConstructor
     @Getter
     public static class Post {
         @Positive

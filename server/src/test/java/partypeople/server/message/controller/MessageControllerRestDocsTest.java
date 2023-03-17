@@ -2,7 +2,6 @@ package partypeople.server.message.controller;
 
 import com.google.gson.Gson;
 import com.jayway.jsonpath.JsonPath;
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -32,7 +31,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.startsWith;
 import static org.mockito.BDDMockito.*;
 import static org.springframework.restdocs.headers.HeaderDocumentation.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -86,7 +86,7 @@ class MessageControllerRestDocsTest {
         //then
         actions
             .andExpect(status().isCreated())
-            .andExpect(header().string("location", is(Matchers.startsWith("/messages/"))))
+            .andExpect(header().string("location", is(startsWith("/messages/"))))
             .andDo(document("post-message",
                 getRequestPreProcessor(),
                 getResponsePreProcessor(),
