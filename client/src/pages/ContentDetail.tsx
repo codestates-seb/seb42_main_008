@@ -2,16 +2,17 @@
 import axios from 'axios';
 import ContentWriter from 'components/ContentDetail/ContentWriter';
 import Participants from 'components/ContentDetail/Participants';
+// import SearchMap from 'components/ContentDetail/SearchMap';
 import { detailInfo } from 'interfaces/ContentDetail.interface';
 import { useEffect, useState } from 'react';
-// import { useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 // import SearchMap from 'components/ContentDetail/SearchMap';
 
 import styled from 'styled-components';
 
 const ContentDetail = () => {
-  // const params = useParams();
-  // const { companionId } = params;
+  const params = useParams();
+  const { companionId } = params;
 
   const [detail, setDetail] = useState<detailInfo>({
     companionId: 0,
@@ -31,7 +32,7 @@ const ContentDetail = () => {
 
   useEffect(() => {
     axios
-      .get(`${process.env.REACT_APP_TEST_SERVER}/companions`)
+      .get(`${process.env.REACT_APP_TEST_SERVER}/companions/${companionId}`)
       .then(res => {
         setDetail(res.data);
       })
