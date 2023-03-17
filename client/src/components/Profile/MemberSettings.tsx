@@ -8,6 +8,7 @@ import {
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import styled from 'styled-components';
+import { StyledButton } from 'styles/StyledButton';
 import Swal from 'sweetalert2';
 import { editValidationCheck } from 'utils/profileEditValidation';
 import AccountDeleteModal from './AccountDeleteModal';
@@ -180,33 +181,23 @@ const UploadButton = styled.div`
     background-color: #feb35c;
     color: #fff;
     border-radius: 50px;
+    transition: 0.3s;
     cursor: pointer;
+    :hover,
+    :active {
+      background-color: #fff;
+      color: #222;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+      transition: 0.3s;
+    }
   }
   > input {
     display: none;
   }
 `;
 
-const SubmitButton = styled.div`
-  padding: 10px 20px;
-  background-color: #feb35c;
-  color: #fff;
-  border-radius: 50px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.2rem;
+const SubmitButton = styled(StyledButton)`
   margin-bottom: 30px;
-  transition: 0.3s;
-  cursor: pointer;
-
-  :hover,
-  :active {
-    background-color: #fff;
-    color: #222;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
-    transition: 0.3s;
-  }
 `;
 
 const AccountDelete = styled.div`

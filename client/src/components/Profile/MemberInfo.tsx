@@ -7,6 +7,7 @@ import { getScoreIcon } from 'utils/getScoreIcon';
 import { toast } from 'react-toastify';
 import FollowModal from './FollowModal';
 import customAxios from 'api/customAxios';
+import { StyledButton } from 'styles/StyledButton';
 
 const MemberInfo = ({ user, member, setMember }: MemberInfoProps) => {
   const [isFollow, setIsFollow] = useState<boolean>(member.followerStatus);
@@ -232,13 +233,11 @@ const ContentWrapper = styled.section`
   }
 `;
 
-const Button = styled.div<{ status: boolean }>`
+const Button = styled(StyledButton)<{ status: boolean }>`
   padding: 5px 15px;
   background-color: ${props => (props.status ? '#9BB76A' : '#aaa')};
-  color: #fff;
   font-weight: 800;
-  cursor: pointer;
-  border-radius: 20px;
+  font-size: 1rem;
   gap: 5px;
 `;
 
