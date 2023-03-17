@@ -35,7 +35,7 @@ const MemberSettings = ({ member, setCurrentTab }: MemberSettingsProps) => {
         axios
           .post('https://api.imgur.com/3/image', formData, {
             headers: {
-              Authorization: 'Client-ID 2dce0c293bfd544',
+              Authorization: `Client-ID ${process.env.REACT_APP_CLIENT_ID}`,
               Accept: 'application/json',
             },
           })
