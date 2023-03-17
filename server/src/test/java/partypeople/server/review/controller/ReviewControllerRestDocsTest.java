@@ -87,7 +87,7 @@ class ReviewControllerRestDocsTest {
                         fieldWithPath("reviewedMemberId").type(JsonFieldType.NUMBER).description("리뷰 받는 회원 식별자"),
                         fieldWithPath("companionId").type(JsonFieldType.NUMBER).description("동행글 식별자"),
                         fieldWithPath("score").type(JsonFieldType.NUMBER).description("평가 점수"),
-                        fieldWithPath("content").type(JsonFieldType.STRING).description("평가 내용")
+                        fieldWithPath("content").type(JsonFieldType.STRING).description("평가 내용").optional()
                     )
                 ),
                 responseHeaders(
