@@ -198,18 +198,10 @@ public class MemberController {
 
     @PostMapping("/reissue-password/{member-id}")
     public ResponseEntity reissuePassword(@PathVariable("member-id") long memberId) {
-        try {
-            memberService.reissuePassword(memberId);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
+
+        memberService.reissuePassword(memberId);
 
 
-        return ResponseEntity.ok().build();
-    }
-
-    @PostMapping("/members/login")
-    public ResponseEntity loginMember(@RequestBody MemberDto.Login login) {
         return ResponseEntity.ok().build();
     }
 }

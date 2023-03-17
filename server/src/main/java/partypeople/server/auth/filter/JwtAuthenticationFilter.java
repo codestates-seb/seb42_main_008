@@ -4,8 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -17,6 +19,8 @@ import partypeople.server.exception.BusinessLogicException;
 import partypeople.server.exception.ExceptionCode;
 import partypeople.server.member.dto.MemberDto;
 import partypeople.server.member.entity.Member;
+import partypeople.server.member.repository.MemberRepository;
+import partypeople.server.member.service.MemberService;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -33,12 +37,23 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     private final AuthenticationManager authenticationManager;
     private final JwtTokenizer jwtTokenizer;
     private final AuthService authService;
+    private final MemberService memberService;
 
     @SneakyThrows
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
+        if (!request.getMethod().equals("POST")) {
+            throw new AuthenticationServiceException("Authentication method not supported: " + request.getMethod());
+        }
+
         ObjectMapper objectMapper = new ObjectMapper();
         MemberDto.Login loginDto = objectMapper.readValue(request.getInputStream(), MemberDto.Login.class);
+
+        try {
+            memberService.findMember(loginDto.getEmail());
+        } catch (Exception e) {
+            throw new AuthenticationServiceException("탈퇴한 회원 입니다.");
+        }
 
         UsernamePasswordAuthenticationToken authenticationToken =
             new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword());

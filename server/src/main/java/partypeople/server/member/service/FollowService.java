@@ -19,7 +19,6 @@ import java.util.Optional;
 public class FollowService {
     private final FollowRepository followRepository;
 
-
     public Boolean followerStatusUpdate(Member member, Long loginMemberId) {
         Optional<Follow> follow = followRepository.findByFollowerMemberIdAndFollowingMemberId(member.getMemberId(),loginMemberId);
         Boolean followerStatus;
