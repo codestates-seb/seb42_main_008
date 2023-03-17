@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { FaRegEnvelope } from 'react-icons/fa';
 import { GrClose } from 'react-icons/gr';
+import axios from 'axios';
 
 interface NoteMessage {
   messageId: number;
@@ -18,8 +19,34 @@ interface Props {
   note: NoteMessage;
   handleOverlayClick: React.MouseEventHandler<HTMLDivElement>;
   handleReplyModal: any;
+  setIsReplyOpen: any;
 }
-const ReplyNote = ({ note, handleOverlayClick, handleReplyModal }: Props) => {
+
+const ReplyNote = ({
+  note,
+  handleOverlayClick,
+  handleReplyModal,
+  setIsReplyOpen,
+}: Props) => {
+  // 답장내용
+  const [replyInput, setReplyInput] = useState('');
+
+  // 답장보내기
+  const handleSubmitReply = async (event: any) => {
+    event.preventDefault();
+    try {
+      await axios.post(`${process.env.REACT_APP_TEST_SERVER}/messages`, {
+        content: replyInput,
+        senderId: 8,
+        receiverId: note.sender.id,
+        companionId: note.companionId,
+      });
+      alert('쪽지를 보냈어요!');
+      setIsReplyOpen(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <ReplyBox onClick={handleOverlayClick}>
       <div className="note-box">
@@ -32,10 +59,15 @@ const ReplyNote = ({ note, handleOverlayClick, handleReplyModal }: Props) => {
             <GrClose />
           </div>
         </div>
-        <textarea className="note-content" />
+        <textarea
+          className="note-content"
+          onChange={(event: any) => setReplyInput(event.target.value)}
+        />
       </div>
       <div className="note-button">
-        <button className="submit">전송</button>
+        <button className="submit" onClick={handleSubmitReply}>
+          전송
+        </button>
         <button className="cancel" onClick={handleReplyModal}>
           취소
         </button>
@@ -145,6 +177,7 @@ const ReplyBox = styled.div`
       height: 45px;
       border-radius: 30px;
       border: none;
+      cursor: pointer;
       @media screen and (max-width: 768px) {
         width: 120px;
         height: 45px;
@@ -160,6 +193,7 @@ const ReplyBox = styled.div`
       height: 45px;
       border-radius: 30px;
       border: none;
+      cursor: pointer;
       @media screen and (max-width: 768px) {
         width: 120px;
         height: 45px;

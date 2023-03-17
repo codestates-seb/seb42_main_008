@@ -126,6 +126,7 @@ const ReadBox = styled.div`
       height: 45px;
       border-radius: 30px;
       border: none;
+      cursor: pointer;
       @media screen and (max-width: 768px) {
         width: 120px;
         height: 45px;
@@ -141,6 +142,7 @@ const ReadBox = styled.div`
       height: 45px;
       border-radius: 30px;
       border: none;
+      cursor: pointer;
       @media screen and (max-width: 768px) {
         width: 120px;
         height: 45px;
@@ -156,6 +158,7 @@ const ReadBox = styled.div`
       height: 45px;
       border-radius: 30px;
       border: none;
+      cursor: pointer;
       @media screen and (max-width: 768px) {
         width: 120px;
         height: 45px;
@@ -171,6 +174,7 @@ const ReadBox = styled.div`
       height: 45px;
       border-radius: 30px;
       border: none;
+      cursor: pointer;
       @media screen and (max-width: 768px) {
         width: 120px;
         height: 45px;

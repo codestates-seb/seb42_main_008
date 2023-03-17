@@ -37,13 +37,19 @@ const Message = ({ note }: Props) => {
     setIsReplyOpen(!isReplyOpen);
   };
 
-  const handelDeleteNote = async () => {
-    try {
-      await axios.delete(
-        `${process.env.REACT_APP_TEST_SERVER}/messages/${note.messageId}`
-      );
-    } catch (error) {
-      console.log(error);
+  const handelDeleteNote = async (event: any) => {
+    event.preventDefault();
+    if (window.confirm('쪽지를 삭제하시겠습니까?')) {
+      try {
+        await axios.delete(
+          `${process.env.REACT_APP_TEST_SERVER}/messages/${note.messageId}`
+        );
+        alert('쪽지가 삭제되었어요');
+        setIsNoteOpen(false);
+        window.location.reload();
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
@@ -77,6 +83,7 @@ const Message = ({ note }: Props) => {
             note={note}
             handleOverlayClick={handleOverlayClick}
             handleReplyModal={handleReplyModal}
+            setIsReplyOpen={setIsReplyOpen}
           />
         </div>
       ) : null}
