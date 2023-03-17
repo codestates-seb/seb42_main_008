@@ -255,5 +255,9 @@ public class MemberControllerRestDocsTest {
                 ));
     }
 
+    @Test
+    @DisplayName("로그아웃")
+    public void logoutMemberTest() throws Exception {
 
+    }
 }
