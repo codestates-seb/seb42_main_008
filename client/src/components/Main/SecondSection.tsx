@@ -1,7 +1,7 @@
 import { useScroll } from 'hooks/useScroll';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import ImageFilter from './ImageFilter';
+import ImageFilter from '../../styles/ImageFilter';
 import { SectionWrapper } from './SectionWrapper';
 
 const SecondSection = () => {

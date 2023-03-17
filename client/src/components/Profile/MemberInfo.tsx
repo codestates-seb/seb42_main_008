@@ -7,27 +7,34 @@ import { getScoreIcon } from 'utils/getScoreIcon';
 import { toast } from 'react-toastify';
 import FollowModal from './FollowModal';
 import customAxios from 'api/customAxios';
+import { StyledButton } from 'styles/StyledButton';
 
-const MemberInfo = ({ user, member }: MemberInfoProps) => {
+const MemberInfo = ({ user, member, setMember }: MemberInfoProps) => {
   const [isFollow, setIsFollow] = useState<boolean>(member.followerStatus);
   const [isShowModal, setIsShowModal] = useState<boolean>(false);
   const [isFollower, setIsFollower] = useState<boolean>(true);
 
   const handleFollowButtonClick = async () => {
-    setIsFollow(cur => !cur);
-
     const data: FollowRequest = {
       followerId: user.memberId,
       followingId: member.memberId,
     };
 
     await customAxios.post('/members/follows', data).then(resp => {
-      console.log(resp.data);
-      setIsFollow(resp.data);
-      if (!resp.data) {
+      setIsFollow(resp.data.data.followerStatus);
+
+      if (!resp.data.data.followerStatus) {
         toast.success('팔로우가 취소되었습니다');
+        setMember({
+          ...member,
+          followerCount: member.followerCount - 1,
+        });
       } else {
         toast.success('팔로우가 완료되었습니다');
+        setMember({
+          ...member,
+          followerCount: member.followerCount + 1,
+        });
       }
     });
   };
@@ -39,69 +46,69 @@ const MemberInfo = ({ user, member }: MemberInfoProps) => {
 
   return (
     <>
-      {member && (
-        <>
-          {isShowModal && (
-            <FollowModal
-              setIsShowModal={setIsShowModal}
-              isFollower={isFollower}
-            />
-          )}
-          <InfoContainer>
-            <ImageWrapper>
-              <img src={member.profile} alt="profile" />
-              <div className="score">
-                <img src={getScoreIcon(member.score)} alt="score" />
-                <span>{member.score}%</span>
-              </div>
-            </ImageWrapper>
-            <ContentWrapper>
-              <section className="name-and-button">
-                <div className="nickname">
-                  <p>{member.nickname}</p>
-                  <span>
-                    {member.gender === 'female' ? (
-                      <TbGenderFemale size={24} />
-                    ) : (
-                      <TbGenderMale size={24} />
-                    )}
-                  </span>
-                </div>
-                {user.memberId !== member.memberId && (
-                  <div className="buttons">
-                    <Button
-                      status={isFollow ? isFollow : false}
-                      onClick={handleFollowButtonClick}
-                    >
-                      {isFollow ? (
-                        <SlUserFollowing size={21} />
-                      ) : (
-                        <SlUserFollow size={21} />
-                      )}
-                      {isFollow ? '팔로잉' : '팔로우'}
-                    </Button>
-                    <Button status={false}>
-                      <TbMail size={24} />
-                      쪽지 보내기
-                    </Button>
-                  </div>
-                )}
-              </section>
-              <section className="follows">
-                <span onClick={() => handleFollowListClick(true)}>
-                  팔로워 {member.followerCount}
-                </span>
-                <span onClick={() => handleFollowListClick(false)}>
-                  팔로잉 {member.followingCount}
-                </span>
-              </section>
-              <section className="content">
-                <p>{member.content}</p>
-              </section>
-            </ContentWrapper>
-          </InfoContainer>
-        </>
+      {isShowModal && (
+        <FollowModal
+          setIsShowModal={setIsShowModal}
+          isFollower={isFollower}
+          member={member}
+        />
       )}
+      <InfoContainer>
+        <ImageWrapper>
+          <div
+            className="img"
+            style={{ backgroundImage: `url(${member.profile})` }}
+          ></div>
+          <div className="score">
+            <img src={getScoreIcon(member.score)} alt="score" />
+            <span>{member.score}%</span>
+          </div>
+        </ImageWrapper>
+        <ContentWrapper>
+          <section className="name-and-button">
+            <div className="nickname">
+              <p>{member.nickname}</p>
+              <span>
+                {member.gender === 'female' ? (
+                  <TbGenderFemale size={24} />
+                ) : (
+                  <TbGenderMale size={24} />
+                )}
+              </span>
+            </div>
+            {user.memberId !== member.memberId && (
+              <div className="buttons">
+                <Button
+                  status={isFollow ? isFollow : false}
+                  onClick={handleFollowButtonClick}
+                >
+                  {isFollow ? (
+                    <SlUserFollowing size={21} />
+                  ) : (
+                    <SlUserFollow size={21} />
+                  )}
+                  {isFollow ? '팔로잉' : '팔로우'}
+                </Button>
+                <Button status={false}>
+                  <TbMail size={24} />
+                  쪽지 보내기
+                </Button>
+              </div>
+            )}
+          </section>
+          <section className="follows">
+            <span onClick={() => handleFollowListClick(true)}>
+              팔로워 {member.followerCount}
+            </span>
+            <span onClick={() => handleFollowListClick(false)}>
+              팔로잉 {member.followingCount}
+            </span>
+          </section>
+          <section className="content">
+            <p>{member.content}</p>
+          </section>
+        </ContentWrapper>
+      </InfoContainer>
     </>
   );
 };
@@ -119,6 +126,17 @@ const InfoContainer = styled.article`
   z-index: 1;
   top: 15vh;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  animation: slidein 0.3s linear;
+  transition: 0.3s;
+
+  @keyframes slidein {
+    from {
+      transform: translateY(20px);
+    }
+    to {
+      transform: translateY(0);
+    }
+  }
 
   @media screen and (max-width: 768px) {
     flex-direction: column;
@@ -133,9 +151,14 @@ const ImageWrapper = styled.section`
   gap: 15px;
   padding-right: 10px;
 
-  > img {
+  .img {
     border-radius: 50%;
     width: 80%;
+    padding-bottom: 80%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: #aaa;
   }
   .score {
     display: flex;
@@ -151,8 +174,9 @@ const ImageWrapper = styled.section`
     width: 100%;
     margin-bottom: 5px;
     gap: 10px;
-    > img {
+    .img {
       width: 35%;
+      padding-bottom: 35%;
     }
   }
 `;
@@ -229,13 +253,11 @@ const ContentWrapper = styled.section`
   }
 `;
 
-const Button = styled.div<{ status: boolean }>`
+const Button = styled(StyledButton)<{ status: boolean }>`
   padding: 5px 15px;
   background-color: ${props => (props.status ? '#9BB76A' : '#aaa')};
-  color: #fff;
   font-weight: 800;
-  cursor: pointer;
-  border-radius: 20px;
+  font-size: 1rem;
   gap: 5px;
 `;
 

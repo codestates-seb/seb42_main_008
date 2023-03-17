@@ -1,14 +1,16 @@
 import customAxios from 'api/customAxios';
+import Loader from 'components/Loader';
 import BackGroundImage from 'components/Profile/BackGroundImage';
 import MemberContent from 'components/Profile/MemberContent';
 import MemberInfo from 'components/Profile/MemberInfo';
 import { LoginUser, MemberProfile } from 'interfaces/Profile.interface';
 import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 
 const Profile = () => {
   const userData: LoginUser = {
-    memberId: 3,
+    memberId: 7,
     nickname: 'TestUSER',
     email: 'test@user.com',
     profile:
@@ -17,29 +19,35 @@ const Profile = () => {
     gender: 'male',
   };
 
+  const { memberId } = useParams();
   const [user, setUser] = useState<LoginUser>(userData);
   const [member, setMember] = useState<MemberProfile | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [currentTab, setCurrentTab] = useState<number>(0);
 
-  const getMemberData = async () => {
-    await customAxios.get('/members').then(resp => {
-      setMember(resp.data);
+  const getMemberData = () => {
+    const params = {
+      loginMemberId: userData.memberId,
+    };
+
+    // ! 실제 테스트용 코드
+    customAxios.get(`/members/${memberId}`, { params }).then(resp => {
+      setMember(resp.data.data);
       setIsLoading(false);
     });
   };
 
   useEffect(() => {
     getMemberData();
-  }, [user, currentTab]);
+  }, [user, currentTab, isLoading]);
 
   const handleTestButtonClick = () => {
     setUser(cur => {
       let memberId;
-      if (cur.memberId === 1) {
-        memberId = 2;
+      if (cur.memberId === 2) {
+        memberId = 3;
       } else {
-        memberId = 1;
+        memberId = 2;
       }
       return Object.assign({}, cur, {
         memberId,
@@ -50,12 +58,15 @@ const Profile = () => {
   return (
     <>
       <BackGroundImage />
-      {isLoading || !member ? (
-        'Loading...'
-      ) : (
+      {isLoading && (
+        <LoaderContainer>
+          <Loader></Loader>
+        </LoaderContainer>
+      )}
+      {!isLoading && member && (
         <Container>
           <TestButton onClick={handleTestButtonClick}>로그인 테스트</TestButton>
-          <MemberInfo user={user} member={member} />
+          <MemberInfo user={user} member={member} setMember={setMember} />
           <MemberContent
             user={user}
             member={member}
@@ -80,6 +91,16 @@ const Container = styled.div`
   }
 `;
 
+const LoaderContainer = styled.div`
+  z-index: 2;
+  width: 100%;
+  top: 50vh;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
 const TestButton = styled.button`
   width: 100px;
   height: 50px;
@@ -88,4 +109,5 @@ const TestButton = styled.button`
   left: 100px;
   z-index: 10;
 `;
+
 export default Profile;

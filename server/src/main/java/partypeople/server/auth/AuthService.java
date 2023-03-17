@@ -17,6 +17,6 @@ public class AuthService {
     private final RedisTemplate<String, String> redisTemplate;
     @Async
     public void redisSetRefreshToken(Long refreshTokenExp,String refreshToken,String subject) {
-        redisTemplate.opsForValue().set(refreshToken, subject, refreshTokenExp, TimeUnit.MILLISECONDS);
+        redisTemplate.opsForValue().set(subject, refreshToken, refreshTokenExp, TimeUnit.MILLISECONDS);
     }
 }

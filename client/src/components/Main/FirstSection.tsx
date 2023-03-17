@@ -5,7 +5,7 @@ import 'slick-carousel/slick/slick-theme.css';
 import { SectionWrapper } from './SectionWrapper';
 import FirstTitle from './FirstTitle';
 import { useEffect, useState } from 'react';
-import ImageFilter from './ImageFilter';
+import ImageFilter from '../../styles/ImageFilter';
 import { useNavigate } from 'react-router-dom';
 
 export const imgLinks = [
@@ -29,6 +29,7 @@ const FirstSection = () => {
     pauseOnFocus: true,
     pauseOnHover: true,
     draggable: false,
+    arrows: false,
   };
 
   const handleButtonClick = () => {
@@ -75,18 +76,9 @@ const FirstWrapper = styled(SectionWrapper)`
     width: 100%;
     overflow: hidden;
   }
-  .slick-prev {
-    left: 20px;
-    z-index: 3;
-  }
-  .slick-next {
-    right: 20px;
-    z-index: 3;
-  }
   .slick-dots {
     position: absolute;
     bottom: 30px;
-    z-index: 3;
   }
   .slick-dots li button:before {
     color: #fff;

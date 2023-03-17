@@ -1,11 +1,18 @@
-import { useState } from 'react';
+import { Dispatch, SetStateAction } from 'react';
 import styled from 'styled-components';
-import ThemeModal from './ThemeModal';
 
 type Props = {
   setIsTendencyModal: (newValue: boolean) => void;
+  setIsThemeModal: (newValue: boolean) => void;
+  selectedTendencies: string[];
+  setSelectedTendencies: Dispatch<SetStateAction<string[]>>;
 };
-const TendencyModal = ({ setIsTendencyModal }: Props) => {
+const TendencyModal = ({
+  setIsTendencyModal,
+  setIsThemeModal,
+  selectedTendencies,
+  setSelectedTendencies,
+}: Props) => {
   const handleModalClose = () => {
     setIsTendencyModal(false);
   };
@@ -23,17 +30,19 @@ const TendencyModal = ({ setIsTendencyModal }: Props) => {
     '휴양',
   ];
 
-  // 성향을 2개 골라야 다음 모달로 넘어가도록
-  const [isThemeModal, setIsThemeModal] = useState(false);
+  // 성향을 1개 골라야 다음 모달로 넘어가도록
+
   const handleTendencySubmit = () => {
     if (selectedTendencies.length >= 1) {
-      setIsThemeModal(!isThemeModal);
+      setIsThemeModal(true);
+      setIsTendencyModal(false);
     } else {
       alert('하나 이상 선택해주세요!');
     }
   };
 
-  const [selectedTendencies, setSelectedTendencies] = useState<string[]>([]);
+  // 고른 성향 배열 안에 문자열 형태
+
   const handleCheckboxClick = (event: React.MouseEvent<HTMLInputElement>) => {
     const target = event.currentTarget;
     const option = target.value;
@@ -82,14 +91,6 @@ const TendencyModal = ({ setIsTendencyModal }: Props) => {
           <button onClick={handleTendencySubmit}>다음</button>
         </div>
       </div>
-      {isThemeModal ? (
-        <div className="overlay">
-          <ThemeModal
-            setIsTendencyModal={setIsTendencyModal}
-            setIsThemeModal={setIsThemeModal}
-          />
-        </div>
-      ) : null}
     </TendencyBox>
   );
 };
@@ -108,6 +109,7 @@ const TendencyBox = styled.div`
   transform: translate(50%, -50%);
   flex-direction: column;
   font-size: 2rem;
+  z-index: 50;
   @media screen and (max-width: 768px) {
     width: 450px;
     height: 720px;
@@ -206,10 +208,12 @@ const TendencyBox = styled.div`
       @media screen and (max-width: 768px) {
         width: 80px;
         height: 30px;
+        font-size: 0.8rem;
       }
       @media screen and (max-width: 576px) {
-        width: 60px;
+        width: 70px;
         height: 25px;
+        font-size: 0.6rem;
       }
     }
   }

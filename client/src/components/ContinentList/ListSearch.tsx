@@ -1,29 +1,112 @@
 import styled from 'styled-components';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaCalendarDay } from 'react-icons/fa';
-import { IoSearch } from 'react-icons/io5';
 import { HiOutlineX } from 'react-icons/hi';
+import {
+  ListSearchProps,
+  SearchOption,
+  SearchQueryString,
+} from 'interfaces/ContentList.interface';
+import customAxios from 'api/customAxios';
+import { useParams } from 'react-router-dom';
+import { getDateString } from 'utils/getDateString';
+import { StyledButton } from 'styles/StyledButton';
 
-const ListSearch = () => {
-  const [startDate, setStartDate] = useState(new Date());
-  const [inputValue, setInputValue] = useState<string>('');
+const ListSearch = ({
+  searchDatas,
+  setSearchDatas,
+  size,
+  searchPage,
+  isSearch,
+  setIsSearch,
+  setIsLast,
+  setSearchPage,
+  setIsLoading,
+  setDatas,
+}: ListSearchProps) => {
+  const { countryCode } = useParams();
+  const [date, setDate] = useState<Date>(new Date());
+  const [keyword, setKeyword] = useState<string>('');
+  const [condition, setCondition] = useState<string>('entire');
 
   const handleDateChange = (date: Date) => {
-    setStartDate(date);
+    setDate(date);
   };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
-    setInputValue(value);
+    setKeyword(value);
   };
 
   const handleClearClick = () => {
-    setInputValue('');
+    setKeyword('');
   };
 
-  const searchOptions: string[] = ['전체', '태그', '제목', '내용', '장소'];
+  const handleChangeOption = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const { value } = event.target;
+    setCondition(value);
+  };
+
+  const handleSearchClick = (page: number) => {
+    if (isSearch) {
+      // ! 이미 검색된 상태에서 검색 버튼을 누른 경우
+      setSearchDatas([]);
+      setSearchPage(1);
+    }
+    setIsSearch(true);
+    getSearchData(page);
+  };
+
+  const getSearchData = async (page: number) => {
+    setIsLoading(true);
+    const params: SearchQueryString = {
+      page,
+      size,
+      sortBy: 'createdAt',
+      sortDir: 'DESC',
+      condition,
+      keyword,
+      date: getDateString(date).fullDateStr,
+      nationCode: countryCode,
+    };
+    await customAxios.get('/companions/search', { params }).then(resp => {
+      setSearchDatas(cur => {
+        if (resp.data.pageInfo.totalPages <= resp.data.pageInfo.page) {
+          // ! 마지막 페이지일 경우
+          setIsLast(true);
+        }
+        setIsLoading(false);
+        if (cur !== undefined) {
+          return [...cur, ...resp.data.data];
+        }
+        return resp.data.data;
+      });
+    });
+  };
+
+  useEffect(() => {
+    if (searchDatas !== undefined) {
+      getSearchData(searchPage);
+    }
+  }, [searchPage]);
+
+  const handleClearSearch = () => {
+    setSearchDatas(undefined);
+    setKeyword('');
+    setDate(new Date());
+    setIsSearch(false);
+    setDatas([]);
+  };
+
+  const searchOptions: SearchOption[] = [
+    { value: '전체', field: 'entire' },
+    { value: '태그', field: 'tags' },
+    { value: '제목', field: 'title' },
+    { value: '내용', field: 'content' },
+    { value: '장소', field: 'address' },
+  ];
 
   return (
     <SearchBox>
@@ -32,30 +115,36 @@ const ListSearch = () => {
           <FaCalendarDay color="#fff" size={22} />
         </label>
         <DatePicker
-          selected={startDate}
+          selected={date}
           onChange={handleDateChange}
-          selectsStart
           id="datePicker"
         />
       </DateSearch>
       <Stroke></Stroke>
       <KeywordSearch>
-        <select>
+        <select onChange={handleChangeOption}>
           {searchOptions.map((item, idx) => (
-            <option key={idx}>{item}</option>
+            <option key={idx} value={item.field}>
+              {item.value}
+            </option>
           ))}
         </select>
         <SearchInput>
-          <input type="text" value={inputValue} onChange={handleInputChange} />
-          {inputValue.length !== 0 && (
+          <input type="text" value={keyword} onChange={handleInputChange} />
+          {keyword.length !== 0 && (
             <span className="clear" onClick={handleClearClick}>
               <HiOutlineX size={19} />
             </span>
           )}
-          <span>
-            <IoSearch size={21} />
-          </span>
         </SearchInput>
+        <Buttons>
+          <SearchButton onClick={() => handleSearchClick(searchPage)}>
+            검색
+          </SearchButton>
+          {isSearch && (
+            <ClearButton onClick={handleClearSearch}>초기화</ClearButton>
+          )}
+        </Buttons>
       </KeywordSearch>
     </SearchBox>
   );
@@ -75,7 +164,7 @@ const SearchBox = styled.section`
   @media screen and (max-width: 768px) {
     flex-direction: column;
     height: fit-content;
-    padding: 10px 30px;
+    padding: 10px;
     gap: 5px;
     top: 34vh;
     align-items: flex-start;
@@ -86,6 +175,7 @@ const DateSearch = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 6;
   > label {
     display: flex;
     align-items: center;
@@ -120,9 +210,11 @@ const Stroke = styled.div`
 `;
 
 const KeywordSearch = styled.div`
+  z-index: 5;
   width: 70%;
   display: flex;
   align-items: center;
+  gap: 10px;
   justify-content: space-between;
   > select {
     width: 90px;
@@ -153,7 +245,7 @@ const KeywordSearch = styled.div`
 `;
 
 const SearchInput = styled.div`
-  width: calc(100% - 100px);
+  flex: 1;
   border-radius: 30px;
   border: 1px solid #fff;
   display: flex;
@@ -173,7 +265,7 @@ const SearchInput = styled.div`
   }
 
   .clear {
-    right: 35px;
+    right: 10px;
     opacity: 0.7;
   }
 
@@ -194,10 +286,44 @@ const SearchInput = styled.div`
       box-shadow: 0px 0px 10px #fff;
     }
   }
+`;
 
-  @media screen and (max-width: 576px) {
-    width: calc(100% - 80px);
+const Buttons = styled.div`
+  height: 100%;
+  display: flex;
+  gap: 10px;
+
+  @media screen and (max-width: 768px) {
+    position: absolute;
+    right: 10px;
+    top: 15px;
+    height: fit-content;
   }
+`;
+
+const SearchButton = styled(StyledButton)`
+  height: 100%;
+  background-color: #fff;
+  color: #222;
+  padding: 5px 20px;
+  font-size: 1rem;
+
+  :hover,
+  :active {
+    background-color: #feb35c;
+    color: #fff;
+    box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.7);
+  }
+
+  @media screen and (max-width: 768px) {
+    font-size: 0.9rem;
+    padding: 5px 10px;
+  }
+`;
+
+const ClearButton = styled(SearchButton)`
+  background-color: #aaa;
+  color: #fff;
 `;
 
 export default ListSearch;

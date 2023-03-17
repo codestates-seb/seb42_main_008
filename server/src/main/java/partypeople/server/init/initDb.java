@@ -121,6 +121,39 @@ public class initDb {
             );
             List<Tag> tags3 = tagService.findTagsByNames(post3.getTags());
             companionService.createCompanion(companionMapper.companionPostDtoToCompanion(post3, tags3));
+
+            CompanionDto.Post post4 = new CompanionDto.Post(
+                    "일본 유니버셜 같이 가요",
+                    "일본 유니버셜 가고싶은데 혼자라 부끄러워요ㅠ 같이 가실 분 구함~",
+                    LocalDate.of(2023, 3, 20),
+                    "일본 유니버셜스튜디오",
+                    123.45678,
+                    123.12345,
+                    "일본",
+                    "jpn",
+                    2,
+                    new ArrayList<>(Arrays.asList("내향", "테마파크")),
+                    2L
+            );
+            List<Tag> tags4 = tagService.findTagsByNames(post1.getTags());
+            companionService.createCompanion(companionMapper.companionPostDtoToCompanion(post1, tags1));
+
+
+            CompanionDto.Post post5 = new CompanionDto.Post(
+                    "일본 유니버셜 같이 가요",
+                    "일본 유니버셜 가고싶은데 혼자라 부끄러워요ㅠ 같이 가실 분 구함~",
+                    LocalDate.of(2023, 3, 20),
+                    "일본 유니버셜스튜디오",
+                    123.45678,
+                    123.12345,
+                    "일본",
+                    "jpn",
+                    2,
+                    new ArrayList<>(Arrays.asList("내향", "테마파크")),
+                    2L
+            );
+            List<Tag> tags5 = tagService.findTagsByNames(post1.getTags());
+            companionService.createCompanion(companionMapper.companionPostDtoToCompanion(post1, tags1));
         }
 
         private Member createMember(String email, String nickname, String password) {

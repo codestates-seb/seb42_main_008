@@ -1,5 +1,5 @@
 import { imgLinks } from 'components/Main/FirstSection';
-import ImageFilter from 'components/Main/ImageFilter';
+import ImageFilter from 'styles/ImageFilter';
 import styled from 'styled-components';
 
 const BackGroundImage = () => {

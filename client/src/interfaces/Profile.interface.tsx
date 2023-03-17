@@ -1,21 +1,25 @@
-// * 회원 정보
-interface MemberProfile {
+// ! 전역 유저 정보
+interface LoginUser {
   memberId: number;
-  email: string;
   nickname: string;
+  email: string;
   profile: string;
-  content: string;
+  memberStatus: string;
   gender: string;
+}
+
+// * 회원 정보
+interface MemberProfile extends LoginUser {
+  content: string;
   score: number;
   followerCount: number;
   followingCount: number;
-  memberStatus: string;
   followerStatus: boolean;
 }
 
 // * 신청/참여/작성한 글
 interface MyCompanion {
-  compainonId: number;
+  companionId: number;
   address: string;
   lat: number;
   lng: number;
@@ -31,14 +35,9 @@ interface Review {
 
 // * 팔로워, 팔로잉
 interface Follow {
-  memberID: number;
+  nickname: string;
+  memberId: number;
   profile: string;
-  nickname: string;
-}
-
-// * 닉네임 중복체크용 body 데이터
-interface Nickname {
-  nickname: string;
 }
 
 // * 프로필 수정 body 데이터
@@ -60,19 +59,24 @@ interface FollowRequest {
 interface MemberInfoProps {
   user: LoginUser;
   member: MemberProfile;
+  setMember: React.Dispatch<React.SetStateAction<MemberProfile | null>>;
+}
+
+// * MemberSettings 컴포넌트 props
+interface MemberSettingsProps {
+  member: MemberProfile;
+  setCurrentTab: React.Dispatch<React.SetStateAction<number>>;
 }
 
 // * MemberContent 컴포넌트 props
-interface MemberContentProps {
+interface MemberContentProps extends MemberSettingsProps {
   user: LoginUser;
-  member: MemberProfile;
   currentTab: number;
-  setCurrentTab: React.Dispatch<React.SetStateAction<number>>;
 }
 
 // * MemberCompanions 컴포넌트 props
 interface MemberCompanionsProps {
-  member: MemberProfile | null;
+  member: MemberProfile;
   user: LoginUser;
 }
 
@@ -83,22 +87,17 @@ interface ListComponentProps {
   titleBody: string;
 }
 
-// * MemberSettings 컴포넌트 props
-interface MemberSettingsProps {
-  member: MemberProfile | null;
-  setCurrentTab: React.Dispatch<React.SetStateAction<number>>;
-}
-
 // * 팔로워/팔로잉 모달 컴포넌트 props
 interface FollowModalProps {
+  member: MemberProfile;
   setIsShowModal: React.Dispatch<React.SetStateAction<boolean>>;
   isFollower: boolean;
 }
 
 // * 회원정보 수정 컴포넌트 props
 interface TextEditProps {
+  member: MemberProfile;
   setMemberData: React.Dispatch<any>;
-  member: MemberProfile | null;
   validation: Validations;
   setValidation: React.Dispatch<React.SetStateAction<Validations>>;
 }
@@ -113,14 +112,9 @@ interface Validations {
   nicknameUnique?: boolean | undefined;
 }
 
-// ! 전역 유저 정보
-interface LoginUser {
-  memberId: number;
-  nickname: string;
-  email: string;
-  profile: string;
-  memberStatus: string;
-  gender: string;
+// * 회원탈퇴 모달 Props
+interface AccountDeleteModalProps {
+  setIsShowDeleteModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export type {
@@ -128,7 +122,6 @@ export type {
   MyCompanion,
   Review,
   Follow,
-  Nickname,
   ProfileEdit,
   FollowRequest,
   MemberInfoProps,
@@ -140,4 +133,5 @@ export type {
   TextEditProps,
   Validations,
   LoginUser,
+  AccountDeleteModalProps,
 };

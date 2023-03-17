@@ -1,24 +1,75 @@
+import axios from 'axios';
+import { useState } from 'react';
 import { FcGoogle } from 'react-icons/fc';
+import { useNavigate } from 'react-router-dom';
+import { useRecoilState, useSetRecoilState } from 'recoil';
+import {
+  loginState,
+  userDecodeToken,
+  userInfo,
+  userToken,
+} from 'states/userState';
 import styled from 'styled-components';
+import Swal from 'sweetalert2';
 
 const Login = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const [isLogin, setIsLogin] = useRecoilState(loginState);
+  const [token, setToken] = useRecoilState(userToken);
+  const [decodedToken, setDecodedToken] = useRecoilState(userDecodeToken);
+  const setUser = useSetRecoilState(userInfo);
+
+  const navigate = useNavigate();
+
+  const handleChangeEmail = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(event.target.value);
+  };
+  const handleChangePw = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(event.target.value);
+  };
+
+  const handleSubmtiLogin = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    await axios
+      .post(`${process.env.REACT_APP_TEST_SERVER}/members/login`, {
+        email,
+        password,
+      })
+      .then(res => {
+        setToken(res.headers.authorization.split(' ')[1].split('.')[1]);
+        setDecodedToken(window.atob(token));
+        return JSON.parse(decodedToken);
+      })
+      .then(res => {
+        setUser(res);
+        setIsLogin(!isLogin);
+        navigate('/');
+      })
+      .catch(error => {
+        Swal.fire({
+          icon: 'error',
+          text: '양식을 다시 확인해주세요',
+        });
+        console.log(error);
+      });
+  };
   return (
     <Container>
       <h1>PartyPeople</h1>
       <LoginBox>
         <h2>로그인</h2>
-        <form>
+        <form onSubmit={handleSubmtiLogin}>
           <div className="group">
             <label htmlFor="email">이메일</label>
-            <input type="text" id="email"></input>
+            <input type="text" id="email" onChange={handleChangeEmail}></input>
           </div>
           <div className="group">
             <label htmlFor="pw">비밀번호</label>
-            <input type="text" id="pw"></input>
+            <input type="password" id="pw" onChange={handleChangePw}></input>
           </div>
-          <button id="btn-login" type="submit">
-            로그인
-          </button>
+          <button id="btn-login">로그인</button>
         </form>
         <OauthLoginBox>
           <div className="divider">

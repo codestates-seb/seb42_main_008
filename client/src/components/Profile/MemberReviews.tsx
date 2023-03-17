@@ -5,6 +5,7 @@ import { Review } from 'interfaces/Profile.interface';
 import Swal from 'sweetalert2';
 import { useEffect, useState } from 'react';
 import customAxios from 'api/customAxios';
+import { useParams } from 'react-router-dom';
 
 interface EmojiProps {
   score: number;
@@ -20,6 +21,7 @@ const Emoji = ({ score }: EmojiProps) => {
 };
 
 const MemberReviews = () => {
+  const { memberId } = useParams();
   const [reviews, setReviews] = useState<Review[] | []>([]);
 
   const handleSirenClick = () => {
@@ -31,12 +33,12 @@ const MemberReviews = () => {
 
   const getReviewData = async () => {
     await customAxios
-      .get(`/reviews`)
+      .get(`/members/${memberId}/reviews`)
       .then(resp => {
-        setReviews(resp.data);
+        setReviews(resp.data.data);
       })
-      .catch(err => {
-        console.log(err);
+      .catch(error => {
+        console.log(error);
       });
   };
 
@@ -45,23 +47,27 @@ const MemberReviews = () => {
   }, []);
 
   return (
-    <ReviewWrapper>
-      {reviews.length !== 0 ? (
-        reviews.map((item, idx) => (
-          <ReviewItem key={idx}>
-            <p>{item.content}</p>
-            <div className="icons">
-              <Emoji score={item.score} />
-              <span className="siren" onClick={handleSirenClick}>
-                <GiSiren size={27} color="red" />
-              </span>
-            </div>
-          </ReviewItem>
-        ))
-      ) : (
-        <p>아직 작성된 리뷰가 없습니다!</p>
+    <>
+      {reviews && (
+        <ReviewWrapper>
+          {reviews.length !== 0 ? (
+            reviews.map((item, idx) => (
+              <ReviewItem key={idx}>
+                <p>{item.content}</p>
+                <div className="icons">
+                  <Emoji score={item.score} />
+                  <span className="siren" onClick={handleSirenClick}>
+                    <GiSiren size={27} color="red" />
+                  </span>
+                </div>
+              </ReviewItem>
+            ))
+          ) : (
+            <p>아직 작성된 리뷰가 없습니다!</p>
+          )}
+        </ReviewWrapper>
       )}
-    </ReviewWrapper>
+    </>
   );
 };
 

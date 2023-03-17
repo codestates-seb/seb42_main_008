@@ -1,51 +1,20 @@
 import styled from 'styled-components';
-import { ListItemProps, SortBy } from 'interfaces/ContentList.interface';
+import { ListItemProps } from 'interfaces/ContentList.interface';
 import { getDateString } from 'utils/getDateString';
 import { useNavigate } from 'react-router-dom';
 import { FaMapMarkerAlt } from 'react-icons/fa';
-import React, { useState } from 'react';
 
 const ListItems = ({ listData }: ListItemProps) => {
   const navigate = useNavigate();
-  const [sortData, setSortData] = useState<SortBy>({
-    value: '작성날짜 (최신순)',
-    sortBy: 'createdAt',
-    sortDir: 'DESC',
-  });
 
   const handleClickItem = (id: number) => {
     navigate(`/companions/${id}`);
   };
 
-  const sortByArr: SortBy[] = [
-    { value: '작성날짜 (최신순)', sortBy: 'createdAt', sortDir: 'DESC' },
-    { value: '작성날짜 (오래된순)', sortBy: 'createdAt', sortDir: 'ASC' },
-  ];
-
-  const handleSortChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const { value } = event.target;
-    const findIdx = sortByArr.findIndex(item => item.value === value);
-    setSortData({ ...sortByArr[findIdx] });
-    console.log(sortData);
-  };
-
   return (
     <ItemListsContainer>
-      <Sort>
-        <label htmlFor="sort">정렬 </label>
-        <select id="sort" onChange={handleSortChange}>
-          {sortByArr.map((item, idx) => (
-            <option key={idx} defaultChecked={idx === 0}>
-              {item.value}
-            </option>
-          ))}
-        </select>
-      </Sort>
-      {listData.map(item => (
-        <ListItem
-          key={item.companionId}
-          onClick={() => handleClickItem(item.companionId)}
-        >
+      {listData.map((item, idx) => (
+        <ListItem key={idx} onClick={() => handleClickItem(item.companionId)}>
           <h1>{getDateString(item.date).shortDateStr}</h1>
           <Address>
             <span>
@@ -71,8 +40,9 @@ const ListItems = ({ listData }: ListItemProps) => {
 const ItemListsContainer = styled.section`
   width: 80%;
   height: fit-content;
+  min-height: calc(100% - 40vh);
   padding: 50px 20px;
-  padding-top: 110px;
+  padding-top: 70px;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 30px;
@@ -84,7 +54,9 @@ const ItemListsContainer = styled.section`
   }
   @media screen and (max-width: 922px) {
     grid-template-columns: repeat(2, 1fr);
-    padding-top: 140px;
+  }
+  @media screen and (max-width: 768px) {
+    padding-top: 100px;
   }
   @media screen and (max-width: 620px) {
     grid-template-columns: repeat(1, 1fr);
@@ -194,30 +166,6 @@ const DoneItem = styled.div`
   width: 100%;
   height: 100%;
   z-index: 1;
-`;
-
-const Sort = styled.div`
-  position: absolute;
-  top: 55px;
-  right: 30px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 0.9rem;
-
-  > select {
-    :focus {
-      outline: none;
-    }
-    padding: 3px;
-    border-radius: 20px;
-    border: 1px solid #888;
-    color: #444;
-  }
-
-  @media screen and (max-width: 768px) {
-    top: 85px;
-  }
 `;
 
 export default ListItems;

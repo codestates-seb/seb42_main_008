@@ -27,6 +27,7 @@ import partypeople.server.auth.utils.CustomAuthorityUtils;
 import partypeople.server.member.service.MemberService;
 
 import java.util.Arrays;
+import java.util.logging.Filter;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -69,7 +70,7 @@ public class SecurityConfiguration {
             .apply(new CustomFilterConfigurer())
             .and()
             .authorizeHttpRequests(authorize -> authorize
-                .antMatchers(HttpMethod.PATCH, "/members/*").hasRole("USER")
+//                .antMatchers(HttpMethod.PATCH, "/members/*").hasRole("USER")
                 .anyRequest().permitAll()
             );
 //            .oauth2Login(oAuth2 -> oAuth2
@@ -106,9 +107,10 @@ public class SecurityConfiguration {
         configuration.setAllowCredentials(true);
         configuration.setAllowedOriginPatterns(Arrays.asList("*"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
-        configuration.addExposedHeader("*");
+//        configuration.addExposedHeader("*");
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PATCH", "DELETE", "OPTIONS"));
-
+        configuration.addExposedHeader("Authorization");
+        configuration.addExposedHeader("Refresh");
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
