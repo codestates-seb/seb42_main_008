@@ -75,7 +75,6 @@ const ListSearch = ({
       setSearchDatas(cur => {
         if (resp.data.pageInfo.totalPages <= resp.data.pageInfo.page) {
           // ! 마지막 페이지일 경우
-          console.log('last');
           setIsLast(true);
         }
         setIsLoading(false);

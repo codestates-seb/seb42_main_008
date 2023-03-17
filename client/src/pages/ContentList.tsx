@@ -68,11 +68,8 @@ const ContentList = () => {
         setDatas([...datas, ...resp.data.data]);
         setIsLoading(false);
         preventRef.current = true;
-        console.log(resp.data);
 
         if (resp.data.pageInfo.totalPages <= resp.data.pageInfo.page) {
-          // endRef.current = true;
-          console.log('last!!!!!');
           setIsLast(true);
         }
       });
@@ -80,7 +77,6 @@ const ContentList = () => {
 
   const obsHandler = (entries: any) => {
     const target = entries[0];
-    console.log('observer');
 
     if (!isLast && target.isIntersecting && preventRef.current) {
       // ! 옵저버를 만났을 때 마지막 페이지가 아니고, 중복 실행이 아닐 경우
