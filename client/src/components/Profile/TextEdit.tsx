@@ -24,10 +24,17 @@ const TextEdit = ({
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
     setValue:
       | React.Dispatch<React.SetStateAction<string | undefined>>
-      | React.Dispatch<React.SetStateAction<string>>
+      | React.Dispatch<React.SetStateAction<string>>,
+    type: string
   ) => {
     const { value } = event.target;
     setValue(value);
+    if (type === 'nickname') {
+      setValidation(cur => ({
+        ...cur,
+        nicknameUnique: false,
+      }));
+    }
   };
 
   const handleUniqueCheck = async () => {
@@ -76,7 +83,7 @@ const TextEdit = ({
           <input
             type="text"
             value={nickname}
-            onChange={event => handleChange(event, setNickname)}
+            onChange={event => handleChange(event, setNickname, 'nickname')}
           />
           <UniqueCheckButton onClick={handleUniqueCheck}>
             중복확인
@@ -107,7 +114,7 @@ const TextEdit = ({
         </div>
         <textarea
           value={content}
-          onChange={event => handleChange(event, setContent)}
+          onChange={event => handleChange(event, setContent, 'content')}
         />
         {!validation.contentValid && content?.length !== 0 && (
           <ValidMessage>
@@ -123,7 +130,7 @@ const TextEdit = ({
           <input
             type="password"
             value={password}
-            onChange={event => handleChange(event, setPassword)}
+            onChange={event => handleChange(event, setPassword, 'password')}
           />
           {!validation.passwordValid && (
             <ValidMessage>
@@ -139,7 +146,9 @@ const TextEdit = ({
           <input
             type="password"
             value={passwordCheck}
-            onChange={event => handleChange(event, setPasswordCheck)}
+            onChange={event =>
+              handleChange(event, setPasswordCheck, 'passwordCheck')
+            }
           />
           {!validation.passwordCheckValid && (
             <ValidMessage>비밀번호가 같지 않습니다!</ValidMessage>
