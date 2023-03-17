@@ -6,19 +6,17 @@ import Participants from 'components/ContentDetail/Participants';
 import { detailInfo } from 'interfaces/ContentDetail.interface';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-// import SearchMap from 'components/ContentDetail/SearchMap';
-
 import styled from 'styled-components';
 
 const ContentDetail = () => {
   const params = useParams();
-  const { companionId } = params;
+  const { contentId } = params;
 
   const [detail, setDetail] = useState<detailInfo>({
     companionId: 0,
     memberId: 0,
     nickname: '',
-    score: null,
+    score: 0,
     title: '',
     content: '',
     date: '',
@@ -32,16 +30,17 @@ const ContentDetail = () => {
 
   useEffect(() => {
     axios
-      .get(`${process.env.REACT_APP_TEST_SERVER}/companions/${companionId}`)
+      .get(`${process.env.REACT_APP_TEST_SERVER}/companions/${contentId}`)
       .then(res => {
         setDetail(res.data);
       })
       .catch(error => {
         console.log(error);
       });
-  }, []);
+  }, [detail]);
 
   console.log(detail);
+  console.log(params);
 
   return (
     <Container>
@@ -64,7 +63,7 @@ const ContentDetail = () => {
           </div>
         </LeftBox>
         <RightBox>
-          <ContentWriter detail={detail} />
+          <ContentWriter />
           {/* 여행완료 ? Participants : Companion */}
           {/* <Companion /> */}
           <Participants />

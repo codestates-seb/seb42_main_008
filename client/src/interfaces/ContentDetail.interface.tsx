@@ -33,14 +33,14 @@ interface detailInfo {
   companionId: number;
   memberId: number;
   nickname: string;
-  score: null;
+  score: number;
   title: string;
   content: string;
   date: string;
   address: string;
   lat: number;
   lng: number;
-  tags: [];
+  tags: string[];
   createdAt: string;
   companionStatus: boolean;
 }

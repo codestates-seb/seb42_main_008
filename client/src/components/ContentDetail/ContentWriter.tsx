@@ -1,10 +1,9 @@
 import axios from 'axios';
-import { detailProps } from 'interfaces/ContentDetail.interface';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { getScoreIcon } from 'utils/getScoreIcon';
 
-const ContentWriter = ({ detail }: detailProps) => {
+const ContentWriter = () => {
   // const params = useParams();
   // const { id } = params;
   // 클릭 시 수정페이지로 이동 추가
@@ -37,7 +36,7 @@ const ContentWriter = ({ detail }: detailProps) => {
   // };
   const handleDelete = async () => {
     await axios
-      .delete(`http://localhost:4000/companions/${detail.companionId}`)
+      .delete(`${process.env.REACT_APP_TEST_SERVER}/companions`)
       .then(() => {
         console.log('delete!');
       })
@@ -52,7 +51,7 @@ const ContentWriter = ({ detail }: detailProps) => {
           <div>프로필 사진 자리</div>
         </div>
         <div className="info-wrapper">
-          <div id="nickname">{detail.nickname}</div>
+          <div id="nickname">이기구왕</div>
           <div id="battery">
             <img src={getScoreIcon(93)} alt="score" />
           </div>
