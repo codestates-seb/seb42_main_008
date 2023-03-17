@@ -60,6 +60,8 @@ interface ListSearchProps {
   isSearch: boolean;
   setIsSearch: React.Dispatch<React.SetStateAction<boolean>>;
   setIsLast: React.Dispatch<React.SetStateAction<boolean>>;
+  setSearchPage: React.Dispatch<React.SetStateAction<number>>;
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 // * 정렬 기준
