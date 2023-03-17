@@ -2,7 +2,7 @@ import axios from 'axios';
 import { ModalBG, ModalContent } from 'components/Profile/ModalStyles';
 import { SearchOption } from 'interfaces/ContentList.interface';
 import React, { useState } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 import { userInfo } from 'states/userState';
 import styled from 'styled-components';
 import { StyledButton } from 'styles/StyledButton';
@@ -18,7 +18,7 @@ const GenderSelect = ({ setIsShowModal }: Props) => {
     value: '',
     field: '',
   });
-  const loginUser = useRecoilValue(userInfo);
+  const [loginUser, setLoginUser] = useRecoilState(userInfo);
 
   const handleChangeGender = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
@@ -54,6 +54,10 @@ const GenderSelect = ({ setIsShowModal }: Props) => {
           })
           .then(() => {
             setIsShowModal(false);
+            setLoginUser({
+              ...loginUser,
+              gender: gender.value,
+            });
           });
       }
     });
