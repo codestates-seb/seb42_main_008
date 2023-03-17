@@ -1,10 +1,12 @@
 import styled from 'styled-components';
 import ImageFilter from 'styles/ImageFilter';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import countries from 'assets/countries.json';
 import { CountryData, CountryNames } from 'interfaces/ContentList.interface';
+import { StyledButton } from 'styles/StyledButton';
 
 const ListTitle = () => {
+  const navigate = useNavigate();
   const { continent, countryCode } = useParams();
   const countriesData: CountryData[] = countries[continent as keyof object];
   const countryName = countriesData.filter(item => item.code === countryCode)[0]
@@ -12,6 +14,15 @@ const ListTitle = () => {
   const names: CountryNames = {
     en: countryName.split('(')[1].slice(0, -1),
     ko: countryName.split('(')[0].slice(0, -1),
+  };
+
+  const handleButtonClick = () => {
+    navigate('/add', {
+      state: {
+        continent,
+        countryCode,
+      },
+    });
   };
 
   return (
@@ -25,7 +36,9 @@ const ListTitle = () => {
     >
       <TitleText>
         <h1>{names.en.toUpperCase()}</h1>
-        <h2>{names.ko}</h2>
+        <AddContentbutton onClick={handleButtonClick}>
+          {names.ko}에서의 동행 찾기
+        </AddContentbutton>
       </TitleText>
       <Filter></Filter>
     </ListTitleWrapper>
@@ -75,6 +88,15 @@ const TitleText = styled.div`
     > h1 {
       font-size: 2.3rem;
     }
+  }
+`;
+
+const AddContentbutton = styled(StyledButton)`
+  background-color: #fff;
+  color: #222;
+  :hover {
+    background-color: #feb35c;
+    color: #fff;
   }
 `;
 
