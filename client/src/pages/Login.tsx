@@ -1,8 +1,8 @@
 import axios from 'axios';
 import { useState } from 'react';
 import { FcGoogle } from 'react-icons/fc';
-import { useNavigate } from 'react-router-dom';
-import { useRecoilState } from 'recoil';
+// import { useNavigate } from 'react-router-dom';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { loginState, userInfo, userToken } from 'states/userState';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
@@ -13,21 +13,23 @@ const Login = () => {
 
   const [isLogin, setIsLogin] = useRecoilState(loginState);
   const [token, setToken] = useRecoilState(userToken);
-  const [decodedToken, setDecodedToken] = useRecoilState(userInfo);
+  const setDecodedToken = useSetRecoilState(userInfo);
+  const userId = useRecoilValue(userInfo);
 
   // const userInfo = {
+  //   gender: 'NONE',
+  //   profile: 'https://source.boringavatars.com/beam',
   //   roles: ['USER'],
-  //   gender: '',
-  //   nickname: '',
-  //   memberStatus: '',
-  //   email: '',
-  //   memberId: 0,
-  //   sub: '',
-  //   iat: 0,
-  //   exp: 0,
+  //   nickname: 'aa',
+  //   memberStatus: 'MEMBER_ACTIVE',
+  //   email: 'aaaa@gg.com',
+  //   memberId: 8,
+  //   sub: 'aaaa@gg.com',
+  //   iat: 1679033173,
+  //   exp: 1679033773,
   // };
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const handleChangeEmail = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
@@ -46,16 +48,14 @@ const Login = () => {
       .then(res => {
         setToken(res.headers.authorization.split(' ')[1].split('.')[1]);
         setIsLogin(!isLogin);
-        console.log(isLogin);
         setDecodedToken(window.atob(token));
-        console.log(token);
-        console.log(decodedToken);
-        navigate('/');
+        console.log(userId.memberId);
+        // navigate('/');
       })
       .catch(error => {
         Swal.fire({
           icon: 'error',
-          text: '입력해주세요',
+          text: '양식을 다시 확인해주세요',
         });
         console.log(error);
       });
