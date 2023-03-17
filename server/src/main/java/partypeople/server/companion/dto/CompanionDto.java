@@ -1,9 +1,6 @@
 package partypeople.server.companion.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotBlank;
@@ -83,6 +80,8 @@ public class CompanionDto {
 
     @Getter
     @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
     public static class Response {
         private Long companionId;
 
@@ -99,6 +98,7 @@ public class CompanionDto {
         @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
         private LocalDate date;
 
+        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
         private LocalDate createdAt;
 
         private String address;
