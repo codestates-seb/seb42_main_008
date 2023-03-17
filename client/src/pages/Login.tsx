@@ -2,11 +2,31 @@ import axios from 'axios';
 import { useState } from 'react';
 import { FcGoogle } from 'react-icons/fc';
 import { useNavigate } from 'react-router-dom';
+import { useRecoilState } from 'recoil';
+import { loginState, userInfo, userToken } from 'states/userState';
 import styled from 'styled-components';
+import Swal from 'sweetalert2';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  const [isLogin, setIsLogin] = useRecoilState(loginState);
+  const [token, setToken] = useRecoilState(userToken);
+  const [decodedToken, setDecodedToken] = useRecoilState(userInfo);
+
+  // const userInfo = {
+  //   roles: ['USER'],
+  //   gender: '',
+  //   nickname: '',
+  //   memberStatus: '',
+  //   email: '',
+  //   memberId: 0,
+  //   sub: '',
+  //   iat: 0,
+  //   exp: 0,
+  // };
+
   const navigate = useNavigate();
 
   const handleChangeEmail = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -24,13 +44,19 @@ const Login = () => {
         password,
       })
       .then(res => {
-        // 응답헤더에서 토큰 확인
-        console.log(res.headers);
-        console.log(res.headers.authorization);
-        // base64 로 복호화하면 정보가 나옴
+        setToken(res.headers.authorization.split(' ')[1].split('.')[1]);
+        setIsLogin(!isLogin);
+        console.log(isLogin);
+        setDecodedToken(window.atob(token));
+        console.log(token);
+        console.log(decodedToken);
         navigate('/');
       })
       .catch(error => {
+        Swal.fire({
+          icon: 'error',
+          text: '입력해주세요',
+        });
         console.log(error);
       });
   };
