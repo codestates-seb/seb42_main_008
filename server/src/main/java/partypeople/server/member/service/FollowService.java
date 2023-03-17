@@ -20,14 +20,16 @@ public class FollowService {
     private final FollowRepository followRepository;
 
 
-    public Member followerStatusUpdate(Member member, Long loginMemberId) {
+    public Boolean followerStatusUpdate(Member member, Long loginMemberId) {
         Optional<Follow> follow = followRepository.findByFollowerMemberIdAndFollowingMemberId(member.getMemberId(),loginMemberId);
+        Boolean followerStatus;
 
-        if(follow.isPresent()) {
-            member.setFollowerStatus(true);
+        if (follow.isPresent()) {
+            followerStatus=true;
+        } else {
+            followerStatus=false;
         }
-
-        return member;
+        return followerStatus;
     }
 
     public Long followerCount(Member member) {

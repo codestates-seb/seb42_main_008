@@ -42,8 +42,6 @@ public class Member extends Auditable {
 
     private Integer followingCount;
 
-    private Boolean followerStatus = false;
-
     @Enumerated(value = EnumType.STRING)
     private MemberStatus memberStatus = MemberStatus.MEMBER_ACTIVE;
 

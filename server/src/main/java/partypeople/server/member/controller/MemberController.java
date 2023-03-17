@@ -75,10 +75,10 @@ public class MemberController {
 //        member.setScore(memberService.scoreCal(member));
         member.setFollowerCount(Math.toIntExact(followService.followerCount(member)));
         member.setFollowingCount(Math.toIntExact(followService.followingCount(member)));
-        Member updateMember = followService.followerStatusUpdate(member, loginMemberId);
+        Boolean followerStatus = followService.followerStatusUpdate(member, loginMemberId);
 
         return ResponseEntity.ok(
-                new SingleResponseDto<>(memberMapper.memberToMemberResponse(member)));
+                new SingleResponseDto<>(memberMapper.memberToMemberResponse(member,followerStatus)));
     }
 
     @GetMapping("/{member-id}/follower")
