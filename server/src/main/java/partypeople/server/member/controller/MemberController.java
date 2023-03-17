@@ -165,8 +165,8 @@ public class MemberController {
         }
 
         Follow follow = new Follow();
-        follow.setFollower(memberService.findMember(requestBody.getFollowerId()));
-        follow.setFollowing(memberService.findMember(requestBody.getFollowingId()));
+        follow.setFollowing(memberService.findMember(requestBody.getFollowerId()));
+        follow.setFollower(memberService.findMember(requestBody.getFollowingId()));
 
 
 

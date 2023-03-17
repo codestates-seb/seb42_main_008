@@ -54,6 +54,7 @@ public class MemberDto {
     }
 
     @Getter
+    @Setter
     public static class Password {
         private String password;
     }

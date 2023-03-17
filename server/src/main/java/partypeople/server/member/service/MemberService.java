@@ -172,10 +172,11 @@ public class MemberService {
     public void logout(String Authorization) {
         String accessToken = Authorization.replace("Bearer ", "");
 
-        String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(jwtTokenizer.getSecretKey());
         try{
-            Long expiration = jwtTokenizer.getExpiration(accessToken,base64EncodedSecretKey);
+            Long expiration = jwtTokenizer.getExpiration(accessToken);
+            String email = jwtTokenizer.extractEmail(accessToken);
             redisTemplate.opsForValue().set(accessToken, "logout", expiration, TimeUnit.MILLISECONDS);
+            redisTemplate.delete(email);
         } catch (SignatureException se) {
             throw new BusinessLogicException(ExceptionCode.SIGNATURE_ERROR);
         } catch (ExpiredJwtException ee) {
@@ -197,7 +198,7 @@ public class MemberService {
         String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(jwtTokenizer.getSecretKey());
 
         try{
-            Long expiration = jwtTokenizer.getExpiration(refreshToken,base64EncodedSecretKey);
+            Long expiration = jwtTokenizer.getExpiration(refreshToken);
             //유효기간 안
             //DB안의 발행토큰인지 확인
             String value = redisTemplate.opsForValue().get(refreshToken);
@@ -265,7 +266,7 @@ public class MemberService {
 
 
     public Member followerStatusUpdate(Member member, Long loginMemberId) {
-        Optional<Follow> follow = followRepository.findByFollowerMemberIdAndFollowingMemberId(loginMemberId, member.getMemberId());
+        Optional<Follow> follow = followRepository.findByFollowerMemberIdAndFollowingMemberId(member.getMemberId(),loginMemberId);
 
         if(follow.isPresent()) {
             member.setFollowerStatus(true);

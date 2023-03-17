@@ -30,11 +30,11 @@ public class Member extends Auditable {
     @Column(length = 100, nullable = false)
     private String password;
 
-    private String profile;
+    private String profile="https://source.boringavatars.com/beam";
 
     private String content;
 
-    private String gender;
+    private String gender="NONE";
 
     private Integer score = 50;
 

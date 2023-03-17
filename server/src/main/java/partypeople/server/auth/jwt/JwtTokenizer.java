@@ -17,6 +17,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
 
 @Component
 public class JwtTokenizer {
@@ -97,23 +98,12 @@ public class JwtTokenizer {
         return key;
     }
 
-    public Long getExpiration(String accessToken,String base64EncodedSecretKey){
-        Key key = getKeyFromBase64EncodedKey(base64EncodedSecretKey);
 
-        Date expiration = Jwts.parserBuilder()
-                .setSigningKey(key)
-                .build()
-                .parseClaimsJws(accessToken)
-                .getBody()
-                .getExpiration();
-
-        long now = new Date().getTime();
-        return expiration.getTime() - now;
-    }
 
     public String delegateAccessToken(Member member) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("memberId", member.getMemberId());
+        claims.put("nickname", member.getNickname());
         claims.put("email", member.getEmail());
         claims.put("profile", member.getProfile());
         claims.put("gender", member.getGender());
@@ -128,5 +118,28 @@ public class JwtTokenizer {
         String accessToken = generateAccessToken(claims, subject, expiration, base64EncodedSecretKey);
 
         return accessToken;
+    }
+
+    private Claims extractAllClaims(String token) {
+        Key key = getKeyFromBase64EncodedKey(encodeBase64SecretKey(secretKey));
+
+        return Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token).getBody();
+    }
+    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
+        final Claims claims = extractAllClaims(token);
+        return claimsResolver.apply(claims);
+    }
+    public String extractEmail(String token) {
+        return extractClaim(token, Claims::getSubject);
+    }
+
+    public Long getExpiration(String accessToken){
+        Date expiration = extractClaim(accessToken, Claims::getExpiration);
+
+        long now = new Date().getTime();
+        return expiration.getTime() - now;
     }
 }
