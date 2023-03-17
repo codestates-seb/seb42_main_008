@@ -50,9 +50,11 @@ const NoteModal = ({ setNoteModal }: Props) => {
           <div>내쪽지함</div>
         </div>
         <ul className="notes">
-          {allNotes.map(note => {
-            return <Message key={note.messageId} note={note} />;
-          })}
+          {allNotes
+            .sort((a, b) => b.messageId - a.messageId)
+            .map(note => {
+              return <Message key={note.messageId} note={note} />;
+            })}
         </ul>
       </div>
     </SideBar>
