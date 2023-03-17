@@ -24,18 +24,6 @@ const FollowModal = ({
   };
 
   const getFollowData = async () => {
-    // ^ json-server 테스트용 코드
-    // if (isFollower) {
-    //   await customAxios.get('/follows').then(resp => {
-    //     setFollowerList(resp.data);
-    //   });
-    // } else {
-    //   await customAxios.get('/follows').then(resp => {
-    //     setFollowingList(resp.data);
-    //   });
-    // }
-
-    // ! 실제 테스트용 코드
     if (isFollower) {
       await customAxios
         .get(`/members/${member.memberId}/follower`)

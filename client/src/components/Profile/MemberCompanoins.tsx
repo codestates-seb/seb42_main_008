@@ -16,17 +16,6 @@ const MemberCompanoins = ({ member, user }: MemberCompanionsProps) => {
   const [titleHead, setTitleHead] = useState<string>('');
 
   const getData = async (dataType: string) => {
-    // ^ json-server
-    // await customAxios.get(`/${dataType}`).then(resp => {
-    //   if (dataType === 'subscribers') {
-    //     setSubscribers(resp.data);
-    //   } else if (dataType === 'participants') {
-    //     setParticipants(resp.data);
-    //   } else {
-    //     setWritters(resp.data);
-    //   }
-    // });
-    // !!!
     await customAxios.get(`members/${memberId}/${dataType}`).then(resp => {
       if (dataType === 'subscribers') {
         setSubscribers(resp.data.data);
