@@ -1,10 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
-import {
-  ListData,
-  ListQueryString,
-  SortBy,
-} from 'interfaces/ContentList.interface';
+import { ListData, ListQueryString } from 'interfaces/ContentList.interface';
 import ListTitle from 'components/ContinentList/ListTitle';
 import ListSearch from 'components/ContinentList/ListSearch';
 import ListItems from 'components/ContinentList/ListItems';
@@ -22,11 +18,6 @@ const ContentList = () => {
     undefined
   );
   const [searchPage, setSearchPage] = useState<number>(1);
-  const [sortData, setSortData] = useState<SortBy>({
-    value: '작성날짜 (최신순)',
-    sortBy: 'createdAt',
-    sortDir: 'DESC',
-  });
   const [page, setPage] = useState<number>(1);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isSearch, setIsSearch] = useState<boolean>(false);
@@ -55,8 +46,8 @@ const ContentList = () => {
     const params: ListQueryString = {
       page,
       size,
-      sortDir: sortData.sortDir,
-      sortBy: sortData.sortBy,
+      sortDir: 'DESC',
+      sortBy: 'createdAt',
       nationCode: countryCode,
     };
 
@@ -108,14 +99,10 @@ const ContentList = () => {
         // ! 첫 페이지일 경우 isLast 초기화
         setIsLast(false);
       }
-      if (searchPage !== 1) {
-        // ! 검색 데이터 초기화
-        setSearchPage(1);
-        setDatas([]);
-      }
+      setSearchPage(1);
       getContentData(page, size);
     }
-  }, [sortData, searchDatas, page, searchPage]);
+  }, [searchDatas, page, searchPage]);
 
   useEffect(() => {
     // ! 윈도우 사이즈별 호출 데이터 개수 변경
@@ -142,15 +129,15 @@ const ContentList = () => {
         searchDatas={searchDatas}
         setSearchDatas={setSearchDatas}
         size={size}
-        sortData={sortData}
         searchPage={searchPage}
         isSearch={isSearch}
         setIsSearch={setIsSearch}
         setIsLast={setIsLast}
         setSearchPage={setSearchPage}
         setIsLoading={setIsLoading}
+        setDatas={setDatas}
       />
-      <ListItems listData={datas} setSortData={setSortData} />
+      <ListItems listData={datas} />
       {isLoading && <Loader />}
       {datas.length !== 0 && (
         <Observer ref={obsRef}>{/* 무한스크롤용 옵저버 */}</Observer>
