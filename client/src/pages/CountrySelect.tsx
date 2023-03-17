@@ -1,19 +1,28 @@
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { FaChevronRight } from 'react-icons/fa';
+import randomCountries from '../assets/countries.json';
+const randomCountriesPick: RandomCountries = randomCountries;
+type RandomCountries = {
+  [key: string]: {
+    name: string;
+    code: string;
+  }[];
+};
+type Countries = {
+  name: string;
+  code: string;
+};
+let countries: Countries[] = [];
 
 const CountrySelect = () => {
-  const { continent } = useParams();
+  const { continent } = useParams<{ continent: string }>();
   const navigate = useNavigate();
 
   // 타이틀
   let title = '';
   let titleImg = '';
-  type Countries = {
-    name: string;
-    code: string;
-  };
-  let countries: Countries[] = [];
+
   //대륙별 고정 국가
   if (continent === 'europe') {
     title = 'Europe';
@@ -149,6 +158,24 @@ const CountrySelect = () => {
     ];
   }
 
+  let filteredrandomCountriesPick: any = [];
+  if (continent !== undefined) {
+    filteredrandomCountriesPick = randomCountriesPick[continent]
+      .sort(() => Math.random() - 0.5)
+      .slice(0, 11);
+  }
+  // 코드값들로 배열변환, 일치하는지 통과 판별 some()
+  const excludedCountries = countries
+    .map(obj => obj.code)
+    .filter(code =>
+      filteredrandomCountriesPick.some((country: any) => country.code === code)
+    )
+    .slice(0, 4);
+
+  filteredrandomCountriesPick = filteredrandomCountriesPick
+    .filter((country: any) => !excludedCountries.includes(country.code))
+    .slice(0, 7);
+
   const handleCountryClick = (code: string): void => {
     navigate(`/${continent}/${code}`);
   };
@@ -169,10 +196,10 @@ const CountrySelect = () => {
       <CountryListBox>
         <div className="countrybox">
           <ul className="hot-country">
-            {countries.map((country, idx) => (
+            {countries.map((country, index) => (
               <li
                 onClick={() => handleCountryClick(country.code)}
-                key={idx}
+                key={index}
                 style={{
                   backgroundImage: `url(
                     https://source.unsplash.com/featured/?${country.name.replace(
@@ -192,41 +219,30 @@ const CountrySelect = () => {
             ))}
           </ul>
           <ul className="random-country">
-            <li>
-              <div>
-                국 <FaChevronRight />
-              </div>
-            </li>
-            <li>
-              <div>
-                국<FaChevronRight />
-              </div>
-            </li>
-            <li>
-              <div>
-                국<FaChevronRight />
-              </div>
-            </li>
-            <li>
-              <div>
-                국<FaChevronRight />
-              </div>
-            </li>
-            <li>
-              <div>
-                국<FaChevronRight />
-              </div>
-            </li>
-            <li>
-              <div>
-                국<FaChevronRight />
-              </div>
-            </li>
-            <li>
-              <div>
-                국<FaChevronRight />
-              </div>
-            </li>
+            {continent !== undefined &&
+              filteredrandomCountriesPick.map((country: any, index: number) => {
+                return (
+                  <li
+                    onClick={() => handleCountryClick(country.code)}
+                    key={index}
+                    style={{
+                      backgroundImage: `url(
+                    https://source.unsplash.com/featured/?${country.name.match(
+                      /[a-zA-Z]/g
+                    )},travel
+                  )`,
+                      backgroundSize: `100% 100%`,
+                      backgroundRepeat: `no-repeat`,
+                      cursor: 'pointer',
+                    }}
+                  >
+                    <div>
+                      <div>{country.name.match(/[a-zA-Z\s]+/g)}</div>
+                      <FaChevronRight />
+                    </div>
+                  </li>
+                );
+              })}
           </ul>
         </div>
       </CountryListBox>
@@ -352,6 +368,7 @@ const CountryListBox = styled.section`
       }
 
       > div {
+        word-wrap: break-word;
         display: flex;
         align-items: center;
         justify-content: flex-end;
@@ -367,7 +384,12 @@ const CountryListBox = styled.section`
           width: 50%;
           height: 100%;
           padding: 10px;
+          font-size: 1.2rem;
           background-color: rgba(0, 0, 0, 0.3);
+        }
+
+        @media screen and (max-width: 576px) {
+          font-size: 0.8rem;
         }
       }
     }
@@ -392,15 +414,29 @@ const CountryListBox = styled.section`
       align-items: flex-end;
       justify-content: flex-end;
       > div {
+        word-wrap: break-word;
         display: flex;
+        font-size: 1.2rem;
         align-items: center;
         justify-content: flex-end;
         width: 50%;
         height: 100%;
         padding: 10px;
-        font-size: 1.5rem;
         color: white;
         background-color: rgba(0, 0, 0, 0.3);
+        @media screen and (max-width: 768px) {
+          font-size: 1.2rem;
+        }
+        @media screen and (max-width: 576px) {
+          font-size: 0.8rem;
+        }
+        div {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          max-width: 80%;
+          max-height: 80%;
+        }
       }
     }
   }

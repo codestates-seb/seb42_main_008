@@ -24,6 +24,7 @@
     "react-slick": "^0.29.0",
     "react-toastify": "^9.1.1",
     "recoil": "^0.7.7",
+    "recoil-persist": "^4.2.0",
     "slick-carousel": "^1.8.1",
     "styled-components": "^5.3.8",
     "sweetalert2": "^11.7.3",

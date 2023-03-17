@@ -1,6 +1,7 @@
 import customAxios from 'api/customAxios';
 import { TextEditProps } from 'interfaces/Profile.interface';
 import React, { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
 import { editValidationCheck } from 'utils/profileEditValidation';
@@ -11,11 +12,13 @@ const TextEdit = ({
   validation,
   setValidation,
 }: TextEditProps) => {
-  const [nickname, setNickname] = useState<string | undefined>(
-    member?.nickname
+  const [nickname, setNickname] = useState<string | undefined>(member.nickname);
+  const [gender, setGender] = useState<string | undefined>(
+    member.gender ? member.gender : undefined
   );
-  const [gender, setGender] = useState<string | undefined>(member?.gender);
-  const [content, setContent] = useState<string | undefined>(member?.content);
+  const [content, setContent] = useState<string | undefined>(
+    member.content ? member.content : ''
+  );
   const [password, setPassword] = useState<string>('');
   const [passwordCheck, setPasswordCheck] = useState<string>('');
 
@@ -36,40 +39,38 @@ const TextEdit = ({
   const handleUniqueCheck = async () => {
     await customAxios
       .post('/members/nickname', { nickname })
-      .then(resp => {
-        console.log(resp);
+      .then(() => {
+        toast.success('사용 가능한 닉네임입니다.');
         setValidation(cur => ({
           ...cur,
           nicknameUnique: true,
         }));
       })
-      .catch(err => {
-        console.log(err);
-        if (err.response.status === 404) {
-          Swal.fire({
-            icon: 'error',
-            title: '중복된 닉네임입니다',
-            text: '다른 닉네임을 입력해 주세요',
-          });
-          setValidation(cur => ({
-            ...cur,
-            nicknameUnique: false,
-          }));
-        }
+      .catch(() => {
+        Swal.fire({
+          icon: 'error',
+          title: '중복된 닉네임입니다',
+          text: '다른 닉네임을 입력해 주세요',
+        });
+        setValidation(cur => ({
+          ...cur,
+          nicknameUnique: false,
+        }));
       });
   };
 
   useEffect(() => {
-    setMemberData((cur: any) => ({
+    setMemberData((cur: object) => ({
       ...cur,
       nickname,
       gender,
       content,
       password,
     }));
-    setValidation({
+    setValidation(cur => ({
+      ...cur,
       ...editValidationCheck({ nickname, content, password, passwordCheck }),
-    });
+    }));
   }, [nickname, gender, content, password, passwordCheck]);
 
   return (
@@ -137,7 +138,7 @@ const TextEdit = ({
         )}
       </ContentEdit>
       <PasswordEdit>
-        <h1>비밀번호</h1>
+        <h1>비밀번호 수정</h1>
         <section
           className={!validation.passwordValid ? 'valid-false' : undefined}
         >
