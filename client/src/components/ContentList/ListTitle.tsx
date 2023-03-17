@@ -51,10 +51,30 @@ const TitleText = styled.div`
   justify-content: center;
   z-index: 2;
   color: #fff;
+  text-align: center;
   text-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
   > h1 {
     font-weight: 800;
     font-size: 4rem;
+  }
+
+  @media screen and (max-width: 992px) {
+    > h1 {
+      font-size: 3.5rem;
+    }
+  }
+  @media screen and (max-width: 768px) {
+    > h1 {
+      font-size: 3rem;
+    }
+    > h2 {
+      font-size: 1.3rem;
+    }
+  }
+  @media screen and (max-width: 576px) {
+    > h1 {
+      font-size: 2.3rem;
+    }
   }
 `;
 
