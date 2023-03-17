@@ -55,7 +55,10 @@ const MemberInfo = ({ user, member, setMember }: MemberInfoProps) => {
       )}
       <InfoContainer>
         <ImageWrapper>
-          <img src={member.profile} alt="profile" />
+          <div
+            className="img"
+            style={{ backgroundImage: `url(${member.profile})` }}
+          ></div>
           <div className="score">
             <img src={getScoreIcon(member.score)} alt="score" />
             <span>{member.score}%</span>
@@ -123,6 +126,17 @@ const InfoContainer = styled.article`
   z-index: 1;
   top: 15vh;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  animation: slidein 0.3s linear;
+  transition: 0.3s;
+
+  @keyframes slidein {
+    from {
+      transform: translateY(20px);
+    }
+    to {
+      transform: translateY(0);
+    }
+  }
 
   @media screen and (max-width: 768px) {
     flex-direction: column;
@@ -137,9 +151,14 @@ const ImageWrapper = styled.section`
   gap: 15px;
   padding-right: 10px;
 
-  > img {
+  .img {
     border-radius: 50%;
     width: 80%;
+    padding-bottom: 80%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: #aaa;
   }
   .score {
     display: flex;
@@ -155,8 +174,9 @@ const ImageWrapper = styled.section`
     width: 100%;
     margin-bottom: 5px;
     gap: 10px;
-    > img {
+    .img {
       width: 35%;
+      padding-bottom: 35%;
     }
   }
 `;
