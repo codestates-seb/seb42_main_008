@@ -4,6 +4,8 @@ import { IoMdClose } from 'react-icons/io';
 import { Follow, FollowModalProps } from 'interfaces/Profile.interface';
 import customAxios from 'api/customAxios';
 import { useNavigate } from 'react-router-dom';
+import ModalScrollDisable from 'utils/ModalScrollDisable';
+import { ModalBG, ModalContent } from './ModalStyles';
 
 const FollowModal = ({
   setIsShowModal,
@@ -41,23 +43,13 @@ const FollowModal = ({
 
   useEffect(() => {
     getFollowData();
-
-    document.body.style.cssText = `
-      position: fixed; 
-      top: -${window.scrollY}px;
-      overflow-y: scroll;
-      width: 100%;`;
-    return () => {
-      const scrollY = document.body.style.top;
-      document.body.style.cssText = '';
-      window.scrollTo(0, parseInt(scrollY || '0', 10) * -1);
-    };
   }, []);
 
   return (
     <>
+      <ModalScrollDisable />
       <ModalBG onClick={handleModalClose}></ModalBG>
-      <ModalContent>
+      <FollowModalContent>
         <div>
           <h1>{isFollower ? '팔로워' : '팔로잉'}</h1>
           <CloseButton onClick={handleModalClose}>
@@ -103,36 +95,12 @@ const FollowModal = ({
         ) : (
           <EmptyFollowList>팔로잉 리스트가 비어있습니다.</EmptyFollowList>
         )}
-      </ModalContent>
+      </FollowModalContent>
     </>
   );
 };
 
-const ModalBG = styled.div`
-  width: 100vw;
-  height: 100vh;
-  position: fixed;
-  background-color: black;
-  opacity: 0.5;
-  z-index: 999;
-  top: 0;
-  left: 0;
-`;
-
-const ModalContent = styled.div`
-  width: 500px;
-  height: 70vh;
-  background-color: #fff;
-  border-radius: 20px;
-  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3);
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 1000;
-  padding-top: 30px;
-  overflow: hidden;
-
+const FollowModalContent = styled(ModalContent)`
   > div {
     width: 100%;
     padding: 0 30px;
@@ -142,10 +110,6 @@ const ModalContent = styled.div`
     > h1 {
       font-size: 1.4rem;
     }
-  }
-
-  @media screen and (max-width: 576px) {
-    width: 80%;
   }
 `;
 
