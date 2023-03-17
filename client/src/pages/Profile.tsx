@@ -5,6 +5,7 @@ import MemberContent from 'components/Profile/MemberContent';
 import MemberInfo from 'components/Profile/MemberInfo';
 import { LoginUser, MemberProfile } from 'interfaces/Profile.interface';
 import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 
 const Profile = () => {
@@ -18,13 +19,13 @@ const Profile = () => {
     gender: 'male',
   };
 
+  const { memberId } = useParams();
   const [user, setUser] = useState<LoginUser>(userData);
   const [member, setMember] = useState<MemberProfile | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [currentTab, setCurrentTab] = useState<number>(0);
 
   const getMemberData = () => {
-    const memberId = 2;
     const userId = 3;
 
     const params = {

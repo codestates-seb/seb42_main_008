@@ -1,18 +1,12 @@
-import React from 'react';
+import { MyCompanion } from './Profile.interface';
 
 // * 국가별 조회, 키워드검색 Response data
-interface ListData {
-  companionId: number;
+interface ListData extends MyCompanion {
   memberId: number;
   nickname: string;
-  address: string;
-  lat: number;
-  lng: number;
   title: string;
   content: string;
-  date: string;
   tags: string[];
-  companionStatus: boolean;
   score?: number | null;
 }
 

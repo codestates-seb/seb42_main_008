@@ -99,10 +99,7 @@ const MemberSettings = ({ member, setCurrentTab }: MemberSettingsProps) => {
   return (
     <SettingsWrapper>
       {isShowDeleteModal && (
-        <AccountDeleteModal
-          member={member}
-          setIsShowDeleteModal={setIsShowDeleteModal}
-        />
+        <AccountDeleteModal setIsShowDeleteModal={setIsShowDeleteModal} />
       )}
       <EditWrapper>
         <ImageUpload>

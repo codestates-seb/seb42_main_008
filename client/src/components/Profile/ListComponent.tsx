@@ -57,7 +57,7 @@ const ListComponent = ({ datas, titleHead, titleBody }: ListComponentProps) => {
           {datas.map((item, idx) => (
             <MemberListItem
               key={idx}
-              onClick={() => handleClickItem(item.compainonId)}
+              onClick={() => handleClickItem(item.companionId)}
             >
               {item.companionStatus && <DoneItem></DoneItem>}
               <h1>{getDateString(item.date).shortDateStr}</h1>
