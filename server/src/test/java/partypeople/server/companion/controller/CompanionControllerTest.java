@@ -1,6 +1,7 @@
 package partypeople.server.companion.controller;
 
 import com.google.gson.Gson;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -33,17 +34,13 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.*;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static partypeople.server.util.ApiDocumentUtils.getRequestPreProcessor;
-import static partypeople.server.util.ApiDocumentUtils.getResponsePreProcessor;
+import static partypeople.server.util.ApiDocumentUtils.*;
 
 @AutoConfigureRestDocs
 @WebMvcTest(CompanionController.class)
@@ -105,7 +102,7 @@ public class CompanionControllerTest {
         // then
         actions
                 .andExpect(status().isCreated())
-                .andExpect(header().string("location", is(startsWith("/companions"))))
+                .andExpect(header().string("location", is(Matchers.startsWith("/companions"))))
                 .andDo(document("post-companion",
                         getRequestPreProcessor(),
                         getResponsePreProcessor(),
