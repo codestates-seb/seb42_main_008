@@ -1,10 +1,12 @@
 import styled from 'styled-components';
 import ImageFilter from 'styles/ImageFilter';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import countries from 'assets/countries.json';
 import { CountryData, CountryNames } from 'interfaces/ContentList.interface';
+import { StyledButton } from 'styles/StyledButton';
 
 const ListTitle = () => {
+  const navigate = useNavigate();
   const { continent, countryCode } = useParams();
   const countriesData: CountryData[] = countries[continent as keyof object];
   const countryName = countriesData.filter(item => item.code === countryCode)[0]
@@ -12,6 +14,15 @@ const ListTitle = () => {
   const names: CountryNames = {
     en: countryName.split('(')[1].slice(0, -1),
     ko: countryName.split('(')[0].slice(0, -1),
+  };
+
+  const handleButtonClick = () => {
+    navigate('/add', {
+      state: {
+        continent,
+        countryCode,
+      },
+    });
   };
 
   return (
@@ -25,7 +36,9 @@ const ListTitle = () => {
     >
       <TitleText>
         <h1>{names.en.toUpperCase()}</h1>
-        <h2>{names.ko}</h2>
+        <AddContentbutton onClick={handleButtonClick}>
+          {names.ko}에서의 동행 찾기
+        </AddContentbutton>
       </TitleText>
       <Filter></Filter>
     </ListTitleWrapper>
@@ -51,10 +64,43 @@ const TitleText = styled.div`
   justify-content: center;
   z-index: 2;
   color: #fff;
+  text-align: center;
   text-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
   > h1 {
     font-weight: 800;
     font-size: 4rem;
+  }
+
+  @media screen and (max-width: 992px) {
+    > h1 {
+      font-size: 3.5rem;
+    }
+  }
+  @media screen and (max-width: 768px) {
+    > h1 {
+      font-size: 3rem;
+    }
+    > h2 {
+      font-size: 1.3rem;
+    }
+  }
+  @media screen and (max-width: 576px) {
+    > h1 {
+      font-size: 2.3rem;
+    }
+  }
+`;
+
+const AddContentbutton = styled(StyledButton)`
+  background-color: #fff;
+  color: #222;
+  :hover {
+    background-color: #feb35c;
+    color: #fff;
+  }
+  font-size: 1.1rem;
+  @media screen and (max-width: 576px) {
+    font-size: 1rem;
   }
 `;
 
