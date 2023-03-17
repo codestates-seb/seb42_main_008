@@ -24,7 +24,7 @@ const LoaderStyle = styled.div`
     position: absolute;
     left: 8px;
     width: 16px;
-    background: #fcf;
+    background: #5d62a0;
     animation: lds-facebook 1.2s cubic-bezier(0, 0.5, 0.5, 1) infinite;
   }
   .lds-facebook div:nth-child(1) {
