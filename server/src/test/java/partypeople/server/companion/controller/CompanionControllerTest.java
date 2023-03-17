@@ -243,7 +243,15 @@ public class CompanionControllerTest {
 
         // then
         actions
-                .andExpect(status().isNoContent());
+                .andExpect(status().isNoContent())
+                .andDo(document("delete-companion",
+                        getRequestPreProcessor(),
+                        getResponsePreProcessor(),
+                        pathParameters(
+                                parameterWithName("companion-id").description("동행글 식별자")
+                        )
+                ));
+
     }
 
     private static class Post {
