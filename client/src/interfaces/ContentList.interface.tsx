@@ -1,3 +1,5 @@
+import React from 'react';
+
 // * 국가별 조회, 키워드검색 Response data
 interface ListData {
   companionId: number;
@@ -24,15 +26,10 @@ interface ListQueryString {
 }
 
 // * 키워드 검색시 필요한 Query String
-interface SearchQueryString {
-  page: number;
-  size: number;
-  sortDir: string;
-  sortBy: string;
+interface SearchQueryString extends ListQueryString {
   condition: string;
   keyword: string;
   date?: string | Date;
-  nationCode: string | undefined;
 }
 
 // * 국가 정보
@@ -62,7 +59,7 @@ interface ListSearchProps {
   searchPage: number;
   isSearch: boolean;
   setIsSearch: React.Dispatch<React.SetStateAction<boolean>>;
-  endRef: React.MutableRefObject<boolean>;
+  setIsLast: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 // * 정렬 기준
@@ -80,6 +77,12 @@ interface PageInfo {
   totalPages: number;
 }
 
+// * ListSearch 컴포넌트에서 사용할 interface
+interface SearchOption {
+  value: string;
+  field: string;
+}
+
 export type {
   ListData,
   ListQueryString,
@@ -90,4 +93,5 @@ export type {
   ListSearchProps,
   SortBy,
   PageInfo,
+  SearchOption,
 };
