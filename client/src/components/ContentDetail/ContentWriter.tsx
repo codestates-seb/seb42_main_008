@@ -16,7 +16,6 @@ const ContentWriter = ({ detail }: detailProps) => {
   // const handleClick = () => {
   //   navigate(`${}/edit`)
   // }
-
   // 클릭 시 글 삭제 추가
   const handleDelete = () => {
     Swal.fire({
@@ -44,13 +43,15 @@ const ContentWriter = ({ detail }: detailProps) => {
   return (
     <Container>
       <WriterInfo>
-        <div className="img-wrapper">
-          <div>{profile}</div>
-        </div>
+        <div
+          className="img"
+          style={{ backgroundImage: `url(${profile})` }}
+        ></div>
         <div className="info-wrapper">
           <div id="nickname">{detail.nickname}</div>
           <div id="battery">
-            <img src={getScoreIcon(93)} alt="score" />
+            <img src={getScoreIcon(detail.score)} alt="score" />
+            <div>{detail.score}%</div>
           </div>
         </div>
       </WriterInfo>
@@ -103,7 +104,7 @@ const WriterInfo = styled.section`
   align-items: center;
   flex-direction: column;
   width: 100%;
-  .img-wrapper {
+  .img {
     background-color: #e7e7e7;
     width: 200px;
     height: 200px;
@@ -111,6 +112,9 @@ const WriterInfo = styled.section`
     display: flex;
     justify-content: center;
     align-items: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
   }
   .info-wrapper {
     display: flex;
@@ -120,6 +124,17 @@ const WriterInfo = styled.section`
     padding: 10px 20px;
     #nickname {
       font-size: 1.3rem;
+    }
+    #battery {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: row;
+      > img {
+        width: 60px;
+        height: 50px;
+        padding-right: 10px;
+      }
     }
   }
   @media screen and (max-width: 768px) {
@@ -137,9 +152,14 @@ const WriterInfo = styled.section`
         font-size: 1rem;
       }
       #battery {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: row;
         > img {
           width: 50px;
           height: 40px;
+          padding-right: 5px;
         }
       }
     }
@@ -152,9 +172,14 @@ const WriterInfo = styled.section`
         font-size: 1rem;
       }
       #battery {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: row;
         > img {
           width: 50px;
           height: 40px;
+          padding-right: 5px;
         }
       }
     }

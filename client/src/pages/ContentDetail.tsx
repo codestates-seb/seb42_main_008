@@ -1,7 +1,7 @@
-// import Companion from 'components/ContentDetail/Companion';
 import axios from 'axios';
+import Companion from 'components/ContentDetail/Companion';
 import ContentWriter from 'components/ContentDetail/ContentWriter';
-import Participants from 'components/ContentDetail/Participants';
+// import Participants from 'components/ContentDetail/Participants';
 // import SearchMap from 'components/ContentDetail/SearchMap';
 import { detailInfo } from 'interfaces/ContentDetail.interface';
 import { useEffect, useState } from 'react';
@@ -10,8 +10,7 @@ import styled from 'styled-components';
 import { getDateString } from 'utils/getDateString';
 
 const ContentDetail = () => {
-  const params = useParams();
-  const { contentId } = params;
+  const { contentId } = useParams<{ contentId: string }>();
 
   const [detail, setDetail] = useState<detailInfo>({
     companionId: 0,
@@ -28,6 +27,7 @@ const ContentDetail = () => {
     createdAt: '',
     companionStatus: false,
   });
+  const [sub, setSub] = useState([]);
 
   useEffect(() => {
     axios
@@ -39,6 +39,23 @@ const ContentDetail = () => {
         console.log(error);
       });
   }, []);
+
+  useEffect(() => {
+    axios
+      .get(
+        `${process.env.REACT_APP_TEST_SERVER}/companions/${contentId}/subscribers`
+      )
+      .then(res => {
+        console.log(res.data.data);
+        setSub(res.data.data);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }, []);
+
+  console.log(sub);
+
   return (
     <Container>
       <ContentDetailBox>
@@ -63,8 +80,8 @@ const ContentDetail = () => {
         <RightBox>
           <ContentWriter detail={detail} />
           {/* 여행완료 ? Participants : Companion */}
-          {/* <Companion /> */}
-          <Participants />
+          <Companion />
+          {/* <Participants /> */}
         </RightBox>
       </ContentDetailBox>
     </Container>
