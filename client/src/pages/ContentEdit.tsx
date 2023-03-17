@@ -110,7 +110,6 @@ const ContentEdit = () => {
     lat: 37.2635727,
     lng: 127.0286009,
   });
-  console.log(markerLocation);
   // 선택한 성향 태그 배열
   const [selectedTendencies, setSelectedTendencies] = useState<string[]>([]);
   // 성향 모달
@@ -154,6 +153,13 @@ const ContentEdit = () => {
       setIsTendencyModal(!isTendencyModal);
     }
   };
+  let formattedDate = '';
+  if (startDate) {
+    const year = startDate.getFullYear();
+    const month = String(startDate.getMonth() + 1).padStart(2, '0');
+    const day = String(startDate.getDate()).padStart(2, '0');
+    formattedDate = `${year}-${month}-${day}`;
+  }
 
   return (
     <ContentAddContainer>
@@ -279,6 +285,7 @@ const ContentEdit = () => {
             countrySelect={countrySelect}
             countryCode={countryCode}
             selectedTendencies={selectedTendencies}
+            formattedDate={formattedDate}
           />
         </div>
       ) : null}
