@@ -5,7 +5,7 @@ import 'slick-carousel/slick/slick-theme.css';
 import { SectionWrapper } from './SectionWrapper';
 import FirstTitle from './FirstTitle';
 import { useEffect, useState } from 'react';
-import ImageFilter from './ImageFilter';
+import ImageFilter from '../../styles/ImageFilter';
 import { useNavigate } from 'react-router-dom';
 
 export const imgLinks = [

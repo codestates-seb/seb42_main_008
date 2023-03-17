@@ -7,7 +7,7 @@ import {
 } from 'components/ContinentList/ListItems';
 import { FaMapMarkerAlt } from 'react-icons/fa';
 import { getDateString } from 'utils/getDateString';
-import ImageFilter from 'components/Main/ImageFilter';
+import ImageFilter from 'styles/ImageFilter';
 import { ListComponentProps } from 'interfaces/Profile.interface';
 import { useNavigate } from 'react-router-dom';
 
@@ -57,7 +57,7 @@ const ListComponent = ({ datas, titleHead, titleBody }: ListComponentProps) => {
           {datas.map((item, idx) => (
             <MemberListItem
               key={idx}
-              onClick={() => handleClickItem(item.compainonId)}
+              onClick={() => handleClickItem(item.companionId)}
             >
               {item.companionStatus && <DoneItem></DoneItem>}
               <h1>{getDateString(item.date).shortDateStr}</h1>

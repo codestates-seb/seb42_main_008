@@ -19,7 +19,7 @@ interface MemberProfile extends LoginUser {
 
 // * 신청/참여/작성한 글
 interface MyCompanion {
-  compainonId: number;
+  companionId: number;
   address: string;
   lat: number;
   lng: number;
@@ -34,14 +34,10 @@ interface Review {
 }
 
 // * 팔로워, 팔로잉
-interface Follow extends Nickname {
+interface Follow {
+  nickname: string;
   memberId: number;
   profile: string;
-}
-
-// * 닉네임 중복체크용 body 데이터
-interface Nickname {
-  nickname: string;
 }
 
 // * 프로필 수정 body 데이터
@@ -66,6 +62,12 @@ interface MemberInfoProps {
   setMember: React.Dispatch<React.SetStateAction<MemberProfile | null>>;
 }
 
+// * MemberSettings 컴포넌트 props
+interface MemberSettingsProps {
+  member: MemberProfile;
+  setCurrentTab: React.Dispatch<React.SetStateAction<number>>;
+}
+
 // * MemberContent 컴포넌트 props
 interface MemberContentProps extends MemberSettingsProps {
   user: LoginUser;
@@ -73,13 +75,9 @@ interface MemberContentProps extends MemberSettingsProps {
 }
 
 // * MemberCompanions 컴포넌트 props
-interface MemberCompanionsProps extends MemberReviewProps {
-  user: LoginUser;
-}
-
-// * MemberReview 컴포넌트 props
-interface MemberReviewProps {
+interface MemberCompanionsProps {
   member: MemberProfile;
+  user: LoginUser;
 }
 
 // * MemberCompanions -> ListComponent 컴포넌트 props
@@ -89,19 +87,16 @@ interface ListComponentProps {
   titleBody: string;
 }
 
-// * MemberSettings 컴포넌트 props
-interface MemberSettingsProps extends MemberReviewProps {
-  setCurrentTab: React.Dispatch<React.SetStateAction<number>>;
-}
-
 // * 팔로워/팔로잉 모달 컴포넌트 props
-interface FollowModalProps extends MemberReviewProps {
+interface FollowModalProps {
+  member: MemberProfile;
   setIsShowModal: React.Dispatch<React.SetStateAction<boolean>>;
   isFollower: boolean;
 }
 
 // * 회원정보 수정 컴포넌트 props
-interface TextEditProps extends MemberReviewProps {
+interface TextEditProps {
+  member: MemberProfile;
   setMemberData: React.Dispatch<any>;
   validation: Validations;
   setValidation: React.Dispatch<React.SetStateAction<Validations>>;
@@ -118,7 +113,7 @@ interface Validations {
 }
 
 // * 회원탈퇴 모달 Props
-interface AccountDeleteModalProps extends MemberReviewProps {
+interface AccountDeleteModalProps {
   setIsShowDeleteModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
@@ -127,14 +122,12 @@ export type {
   MyCompanion,
   Review,
   Follow,
-  Nickname,
   ProfileEdit,
   FollowRequest,
   MemberInfoProps,
   MemberContentProps,
   MemberCompanionsProps,
   MemberSettingsProps,
-  MemberReviewProps,
   ListComponentProps,
   FollowModalProps,
   TextEditProps,

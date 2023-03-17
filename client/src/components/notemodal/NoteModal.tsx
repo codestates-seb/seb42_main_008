@@ -1,17 +1,54 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { FaChevronRight } from 'react-icons/fa';
 import Message from './Message';
+import axios from 'axios';
 
 type Props = {
   noteModal: boolean;
   setNoteModal: (newValue: boolean) => void;
 };
 
+interface NoteMessage {
+  messageId: number;
+  content: string;
+  companionId: number;
+  createdAt: string;
+  read: boolean;
+  sender: {
+    id: number;
+    nickname: string;
+  };
+}
+
 const NoteModal = ({ setNoteModal }: Props) => {
   const HandleModal = () => {
     setNoteModal(false);
   };
+
+  // data : [{
+  //   Long messageId
+  //   String content
+  //   Long companionId
+  //   Object sender: {
+  //   Long id
+  //   String nickname
+  //   },
+  //   String createdAt
+  //   Boolean read
+  //   },{},{}]
+
+  // 쪽지 전체 조회
+  // 멤버아이디 헤더로 보내기
+  const [allNotes, setAllNotes] = useState<NoteMessage[]>([]);
+  useEffect(() => {
+    axios
+      .get(`${process.env.REACT_APP_TEST_SERVER}/messages`)
+      .then(response => {
+        setAllNotes(response.data);
+      })
+      .catch(error => console.log(error));
+  }, []);
 
   return (
     <SideBar>
@@ -27,7 +64,9 @@ const NoteModal = ({ setNoteModal }: Props) => {
           <div>내쪽지함</div>
         </div>
         <ul className="notes">
-          <Message />
+          {allNotes.map(note => {
+            return <Message key={note.messageId} note={note} />;
+          })}
         </ul>
       </div>
     </SideBar>
