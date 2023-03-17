@@ -229,6 +229,23 @@ public class CompanionControllerTest {
                         )));
     }
 
+    @Test
+    @DisplayName("Companion Delete Test")
+    void deleteCompanionTest() throws Exception {
+        // given
+        doNothing().when(companionService).deleteCompanion(Mockito.anyLong());
+        Long companionId = 1L;
+
+        //when
+        ResultActions actions = mockMvc.perform(
+                delete("/companions/{companion-id}", companionId)
+        );
+
+        // then
+        actions
+                .andExpect(status().isNoContent());
+    }
+
     private static class Post {
         @NotBlank
         private String title;
