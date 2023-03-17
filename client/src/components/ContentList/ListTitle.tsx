@@ -98,6 +98,10 @@ const AddContentbutton = styled(StyledButton)`
     background-color: #feb35c;
     color: #fff;
   }
+  font-size: 1.1rem;
+  @media screen and (max-width: 576px) {
+    font-size: 1rem;
+  }
 `;
 
 const Filter = styled(ImageFilter)`
