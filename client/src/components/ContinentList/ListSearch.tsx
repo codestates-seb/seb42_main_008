@@ -22,6 +22,8 @@ const ListSearch = ({
   isSearch,
   setIsSearch,
   setIsLast,
+  setSearchPage,
+  setIsLoading,
 }: ListSearchProps) => {
   const { countryCode } = useParams();
   const [date, setDate] = useState<Date>(new Date());
@@ -46,8 +48,18 @@ const ListSearch = ({
     setCondition(value);
   };
 
-  const handleSearchClick = async (page: number) => {
+  const handleSearchClick = (page: number) => {
+    if (isSearch) {
+      // ! 이미 검색된 상태에서 검색 버튼을 누른 경우
+      setSearchDatas([]);
+      setSearchPage(1);
+    }
     setIsSearch(true);
+    getSearchData(page);
+  };
+
+  const getSearchData = async (page: number) => {
+    setIsLoading(true);
     const params: SearchQueryString = {
       page,
       size,
@@ -66,7 +78,7 @@ const ListSearch = ({
           console.log('last');
           setIsLast(true);
         }
-
+        setIsLoading(false);
         if (cur !== undefined) {
           return [...cur, ...resp.data.data];
         }
@@ -77,7 +89,7 @@ const ListSearch = ({
 
   useEffect(() => {
     if (searchDatas !== undefined) {
-      handleSearchClick(searchPage);
+      getSearchData(searchPage);
     }
   }, [searchPage]);
 

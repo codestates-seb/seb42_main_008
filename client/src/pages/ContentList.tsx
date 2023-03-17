@@ -14,9 +14,9 @@ import Loader from 'components/Loader';
 
 const ContentList = () => {
   const { countryCode } = useParams();
-  const preventRef = useRef(true); //중복 실행 방지
-  const obsRef = useRef(null); //observer Element
-  // const endRef = useRef(false); //모든 글 로드 확인
+  const preventRef = useRef(true); // * (무한스크롤) 중복 실행 방지
+  const obsRef = useRef(null); // * (무한스크롤) observer Element
+  const [isLast, setIsLast] = useState<boolean>(false); // * (무한스크롤) 모든 글 로드 확인
   const [datas, setDatas] = useState<ListData[] | []>([]);
   const [searchDatas, setSearchDatas] = useState<ListData[] | undefined>(
     undefined
@@ -30,7 +30,6 @@ const ContentList = () => {
   const [page, setPage] = useState<number>(1);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isSearch, setIsSearch] = useState<boolean>(false);
-  const [isLast, setIsLast] = useState<boolean>(false);
 
   const handleSize = () => {
     const width = window.innerWidth;
@@ -52,6 +51,7 @@ const ContentList = () => {
   };
 
   const getContentData = async (page: number, size: number) => {
+    setIsLoading(true);
     const params: ListQueryString = {
       page,
       size,
@@ -80,6 +80,7 @@ const ContentList = () => {
 
   const obsHandler = (entries: any) => {
     const target = entries[0];
+    console.log('observer');
 
     if (!isLast && target.isIntersecting && preventRef.current) {
       // ! 옵저버를 만났을 때 마지막 페이지가 아니고, 중복 실행이 아닐 경우
@@ -115,7 +116,6 @@ const ContentList = () => {
         // ! 검색 데이터 초기화
         setSearchPage(1);
         setDatas([]);
-        setIsLoading(true);
       }
       getContentData(page, size);
     }
@@ -137,7 +137,7 @@ const ContentList = () => {
     return () => {
       observer.disconnect();
     };
-  }, [isSearch, isLast]);
+  }, [isSearch, isLast, datas.length !== 0]);
 
   return (
     <Container>
@@ -151,10 +151,14 @@ const ContentList = () => {
         isSearch={isSearch}
         setIsSearch={setIsSearch}
         setIsLast={setIsLast}
+        setSearchPage={setSearchPage}
+        setIsLoading={setIsLoading}
       />
       <ListItems listData={datas} setSortData={setSortData} />
       {isLoading && <Loader />}
-      <Observer ref={obsRef}>OBSERVER</Observer>
+      {datas.length !== 0 && (
+        <Observer ref={obsRef}>{/* 무한스크롤용 옵저버 */}</Observer>
+      )}
     </Container>
   );
 };
