@@ -3,31 +3,23 @@ import Loader from 'components/Loader';
 import BackGroundImage from 'components/Profile/BackGroundImage';
 import MemberContent from 'components/Profile/MemberContent';
 import MemberInfo from 'components/Profile/MemberInfo';
-import { LoginUser, MemberProfile } from 'interfaces/Profile.interface';
+import { MemberProfile } from 'interfaces/Profile.interface';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { useRecoilValue } from 'recoil';
+import { userInfo } from 'states/userState';
 import styled from 'styled-components';
 
 const Profile = () => {
-  const userData: LoginUser = {
-    memberId: 7,
-    nickname: 'TestUSER',
-    email: 'test@user.com',
-    profile:
-      'https://user-images.githubusercontent.com/6022883/45476027-e45c1a80-b778-11e8-9716-4e39c6d6e58e.png',
-    memberStatus: '...',
-    gender: 'male',
-  };
-
   const { memberId } = useParams();
-  const [user, setUser] = useState<LoginUser>(userData);
   const [member, setMember] = useState<MemberProfile | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [currentTab, setCurrentTab] = useState<number>(0);
+  const loginUser = useRecoilValue(userInfo);
 
   const getMemberData = () => {
     const params = {
-      loginMemberId: userData.memberId,
+      loginMemberId: loginUser.memberId,
     };
 
     // ! 실제 테스트용 코드
@@ -39,21 +31,8 @@ const Profile = () => {
 
   useEffect(() => {
     getMemberData();
-  }, [user, currentTab, isLoading]);
-
-  const handleTestButtonClick = () => {
-    setUser(cur => {
-      let memberId;
-      if (cur.memberId === 2) {
-        memberId = 3;
-      } else {
-        memberId = 2;
-      }
-      return Object.assign({}, cur, {
-        memberId,
-      });
-    });
-  };
+    console.log(loginUser);
+  }, [currentTab, isLoading]);
 
   return (
     <>
@@ -65,10 +44,8 @@ const Profile = () => {
       )}
       {!isLoading && member && (
         <Container>
-          <TestButton onClick={handleTestButtonClick}>로그인 테스트</TestButton>
-          <MemberInfo user={user} member={member} setMember={setMember} />
+          <MemberInfo member={member} setMember={setMember} />
           <MemberContent
-            user={user}
             member={member}
             currentTab={currentTab}
             setCurrentTab={setCurrentTab}
@@ -99,15 +76,6 @@ const LoaderContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-`;
-
-const TestButton = styled.button`
-  width: 100px;
-  height: 50px;
-  position: absolute;
-  top: 50px;
-  left: 100px;
-  z-index: 10;
 `;
 
 export default Profile;

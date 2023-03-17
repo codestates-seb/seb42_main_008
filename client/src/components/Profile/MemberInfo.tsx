@@ -8,15 +8,18 @@ import { toast } from 'react-toastify';
 import FollowModal from './FollowModal';
 import customAxios from 'api/customAxios';
 import { StyledButton } from 'styles/StyledButton';
+import { useRecoilValue } from 'recoil';
+import { userInfo } from 'states/userState';
 
-const MemberInfo = ({ user, member, setMember }: MemberInfoProps) => {
+const MemberInfo = ({ member, setMember }: MemberInfoProps) => {
   const [isFollow, setIsFollow] = useState<boolean>(member.followerStatus);
   const [isShowModal, setIsShowModal] = useState<boolean>(false);
   const [isFollower, setIsFollower] = useState<boolean>(true);
+  const loginUser = useRecoilValue(userInfo);
 
   const handleFollowButtonClick = async () => {
     const data: FollowRequest = {
-      followerId: user.memberId,
+      followerId: loginUser.memberId,
       followingId: member.memberId,
     };
 
@@ -76,7 +79,7 @@ const MemberInfo = ({ user, member, setMember }: MemberInfoProps) => {
                 )}
               </span>
             </div>
-            {user.memberId !== member.memberId && (
+            {loginUser.memberId !== member.memberId && (
               <div className="buttons">
                 <Button
                   status={isFollow ? isFollow : false}
