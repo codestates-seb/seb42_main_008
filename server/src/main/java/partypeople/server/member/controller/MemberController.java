@@ -17,6 +17,7 @@ import partypeople.server.member.dto.MemberDto;
 import partypeople.server.member.entity.Follow;
 import partypeople.server.member.entity.Member;
 import partypeople.server.member.mapper.MemberMapper;
+import partypeople.server.member.service.FollowService;
 import partypeople.server.member.service.MemberService;
 import partypeople.server.review.entity.Review;
 import partypeople.server.review.mapper.ReviewMapper;
@@ -37,6 +38,8 @@ public class MemberController {
     private final MemberMapper memberMapper;
     private final ReviewMapper reviewMapper;
     private final CompanionMapper companionMapper;
+
+    private final FollowService followService;
 
     @PostMapping("/logout")
     public ResponseEntity logoutMember(@RequestHeader("Authorization") String Authorization) {
@@ -70,9 +73,9 @@ public class MemberController {
         Member member = memberService.findMember(memberId);
         //service
 //        member.setScore(memberService.scoreCal(member));
-        member.setFollowerCount(Math.toIntExact(memberService.followerCount(member)));
-        member.setFollowingCount(Math.toIntExact(memberService.followingCount(member)));
-        Member updateMember = memberService.followerStatusUpdate(member, loginMemberId);
+        member.setFollowerCount(Math.toIntExact(followService.followerCount(member)));
+        member.setFollowingCount(Math.toIntExact(followService.followingCount(member)));
+        Member updateMember = followService.followerStatusUpdate(member, loginMemberId);
 
         return ResponseEntity.ok(
                 new SingleResponseDto<>(memberMapper.memberToMemberResponse(member)));
@@ -80,7 +83,7 @@ public class MemberController {
 
     @GetMapping("/{member-id}/follower")
     public ResponseEntity getFollower(@PathVariable("member-id") long memberId) {
-        List<Follow> follows = memberService.findFollowers(memberId);
+        List<Follow> follows = followService.findFollowers(memberId);
 
         return ResponseEntity.ok(
                 new SingleResponseDto<>(memberMapper.followsToFollowingResponses(follows))
@@ -89,7 +92,7 @@ public class MemberController {
 
     @GetMapping("/{member-id}/following")
     public ResponseEntity getFollowing(@PathVariable("member-id") long memberId) {
-        List<Follow> follows = memberService.findFollowings(memberId);
+        List<Follow> follows = followService.findFollowings(memberId);
 
         return ResponseEntity.ok(
                 new SingleResponseDto<>(memberMapper.followsToFollowerResponses(follows))
@@ -171,7 +174,7 @@ public class MemberController {
 
 
         return ResponseEntity.ok(
-                new SingleResponseDto<>(memberService.followExe(follow))
+                new SingleResponseDto<>(followService.followExe(follow))
         );
     }
 
