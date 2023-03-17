@@ -18,7 +18,6 @@ const ListSearch = ({
   searchDatas,
   setSearchDatas,
   size,
-  sortData,
   searchPage,
   isSearch,
   setIsSearch,
@@ -64,8 +63,8 @@ const ListSearch = ({
     const params: SearchQueryString = {
       page,
       size,
-      sortBy: sortData.sortBy,
-      sortDir: sortData.sortDir,
+      sortBy: 'createdAt',
+      sortDir: 'DESC',
       condition,
       keyword,
       date: getDateString(date).fullDateStr,

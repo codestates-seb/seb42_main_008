@@ -47,7 +47,6 @@ interface CountryNames {
 // * ListItems 컴포넌트 Props data
 interface ListItemProps {
   listData: ListData[];
-  setSortData: React.Dispatch<React.SetStateAction<SortBy>>;
 }
 
 // * ListSearch 컴포넌트 props
@@ -55,20 +54,12 @@ interface ListSearchProps {
   searchDatas: ListData[] | undefined;
   setSearchDatas: React.Dispatch<React.SetStateAction<ListData[] | undefined>>;
   size: number;
-  sortData: SortBy;
   searchPage: number;
   isSearch: boolean;
   setIsSearch: React.Dispatch<React.SetStateAction<boolean>>;
   setIsLast: React.Dispatch<React.SetStateAction<boolean>>;
   setSearchPage: React.Dispatch<React.SetStateAction<number>>;
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-// * 정렬 기준
-interface SortBy {
-  value: string;
-  sortBy: string;
-  sortDir: string;
 }
 
 // * Api 호출시 response pageInfo
@@ -93,7 +84,6 @@ export type {
   CountryNames,
   ListItemProps,
   ListSearchProps,
-  SortBy,
   PageInfo,
   SearchOption,
 };
