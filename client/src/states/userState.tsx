@@ -3,24 +3,6 @@ import { recoilPersist } from 'recoil-persist';
 
 const { persistAtom } = recoilPersist();
 
-// interface userInfoTypes {
-//   key: string;
-//   default: userInfoType;
-//   effects_UNSTABLE: [];
-// }
-
-// interface userInfoType {
-//   gender: string;
-//   profile: string;
-//   nickname: string;
-//   memberStatus: string;
-//   email: string;
-//   memberId: number;
-//   sub: string;
-//   iat: number;
-//   exp: number;
-// }
-
 // 로그인 상태
 export const loginState = atom({
   key: 'loginState',
@@ -32,6 +14,13 @@ export const loginState = atom({
 export const userToken = atom({
   key: 'userToken',
   default: { authorization: '' },
+  effects_UNSTABLE: [persistAtom],
+});
+
+// 로그인 토큰 디코딩 정보
+export const userDecodeToken = atom({
+  key: 'userTokenLoading',
+  default: false,
   effects_UNSTABLE: [persistAtom],
 });
 
@@ -50,7 +39,6 @@ export const userInfo = atom({
     iat: 1679033173,
     exp: 1679033773,
   },
-  effects_UNSTABLE: [persistAtom],
 });
 
 // export type { userInfoTypes, userInfoType };

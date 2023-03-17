@@ -1,9 +1,14 @@
 import axios from 'axios';
 import { useState } from 'react';
 import { FcGoogle } from 'react-icons/fc';
-// import { useNavigate } from 'react-router-dom';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import { loginState, userInfo, userToken } from 'states/userState';
+import { useNavigate } from 'react-router-dom';
+import { useRecoilState, useSetRecoilState } from 'recoil';
+import {
+  loginState,
+  userDecodeToken,
+  userInfo,
+  userToken,
+} from 'states/userState';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
 
@@ -13,23 +18,10 @@ const Login = () => {
 
   const [isLogin, setIsLogin] = useRecoilState(loginState);
   const [token, setToken] = useRecoilState(userToken);
-  const setDecodedToken = useSetRecoilState(userInfo);
-  const userId = useRecoilValue(userInfo);
+  const [decodedToken, setDecodedToken] = useRecoilState(userDecodeToken);
+  const setUser = useSetRecoilState(userInfo);
 
-  // const userInfo = {
-  //   gender: 'NONE',
-  //   profile: 'https://source.boringavatars.com/beam',
-  //   roles: ['USER'],
-  //   nickname: 'aa',
-  //   memberStatus: 'MEMBER_ACTIVE',
-  //   email: 'aaaa@gg.com',
-  //   memberId: 8,
-  //   sub: 'aaaa@gg.com',
-  //   iat: 1679033173,
-  //   exp: 1679033773,
-  // };
-
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const handleChangeEmail = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
@@ -47,10 +39,13 @@ const Login = () => {
       })
       .then(res => {
         setToken(res.headers.authorization.split(' ')[1].split('.')[1]);
-        setIsLogin(!isLogin);
         setDecodedToken(window.atob(token));
-        console.log(userId.memberId);
-        // navigate('/');
+        return JSON.parse(decodedToken);
+      })
+      .then(res => {
+        setUser(res);
+        setIsLogin(!isLogin);
+        navigate('/');
       })
       .catch(error => {
         Swal.fire({
