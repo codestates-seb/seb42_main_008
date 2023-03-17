@@ -38,8 +38,9 @@ import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static partypeople.server.util.ApiDocumentUtils.getRequestPreProcessor;
 import static partypeople.server.util.ApiDocumentUtils.getResponsePreProcessor;
@@ -109,19 +110,17 @@ public class CompanionControllerTest {
                         getRequestPreProcessor(),
                         getResponsePreProcessor(),
                         requestFields(
-                                List.of(
-                                        fieldWithPath("title").type(JsonFieldType.STRING).description("동행글 제목"),
-                                        fieldWithPath("memberId").type(JsonFieldType.NUMBER).description("작성자 식별자"),
-                                        fieldWithPath("content").type(JsonFieldType.STRING).description("동행글 내용"),
-                                        fieldWithPath("date").type(JsonFieldType.STRING).description("동행 날짜"),
-                                        fieldWithPath("address").type(JsonFieldType.STRING).description("동행 주소"),
-                                        fieldWithPath("lat").type(JsonFieldType.NUMBER).description("위도"),
-                                        fieldWithPath("lng").type(JsonFieldType.NUMBER).description("경도"),
-                                        fieldWithPath("nationName").type(JsonFieldType.STRING).description("국가"),
-                                        fieldWithPath("nationCode").type(JsonFieldType.STRING).description("국가 코드"),
-                                        fieldWithPath("continent").type(JsonFieldType.NUMBER).description("대륙 코드"),
-                                        fieldWithPath("tags").type(JsonFieldType.ARRAY).description("태그")
-                                )
+                                fieldWithPath("title").type(JsonFieldType.STRING).description("동행글 제목"),
+                                fieldWithPath("memberId").type(JsonFieldType.NUMBER).description("작성자 식별자"),
+                                fieldWithPath("content").type(JsonFieldType.STRING).description("동행글 내용"),
+                                fieldWithPath("date").type(JsonFieldType.STRING).description("동행 날짜"),
+                                fieldWithPath("address").type(JsonFieldType.STRING).description("동행 주소"),
+                                fieldWithPath("lat").type(JsonFieldType.NUMBER).description("위도"),
+                                fieldWithPath("lng").type(JsonFieldType.NUMBER).description("경도"),
+                                fieldWithPath("nationName").type(JsonFieldType.STRING).description("국가"),
+                                fieldWithPath("nationCode").type(JsonFieldType.STRING).description("국가 코드"),
+                                fieldWithPath("continent").type(JsonFieldType.NUMBER).description("대륙 코드"),
+                                fieldWithPath("tags").type(JsonFieldType.ARRAY).description("태그")
                         )));
     }
 
@@ -195,8 +194,42 @@ public class CompanionControllerTest {
                 .andExpect(jsonPath("$.data.lat").value(response.getLat()))
                 .andExpect(jsonPath("$.data.lng").value(response.getLng()))
                 .andExpect(jsonPath("$.data.tags").isArray())
-                .andExpect(jsonPath("$.data.companionStatus").value(response.isCompanionStatus()));
-
+                .andExpect(jsonPath("$.data.companionStatus").value(response.isCompanionStatus()))
+                .andDo(document("patch-companion",
+                        getRequestPreProcessor(),
+                        getResponsePreProcessor(),
+                        pathParameters(
+                                parameterWithName("companion-id").description("동행글 식별자")
+                        ),
+                        requestFields(
+                                fieldWithPath("companionId").type(JsonFieldType.NUMBER).description("동행글 식별자").ignored(),
+                                fieldWithPath("title").type(JsonFieldType.STRING).description("동행글 제목").optional(),
+                                fieldWithPath("content").type(JsonFieldType.STRING).description("동행글 내용").optional(),
+                                fieldWithPath("date").type(JsonFieldType.STRING).description("동행 날짜").optional(),
+                                fieldWithPath("address").type(JsonFieldType.STRING).description("동행 주소").optional(),
+                                fieldWithPath("lat").type(JsonFieldType.NUMBER).description("위도").optional(),
+                                fieldWithPath("lng").type(JsonFieldType.NUMBER).description("경도").optional(),
+                                fieldWithPath("nationName").type(JsonFieldType.STRING).description("국가").optional(),
+                                fieldWithPath("nationCode").type(JsonFieldType.STRING).description("국가 코드").optional(),
+                                fieldWithPath("continent").type(JsonFieldType.NUMBER).description("대륙 코드").optional(),
+                                fieldWithPath("tags").type(JsonFieldType.ARRAY).description("태그").optional()
+                        ),
+                        responseFields(
+                                fieldWithPath("data").type(JsonFieldType.OBJECT).description("결과 데이터"),
+                                fieldWithPath("data.companionId").type(JsonFieldType.NUMBER).description("동행글 식별자"),
+                                fieldWithPath("data.memberId").type(JsonFieldType.NUMBER).description("작성자 식별자"),
+                                fieldWithPath("data.nickname").type(JsonFieldType.STRING).description("작성자 닉네임"),
+                                fieldWithPath("data.score").type(JsonFieldType.NUMBER).description("작성자 점수"),
+                                fieldWithPath("data.title").type(JsonFieldType.STRING).description("동행글 제목"),
+                                fieldWithPath("data.content").type(JsonFieldType.STRING).description("동행글 내용"),
+                                fieldWithPath("data.createdAt").type(JsonFieldType.STRING).description("동행글 작성 날짜"),
+                                fieldWithPath("data.date").type(JsonFieldType.STRING).description("동행 날짜"),
+                                fieldWithPath("data.address").type(JsonFieldType.STRING).description("동행 주소"),
+                                fieldWithPath("data.lat").type(JsonFieldType.NUMBER).description("위도"),
+                                fieldWithPath("data.lng").type(JsonFieldType.NUMBER).description("경도"),
+                                fieldWithPath("data.tags").type(JsonFieldType.ARRAY).description("태그"),
+                                fieldWithPath("data.companionStatus").type(JsonFieldType.BOOLEAN).description("동행 완료 여부")
+                        )));
     }
 
     private static class Post {
