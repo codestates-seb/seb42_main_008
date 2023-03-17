@@ -99,11 +99,7 @@ const ContentList = () => {
         // ! 첫 페이지일 경우 isLast 초기화
         setIsLast(false);
       }
-      if (searchPage !== 1) {
-        // ! 검색 데이터 초기화
-        setSearchPage(1);
-        setDatas([]);
-      }
+      setSearchPage(1);
       getContentData(page, size);
     }
   }, [searchDatas, page, searchPage]);
@@ -139,6 +135,7 @@ const ContentList = () => {
         setIsLast={setIsLast}
         setSearchPage={setSearchPage}
         setIsLoading={setIsLoading}
+        setDatas={setDatas}
       />
       <ListItems listData={datas} />
       {isLoading && <Loader />}

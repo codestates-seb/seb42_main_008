@@ -54,6 +54,7 @@ interface ListSearchProps {
   setIsLast: React.Dispatch<React.SetStateAction<boolean>>;
   setSearchPage: React.Dispatch<React.SetStateAction<number>>;
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  setDatas: React.Dispatch<React.SetStateAction<ListData[] | []>>;
 }
 
 // * Api 호출시 response pageInfo

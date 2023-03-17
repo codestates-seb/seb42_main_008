@@ -24,6 +24,7 @@ const ListSearch = ({
   setIsLast,
   setSearchPage,
   setIsLoading,
+  setDatas,
 }: ListSearchProps) => {
   const { countryCode } = useParams();
   const [date, setDate] = useState<Date>(new Date());
@@ -97,6 +98,7 @@ const ListSearch = ({
     setKeyword('');
     setDate(new Date());
     setIsSearch(false);
+    setDatas([]);
   };
 
   const searchOptions: SearchOption[] = [
