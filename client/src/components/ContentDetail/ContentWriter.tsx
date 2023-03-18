@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { detailProps } from 'interfaces/ContentDetail.interface';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { userInfo } from 'states/userState';
 import styled from 'styled-components';
@@ -8,14 +8,15 @@ import Swal from 'sweetalert2';
 import { getScoreIcon } from 'utils/getScoreIcon';
 
 const ContentWriter = ({ detail }: detailProps) => {
-  const { profile } = useRecoilValue(userInfo);
-  // const params = useParams();
-  // const { id } = params;
-  // 클릭 시 수정페이지로 이동 추가
+  const { profile, memberId } = useRecoilValue(userInfo);
+  const params = useParams();
+  const { contentId } = params;
+
   const navigate = useNavigate();
-  // const handleClick = () => {
-  //   navigate(`${}/edit`)
-  // }
+  const handleUpdate = () => {
+    navigate(`${contentId}/edit`);
+  };
+
   // 클릭 시 글 삭제 추가
   const handleDelete = () => {
     Swal.fire({
@@ -36,10 +37,34 @@ const ContentWriter = ({ detail }: detailProps) => {
             console.log('delete!');
           })
           .catch(error => console.log(error));
-        navigate(`/asia/jpn`);
+        navigate(-1);
       }
     });
   };
+
+  // 만약 이미 신청한 사람이라면, alert 창 띄우기
+  // 신청자 배열 or 참여자 배열에 있는 id === userInfo의 memberId ? 이미 신청한 동행입니다. : 신청되었습니다
+  const handleApply = async () => {
+    await axios
+      .post(
+        `${process.env.REACT_APP_TEST_SERVER}/companions/${contentId}/subscribers`,
+        {
+          memberId,
+        }
+      )
+      .then(() => {
+        Swal.fire('Applied!', '동행이 신청되었습니다!', 'success');
+      })
+      .catch(() => {
+        // console.log(error);
+        Swal.fire('Failed!', '이미 신청한 동행입니다!', 'error');
+      });
+  };
+
+  const handleProfile = () => {
+    navigate(`/${detail.memberId}/profile`);
+  };
+
   return (
     <Container>
       <WriterInfo>
@@ -58,10 +83,26 @@ const ContentWriter = ({ detail }: detailProps) => {
       <ButtonBox>
         {/* 여행완료? 리뷰작성 버튼 : (작성자ID === 현재 로그인ID ?  수정, 삭제 버튼 : 동행신청, 프로필보기 버튼) */}
         {/* 참여자 탭에서는 버튼 안보이도록 수정하기 */}
-        <button className="btn">동행글 수정</button>
-        <button className="btn" onClick={handleDelete}>
-          동행글 삭제
-        </button>
+        {/* 수정페이지 내비게이트 추가 */}
+        {detail.memberId === memberId ? (
+          <>
+            <button className="btn" onClick={handleUpdate}>
+              동행글 수정
+            </button>
+            <button className="btn" onClick={handleDelete}>
+              동행글 삭제
+            </button>
+          </>
+        ) : (
+          <>
+            <button className="btn" onClick={handleApply}>
+              동행 신청
+            </button>
+            <button className="btn" onClick={handleProfile}>
+              프로필 보기
+            </button>
+          </>
+        )}
       </ButtonBox>
     </Container>
   );
@@ -138,7 +179,7 @@ const WriterInfo = styled.section`
     }
   }
   @media screen and (max-width: 768px) {
-    .img-wrapper {
+    .img {
       width: 150px;
       height: 150px;
     }

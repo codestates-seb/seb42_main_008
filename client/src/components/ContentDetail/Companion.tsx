@@ -1,42 +1,26 @@
 import { contentsTab } from 'interfaces/ContentDetail.interface';
 import { useState } from 'react';
+import { useRecoilValue } from 'recoil';
+import { userInfo } from 'states/userState';
 import styled from 'styled-components';
 
-const Companion = () => {
+const Companion = ({ sub, detail }: any) => {
   const [currentTab, setCurrentTab] = useState(0);
-
+  const { memberId } = useRecoilValue(userInfo);
   const companionTabs: contentsTab[] = [
     {
       tabName: '신청자',
-      content: [
-        { picture: '사진', name: '윤두준' },
-        { picture: '사진', name: '양요섭' },
-        { picture: '사진', name: '양요섭' },
-        { picture: '사진', name: '양요섭' },
-        { picture: '사진', name: '양요섭' },
-        { picture: '사진', name: '양요섭' },
-        { picture: '사진', name: '양요섭' },
-        { picture: '사진', name: '양요섭' },
-        { picture: '사진', name: '양요섭' },
-        { picture: '사진', name: '양요섭' },
-        { picture: '사진', name: '양요섭' },
-        { picture: '사진', name: '양요섭' },
-        { picture: '사진', name: '양요섭' },
-        { picture: '사진', name: '양요섭' },
-      ],
     },
     {
       tabName: '참여자',
-      content: [
-        { picture: '사진', name: '이기광' },
-        { picture: '사진', name: '손동운' },
-      ],
     },
   ];
 
   const handleSelectTab = (index: number) => {
     setCurrentTab(index);
   };
+
+  console.log(sub);
 
   return (
     <Container>
@@ -52,19 +36,28 @@ const Companion = () => {
         ))}
       </TabBox>
       <Content>
-        {companionTabs[currentTab].content.map((el, index) => (
-          <li key={index}>
-            <div className="companion-info">
-              <span>{el.picture}</span>
-              <span>{el.name}</span>
-            </div>
-            {/* 작성자ID === 현재 로그인ID ? 수락, 거절 버튼 : (신청자ID === 현재 로그인ID ? 취소 버튼 : null) */}
-            <div className="btn-wrapper">
-              <button className="btn">수락</button>
-              <button className="btn">거절</button>
-            </div>
-          </li>
-        ))}
+        {sub ? (
+          <li>동행 신청자가 없습니다.</li>
+        ) : (
+          sub.map((el: any, index: number) => (
+            <li key={index}>
+              <div className="companion-info">
+                <span>{el.picture}</span>
+                <span>{el.name}</span>
+              </div>
+              {/* 작성자ID === 현재 로그인ID ? 수락, 거절 버튼 : (신청자ID === 현재 로그인ID ? 취소 버튼 : null) */}
+              {detail.memberId === memberId ? (
+                <div className="btn-wrapper">
+                  {/* 수락 또는 거절되었을 경우 쪽지 보내기..?! */}
+                  <button className="btn">수락</button>
+                  <button className="btn">거절</button>
+                </div>
+              ) : (
+                <div className="btn-wrapper"></div>
+              )}
+            </li>
+          ))
+        )}
       </Content>
     </Container>
   );
