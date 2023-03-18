@@ -84,7 +84,7 @@ const Header = () => {
         </div>
       ) : null}
       <nav className="mobile-menu">
-        {!isLogin ? (
+        {isLogin ? (
           <div className="envelope-alert">
             <FaEnvelope
               className="envelope"
