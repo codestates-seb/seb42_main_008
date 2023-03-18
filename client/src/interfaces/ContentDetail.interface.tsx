@@ -1,6 +1,6 @@
 interface contentsTab {
   tabName: string;
-  content: profileList[];
+  // content: profileList[];
 }
 [];
 
@@ -49,6 +49,22 @@ interface detailProps {
   detail: detailInfo;
 }
 
+interface subProps {
+  detail: detailInfo;
+  sub: subApply[];
+}
+
+interface subApply {
+  memberId: number;
+  profile: string;
+  nickname: string;
+}
+
+interface subInfo {
+  sub: subApply[];
+  setSub: (newValue: subApply[]) => void;
+}
+
 export type {
   contentsTab,
   profileList,
@@ -58,4 +74,6 @@ export type {
   thirdModal,
   detailInfo,
   detailProps,
+  subProps,
+  subInfo,
 };

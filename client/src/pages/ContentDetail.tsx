@@ -1,7 +1,7 @@
-// import Companion from 'components/ContentDetail/Companion';
 import axios from 'axios';
+import Companion from 'components/ContentDetail/Companion';
 import ContentWriter from 'components/ContentDetail/ContentWriter';
-import Participants from 'components/ContentDetail/Participants';
+// import Participants from 'components/ContentDetail/Participants';
 // import SearchMap from 'components/ContentDetail/SearchMap';
 import { detailInfo } from 'interfaces/ContentDetail.interface';
 import { useEffect, useState } from 'react';
@@ -10,8 +10,7 @@ import styled from 'styled-components';
 import { getDateString } from 'utils/getDateString';
 
 const ContentDetail = () => {
-  const params = useParams();
-  const { contentId } = params;
+  const { contentId } = useParams<{ contentId: string }>();
 
   const [detail, setDetail] = useState<detailInfo>({
     companionId: 0,
@@ -28,12 +27,34 @@ const ContentDetail = () => {
     createdAt: '',
     companionStatus: false,
   });
+  // const [sub, setSub] = useState<subInfo>({
+  //   memberId: 0,
+  //   nickname: '',
+  //   profile: '',
+  // });
+
+  const [sub, setSub] = useState<any>([]);
 
   useEffect(() => {
     axios
       .get(`${process.env.REACT_APP_TEST_SERVER}/companions/${contentId}`)
       .then(res => {
         setDetail(res.data.data);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }, []);
+
+  useEffect(() => {
+    axios
+      .get(
+        `${process.env.REACT_APP_TEST_SERVER}/companions/${contentId}/subscribers`
+      )
+      .then(res => {
+        console.log(res.data.data);
+        console.log(res.data);
+        setSub(res.data.data);
       })
       .catch(error => {
         console.log(error);
@@ -51,7 +72,10 @@ const ContentDetail = () => {
             <h2>{detail.title}</h2>
             <h4>작성날짜: {detail.createdAt}</h4>
             {/* <SearchMap detail={detail} /> */}
-            <div id="content">{detail.content}</div>
+            <div
+              id="content"
+              dangerouslySetInnerHTML={{ __html: detail.content }}
+            ></div>
             <div id="tag-box">
               {detail &&
                 detail.tags.map((el, index: number) => (
@@ -63,8 +87,10 @@ const ContentDetail = () => {
         <RightBox>
           <ContentWriter detail={detail} />
           {/* 여행완료 ? Participants : Companion */}
-          {/* <Companion /> */}
-          <Participants />
+          {/* newDate 함수 호출해서 지금 시간이랑 비교 후 지나있으면 상태변경 */}
+          {/* newDate(현재날짜) 보다 크면? 년도 비교한번, 월비교한번, 일자비교한번, 시간비교한번 */}
+          <Companion detail={detail} sub={sub} />
+          {/* <Participants /> */}
         </RightBox>
       </ContentDetailBox>
     </Container>
