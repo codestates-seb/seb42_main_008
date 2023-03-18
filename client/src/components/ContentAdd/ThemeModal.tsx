@@ -1,6 +1,8 @@
 import axios from 'axios';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useRecoilValue } from 'recoil';
+import { userInfo } from 'states/userState';
 import styled from 'styled-components';
 
 type LatLng = {
@@ -77,8 +79,9 @@ const ThemeModal = ({
   // 성향,테마 태그 종합
   const allTags = selectedTendencies.concat(selectedThemes);
 
-  //대륙
-
+  // 멤버아이디
+  const user = useRecoilValue(userInfo);
+  console.log(user.memberId);
   // 모든 양식 제출 post 요청
   // 멤버아이디는 토큰받아 입력 // 대륙은 정수?
   const handleAllSubmit = async (event: any) => {
@@ -98,7 +101,7 @@ const ThemeModal = ({
             nationCode: countryCode,
             continent: 2,
             tags: allTags,
-            memberId: 8,
+            memberId: user.memberId,
           }
         );
         setIsThemeModal(false);
