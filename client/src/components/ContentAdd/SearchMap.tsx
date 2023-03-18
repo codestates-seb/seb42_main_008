@@ -1,11 +1,16 @@
 import React, { useState } from 'react';
-import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
+import {
+  GoogleMap,
+  LoadScript,
+  LoadScriptProps,
+  Marker,
+} from '@react-google-maps/api';
 import styled from 'styled-components';
 import { FaMapMarkerAlt } from 'react-icons/fa';
 interface LatLngWithAddress extends google.maps.LatLngLiteral {
   address: string;
 }
-
+const libraries: LoadScriptProps['libraries'] = ['places'];
 const SearchMap = ({
   savedAddress,
   setSavedAddress,
@@ -80,7 +85,7 @@ const SearchMap = ({
   };
 
   return (
-    <LoadScript googleMapsApiKey={googlekey} libraries={['places']}>
+    <LoadScript googleMapsApiKey={googlekey} libraries={libraries}>
       <div>
         <SearchForm onSubmit={handleSearchClick}>
           <input type="text" value={searchPlace} onChange={handlePlaceSelect} />
