@@ -7,9 +7,9 @@ import 'react-datepicker/dist/react-datepicker.css';
 import ko from 'date-fns/locale/ko';
 import CountrySelectModal from 'components/ContentAdd/CountrySelectModal';
 import TendencyModal from 'components/ContentAdd/TendencyModal';
-import SearchMap from 'components/ContentAdd/SearchMap';
 import countries from '../assets/countries.json';
 import ThemeModal from 'components/ContentAdd/ThemeModal';
+import SearchMap from 'components/ContentAdd/SearchMap';
 
 registerLocale('ko', ko);
 

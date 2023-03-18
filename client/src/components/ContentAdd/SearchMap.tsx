@@ -1,6 +1,5 @@
-import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
-import axios from 'axios';
 import React, { useState } from 'react';
+import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 import styled from 'styled-components';
 import { FaMapMarkerAlt } from 'react-icons/fa';
 interface LatLngWithAddress extends google.maps.LatLngLiteral {
@@ -13,72 +12,104 @@ const SearchMap = ({
   markerLocation,
   setMarkerLocation,
 }: any) => {
-  const [map, setMap] = useState<google.maps.Map | null>(null);
-  const [searchInput, setSearchInput] = useState<string>('');
-  const [selectPlace, setSelectPlace] = useState<LatLngWithAddress | null>(
-    null
-  );
-
-  const onLoad = (map: google.maps.Map) => {
-    setMap(map);
-  };
-
-  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchInput(event.target.value);
-  };
-
+  // 구글 api
   const googlekey: any = process.env.REACT_APP_API_KEY;
+  // 초기마커위치
+  const initialCenter = {
+    lat: 37.5665,
+    lng: 126.978,
+  };
+  //  마커위치 및 화면 위치
+  const [center, setCenter] =
+    useState<google.maps.LatLngLiteral>(initialCenter);
+  // 포인트
+  const [markerPosition, setMarkerPosition] =
+    useState<LatLngWithAddress | null>(null);
+  // 인풋값
+  const [searchPlace, setSearchPlace] = useState('');
 
-  const handleSearchSubmit = async (
-    event: React.FormEvent<HTMLFormElement>
-  ) => {
-    event.preventDefault();
-
-    const url = `/json?address=${searchInput}&key=${process.env.REACT_APP_API_KEY}`;
-    try {
-      const response = await axios.get(url);
-      const data = response.data;
-      if (data.status === 'OK') {
-        const result = data.results[0];
-        const location = result.geometry.location;
-        const formmatedAddress = result.formatted_address;
-        setSelectPlace({
-          lat: Number(location.lat),
-          lng: Number(location.lng),
-          address: formmatedAddress,
-        });
-        setSavedAddress(formmatedAddress);
-        setMarkerLocation(location);
-        if (map) {
-          map.panTo(location);
+  // 맵클릭시 마커 이동
+  const handleMapClick = (event: google.maps.MapMouseEvent) => {
+    if (event.latLng) {
+      const geocoder = new google.maps.Geocoder();
+      const latLng: LatLngWithAddress = {
+        ...event.latLng.toJSON(),
+        address: '',
+      };
+      geocoder.geocode({ location: latLng }, (results, status) => {
+        if (status === google.maps.GeocoderStatus.OK && results) {
+          latLng.address = results[0].formatted_address;
+          setMarkerPosition(latLng);
+          setCenter(latLng);
+          setSavedAddress(latLng.address);
         }
-      }
-    } catch (error) {
-      console.log(error);
-      console.log(markerLocation);
+      });
     }
   };
 
+  // 검색 인풋 핸들러
+  const handlePlaceSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchPlace(e.target.value);
+  };
+
+  // 장소 검색, 마커 이동, 센터 이동
+  const handleSearchClick = (event: any) => {
+    event.preventDefault();
+    const geocoder = new google.maps.Geocoder();
+    geocoder.geocode(
+      { address: searchPlace },
+      (
+        results: google.maps.GeocoderResult[] | null,
+        status: google.maps.GeocoderStatus
+      ) => {
+        if (status === google.maps.GeocoderStatus.OK && results) {
+          const location = results[0].geometry.location.toJSON();
+          const formmatedAddress = results[0].formatted_address;
+          setMarkerPosition({
+            lat: Number(location.lat),
+            lng: Number(location.lng),
+            address: formmatedAddress,
+          });
+          setSavedAddress(formmatedAddress);
+          setCenter(location);
+          setMarkerLocation(location);
+          console.log(markerLocation);
+        }
+      }
+    );
+  };
+
   return (
-    <LoadScript googleMapsApiKey={googlekey}>
-      <SearchForm onSubmit={handleSearchSubmit}>
-        <input type="text" value={searchInput} onChange={handleSearch} />
-        <button type="submit">Search</button>
-      </SearchForm>
-      <GoogleMap
-        mapContainerStyle={containerStyle}
-        center={center}
-        zoom={10}
-        onLoad={onLoad}
-      >
-        {selectPlace && <Marker position={selectPlace} />}
-      </GoogleMap>
-      {selectPlace && (
-        <AddressRender>
-          <FaMapMarkerAlt className="mark-icon" />
-          <div>{savedAddress}</div>
-        </AddressRender>
-      )}
+    <LoadScript googleMapsApiKey={googlekey} libraries={['places']}>
+      <div>
+        <SearchForm onSubmit={handleSearchClick}>
+          <input type="text" value={searchPlace} onChange={handlePlaceSelect} />
+          <button type="submit">Search</button>
+        </SearchForm>
+        <GoogleMap
+          mapContainerStyle={containerStyle}
+          center={center}
+          zoom={10}
+          onClick={handleMapClick}
+        >
+          {markerPosition && (
+            <Marker
+              position={
+                markerPosition && {
+                  lat: markerPosition.lat,
+                  lng: markerPosition.lng,
+                }
+              }
+            />
+          )}
+        </GoogleMap>
+        {markerPosition && (
+          <AddressRender>
+            <FaMapMarkerAlt className="mark-icon" />
+            <div>{savedAddress}</div>
+          </AddressRender>
+        )}
+      </div>
     </LoadScript>
   );
 };
@@ -88,11 +119,6 @@ export default SearchMap;
 const containerStyle: React.CSSProperties = {
   width: '100%',
   height: '400px',
-};
-
-const center = {
-  lat: 37.5665,
-  lng: 126.978,
 };
 
 const SearchForm = styled.form`
@@ -116,7 +142,6 @@ const SearchForm = styled.form`
     border-radius: 30px;
   }
 `;
-
 const AddressRender = styled.div`
   display: flex;
   align-items: center;
