@@ -42,6 +42,7 @@ const ThemeModal = ({
   };
   const navigate = useNavigate();
 
+  // 테마 태그 종류
   const themes: string[] = [
     '맛집',
     '명소',
@@ -75,6 +76,8 @@ const ThemeModal = ({
   };
   // 성향,테마 태그 종합
   const allTags = selectedTendencies.concat(selectedThemes);
+
+  //대륙
 
   // 모든 양식 제출 post 요청
   // 멤버아이디는 토큰받아 입력 // 대륙은 정수?
