@@ -23,6 +23,7 @@ const Header = () => {
           headers: { Authorization: token },
         }
       );
+      localStorage.clear();
       setToken('');
       setIsLogin(!isLogin);
       console.log(isLogin);
