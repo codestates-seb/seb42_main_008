@@ -58,6 +58,22 @@ const ThemeModal = ({
     '기타',
   ];
 
+  // 대륙 번호
+  let continentNumber: number;
+  if (continentSelect === 'africa') {
+    continentNumber = 1;
+  } else if (continentSelect === 'asia') {
+    continentNumber = 2;
+  } else if (continentSelect === 'europe') {
+    continentNumber = 3;
+  } else if (continentSelect === 'northAmerica') {
+    continentNumber = 4;
+  } else if (continentSelect === 'oceania') {
+    continentNumber = 5;
+  } else if (continentSelect === 'southAmerica') {
+    continentNumber = 6;
+  }
+
   // 테마 담기 // 최대개수
   const [selectedThemes, setSelectedThemes] = useState<string[]>([]);
   const handleCheckboxClick = (event: React.MouseEvent<HTMLInputElement>) => {
@@ -99,7 +115,7 @@ const ThemeModal = ({
             lng: markerLocation.lng,
             nationName: countrySelect,
             nationCode: countryCode,
-            continent: 2,
+            continent: continentNumber,
             tags: allTags,
             memberId: user.memberId,
           }
