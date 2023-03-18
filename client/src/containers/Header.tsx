@@ -30,6 +30,8 @@ const Header = () => {
     } catch (error) {
       console.log(error);
       console.log(token);
+      console.log(loginState);
+      console.log(isLogin);
     }
   };
   //쪽지 모달
@@ -58,7 +60,7 @@ const Header = () => {
         </Link>
       </div>
 
-      {isLogin ? (
+      {!isLogin ? (
         <LogoutNav>
           <Link to="login">Login</Link>
           <Link to="signup">SignUp</Link>
@@ -102,7 +104,7 @@ const Header = () => {
         </div>
       </nav>
       {isShowMenu ? (
-        !isLogin ? (
+        isLogin ? (
           <Menu setIsShowMenu={setIsShowMenu} handleLogout={handleLogout} />
         ) : (
           <LogoutMenu setIsShowMenu={setIsShowMenu} />
