@@ -4,18 +4,14 @@ import styled from 'styled-components';
 
 type Props = {
   setIsShowMenu: (newValue: boolean) => void;
-  setIsLogin: (newValue: boolean) => void;
+  handleLogout: React.MouseEventHandler<HTMLDivElement>;
 };
-const Menu = ({ setIsShowMenu, setIsLogin }: Props) => {
+const Menu = ({ setIsShowMenu, handleLogout }: Props) => {
   const handleMenuEnter = () => {
     setIsShowMenu(true);
   };
   const handleMenuLeave = () => {
     setIsShowMenu(false);
-  };
-  const handleLogout = () => {
-    window.confirm('로그아웃 하시겠습니까?');
-    setIsLogin(true);
   };
 
   return (

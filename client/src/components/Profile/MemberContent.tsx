@@ -4,22 +4,24 @@ import { useEffect, useState } from 'react';
 import MemberReviews from './MemberReviews';
 import MemberCompanoins from './MemberCompanoins';
 import MemberSettings from './MemberSettings';
+import { useRecoilValue } from 'recoil';
+import { userInfo } from 'states/userState';
 
 const MemberContent = ({
-  user,
   member,
   currentTab,
   setCurrentTab,
 }: MemberContentProps) => {
   const [tabList, setTabList] = useState<string[]>([]);
+  const loginUser = useRecoilValue(userInfo);
 
   useEffect(() => {
     setTabList(
-      user.memberId === member?.memberId
+      loginUser.memberId === member?.memberId
         ? ['평가 모아보기', `내 동행글`, '계정 관리']
         : ['평가 모아보기', `동행글 보기`]
     );
-  }, [user]);
+  }, []);
 
   const handleTabClick = (idx: number) => {
     setCurrentTab(idx);
@@ -40,7 +42,7 @@ const MemberContent = ({
         ))}
       </Tabs>
       {currentTab === 0 && <MemberReviews />}
-      {currentTab === 1 && <MemberCompanoins member={member} user={user} />}
+      {currentTab === 1 && <MemberCompanoins member={member} />}
       {currentTab === 2 && (
         <MemberSettings member={member} setCurrentTab={setCurrentTab} />
       )}

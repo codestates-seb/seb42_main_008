@@ -1,6 +1,7 @@
 package partypeople.server.review.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import partypeople.server.member.entity.Member;
@@ -33,6 +34,6 @@ public class ReviewService {
 
     @Transactional(readOnly = true)
     public List<Review> getReviewsByCompanionIdAndMemberId(Long companionId, Long memberId) {
-        return reviewRepository.findByCompanionCompanionIdAndMemberMemberId(companionId, memberId);
+        return reviewRepository.findByCompanionCompanionIdAndMemberMemberId(companionId, memberId,Sort.by("memberId").descending());
     }
 }

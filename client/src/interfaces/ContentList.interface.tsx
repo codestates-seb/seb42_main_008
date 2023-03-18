@@ -41,6 +41,7 @@ interface CountryNames {
 // * ListItems 컴포넌트 Props data
 interface ListItemProps {
   listData: ListData[];
+  isLoading: boolean;
 }
 
 // * ListSearch 컴포넌트 props

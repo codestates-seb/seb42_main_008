@@ -41,7 +41,7 @@ public class SecurityConfiguration {
     private final CustomAuthorityUtils authorityUtils;
     private final RedisTemplate<String, String> redisTemplate;
     private final AuthService authService;
-//    private final MemberService memberService;
+    private final MemberService memberService;
 
 //    @Value("${spring.security.oauth2.client.registration.google.clientId}")
 //    private String clientId;
@@ -107,7 +107,6 @@ public class SecurityConfiguration {
         configuration.setAllowCredentials(true);
         configuration.setAllowedOriginPatterns(Arrays.asList("*"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
-//        configuration.addExposedHeader("*");
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PATCH", "DELETE", "OPTIONS"));
         configuration.addExposedHeader("Authorization");
         configuration.addExposedHeader("Refresh");
@@ -121,7 +120,7 @@ public class SecurityConfiguration {
         public void configure(HttpSecurity builder) {
             AuthenticationManager authenticationManager = builder.getSharedObject(AuthenticationManager.class);
 
-            JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager, jwtTokenizer,authService);
+            JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager, jwtTokenizer,authService,memberService);
             jwtAuthenticationFilter.setFilterProcessesUrl("/members/login");
             jwtAuthenticationFilter.setAuthenticationSuccessHandler(new MemberAuthenticationSuccessHandler());
             jwtAuthenticationFilter.setAuthenticationFailureHandler(new MemberAuthenticationFailureHandler());

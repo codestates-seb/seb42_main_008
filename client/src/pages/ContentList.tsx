@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { ListData, ListQueryString } from 'interfaces/ContentList.interface';
-import ListTitle from 'components/ContinentList/ListTitle';
-import ListSearch from 'components/ContinentList/ListSearch';
-import ListItems from 'components/ContinentList/ListItems';
+import ListTitle from 'components/ContentList/ListTitle';
+import ListSearch from 'components/ContentList/ListSearch';
+import ListItems from 'components/ContentList/ListItems';
 import customAxios from 'api/customAxios';
 import { useParams } from 'react-router-dom';
 import Loader from 'components/Loader';
@@ -137,7 +137,7 @@ const ContentList = () => {
         setIsLoading={setIsLoading}
         setDatas={setDatas}
       />
-      <ListItems listData={datas} />
+      <ListItems listData={datas} isLoading={isLoading} />
       {isLoading && <Loader />}
       {datas.length !== 0 && (
         <Observer ref={obsRef}>{/* 무한스크롤용 옵저버 */}</Observer>

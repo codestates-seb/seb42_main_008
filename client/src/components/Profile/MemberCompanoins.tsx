@@ -7,13 +7,16 @@ import styled from 'styled-components';
 import ListComponent from './ListComponent';
 import customAxios from 'api/customAxios';
 import { useParams } from 'react-router-dom';
+import { useRecoilValue } from 'recoil';
+import { userInfo } from 'states/userState';
 
-const MemberCompanoins = ({ member, user }: MemberCompanionsProps) => {
+const MemberCompanoins = ({ member }: MemberCompanionsProps) => {
   const { memberId } = useParams();
   const [subscribers, setSubscribers] = useState<MyCompanion[] | []>([]);
   const [participants, setParticipants] = useState<MyCompanion[] | []>([]);
   const [writers, setWriters] = useState<MyCompanion[] | []>([]);
   const [titleHead, setTitleHead] = useState<string>('');
+  const loginUser = useRecoilValue(userInfo);
 
   const getData = async (dataType: string) => {
     await customAxios.get(`members/${memberId}/${dataType}`).then(resp => {
@@ -33,13 +36,13 @@ const MemberCompanoins = ({ member, user }: MemberCompanionsProps) => {
     getData('writers');
     setTitleHead(cur => {
       if (member) {
-        return member.memberId === user.memberId
+        return member.memberId === loginUser.memberId
           ? '내가 '
           : `${member.nickname}님이 `;
       }
       return cur;
     });
-  }, [user]);
+  }, []);
 
   return (
     <CompanoinsWrapper>

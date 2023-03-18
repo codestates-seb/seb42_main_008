@@ -7,15 +7,29 @@ import { RiLogoutBoxRLine } from 'react-icons/ri';
 import { GiHamburgerMenu } from 'react-icons/gi';
 import Menu from 'components/Header/Menu';
 import LogoutMenu from 'components/Header/LogoutMenu';
+import { useRecoilState } from 'recoil';
+import { loginState, userToken } from 'states/userState';
+import axios from 'axios';
 const Header = () => {
-  // 로그인 상태 임시
-  const [isLogin, setIsLogin] = useState(true);
-  const LoginHandler = () => {
-    setIsLogin(!isLogin);
-  };
-  const handleLogout = () => {
-    window.confirm('로그아웃 하시겠습니까?');
-    setIsLogin(true);
+  const [isLogin, setIsLogin] = useRecoilState(loginState);
+  const [token, setToken] = useRecoilState(userToken);
+
+  const handleLogout = async () => {
+    try {
+      await axios.post(
+        `${process.env.REACT_APP_TEST_SERVER}/members/logout`,
+        null,
+        {
+          headers: { Authorization: token },
+        }
+      );
+      setToken('');
+      setIsLogin(!isLogin);
+      console.log(isLogin);
+    } catch (error) {
+      console.log(error);
+      console.log(token);
+    }
   };
   //쪽지 모달
   const [noteModal, setNoteModal] = useState(false);
@@ -41,7 +55,6 @@ const Header = () => {
         <Link to="/continents" className="party-link">
           파티 구하기
         </Link>
-        <button onClick={LoginHandler}>임시 로그인</button>
       </div>
 
       {isLogin ? (
@@ -89,7 +102,7 @@ const Header = () => {
       </nav>
       {isShowMenu ? (
         !isLogin ? (
-          <Menu setIsShowMenu={setIsShowMenu} setIsLogin={setIsLogin} />
+          <Menu setIsShowMenu={setIsShowMenu} handleLogout={handleLogout} />
         ) : (
           <LogoutMenu setIsShowMenu={setIsShowMenu} />
         )
@@ -128,6 +141,7 @@ const HeaderBox = styled.header`
     height: 100%;
     @media screen and (max-width: 768px) {
       width: 70%;
+      justify-content: flex-start;
     }
     > a:first-child {
       display: flex;

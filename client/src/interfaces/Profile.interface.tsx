@@ -44,7 +44,6 @@ interface Follow {
 interface ProfileEdit {
   proflie?: string;
   nickname?: string;
-  gender?: string;
   content?: string;
   password: string;
 }
@@ -57,7 +56,6 @@ interface FollowRequest {
 
 // * MemberInfo 컴포넌트 props
 interface MemberInfoProps {
-  user: LoginUser;
   member: MemberProfile;
   setMember: React.Dispatch<React.SetStateAction<MemberProfile | null>>;
 }
@@ -70,14 +68,12 @@ interface MemberSettingsProps {
 
 // * MemberContent 컴포넌트 props
 interface MemberContentProps extends MemberSettingsProps {
-  user: LoginUser;
   currentTab: number;
 }
 
 // * MemberCompanions 컴포넌트 props
 interface MemberCompanionsProps {
   member: MemberProfile;
-  user: LoginUser;
 }
 
 // * MemberCompanions -> ListComponent 컴포넌트 props

@@ -1,10 +1,6 @@
 import Slider from 'react-slick';
 import styled from 'styled-components';
-import {
-  Address,
-  FlagText,
-  ListItem,
-} from 'components/ContinentList/ListItems';
+import { Address, FlagText, ListItem } from 'components/ContentList/ListItems';
 import { FaMapMarkerAlt } from 'react-icons/fa';
 import { getDateString } from 'utils/getDateString';
 import ImageFilter from 'styles/ImageFilter';

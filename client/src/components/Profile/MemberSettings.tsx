@@ -7,6 +7,8 @@ import {
 } from 'interfaces/Profile.interface';
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
+import { useRecoilState } from 'recoil';
+import { userInfo } from 'states/userState';
 import styled from 'styled-components';
 import { StyledButton } from 'styles/StyledButton';
 import Swal from 'sweetalert2';
@@ -15,12 +17,13 @@ import AccountDeleteModal from './AccountDeleteModal';
 import TextEdit from './TextEdit';
 
 const MemberSettings = ({ member, setCurrentTab }: MemberSettingsProps) => {
-  const [memberData, setMemberData] = useState<ProfileEdit | object>({});
+  const [memberData, setMemberData] = useState<ProfileEdit | any>({});
   const [profile, setProfile] = useState<string>(member.profile);
   const [validation, setValidation] = useState<Validations>(
     editValidationCheck({ ...memberData })
   );
   const [isShowDeleteModal, setIsShowDeleteModal] = useState<boolean>(false);
+  const [loginUser, setLoginUser] = useRecoilState(userInfo);
 
   const onFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const formData = new FormData();
@@ -32,16 +35,16 @@ const MemberSettings = ({ member, setCurrentTab }: MemberSettingsProps) => {
         axios
           .post('https://api.imgur.com/3/image', formData, {
             headers: {
-              Authorization: 'Client-ID 2dce0c293bfd544',
+              Authorization: `Client-ID ${process.env.REACT_APP_CLIENT_ID}`,
               Accept: 'application/json',
             },
           })
           .then(response => {
             setProfile(response.data.data.link);
-            setMemberData(cur => ({
-              ...cur,
+            setMemberData({
+              ...memberData,
               profile: response.data.data.link,
-            }));
+            });
           });
       }
     } else {
@@ -81,9 +84,21 @@ const MemberSettings = ({ member, setCurrentTab }: MemberSettingsProps) => {
       confirmButtonText: '확인',
     }).then(async result => {
       if (result.isConfirmed) {
-        await customAxios.patch(`/members/${member.memberId}`, {
+        await customAxios.patch(`/members/${loginUser.memberId}`, {
           ...memberData,
         });
+        if (memberData.nickname) {
+          setLoginUser({
+            ...loginUser,
+            profile,
+            nickname: memberData.nickname,
+          });
+        } else {
+          setLoginUser({
+            ...loginUser,
+            nickname: memberData.nickname,
+          });
+        }
         setCurrentTab(0);
         window.scrollTo(0, 0);
       } else {
