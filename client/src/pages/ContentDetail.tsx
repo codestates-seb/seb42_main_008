@@ -51,7 +51,7 @@ const ContentDetail = () => {
       .catch(error => {
         console.log(error);
       });
-  }, [sub]);
+  }, []);
 
   return (
     <Container>
