@@ -1,5 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useRecoilValue } from 'recoil';
+import { userInfo } from 'states/userState';
 import styled from 'styled-components';
 
 type Props = {
@@ -13,10 +15,11 @@ const Menu = ({ setIsShowMenu, handleLogout }: Props) => {
   const handleMenuLeave = () => {
     setIsShowMenu(false);
   };
-
+  const UserInfo = useRecoilValue(userInfo);
+  const memberId = UserInfo.memberId;
   return (
     <MenuBox onMouseEnter={handleMenuEnter} onMouseLeave={handleMenuLeave}>
-      <Link to="/:memberId/profile">Profile</Link>
+      <Link to={`/${memberId}/profile`}>Profile</Link>
       <Link to="/continents">파티 구하기</Link>
       <div onClick={handleLogout}>Logout</div>
     </MenuBox>

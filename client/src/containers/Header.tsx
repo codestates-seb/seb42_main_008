@@ -7,8 +7,8 @@ import { RiLogoutBoxRLine } from 'react-icons/ri';
 import { GiHamburgerMenu } from 'react-icons/gi';
 import Menu from 'components/Header/Menu';
 import LogoutMenu from 'components/Header/LogoutMenu';
-import { useRecoilState } from 'recoil';
-import { loginState, userToken } from 'states/userState';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { loginState, userInfo, userToken } from 'states/userState';
 import axios from 'axios';
 const Header = () => {
   const [isLogin, setIsLogin] = useRecoilState(loginState);
@@ -45,6 +45,9 @@ const Header = () => {
     setIsShowMenu(false);
   };
 
+  const UserInfo = useRecoilValue(userInfo);
+  const memberId = UserInfo.memberId;
+
   return (
     <HeaderBox>
       <div className="header-left">
@@ -63,7 +66,7 @@ const Header = () => {
         </LogoutNav>
       ) : (
         <LoginNav>
-          <Link to="/:memberId/profile">Profile</Link>
+          <Link to={`/${memberId}/profile`}>Profile</Link>
           <div className="nav-icon">
             <div className="message-icon">
               <FaEnvelope onClick={NoteHandler} cursor="pointer" />
