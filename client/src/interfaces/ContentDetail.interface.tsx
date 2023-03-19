@@ -49,6 +49,14 @@ interface detailProps {
   detail: detailInfo;
 }
 
+interface companionProps {
+  detail: detailInfo;
+  sub: subApply[];
+  setSub: (newValue: subApply[]) => void;
+  part: partApply[];
+  setPart: (newValue: partApply[]) => void;
+}
+
 interface subProps {
   detail: detailInfo;
   sub: subApply[];
@@ -61,6 +69,18 @@ interface subApply {
   nickname: string;
 }
 
+interface partApply {
+  memberId: number;
+  profile: string;
+  nickname: string;
+}
+
+interface partProps {
+  detail: detailInfo;
+  part: partApply[];
+  setPart: (newValue: partApply[]) => void;
+}
+
 export type {
   contentsTab,
   profileList,
@@ -71,4 +91,6 @@ export type {
   detailInfo,
   detailProps,
   subProps,
+  partProps,
+  companionProps,
 };

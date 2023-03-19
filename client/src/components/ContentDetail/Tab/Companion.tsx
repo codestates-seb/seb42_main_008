@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { subProps } from 'interfaces/ContentDetail.interface';
-import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { userInfo } from 'states/userState';
@@ -11,7 +10,6 @@ const Companion = ({ detail, sub, setSub }: subProps) => {
   const params = useParams();
   const { contentId } = params;
   const { memberId } = useRecoilValue(userInfo);
-  const [part, setPart] = useState<any>([]);
 
   const handleCancel = async () => {
     Swal.fire({
@@ -37,20 +35,53 @@ const Companion = ({ detail, sub, setSub }: subProps) => {
     });
   };
 
-  useEffect(() => {
-    axios
-      .get(
-        `${process.env.REACT_APP_SERVER}/companions/${contentId}/participants`
-      )
-      .then(res => {
-        console.log(res.data.data);
-        setPart(res.data.data);
-        console.log(part);
-      })
-      .catch(error => {
-        console.log(error);
-      });
-  }, []);
+  const handleAccept = async () => {
+    Swal.fire({
+      title: '동행신청을 수락하시겠습니까?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: '네, 수락합니다',
+    }).then(async result => {
+      if (result.isConfirmed) {
+        await axios
+          .patch(
+            `${process.env.REACT_APP_TEST_SERVER}/companions/${contentId}/subscribers`,
+            { data: { memberId } }
+          )
+          .then(() => {
+            Swal.fire('Accepted!', '확인되었습니다', 'success');
+            setSub(sub);
+          })
+          .catch(error => console.log(error));
+      }
+    });
+  };
+
+  const handleReject = async () => {
+    Swal.fire({
+      title: '동행신청을 거절하시겠습니까?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: '네, 거절합니다',
+    }).then(async result => {
+      if (result.isConfirmed) {
+        await axios
+          .delete(
+            `${process.env.REACT_APP_TEST_SERVER}/companions/${contentId}/subscribers`,
+            { data: { memberId } }
+          )
+          .then(() => {
+            Swal.fire('Deleted!', '취소되었습니다', 'success');
+            setSub(sub);
+          })
+          .catch(error => console.log(error));
+      }
+    });
+  };
 
   return (
     <Container>
@@ -65,8 +96,12 @@ const Companion = ({ detail, sub, setSub }: subProps) => {
               {detail.memberId === memberId ? (
                 <div className="btn-wrapper">
                   {/* 수락 또는 거절되었을 경우 쪽지 보내기..?! */}
-                  <button className="btn">수락</button>
-                  <button className="btn">거절</button>
+                  <button className="btn" onClick={handleAccept}>
+                    수락
+                  </button>
+                  <button className="btn" onClick={handleReject}>
+                    거절
+                  </button>
                 </div>
               ) : memberId === el.memberId ? (
                 <div className="btn-wrapper">
@@ -92,7 +127,6 @@ const Container = styled.section`
   /* justify-content: center; */
   align-items: center;
   flex-direction: column;
-  padding: 10px;
   width: 100%;
   height: 50%;
   @media screen and (max-width: 992px) {

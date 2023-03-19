@@ -3,7 +3,7 @@ import { participantList } from 'interfaces/ContentDetail.interface';
 import { useState } from 'react';
 import styled from 'styled-components';
 
-const Companion = () => {
+const TravelComplete = () => {
   const companionTabs: participantList[] = [
     {
       tabName: '참여자',
@@ -59,7 +59,7 @@ const Companion = () => {
   );
 };
 
-export default Companion;
+export default TravelComplete;
 
 const Container = styled.section`
   display: flex;

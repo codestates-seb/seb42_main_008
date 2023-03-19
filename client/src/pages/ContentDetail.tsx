@@ -12,6 +12,7 @@ import { getDateString } from 'utils/getDateString';
 const ContentDetail = () => {
   const { contentId } = useParams<{ contentId: string }>();
   const [sub, setSub] = useState<any>();
+  const [part, setPart] = useState<any>();
 
   const [detail, setDetail] = useState<detailInfo>({
     companionId: 0,
@@ -29,6 +30,7 @@ const ContentDetail = () => {
     companionStatus: false,
   });
 
+  // 글 세부조회
   useEffect(() => {
     axios
       .get(`${process.env.REACT_APP_SERVER}/companions/${contentId}`)
@@ -40,6 +42,7 @@ const ContentDetail = () => {
       });
   }, []);
 
+  // 신청자 조회
   useEffect(() => {
     axios
       .get(
@@ -51,7 +54,21 @@ const ContentDetail = () => {
       .catch(error => {
         console.log(error);
       });
-  }, [sub]);
+  }, []);
+
+  // 참여자 조회
+  useEffect(() => {
+    axios
+      .get(
+        `${process.env.REACT_APP_SERVER}/companions/${contentId}/participants`
+      )
+      .then(res => {
+        setPart(res.data.data);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }, []);
 
   return (
     <Container>
@@ -79,7 +96,13 @@ const ContentDetail = () => {
         </LeftBox>
         <RightBox>
           <ContentWriter detail={detail} sub={sub} setSub={setSub} />
-          <CompanionTab detail={detail} sub={sub} setSub={setSub} />
+          <CompanionTab
+            detail={detail}
+            sub={sub}
+            setSub={setSub}
+            part={part}
+            setPart={setPart}
+          />
           {/* 여행완료 ? TravelComplete : Companion */}
           {/* newDate 함수 호출해서 지금 시간이랑 비교 후 지나있으면 상태변경 */}
           {/* newDate(현재날짜) 보다 크면? 년도 비교한번, 월비교한번, 일자비교한번, 시간비교한번 */}

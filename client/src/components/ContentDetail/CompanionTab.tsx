@@ -1,10 +1,19 @@
 import Participants from 'components/ContentDetail/Tab//Participants';
 import Companion from 'components/ContentDetail/Tab/Companion';
-import { contentsTab, subProps } from 'interfaces/ContentDetail.interface';
+import {
+  companionProps,
+  contentsTab,
+} from 'interfaces/ContentDetail.interface';
 import { useState } from 'react';
 import styled from 'styled-components';
 
-const CompanionTab = ({ detail, sub, setSub }: subProps) => {
+const CompanionTab = ({
+  detail,
+  sub,
+  setSub,
+  part,
+  setPart,
+}: companionProps) => {
   const [currentTab, setCurrentTab] = useState(0);
   const companionTabs: contentsTab[] = [
     {
@@ -20,9 +29,9 @@ const CompanionTab = ({ detail, sub, setSub }: subProps) => {
   const handleSelectTab = (index: number) => {
     setCurrentTab(index);
   };
+
   return (
     <Container>
-      {/* 만약 현재 선택된 탭이 신청자라면 ? <Companion /> : <Participants /> */}
       <TabBox>
         {companionTabs.map((el: contentsTab, index: number) => (
           <li
@@ -34,8 +43,11 @@ const CompanionTab = ({ detail, sub, setSub }: subProps) => {
           </li>
         ))}
       </TabBox>
-      <Companion detail={detail} sub={sub} setSub={setSub} />
-      <Participants detail={detail} sub={sub} setSub={setSub} />
+      {currentTab === 0 ? (
+        <Companion detail={detail} sub={sub} setSub={setSub} />
+      ) : (
+        <Participants detail={detail} part={part} setPart={setPart} />
+      )}
     </Container>
   );
 };
