@@ -5,21 +5,15 @@ import { useEffect, useState } from 'react';
 import DatePicker, { registerLocale } from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import ko from 'date-fns/locale/ko';
-import CountrySelectModal from 'components/ContentAdd/CountrySelectModal';
-import TendencyModal from 'components/ContentAdd/TendencyModal';
 import countries from '../assets/countries.json';
-import ThemeModal from 'components/ContentAdd/ThemeModal';
-import SearchMap from 'components/ContentAdd/SearchMap';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import SearchMap from 'components/ContentEdit/SearchMap';
+import CountrySelectModal from 'components/ContentEdit/CountrySelectModal';
+import TendencyModal from 'components/ContentEdit/TendencyModal';
+import ThemeModal from 'components/ContentEdit/ThemeModal';
 
 registerLocale('ko', ko);
-
-// interface DataProps {
-//   title:string;
-//   content:string;
-
-// }
 
 const ContentEdit = () => {
   // 해당글 내용 불러오기
@@ -164,13 +158,6 @@ const ContentEdit = () => {
       setIsTendencyModal(!isTendencyModal);
     }
   };
-  let formattedDate = '';
-  if (startDate) {
-    const year = startDate.getFullYear();
-    const month = String(startDate.getMonth() + 1).padStart(2, '0');
-    const day = String(startDate.getDate()).padStart(2, '0');
-    formattedDate = `${year}-${month}-${day}`;
-  }
 
   //타이틀받기
   useEffect(() => {
@@ -196,17 +183,31 @@ const ContentEdit = () => {
       });
   }, []);
 
-  // 날짜받기
+  //날짜 받기
+  //원래 값 형태로 한번 바꿔준 dateObj
+  // startDate 는 원래 날짜 형태
+  // 온체인지 이벤트에 넣으려면 이렇게 바꿔줘야하고
+  // 온체인지로 상태변경한 startDate를 다시 요청가능한 형태로 변경
   useEffect(() => {
     axios
       .get(`${process.env.REACT_APP_TEST_SERVER}/companions/${contentId}`)
       .then(response => {
-        setStartDate(response.data.data.date);
+        const dateObj = new Date(response.data.data.date);
+        setStartDate(dateObj);
       })
       .catch(error => {
         console.log(error);
       });
   }, []);
+
+  let formattedDate = '';
+  if (startDate) {
+    const year = startDate.getFullYear();
+    const month = String(startDate.getMonth() + 1).padStart(2, '0');
+    const day = String(startDate.getDate()).padStart(2, '0');
+    formattedDate = `${year}-${month}-${day}`;
+  }
+
   // 위치받기
   useEffect(() => {
     axios
@@ -221,6 +222,9 @@ const ContentEdit = () => {
         console.log(error);
       });
   }, []);
+  useEffect(() => {
+    console.log(markerLocation);
+  }, [markerLocation]);
   //주소 명칭 받기
   useEffect(() => {
     axios
@@ -232,6 +236,7 @@ const ContentEdit = () => {
         console.log(error);
       });
   }, []);
+
   return (
     <ContentAddContainer>
       <TitleBox style={{ backgroundImage: `url(${titleImg})` }}>
@@ -314,6 +319,7 @@ const ContentEdit = () => {
           <ReactQuill
             theme="snow"
             modules={modules}
+            value={contentInput}
             onChange={event => {
               setContentInput(event);
             }}
