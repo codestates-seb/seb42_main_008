@@ -26,12 +26,8 @@ const Header = () => {
       localStorage.clear();
       setToken('');
       setIsLogin(!isLogin);
-      console.log(isLogin);
     } catch (error) {
       console.log(error);
-      console.log(token);
-      console.log(loginState);
-      console.log(isLogin);
     }
   };
   //쪽지 모달
