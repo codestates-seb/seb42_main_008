@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { subProps } from 'interfaces/ContentDetail.interface';
+import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { userInfo } from 'states/userState';
@@ -23,19 +24,34 @@ const Companion = ({ detail, sub, setSub }: subProps) => {
       if (result.isConfirmed) {
         await axios
           .delete(
-            `${process.env.REACT_APP_TEST_SERVER}/companions/${contentId}/subscribers`,
+            `${process.env.REACT_APP_SERVER}/companions/${contentId}/subscribers`,
             { data: { memberId } }
           )
           .then(() => {
             Swal.fire('Deleted!', '취소되었습니다', 'success');
             setSub(sub);
+            getSubList();
           })
           .catch(error => console.log(error));
       }
     });
   };
 
-  const handleAccept = async () => {
+  const getSubList = () => {
+    axios
+      .get(
+        `${process.env.REACT_APP_SERVER}/companions/${contentId}/subscribers`
+      )
+      .then(res => {
+        setSub(res.data.data);
+      });
+  };
+
+  useEffect(() => {
+    getSubList();
+  }, []);
+
+  const handleAccept = async (memberId: number) => {
     Swal.fire({
       title: '동행신청을 수락하시겠습니까?',
       icon: 'warning',
@@ -47,19 +63,22 @@ const Companion = ({ detail, sub, setSub }: subProps) => {
       if (result.isConfirmed) {
         await axios
           .patch(
-            `${process.env.REACT_APP_TEST_SERVER}/companions/${contentId}/subscribers`,
-            { data: { memberId } }
+            `${process.env.REACT_APP_SERVER}/companions/${contentId}/subscribers`,
+            // 신청자의 memberId 를 보내줘야 하는듯..?
+            { memberId }
           )
           .then(() => {
             Swal.fire('Accepted!', '확인되었습니다', 'success');
             setSub(sub);
           })
-          .catch(error => console.log(error));
+          .catch(error => {
+            console.log(error);
+          });
       }
     });
   };
 
-  const handleReject = async () => {
+  const handleReject = async (memberId: number) => {
     Swal.fire({
       title: '동행신청을 거절하시겠습니까?',
       icon: 'warning',
@@ -71,11 +90,11 @@ const Companion = ({ detail, sub, setSub }: subProps) => {
       if (result.isConfirmed) {
         await axios
           .delete(
-            `${process.env.REACT_APP_TEST_SERVER}/companions/${contentId}/subscribers`,
+            `${process.env.REACT_APP_SERVER}/companions/${contentId}/subscribers`,
             { data: { memberId } }
           )
           .then(() => {
-            Swal.fire('Deleted!', '취소되었습니다', 'success');
+            Swal.fire('Deleted!', '거절되었습니다', 'success');
             setSub(sub);
           })
           .catch(error => console.log(error));
@@ -90,16 +109,25 @@ const Companion = ({ detail, sub, setSub }: subProps) => {
           sub.map((el: any, index: number) => (
             <li key={index}>
               <div className="companion-info">
-                <span style={{ backgroundImage: `url(${el.profile})` }}></span>
-                <span>{el.nickname}</span>
+                <div
+                  className="img"
+                  style={{ backgroundImage: `url(${el.profile})` }}
+                ></div>
+                <div>{el.nickname}</div>
               </div>
               {detail.memberId === memberId ? (
                 <div className="btn-wrapper">
                   {/* 수락 또는 거절되었을 경우 쪽지 보내기..?! */}
-                  <button className="btn" onClick={handleAccept}>
+                  <button
+                    className="btn"
+                    onClick={() => handleAccept(el.memberId)}
+                  >
                     수락
                   </button>
-                  <button className="btn" onClick={handleReject}>
+                  <button
+                    className="btn"
+                    onClick={() => handleReject(el.memberId)}
+                  >
                     거절
                   </button>
                 </div>
@@ -167,7 +195,19 @@ const Content = styled.ul`
     font-size: 1.2rem;
     padding: 5px;
     .companion-info {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
       width: 50%;
+      .img {
+        margin-right: 5px;
+        width: 30px;
+        height: 30px;
+        border-radius: 100%;
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center;
+      }
     }
     .btn-wrapper {
       width: 50%;
@@ -214,8 +254,9 @@ const Content = styled.ul`
 /* TODO:
 1. 탭 만들기 *
 2. 신청자 또는 참여자 탭별로 데이터 불러오기 * 
-3. 작성자인지 아닌지 판단하여 버튼 다르게 띄우기
-3-1. 작성자라면 수정, 삭제, 수락, 거절 버튼
-3-2. 작성자가 아니라면 신청, 프로필보기, 신청자&참여자 목록에는 버튼 없음
-3-3. 신청자라면 신청자 리스트에 본인 계정에 취소버튼 보이도록 추가
+3. 작성자인지 아닌지 판단하여 버튼 다르게 띄우기 * 
+3-1. 작성자라면 수정, 삭제, 수락, 거절 버튼 * 
+3-2. 작성자가 아니라면 신청, 프로필보기, 신청자&참여자 목록에는 버튼 없음 *
+3-3. 신청자라면 신청자 리스트에 본인 계정에 취소버튼 보이도록 추가 *
+4. 신청 수락/거절 시 쪽지 보내기
 */
