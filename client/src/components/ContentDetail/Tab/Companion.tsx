@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { subProps } from 'interfaces/ContentDetail.interface';
+import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { userInfo } from 'states/userState';
@@ -23,17 +24,32 @@ const Companion = ({ detail, sub, setSub }: subProps) => {
       if (result.isConfirmed) {
         await axios
           .delete(
-            `${process.env.REACT_APP_TEST_SERVER}/companions/${contentId}/subscribers`,
+            `${process.env.REACT_APP_SERVER}/companions/${contentId}/subscribers`,
             { data: { memberId } }
           )
           .then(() => {
             Swal.fire('Deleted!', '취소되었습니다', 'success');
             setSub(sub);
+            getSubList();
           })
           .catch(error => console.log(error));
       }
     });
   };
+
+  const getSubList = () => {
+    axios
+      .get(
+        `${process.env.REACT_APP_SERVER}/companions/${contentId}/subscribers`
+      )
+      .then(res => {
+        setSub(res.data.data);
+      });
+  };
+
+  useEffect(() => {
+    getSubList();
+  }, []);
 
   const handleAccept = async () => {
     Swal.fire({
@@ -48,13 +64,15 @@ const Companion = ({ detail, sub, setSub }: subProps) => {
         await axios
           .patch(
             `${process.env.REACT_APP_TEST_SERVER}/companions/${contentId}/subscribers`,
-            { data: { memberId } }
+            { memberId }
           )
           .then(() => {
             Swal.fire('Accepted!', '확인되었습니다', 'success');
             setSub(sub);
           })
-          .catch(error => console.log(error));
+          .catch(error => {
+            console.log(error);
+          });
       }
     });
   };
@@ -71,11 +89,11 @@ const Companion = ({ detail, sub, setSub }: subProps) => {
       if (result.isConfirmed) {
         await axios
           .delete(
-            `${process.env.REACT_APP_TEST_SERVER}/companions/${contentId}/subscribers`,
+            `${process.env.REACT_APP_SERVER}/companions/${contentId}/subscribers`,
             { data: { memberId } }
           )
           .then(() => {
-            Swal.fire('Deleted!', '취소되었습니다', 'success');
+            Swal.fire('Deleted!', '거절되었습니다', 'success');
             setSub(sub);
           })
           .catch(error => console.log(error));

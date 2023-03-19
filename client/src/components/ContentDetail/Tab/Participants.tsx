@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { partProps } from 'interfaces/ContentDetail.interface';
+import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { userInfo } from 'states/userState';
@@ -29,11 +30,26 @@ const Participants = ({ part, setPart }: partProps) => {
           .then(() => {
             Swal.fire('Deleted!', '취소되었습니다', 'success');
             setPart(part);
+            getPartList();
           })
           .catch(error => console.log(error));
       }
     });
   };
+
+  const getPartList = () => {
+    axios
+      .get(
+        `${process.env.REACT_APP_SERVER}/companions/${contentId}/participants`
+      )
+      .then(res => {
+        setPart(res.data.data);
+      });
+  };
+
+  useEffect(() => {
+    getPartList();
+  }, []);
 
   return (
     <Container>
