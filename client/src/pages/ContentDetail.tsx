@@ -11,6 +11,7 @@ import { getDateString } from 'utils/getDateString';
 
 const ContentDetail = () => {
   const { contentId } = useParams<{ contentId: string }>();
+  const [sub, setSub] = useState<any>();
 
   const [detail, setDetail] = useState<detailInfo>({
     companionId: 0,
@@ -27,17 +28,10 @@ const ContentDetail = () => {
     createdAt: '',
     companionStatus: false,
   });
-  // const [sub, setSub] = useState<subInfo>({
-  //   memberId: 0,
-  //   nickname: '',
-  //   profile: '',
-  // });
-
-  const [sub, setSub] = useState<any>([]);
 
   useEffect(() => {
     axios
-      .get(`${process.env.REACT_APP_TEST_SERVER}/companions/${contentId}`)
+      .get(`${process.env.REACT_APP_SERVER}/companions/${contentId}`)
       .then(res => {
         setDetail(res.data.data);
       })
@@ -49,17 +43,16 @@ const ContentDetail = () => {
   useEffect(() => {
     axios
       .get(
-        `${process.env.REACT_APP_TEST_SERVER}/companions/${contentId}/subscribers`
+        `${process.env.REACT_APP_SERVER}/companions/${contentId}/subscribers`
       )
       .then(res => {
-        console.log(res.data.data);
-        console.log(res.data);
         setSub(res.data.data);
       })
       .catch(error => {
         console.log(error);
       });
-  }, []);
+  }, [sub]);
+
   return (
     <Container>
       <ContentDetailBox>
@@ -85,11 +78,11 @@ const ContentDetail = () => {
           </div>
         </LeftBox>
         <RightBox>
-          <ContentWriter detail={detail} />
+          <ContentWriter detail={detail} sub={sub} setSub={setSub} />
           {/* 여행완료 ? Participants : Companion */}
           {/* newDate 함수 호출해서 지금 시간이랑 비교 후 지나있으면 상태변경 */}
           {/* newDate(현재날짜) 보다 크면? 년도 비교한번, 월비교한번, 일자비교한번, 시간비교한번 */}
-          <Companion detail={detail} sub={sub} />
+          <Companion detail={detail} sub={sub} setSub={setSub} />
           {/* <Participants /> */}
         </RightBox>
       </ContentDetailBox>

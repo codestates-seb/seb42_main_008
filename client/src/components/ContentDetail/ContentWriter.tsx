@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { detailProps } from 'interfaces/ContentDetail.interface';
+import { subProps } from 'interfaces/ContentDetail.interface';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { userInfo } from 'states/userState';
@@ -7,14 +7,14 @@ import styled from 'styled-components';
 import Swal from 'sweetalert2';
 import { getScoreIcon } from 'utils/getScoreIcon';
 
-const ContentWriter = ({ detail }: detailProps) => {
+const ContentWriter = ({ detail, sub, setSub }: subProps) => {
   const { profile, memberId } = useRecoilValue(userInfo);
   const params = useParams();
   const { contentId } = params;
 
   const navigate = useNavigate();
   const handleUpdate = () => {
-    navigate(`${contentId}/edit`);
+    navigate(`/${contentId}/edit`);
   };
 
   // 클릭 시 글 삭제 추가
@@ -47,16 +47,16 @@ const ContentWriter = ({ detail }: detailProps) => {
   const handleApply = async () => {
     await axios
       .post(
-        `${process.env.REACT_APP_TEST_SERVER}/companions/${contentId}/subscribers`,
+        `${process.env.REACT_APP_SERVER}/companions/${contentId}/subscribers`,
         {
           memberId,
         }
       )
       .then(() => {
         Swal.fire('Applied!', '동행이 신청되었습니다!', 'success');
+        setSub(sub);
       })
       .catch(() => {
-        // console.log(error);
         Swal.fire('Failed!', '이미 신청한 동행입니다!', 'error');
       });
   };
