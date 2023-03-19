@@ -1,8 +1,9 @@
 import axios from 'axios';
-import Companion from 'components/ContentDetail/Companion';
+import CompanionTab from 'components/ContentDetail/CompanionTab';
 import ContentWriter from 'components/ContentDetail/ContentWriter';
+import Companion from 'components/ContentDetail/Tab/Companion';
+// import TravelComplete from 'components/ContentDetail/TravelComplete';
 // import Participants from 'components/ContentDetail/Participants';
-// import SearchMap from 'components/ContentDetail/SearchMap';
 import { detailInfo } from 'interfaces/ContentDetail.interface';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -79,11 +80,13 @@ const ContentDetail = () => {
         </LeftBox>
         <RightBox>
           <ContentWriter detail={detail} sub={sub} setSub={setSub} />
-          {/* 여행완료 ? Participants : Companion */}
+          {/* 여행완료 ? TravelComplete : Companion */}
           {/* newDate 함수 호출해서 지금 시간이랑 비교 후 지나있으면 상태변경 */}
           {/* newDate(현재날짜) 보다 크면? 년도 비교한번, 월비교한번, 일자비교한번, 시간비교한번 */}
           <Companion detail={detail} sub={sub} setSub={setSub} />
           {/* <Participants /> */}
+          {/* <TravelComplete /> */}
+          <CompanionTab detail={detail} sub={sub} setSub={setSub} />
         </RightBox>
       </ContentDetailBox>
     </Container>
