@@ -58,8 +58,11 @@ const Participants = ({ part, setPart }: partProps) => {
           part.map((el: any, index: number) => (
             <li key={index}>
               <div className="companion-info">
-                <span style={{ backgroundImage: `url(${el.profile})` }}></span>
-                <span>{el.nickname}</span>
+                <div
+                  className="img"
+                  style={{ backgroundImage: `url(${el.profile})` }}
+                ></div>
+                <div>{el.nickname}</div>
               </div>
               {memberId === el.memberId ? (
                 <div className="btn-wrapper">
@@ -126,6 +129,18 @@ const Content = styled.ul`
     padding: 5px;
     .companion-info {
       width: 50%;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      .img {
+        margin-right: 5px;
+        width: 30px;
+        height: 30px;
+        border-radius: 100%;
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center;
+      }
     }
     .btn-wrapper {
       width: 50%;
@@ -173,7 +188,7 @@ const Content = styled.ul`
 1. 탭 만들기 *
 2. 신청자 또는 참여자 탭별로 데이터 불러오기 * 
 3. 작성자인지 아닌지 판단하여 버튼 다르게 띄우기
-3-1. 작성자라면 수정, 삭제, 수락, 거절 버튼
-3-2. 작성자가 아니라면 신청, 프로필보기, 신청자&참여자 목록에는 버튼 없음
-3-3. 신청자라면 신청자 리스트에 본인 계정에 취소버튼 보이도록 추가
+3-1. 작성자라면 수정, 삭제, 수락, 거절 버튼 * 
+3-2. 작성자가 아니라면 신청, 프로필보기, 신청자&참여자 목록에는 버튼 없음 * 
+3-3. 신청자라면 신청자 리스트에 본인 계정에 취소버튼 보이도록 추가 * 
 */

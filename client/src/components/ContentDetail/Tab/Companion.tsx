@@ -63,7 +63,7 @@ const Companion = ({ detail, sub, setSub }: subProps) => {
       if (result.isConfirmed) {
         await axios
           .patch(
-            `${process.env.REACT_APP_TEST_SERVER}/companions/${contentId}/subscribers`,
+            `${process.env.REACT_APP_SERVER}/companions/${contentId}/subscribers`,
             { memberId }
           )
           .then(() => {
@@ -108,8 +108,11 @@ const Companion = ({ detail, sub, setSub }: subProps) => {
           sub.map((el: any, index: number) => (
             <li key={index}>
               <div className="companion-info">
-                <span style={{ backgroundImage: `url(${el.profile})` }}></span>
-                <span>{el.nickname}</span>
+                <div
+                  className="img"
+                  style={{ backgroundImage: `url(${el.profile})` }}
+                ></div>
+                <div>{el.nickname}</div>
               </div>
               {detail.memberId === memberId ? (
                 <div className="btn-wrapper">
@@ -185,7 +188,19 @@ const Content = styled.ul`
     font-size: 1.2rem;
     padding: 5px;
     .companion-info {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
       width: 50%;
+      .img {
+        margin-right: 5px;
+        width: 30px;
+        height: 30px;
+        border-radius: 100%;
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center;
+      }
     }
     .btn-wrapper {
       width: 50%;
