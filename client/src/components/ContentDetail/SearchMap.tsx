@@ -12,7 +12,7 @@ const SearchMap = ({ detail }: any) => {
   return (
     <MapContent>
       <LoadScript googleMapsApiKey={googleMapKey}>
-        <GoogleMap mapContainerStyle={containerStyle} center={center} zoom={10}>
+        <GoogleMap mapContainerStyle={containerStyle} center={center} zoom={13}>
           <MarkerF position={center} />
         </GoogleMap>
         <MapPlace>
@@ -52,6 +52,7 @@ const LocationPin = styled(MdLocationOn)`
 /* TODO:
 1. 기본 구조 * 
 2. 지도 API * 
-2-1. 위치 핀 찍기
-2-2. 위치 핀찍은 장소 렌더링
+2-1. 위치 핀 찍기 *
+2-2. 위치 핀찍은 장소 렌더링 *
+3. useEffect 로 Loading 없애기
 */

@@ -1,37 +1,19 @@
 import axios from 'axios';
-import { contentsTab, subProps } from 'interfaces/ContentDetail.interface';
-import { useEffect, useState } from 'react';
+import { partProps } from 'interfaces/ContentDetail.interface';
 import { useParams } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { userInfo } from 'states/userState';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
 
-const Companion = ({ detail, sub, setSub }: subProps) => {
-  const [currentTab, setCurrentTab] = useState(0);
+const Participants = ({ part, setPart }: partProps) => {
   const params = useParams();
   const { contentId } = params;
   const { memberId } = useRecoilValue(userInfo);
-  const [part, setPart] = useState<any>([]);
-
-  const companionTabs: contentsTab[] = [
-    {
-      tabName: '신청자',
-      content: [],
-    },
-    {
-      tabName: '참여자',
-      content: [],
-    },
-  ];
-
-  const handleSelectTab = (index: number) => {
-    setCurrentTab(index);
-  };
 
   const handleCancel = async () => {
     Swal.fire({
-      title: '동행신청을 취소하시겠습니까?',
+      title: '동행참여를 취소하시겠습니까?',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -41,61 +23,29 @@ const Companion = ({ detail, sub, setSub }: subProps) => {
       if (result.isConfirmed) {
         await axios
           .delete(
-            `${process.env.REACT_APP_TEST_SERVER}/companions/${contentId}/subscribers`,
+            `${process.env.REACT_APP_TEST_SERVER}/companions/${contentId}/participants`,
             { data: { memberId } }
           )
           .then(() => {
             Swal.fire('Deleted!', '취소되었습니다', 'success');
-            setSub(sub);
+            setPart(part);
           })
           .catch(error => console.log(error));
       }
     });
   };
 
-  useEffect(() => {
-    axios
-      .get(
-        `${process.env.REACT_APP_SERVER}/companions/${contentId}/participants`
-      )
-      .then(res => {
-        console.log(res.data.data);
-        setPart(res.data.data);
-        console.log(part);
-      })
-      .catch(error => {
-        console.log(error);
-      });
-  }, []);
-
   return (
     <Container>
-      <TabBox>
-        {companionTabs.map((el: contentsTab, index: number) => (
-          <li
-            key={index}
-            className={`${currentTab === index ? `menu focused` : `menu`}`}
-            onClick={() => handleSelectTab(index)}
-          >
-            {el.tabName}
-          </li>
-        ))}
-      </TabBox>
       <Content>
-        {sub && sub.length !== 0 ? (
-          sub.map((el: any, index: number) => (
+        {part && part.length !== 0 ? (
+          part.map((el: any, index: number) => (
             <li key={index}>
               <div className="companion-info">
                 <span style={{ backgroundImage: `url(${el.profile})` }}></span>
                 <span>{el.nickname}</span>
               </div>
-              {detail.memberId === memberId ? (
-                <div className="btn-wrapper">
-                  {/* 수락 또는 거절되었을 경우 쪽지 보내기..?! */}
-                  <button className="btn">수락</button>
-                  <button className="btn">거절</button>
-                </div>
-              ) : memberId === el.memberId ? (
+              {memberId === el.memberId ? (
                 <div className="btn-wrapper">
                   <button className="btn" onClick={handleCancel}>
                     취소
@@ -105,21 +55,20 @@ const Companion = ({ detail, sub, setSub }: subProps) => {
             </li>
           ))
         ) : (
-          <li>동행 신청자가 없습니다. 🥲</li>
+          <li>동행 참여자가 없습니다. 🥲</li>
         )}
       </Content>
     </Container>
   );
 };
 
-export default Companion;
+export default Participants;
 
 const Container = styled.section`
   display: flex;
   /* justify-content: center; */
   align-items: center;
   flex-direction: column;
-  padding: 10px;
   width: 100%;
   height: 50%;
   @media screen and (max-width: 992px) {
@@ -135,40 +84,6 @@ const Container = styled.section`
   }
   @media screen and (max-width: 576px) {
     height: 100%;
-  }
-`;
-
-const TabBox = styled.ul`
-  background-color: #dcdcdc;
-  color: rgba(73, 73, 73, 0.5);
-  font-weight: bold;
-  display: flex;
-  flex-direction: row;
-  justify-items: center;
-  align-items: center;
-  list-style: none;
-  width: 100%;
-  cursor: pointer;
-  > li {
-    width: 50%;
-    text-align: center;
-  }
-  .menu {
-    padding: 15px;
-  }
-  .focused {
-    background-color: #d9506a;
-    color: white;
-  }
-  @media screen and (max-width: 768px) {
-    .menu {
-      padding: 10px;
-    }
-  }
-  @media screen and (max-width: 576px) {
-    .menu {
-      padding: 10px;
-    }
   }
 `;
 
