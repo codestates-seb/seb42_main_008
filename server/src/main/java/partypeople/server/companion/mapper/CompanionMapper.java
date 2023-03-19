@@ -90,6 +90,9 @@ public interface CompanionMapper {
         response.setAddress( companion.getAddress() );
         response.setLat( companion.getLat() );
         response.setLng( companion.getLng() );
+        response.setNationName( companion.getNation().getName() );
+        response.setNationCode( companion.getNation().getCode() );
+        response.setContinent( companion.getNation().getContinent() );
         response.setCompanionStatus(companion.isCompanionStatus());
 
         List<String> tags = companion.getCompanionTags().stream()

@@ -107,6 +107,12 @@ public class CompanionDto {
 
         private Double lng;
 
+        private String nationName;
+
+        private String nationCode;
+
+        private Integer continent;
+
         private List<String> tags;
 
         private boolean companionStatus;
