@@ -55,7 +55,6 @@ const ContentDetail = () => {
         console.log(error);
       });
   }, []);
-
   // 참여자 조회
   useEffect(() => {
     axios

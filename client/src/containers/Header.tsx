@@ -7,12 +7,12 @@ import { RiLogoutBoxRLine } from 'react-icons/ri';
 import { GiHamburgerMenu } from 'react-icons/gi';
 import Menu from 'components/Header/Menu';
 import LogoutMenu from 'components/Header/LogoutMenu';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import { loginState, userInfo, userToken } from 'states/userState';
 import axios from 'axios';
 const Header = () => {
-  const [isLogin, setIsLogin] = useRecoilState(loginState);
-  const [token, setToken] = useRecoilState(userToken);
+  const isLogin = useRecoilValue(loginState);
+  const token = useRecoilValue(userToken);
 
   const handleLogout = async () => {
     try {
@@ -24,8 +24,6 @@ const Header = () => {
         }
       );
       localStorage.clear();
-      setToken('');
-      setIsLogin(!isLogin);
     } catch (error) {
       console.log(error);
     }
