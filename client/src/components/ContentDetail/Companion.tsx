@@ -1,18 +1,27 @@
-import { contentsTab } from 'interfaces/ContentDetail.interface';
-import { useState } from 'react';
+import axios from 'axios';
+import { contentsTab, subProps } from 'interfaces/ContentDetail.interface';
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { userInfo } from 'states/userState';
 import styled from 'styled-components';
+import Swal from 'sweetalert2';
 
-const Companion = ({ sub, detail }: any) => {
+const Companion = ({ detail, sub, setSub }: subProps) => {
   const [currentTab, setCurrentTab] = useState(0);
+  const params = useParams();
+  const { contentId } = params;
   const { memberId } = useRecoilValue(userInfo);
+  const [part, setPart] = useState<any>([]);
+
   const companionTabs: contentsTab[] = [
     {
       tabName: '신청자',
+      content: [],
     },
     {
       tabName: '참여자',
+      content: [],
     },
   ];
 
@@ -20,7 +29,44 @@ const Companion = ({ sub, detail }: any) => {
     setCurrentTab(index);
   };
 
-  console.log(sub);
+  const handleCancel = async () => {
+    Swal.fire({
+      title: '동행신청을 취소하시겠습니까?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: '네, 취소합니다',
+    }).then(async result => {
+      if (result.isConfirmed) {
+        await axios
+          .delete(
+            `${process.env.REACT_APP_TEST_SERVER}/companions/${contentId}/subscribers`,
+            { data: { memberId } }
+          )
+          .then(() => {
+            Swal.fire('Deleted!', '취소되었습니다', 'success');
+            setSub(sub);
+          })
+          .catch(error => console.log(error));
+      }
+    });
+  };
+
+  useEffect(() => {
+    axios
+      .get(
+        `${process.env.REACT_APP_SERVER}/companions/${contentId}/participants`
+      )
+      .then(res => {
+        console.log(res.data.data);
+        setPart(res.data.data);
+        console.log(part);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }, []);
 
   return (
     <Container>
@@ -36,27 +82,30 @@ const Companion = ({ sub, detail }: any) => {
         ))}
       </TabBox>
       <Content>
-        {sub ? (
-          <li>동행 신청자가 없습니다.</li>
-        ) : (
+        {sub && sub.length !== 0 ? (
           sub.map((el: any, index: number) => (
             <li key={index}>
               <div className="companion-info">
-                <span>{el.picture}</span>
-                <span>{el.name}</span>
+                <span style={{ backgroundImage: `url(${el.profile})` }}></span>
+                <span>{el.nickname}</span>
               </div>
-              {/* 작성자ID === 현재 로그인ID ? 수락, 거절 버튼 : (신청자ID === 현재 로그인ID ? 취소 버튼 : null) */}
               {detail.memberId === memberId ? (
                 <div className="btn-wrapper">
                   {/* 수락 또는 거절되었을 경우 쪽지 보내기..?! */}
                   <button className="btn">수락</button>
                   <button className="btn">거절</button>
                 </div>
-              ) : (
-                <div className="btn-wrapper"></div>
-              )}
+              ) : memberId === el.memberId ? (
+                <div className="btn-wrapper">
+                  <button className="btn" onClick={handleCancel}>
+                    취소
+                  </button>
+                </div>
+              ) : null}
             </li>
           ))
+        ) : (
+          <li>동행 신청자가 없습니다. 🥲</li>
         )}
       </Content>
     </Container>
@@ -148,7 +197,6 @@ const Content = styled.ul`
       width: 50%;
     }
     .btn-wrapper {
-      padding: 5px;
       width: 50%;
       display: flex;
       justify-content: space-around;
@@ -160,7 +208,7 @@ const Content = styled.ul`
       }
       .btn {
         cursor: pointer;
-        padding: 5px 10px;
+        padding: 0px 10px;
         font-size: 1rem;
         color: white;
         border: none;

@@ -1,6 +1,6 @@
 interface contentsTab {
   tabName: string;
-  // content: profileList[];
+  content: profileList[];
 }
 [];
 
@@ -52,17 +52,13 @@ interface detailProps {
 interface subProps {
   detail: detailInfo;
   sub: subApply[];
+  setSub: (newValue: subApply[]) => void;
 }
 
 interface subApply {
   memberId: number;
   profile: string;
   nickname: string;
-}
-
-interface subInfo {
-  sub: subApply[];
-  setSub: (newValue: subApply[]) => void;
 }
 
 export type {
@@ -75,5 +71,4 @@ export type {
   detailInfo,
   detailProps,
   subProps,
-  subInfo,
 };
