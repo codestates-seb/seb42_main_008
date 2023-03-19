@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { contentsTab, subProps } from 'interfaces/ContentDetail.interface';
+import { subProps } from 'interfaces/ContentDetail.interface';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
@@ -8,26 +8,10 @@ import styled from 'styled-components';
 import Swal from 'sweetalert2';
 
 const Companion = ({ detail, sub, setSub }: subProps) => {
-  const [currentTab, setCurrentTab] = useState(0);
   const params = useParams();
   const { contentId } = params;
   const { memberId } = useRecoilValue(userInfo);
   const [part, setPart] = useState<any>([]);
-
-  const companionTabs: contentsTab[] = [
-    {
-      tabName: '신청자',
-      content: [],
-    },
-    {
-      tabName: '참여자',
-      content: [],
-    },
-  ];
-
-  const handleSelectTab = (index: number) => {
-    setCurrentTab(index);
-  };
 
   const handleCancel = async () => {
     Swal.fire({
@@ -70,17 +54,6 @@ const Companion = ({ detail, sub, setSub }: subProps) => {
 
   return (
     <Container>
-      <TabBox>
-        {companionTabs.map((el: contentsTab, index: number) => (
-          <li
-            key={index}
-            className={`${currentTab === index ? `menu focused` : `menu`}`}
-            onClick={() => handleSelectTab(index)}
-          >
-            {el.tabName}
-          </li>
-        ))}
-      </TabBox>
       <Content>
         {sub && sub.length !== 0 ? (
           sub.map((el: any, index: number) => (
@@ -135,40 +108,6 @@ const Container = styled.section`
   }
   @media screen and (max-width: 576px) {
     height: 100%;
-  }
-`;
-
-const TabBox = styled.ul`
-  background-color: #dcdcdc;
-  color: rgba(73, 73, 73, 0.5);
-  font-weight: bold;
-  display: flex;
-  flex-direction: row;
-  justify-items: center;
-  align-items: center;
-  list-style: none;
-  width: 100%;
-  cursor: pointer;
-  > li {
-    width: 50%;
-    text-align: center;
-  }
-  .menu {
-    padding: 15px;
-  }
-  .focused {
-    background-color: #d9506a;
-    color: white;
-  }
-  @media screen and (max-width: 768px) {
-    .menu {
-      padding: 10px;
-    }
-  }
-  @media screen and (max-width: 576px) {
-    .menu {
-      padding: 10px;
-    }
   }
 `;
 
