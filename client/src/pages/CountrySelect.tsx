@@ -1,7 +1,9 @@
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { FaChevronRight } from 'react-icons/fa';
 import randomCountries from '../assets/countries.json';
+import { useRecoilValue } from 'recoil';
+import { loginState } from 'states/userState';
 const randomCountriesPick: RandomCountries = randomCountries;
 type RandomCountries = {
   [key: string]: {
@@ -180,6 +182,17 @@ const CountrySelect = () => {
     navigate(`/${continent}/${code}`);
   };
 
+  // 로그인 사용자만 글작성 이동 클릭 라우터
+  const login = useRecoilValue(loginState);
+  const handleMoveAddPage = () => {
+    if (login === true) {
+      navigate('/add');
+    } else {
+      alert('로그인이 필요한 서비스입니다');
+      navigate('/login');
+    }
+  };
+
   return (
     <CountryListContainer>
       <div
@@ -191,7 +204,9 @@ const CountrySelect = () => {
       </div>
       <div className="list-top">
         <div>내가 함께하고 싶은 도시가 없나요?</div>
-        <Link to="/add">글 작성하기</Link>
+        <div className="addpage-route" onClick={handleMoveAddPage}>
+          글 작성하기
+        </div>
       </div>
       <CountryListBox>
         <div className="countrybox">
@@ -307,7 +322,7 @@ const CountryListContainer = styled.div`
     @media screen and (max-width: 576px) {
       font-size: 0.6rem;
     }
-    > a {
+    > .addpage-route {
       display: flex;
       justify-content: center;
       align-items: center;
@@ -316,6 +331,7 @@ const CountryListContainer = styled.div`
       height: 30px;
       font-weight: bold;
       border-radius: 10px;
+      cursor: pointer;
     }
   }
 `;

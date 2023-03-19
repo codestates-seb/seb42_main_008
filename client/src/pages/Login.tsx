@@ -28,8 +28,8 @@ const Login = () => {
     event.preventDefault();
     await axios
       .post(`${process.env.REACT_APP_TEST_SERVER}/members/login`, {
-        email,
-        password,
+        email: email.trim(),
+        password: password.trim(),
       })
       .then(res => {
         setToken(res.headers.authorization);

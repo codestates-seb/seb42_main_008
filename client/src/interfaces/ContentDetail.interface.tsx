@@ -49,6 +49,18 @@ interface detailProps {
   detail: detailInfo;
 }
 
+interface subProps {
+  detail: detailInfo;
+  sub: subApply[];
+  setSub: (newValue: subApply[]) => void;
+}
+
+interface subApply {
+  memberId: number;
+  profile: string;
+  nickname: string;
+}
+
 export type {
   contentsTab,
   profileList,
@@ -58,4 +70,5 @@ export type {
   thirdModal,
   detailInfo,
   detailProps,
+  subProps,
 };

@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import { FaRegEnvelope } from 'react-icons/fa';
 import { GrClose } from 'react-icons/gr';
 import axios from 'axios';
+import { useRecoilValue } from 'recoil';
+import { userInfo } from 'states/userState';
 
 interface NoteMessage {
   messageId: number;
@@ -30,14 +32,15 @@ const ReplyNote = ({
 }: Props) => {
   // 답장내용
   const [replyInput, setReplyInput] = useState('');
-
+  // 멤버 아이디
+  const user = useRecoilValue(userInfo);
   // 답장보내기
   const handleSubmitReply = async (event: any) => {
     event.preventDefault();
     try {
       await axios.post(`${process.env.REACT_APP_TEST_SERVER}/messages`, {
         content: replyInput,
-        senderId: 8,
+        senderId: user.memberId,
         receiverId: note.sender.id,
         companionId: note.companionId,
       });

@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import { FaChevronRight } from 'react-icons/fa';
 import Message from './Message';
 import axios from 'axios';
+import { useRecoilValue } from 'recoil';
+import { userInfo } from 'states/userState';
 
 type Props = {
   noteModal: boolean;
@@ -27,9 +29,14 @@ const NoteModal = ({ setNoteModal }: Props) => {
   };
 
   const [allNotes, setAllNotes] = useState<NoteMessage[]>([]);
+  // 멤버아이디
+  const user = useRecoilValue(userInfo);
+
   useEffect(() => {
     axios
-      .get(`${process.env.REACT_APP_TEST_SERVER}/messages?memberId=8`)
+      .get(
+        `${process.env.REACT_APP_TEST_SERVER}/messages?memberId=${user.memberId}`
+      )
       .then(response => {
         setAllNotes(response.data.data);
       })

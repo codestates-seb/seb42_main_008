@@ -23,12 +23,11 @@ const Header = () => {
           headers: { Authorization: token },
         }
       );
+      localStorage.clear();
       setToken('');
       setIsLogin(!isLogin);
-      console.log(isLogin);
     } catch (error) {
       console.log(error);
-      console.log(token);
     }
   };
   //쪽지 모달
@@ -57,7 +56,7 @@ const Header = () => {
         </Link>
       </div>
 
-      {isLogin ? (
+      {!isLogin ? (
         <LogoutNav>
           <Link to="login">Login</Link>
           <Link to="signup">SignUp</Link>
@@ -81,7 +80,7 @@ const Header = () => {
         </div>
       ) : null}
       <nav className="mobile-menu">
-        {!isLogin ? (
+        {isLogin ? (
           <div className="envelope-alert">
             <FaEnvelope
               className="envelope"
@@ -101,7 +100,7 @@ const Header = () => {
         </div>
       </nav>
       {isShowMenu ? (
-        !isLogin ? (
+        isLogin ? (
           <Menu setIsShowMenu={setIsShowMenu} handleLogout={handleLogout} />
         ) : (
           <LogoutMenu setIsShowMenu={setIsShowMenu} />
