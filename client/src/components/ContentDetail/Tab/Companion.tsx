@@ -51,7 +51,7 @@ const Companion = ({ detail, sub, setSub }: subProps) => {
     getSubList();
   }, []);
 
-  const handleAccept = async () => {
+  const handleAccept = async (memberId: number) => {
     Swal.fire({
       title: '동행신청을 수락하시겠습니까?',
       icon: 'warning',
@@ -78,7 +78,7 @@ const Companion = ({ detail, sub, setSub }: subProps) => {
     });
   };
 
-  const handleReject = async () => {
+  const handleReject = async (memberId: number) => {
     Swal.fire({
       title: '동행신청을 거절하시겠습니까?',
       icon: 'warning',
@@ -118,10 +118,16 @@ const Companion = ({ detail, sub, setSub }: subProps) => {
               {detail.memberId === memberId ? (
                 <div className="btn-wrapper">
                   {/* 수락 또는 거절되었을 경우 쪽지 보내기..?! */}
-                  <button className="btn" onClick={handleAccept}>
+                  <button
+                    className="btn"
+                    onClick={() => handleAccept(el.memberId)}
+                  >
                     수락
                   </button>
-                  <button className="btn" onClick={handleReject}>
+                  <button
+                    className="btn"
+                    onClick={() => handleReject(el.memberId)}
+                  >
                     거절
                   </button>
                 </div>
