@@ -1,26 +1,25 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useRecoilValue } from 'recoil';
+import { userInfo } from 'states/userState';
 import styled from 'styled-components';
 
 type Props = {
   setIsShowMenu: (newValue: boolean) => void;
-  setIsLogin: (newValue: boolean) => void;
+  handleLogout: React.MouseEventHandler<HTMLDivElement>;
 };
-const Menu = ({ setIsShowMenu, setIsLogin }: Props) => {
+const Menu = ({ setIsShowMenu, handleLogout }: Props) => {
   const handleMenuEnter = () => {
     setIsShowMenu(true);
   };
   const handleMenuLeave = () => {
     setIsShowMenu(false);
   };
-  const handleLogout = () => {
-    window.confirm('로그아웃 하시겠습니까?');
-    setIsLogin(true);
-  };
-
+  const UserInfo = useRecoilValue(userInfo);
+  const memberId = UserInfo.memberId;
   return (
     <MenuBox onMouseEnter={handleMenuEnter} onMouseLeave={handleMenuLeave}>
-      <Link to="/:memberId/profile">Profile</Link>
+      <Link to={`/${memberId}/profile`}>Profile</Link>
       <Link to="/continents">파티 구하기</Link>
       <div onClick={handleLogout}>Logout</div>
     </MenuBox>

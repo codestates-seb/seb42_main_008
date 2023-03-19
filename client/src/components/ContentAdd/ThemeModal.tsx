@@ -1,6 +1,8 @@
 import axios from 'axios';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useRecoilValue } from 'recoil';
+import { userInfo } from 'states/userState';
 import styled from 'styled-components';
 
 type LatLng = {
@@ -42,6 +44,7 @@ const ThemeModal = ({
   };
   const navigate = useNavigate();
 
+  // 테마 태그 종류
   const themes: string[] = [
     '맛집',
     '명소',
@@ -54,6 +57,22 @@ const ThemeModal = ({
     '파티',
     '기타',
   ];
+
+  // 대륙 번호
+  let continentNumber: number;
+  if (continentSelect === 'africa') {
+    continentNumber = 1;
+  } else if (continentSelect === 'asia') {
+    continentNumber = 2;
+  } else if (continentSelect === 'europe') {
+    continentNumber = 3;
+  } else if (continentSelect === 'northAmerica') {
+    continentNumber = 4;
+  } else if (continentSelect === 'oceania') {
+    continentNumber = 5;
+  } else if (continentSelect === 'southAmerica') {
+    continentNumber = 6;
+  }
 
   // 테마 담기 // 최대개수
   const [selectedThemes, setSelectedThemes] = useState<string[]>([]);
@@ -76,6 +95,9 @@ const ThemeModal = ({
   // 성향,테마 태그 종합
   const allTags = selectedTendencies.concat(selectedThemes);
 
+  // 멤버아이디
+  const user = useRecoilValue(userInfo);
+  console.log(user.memberId);
   // 모든 양식 제출 post 요청
   // 멤버아이디는 토큰받아 입력 // 대륙은 정수?
   const handleAllSubmit = async (event: any) => {
@@ -93,9 +115,9 @@ const ThemeModal = ({
             lng: markerLocation.lng,
             nationName: countrySelect,
             nationCode: countryCode,
-            continent: 2,
+            continent: continentNumber,
             tags: allTags,
-            memberId: 8,
+            memberId: user.memberId,
           }
         );
         setIsThemeModal(false);

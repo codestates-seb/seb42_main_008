@@ -1,5 +1,6 @@
 package partypeople.server.review.repository;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -17,5 +18,5 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     int sumScoreByMemberId(@Param("memberId") Long memberId);
 
     @EntityGraph(attributePaths = {"companion", "member"})
-    List<Review> findByCompanionCompanionIdAndMemberMemberId(Long companionId, Long memberId);
+    List<Review> findByCompanionCompanionIdAndMemberMemberId(Long companionId, Long memberId, Sort id);
 }

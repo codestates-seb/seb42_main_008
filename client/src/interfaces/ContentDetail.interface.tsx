@@ -49,6 +49,38 @@ interface detailProps {
   detail: detailInfo;
 }
 
+interface companionProps {
+  detail: detailInfo;
+  sub: subApply[];
+  setSub: (newValue: subApply[]) => void;
+  part: partApply[];
+  setPart: (newValue: partApply[]) => void;
+}
+
+interface subProps {
+  detail: detailInfo;
+  sub: subApply[];
+  setSub: (newValue: subApply[]) => void;
+}
+
+interface subApply {
+  memberId: number;
+  profile: string;
+  nickname: string;
+}
+
+interface partApply {
+  memberId: number;
+  profile: string;
+  nickname: string;
+}
+
+interface partProps {
+  detail: detailInfo;
+  part: partApply[];
+  setPart: (newValue: partApply[]) => void;
+}
+
 export type {
   contentsTab,
   profileList,
@@ -58,4 +90,7 @@ export type {
   thirdModal,
   detailInfo,
   detailProps,
+  subProps,
+  partProps,
+  companionProps,
 };

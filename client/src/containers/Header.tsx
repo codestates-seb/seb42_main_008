@@ -7,15 +7,28 @@ import { RiLogoutBoxRLine } from 'react-icons/ri';
 import { GiHamburgerMenu } from 'react-icons/gi';
 import Menu from 'components/Header/Menu';
 import LogoutMenu from 'components/Header/LogoutMenu';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { loginState, userInfo, userToken } from 'states/userState';
+import axios from 'axios';
 const Header = () => {
-  // 로그인 상태 임시
-  const [isLogin, setIsLogin] = useState(true);
-  const LoginHandler = () => {
-    setIsLogin(!isLogin);
-  };
-  const handleLogout = () => {
-    window.confirm('로그아웃 하시겠습니까?');
-    setIsLogin(true);
+  const [isLogin, setIsLogin] = useRecoilState(loginState);
+  const [token, setToken] = useRecoilState(userToken);
+
+  const handleLogout = async () => {
+    try {
+      await axios.post(
+        `${process.env.REACT_APP_TEST_SERVER}/members/logout`,
+        null,
+        {
+          headers: { Authorization: token },
+        }
+      );
+      localStorage.clear();
+      setToken('');
+      setIsLogin(!isLogin);
+    } catch (error) {
+      console.log(error);
+    }
   };
   //쪽지 모달
   const [noteModal, setNoteModal] = useState(false);
@@ -32,6 +45,9 @@ const Header = () => {
     setIsShowMenu(false);
   };
 
+  const UserInfo = useRecoilValue(userInfo);
+  const memberId = UserInfo.memberId;
+
   return (
     <HeaderBox>
       <div className="header-left">
@@ -41,17 +57,16 @@ const Header = () => {
         <Link to="/continents" className="party-link">
           파티 구하기
         </Link>
-        <button onClick={LoginHandler}>임시 로그인</button>
       </div>
 
-      {isLogin ? (
+      {!isLogin ? (
         <LogoutNav>
           <Link to="login">Login</Link>
           <Link to="signup">SignUp</Link>
         </LogoutNav>
       ) : (
         <LoginNav>
-          <Link to="/:memberId/profile">Profile</Link>
+          <Link to={`/${memberId}/profile`}>Profile</Link>
           <div className="nav-icon">
             <div className="message-icon">
               <FaEnvelope onClick={NoteHandler} cursor="pointer" />
@@ -68,7 +83,7 @@ const Header = () => {
         </div>
       ) : null}
       <nav className="mobile-menu">
-        {!isLogin ? (
+        {isLogin ? (
           <div className="envelope-alert">
             <FaEnvelope
               className="envelope"
@@ -88,8 +103,8 @@ const Header = () => {
         </div>
       </nav>
       {isShowMenu ? (
-        !isLogin ? (
-          <Menu setIsShowMenu={setIsShowMenu} setIsLogin={setIsLogin} />
+        isLogin ? (
+          <Menu setIsShowMenu={setIsShowMenu} handleLogout={handleLogout} />
         ) : (
           <LogoutMenu setIsShowMenu={setIsShowMenu} />
         )
@@ -128,6 +143,7 @@ const HeaderBox = styled.header`
     height: 100%;
     @media screen and (max-width: 768px) {
       width: 70%;
+      justify-content: flex-start;
     }
     > a:first-child {
       display: flex;

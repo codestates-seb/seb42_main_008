@@ -99,6 +99,10 @@ public class MemberService {
         Member findMember = optionalMember
             .orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
 
+        if(findMember.getMemberStatus().equals(Member.MemberStatus.MEMBER_QUIT)) {
+            throw new BusinessLogicException(ExceptionCode.WITHDRAWAL_MEMBER);
+        }
+
         return findMember;
     }
 
@@ -198,9 +202,14 @@ public class MemberService {
         String password = generateRandomPassword();
         String body = "다음은 당신의 임시 비밀번호 입니다 ! : " + password;
 
-        findMember.setPassword(passwordEncoder.encode(password));
+        try {
+            findMember.setPassword(passwordEncoder.encode(password));
 
-        mailService.sendEmail(findMember.getEmail(),subject,body);
+            mailService.sendEmail(findMember.getEmail(),subject,body);
+        } catch (Exception e) {
+            System.out.println("e.getMessage() = " + e.getMessage());
+            throw new RuntimeException(e);
+        }
     }
     private String generateRandomPassword() {
         String upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";

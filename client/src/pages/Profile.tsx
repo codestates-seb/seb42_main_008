@@ -31,7 +31,7 @@ const Profile = () => {
 
   useEffect(() => {
     getMemberData();
-  }, [currentTab, isLoading]);
+  }, [currentTab, isLoading, memberId]);
 
   return (
     <>

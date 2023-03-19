@@ -7,13 +7,24 @@ import 'react-datepicker/dist/react-datepicker.css';
 import ko from 'date-fns/locale/ko';
 import CountrySelectModal from 'components/ContentAdd/CountrySelectModal';
 import TendencyModal from 'components/ContentAdd/TendencyModal';
-import SearchMap from 'components/ContentAdd/SearchMap';
 import countries from '../assets/countries.json';
 import ThemeModal from 'components/ContentAdd/ThemeModal';
+import SearchMap from 'components/ContentAdd/SearchMap';
+import { useParams } from 'react-router-dom';
+import axios from 'axios';
 
 registerLocale('ko', ko);
 
+// interface DataProps {
+//   title:string;
+//   content:string;
+
+// }
+
 const ContentEdit = () => {
+  // 해당글 내용 불러오기
+  const { contentId } = useParams();
+
   const modules = {
     toolbar: {
       container: [
@@ -161,6 +172,66 @@ const ContentEdit = () => {
     formattedDate = `${year}-${month}-${day}`;
   }
 
+  //타이틀받기
+  useEffect(() => {
+    axios
+      .get(`${process.env.REACT_APP_TEST_SERVER}/companions/${contentId}`)
+      .then(response => {
+        setTitleInput(response.data.data.title);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }, []);
+
+  // 내용받기
+  useEffect(() => {
+    axios
+      .get(`${process.env.REACT_APP_TEST_SERVER}/companions/${contentId}`)
+      .then(response => {
+        setContentInput(response.data.data.content);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }, []);
+
+  // 날짜받기
+  useEffect(() => {
+    axios
+      .get(`${process.env.REACT_APP_TEST_SERVER}/companions/${contentId}`)
+      .then(response => {
+        setStartDate(response.data.data.date);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }, []);
+  // 위치받기
+  useEffect(() => {
+    axios
+      .get(`${process.env.REACT_APP_TEST_SERVER}/companions/${contentId}`)
+      .then(response => {
+        setMarkerLocation({
+          lat: response.data.data.lat,
+          lng: response.data.data.lng,
+        });
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }, []);
+  //주소 명칭 받기
+  useEffect(() => {
+    axios
+      .get(`${process.env.REACT_APP_TEST_SERVER}/companions/${contentId}`)
+      .then(response => {
+        setSavedAddress(response.data.data.address);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }, []);
   return (
     <ContentAddContainer>
       <TitleBox style={{ backgroundImage: `url(${titleImg})` }}>
@@ -200,6 +271,7 @@ const ContentEdit = () => {
           <label>제목</label>
           <input
             className="title-input"
+            value={titleInput}
             onChange={event => setTitleInput(event.target.value)}
           ></input>
         </div>
