@@ -47,6 +47,7 @@ public class MessageService {
     public void changeMessageStatus(Long messageId, boolean read) {
         Message message = findVerifiedMessage(messageId);
         message.setRead(read);
+        sseEmitters.count(message.getReceiver().getMemberId());
     }
 
     @Transactional
