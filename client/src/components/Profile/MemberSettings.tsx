@@ -58,6 +58,7 @@ const MemberSettings = ({ member, setCurrentTab }: MemberSettingsProps) => {
   };
 
   const handleSubmitClick = () => {
+    console.log(validation.nicknameUnique);
     if (!validation.totalValid) {
       Swal.fire({
         icon: 'error',
@@ -66,7 +67,7 @@ const MemberSettings = ({ member, setCurrentTab }: MemberSettingsProps) => {
       });
       return;
     }
-    if (!validation.nicknameUnique) {
+    if (!validation.nicknameUnique && validation.nicknameUnique !== undefined) {
       Swal.fire({
         icon: 'error',
         title: '수정할 수 없습니다',
