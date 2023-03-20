@@ -1,5 +1,5 @@
 import NoteModal from 'components/NoteModal/NoteModal';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { FaEnvelope } from 'react-icons/fa';
@@ -14,7 +14,9 @@ const Header = () => {
   const isLogin = useRecoilValue(loginState);
   const token = useRecoilValue(userToken);
   const navigate = useNavigate();
-
+  //멤버아이디
+  const UserInfo = useRecoilValue(userInfo);
+  const memberId = UserInfo.memberId;
   const handleLogout = async () => {
     try {
       await axios.post(
@@ -46,8 +48,35 @@ const Header = () => {
     setIsShowMenu(false);
   };
 
-  const UserInfo = useRecoilValue(userInfo);
-  const memberId = UserInfo.memberId;
+  // 쪽지 목록 불러오기
+  // const [notes, setNotes] = useState();
+  // useEffect(() => {
+  //   axios
+  //     .get(`${process.env.REACT_APP_SERVER}/messages?memberId=${memberId}`)
+  //     .then(response => {
+  //       setNotes(response.data.data);
+  //     })
+  //     .catch(error => console.log(error));
+  // }, []);
+
+  // 안읽은 쪽지 개수확인
+  const [notRead, setNotRead] = useState();
+  useEffect(() => {
+    const eventSource = new EventSource(
+      `${process.env.REACT_APP_SERVER}/messages/not-read/${memberId}`
+    );
+    eventSource.addEventListener('notReadCount', event => {
+      const data = JSON.parse(event.data);
+      setNotRead(data.data.notReadCount);
+    });
+    eventSource.onerror = error => {
+      console.log(error);
+      eventSource.close();
+    };
+    return () => {
+      eventSource.close();
+    };
+  }, [memberId]);
 
   return (
     <HeaderBox>
@@ -71,7 +100,7 @@ const Header = () => {
           <div className="nav-icon">
             <div className="message-icon">
               <FaEnvelope onClick={NoteHandler} cursor="pointer" />
-              <div className="message-alert">1</div>
+              <div className="message-alert">{notRead}</div>
             </div>
             <RiLogoutBoxRLine onClick={handleLogout} cursor="pointer" />
           </div>
@@ -91,7 +120,7 @@ const Header = () => {
               onClick={NoteHandler}
               cursor="pointer"
             />
-            <div className="message-alert">1</div>
+            <div className="message-alert">{notRead}</div>
           </div>
         ) : null}
 
