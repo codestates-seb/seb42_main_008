@@ -2,7 +2,7 @@ import axios from 'axios';
 axios.defaults.withCredentials = true;
 
 const customAxios = axios.create({
-  baseURL: 'https://86de-1-237-37-135.jp.ngrok.io',
+  baseURL: process.env.REACT_APP_TEST_SERVER,
   headers: {
     'Content-Type': 'application/json',
     'Access-Control-Allow-Origin': '*',
