@@ -128,6 +128,12 @@ const ContentWriter = ({ detail, sub, setSub }: subProps) => {
               동행글 삭제
             </button>
           </>
+        ) : detail.companionStatus ? (
+          <>
+            <button className="btn" onClick={handleProfile}>
+              프로필 보기
+            </button>
+          </>
         ) : (
           <>
             <button className="btn" onClick={handleApply}>
@@ -277,6 +283,9 @@ const ButtonBox = styled.section`
     font-size: 1.2rem;
     cursor: pointer;
   }
+  .yellow {
+    background: #feb35c;
+  }
   @media screen and (max-width: 768px) {
     .btn {
       background-color: #d9d9d9;
@@ -287,10 +296,16 @@ const ButtonBox = styled.section`
       font-size: 0.7rem;
       cursor: pointer;
     }
+    .yellow {
+      background: #feb35c;
+    }
   }
   @media screen and (max-width: 576px) {
     > * {
       font-size: 0.5rem;
+    }
+    .yellow {
+      background: #feb35c;
     }
   }
 `;

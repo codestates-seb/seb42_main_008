@@ -19,12 +19,28 @@ interface Props {
   note: NoteMessage;
 }
 
+interface IMessageBoxProps {
+  isRead: boolean;
+}
+
 const Message = ({ note }: Props) => {
   const [isNoteOpen, setIsNoteOpen] = useState(false);
   const [isReplyOpen, setIsReplyOpen] = useState(false);
+  //읽은 쪽지 안읽은 쪽지 상태 구분
+  const [isRead, setIsRead] = useState<boolean>(note.read);
 
-  const handleOpenNote = () => {
-    setIsNoteOpen(!isNoteOpen);
+  const handleOpenNote = async (event: any) => {
+    event.preventDefault();
+    try {
+      await axios.patch(
+        `${process.env.REACT_APP_SERVER}/messages/${note.messageId}`,
+        { read: true }
+      );
+      setIsNoteOpen(!isNoteOpen);
+      setIsRead(true);
+    } catch (error) {
+      console.log(error);
+    }
   };
   const handleCloseNote = () => {
     setIsNoteOpen(false);
@@ -54,7 +70,7 @@ const Message = ({ note }: Props) => {
   };
 
   return (
-    <MessageBox>
+    <MessageBox isRead={isRead}>
       <div className="message-info">
         <div className="info-left">
           <div>{note.createdAt}</div>
@@ -65,6 +81,7 @@ const Message = ({ note }: Props) => {
       </div>
       <div className="message-content" onClick={handleOpenNote}>
         {note.content}
+        {String(isRead)}
       </div>
       {isNoteOpen ? (
         <div className="overlay">
@@ -93,12 +110,12 @@ const Message = ({ note }: Props) => {
 
 export default Message;
 
-const MessageBox = styled.div`
+const MessageBox = styled.div<IMessageBoxProps>`
   display: flex;
   width: 100%;
   padding: 10px;
   flex-direction: column;
-  background-color: #f4f4f4;
+  background-color: ${({ isRead }) => (isRead ? '#AAAAAA' : '#f4f4f4')};
   border-radius: 5px;
   margin: 10px 0px 10px 0px;
   @media screen and (max-width: 768px) {

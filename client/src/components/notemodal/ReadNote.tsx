@@ -44,9 +44,11 @@ const ReadNote = ({
         <div className="note-content">{note.content}</div>
       </div>
       <div className="note-button">
-        <button className="reply" onClick={handleReplyModal}>
-          답장하기
-        </button>
+        {note.sender.id !== 1 ? (
+          <button className="reply" onClick={handleReplyModal}>
+            답장하기
+          </button>
+        ) : null}
         <button className="delete" onClick={handelDeleteNote}>
           쪽지 삭제
         </button>
@@ -90,6 +92,7 @@ const ReadBox = styled.div`
     justify-content: space-between;
     padding-bottom: 15px;
     font-size: 1.5rem;
+    white-space: nowrap;
     @media screen and (max-width: 768px) {
       font-size: 1.5rem;
     }

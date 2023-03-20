@@ -10,12 +10,27 @@ import customAxios from 'api/customAxios';
 import { StyledButton } from 'styles/StyledButton';
 import { useRecoilValue } from 'recoil';
 import { userInfo } from 'states/userState';
+import { getDateString } from 'utils/getDateString';
+import ReplyNote from 'components/NoteModal/ReplyNote';
+import { ModalBG } from './ModalStyles';
 
 const MemberInfo = ({ member, setMember }: MemberInfoProps) => {
   const [isFollow, setIsFollow] = useState<boolean>(member.followerStatus);
   const [isShowModal, setIsShowModal] = useState<boolean>(false);
   const [isFollower, setIsFollower] = useState<boolean>(true);
+  const [isShowNoteModal, setIsShowNoteModal] = useState<boolean>(false);
   const loginUser = useRecoilValue(userInfo);
+  const noteData = {
+    messageId: 0,
+    content: '',
+    companionId: 0,
+    createdAt: getDateString(new Date()).fullDateStr,
+    read: false,
+    sender: {
+      id: member.memberId,
+      nickname: member.nickname,
+    },
+  };
 
   const handleFollowButtonClick = async () => {
     const data: FollowRequest = {
@@ -47,6 +62,14 @@ const MemberInfo = ({ member, setMember }: MemberInfoProps) => {
     setIsFollower(type);
   };
 
+  const handleNoteModal = () => {
+    setIsShowNoteModal(true);
+  };
+
+  const handleOverlayClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    event.stopPropagation();
+  };
+
   return (
     <>
       {isShowModal && (
@@ -55,6 +78,17 @@ const MemberInfo = ({ member, setMember }: MemberInfoProps) => {
           isFollower={isFollower}
           member={member}
         />
+      )}
+      {isShowNoteModal && (
+        <>
+          <ModalBG onClick={() => setIsShowNoteModal(false)} />
+          <ReplyNote
+            note={noteData}
+            handleOverlayClick={handleOverlayClick}
+            handleReplyModal={() => setIsShowNoteModal(false)}
+            setIsReplyOpen={setIsShowNoteModal}
+          />
+        </>
       )}
       <InfoContainer>
         <ImageWrapper>
@@ -92,7 +126,7 @@ const MemberInfo = ({ member, setMember }: MemberInfoProps) => {
                   )}
                   {isFollow ? '팔로잉' : '팔로우'}
                 </Button>
-                <Button status={false}>
+                <Button status={false} onClick={handleNoteModal}>
                   <TbMail size={24} />
                   쪽지 보내기
                 </Button>

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { partProps } from 'interfaces/ContentDetail.interface';
+import { companionProps } from 'interfaces/ContentDetail.interface';
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
@@ -7,7 +7,7 @@ import { userInfo } from 'states/userState';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
 
-const Participants = ({ detail, setSub, part, setPart }: partProps) => {
+const Participants = ({ detail, setSub, part, setPart }: companionProps) => {
   const params = useParams();
   const { contentId } = params;
   const { memberId, nickname } = useRecoilValue(userInfo);

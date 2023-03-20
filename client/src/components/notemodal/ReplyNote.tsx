@@ -58,7 +58,7 @@ const ReplyNote = ({
             <FaRegEnvelope />
             받는사람 | {note.sender.nickname}
           </div>
-          <div onClick={handleReplyModal}>
+          <div className="note-close" onClick={handleReplyModal}>
             <GrClose />
           </div>
         </div>
@@ -92,6 +92,7 @@ const ReplyBox = styled.div`
   right: 50%;
   transform: translate(50%, -50%);
   flex-direction: column;
+  z-index: 1000;
   @media screen and (max-width: 768px) {
     width: 500px;
     height: 360px;
@@ -121,6 +122,9 @@ const ReplyBox = styled.div`
       font-size: 1.2rem;
     }
   }
+  .note-close {
+    cursor: pointer;
+  }
   .note-title {
     display: flex;
     align-items: center;
@@ -138,6 +142,7 @@ const ReplyBox = styled.div`
     height: 80%;
     width: 100%;
     padding: 10px;
+    resize: none;
   }
   .note-button {
     display: flex;
