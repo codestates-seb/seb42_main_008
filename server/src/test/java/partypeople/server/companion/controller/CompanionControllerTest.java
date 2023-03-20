@@ -65,7 +65,7 @@ public class CompanionControllerTest {
     private TagService tagService;
 
     @Test
-    @DisplayName("Companion Post Test")
+    @DisplayName("Post Companion Test")
     void postCompanionTest() throws Exception {
         // given
         Post request = new Post(
@@ -124,7 +124,7 @@ public class CompanionControllerTest {
     }
 
     @Test
-    @DisplayName("Companion Patch Test")
+    @DisplayName("Patch Companion Test")
     void patchCompanionTest() throws Exception {
         // given
         Patch request = new Patch(1L,
@@ -241,7 +241,7 @@ public class CompanionControllerTest {
     }
 
     @Test
-    @DisplayName("Companion Delete Test")
+    @DisplayName("Delete Companion Test")
     void deleteCompanionTest() throws Exception {
         // given
         doNothing().when(companionService).deleteCompanion(Mockito.anyLong());
@@ -266,7 +266,7 @@ public class CompanionControllerTest {
     }
 
     @Test
-    @DisplayName("Companion Get Test")
+    @DisplayName("Get Companion Test")
     void getCompanionTest() throws Exception {
         // given
         Long companionId = 1L;
@@ -347,7 +347,7 @@ public class CompanionControllerTest {
     }
 
     @Test
-    @DisplayName("Companions Get By Nation Test")
+    @DisplayName("Get Companions By Nation Test")
     void getCompanionsByNationTest() throws Exception {
         // given
         int page = 1;
@@ -449,6 +449,39 @@ public class CompanionControllerTest {
                                 fieldWithPath("pageInfo.totalPages").type(JsonFieldType.NUMBER).description("총 페이지 수")
                         )));
     }
+
+    @Test
+    @DisplayName("Get Counts Of Companions By Continent Test")
+    void getCountsOfCompanionsByContinentTest() throws Exception {
+        // given
+        int continent = 2;
+        Companion companion = new Companion();
+        CompanionDto.ContinentResponse response = new CompanionDto.ContinentResponse("jpn", 1);
+
+        List<Companion> companions = new ArrayList<>(List.of(companion));
+        List<CompanionDto.ContinentResponse> responses = new ArrayList<>(List.of(response));
+
+        given(companionService.findCompanionsByContinent(Mockito.anyInt())).willReturn(companions);
+        given(mapper.companionsToContinentResponseDtos(Mockito.anyList())).willReturn(responses);
+
+
+        // when
+        ResultActions actions = mockMvc.perform(
+                get("/companions/continents")
+                        .param("continent", String.valueOf(continent))
+        );
+
+
+        // then
+        actions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data").isArray())
+                .andExpect(jsonPath("$.data[0].nationCode").value(responses.get(0).getNationCode()))
+                .andExpect(jsonPath("$.data[0].companionsCount").value(responses.get(0).getCompanionsCount()));
+
+
+    }
+
 
     private static class Post {
         @NotBlank
