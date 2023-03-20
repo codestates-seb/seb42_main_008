@@ -316,7 +316,32 @@ public class CompanionControllerTest {
                 .andExpect(jsonPath("$.data.nationCode").value(response.getNationCode()))
                 .andExpect(jsonPath("$.data.continent").value(response.getContinent()))
                 .andExpect(jsonPath("$.data.tags").isArray())
-                .andExpect(jsonPath("$.data.companionStatus").value(response.isCompanionStatus()));
+                .andExpect(jsonPath("$.data.companionStatus").value(response.isCompanionStatus()))
+                .andDo(document("get-companion",
+                        getRequestPreProcessor(),
+                        getResponsePreProcessor(),
+                        pathParameters(
+                                parameterWithName("companion-id").description("동행글 식별자")
+                        ),
+                        responseFields(
+                                fieldWithPath("data").type(JsonFieldType.OBJECT).description("결과 데이터"),
+                                fieldWithPath("data.companionId").type(JsonFieldType.NUMBER).description("동행글 식별자"),
+                                fieldWithPath("data.memberId").type(JsonFieldType.NUMBER).description("작성자 식별자"),
+                                fieldWithPath("data.nickname").type(JsonFieldType.STRING).description("작성자 닉네임"),
+                                fieldWithPath("data.score").type(JsonFieldType.NUMBER).description("작성자 점수"),
+                                fieldWithPath("data.title").type(JsonFieldType.STRING).description("동행글 제목"),
+                                fieldWithPath("data.content").type(JsonFieldType.STRING).description("동행글 내용"),
+                                fieldWithPath("data.createdAt").type(JsonFieldType.STRING).description("동행글 작성 날짜"),
+                                fieldWithPath("data.date").type(JsonFieldType.STRING).description("동행 날짜"),
+                                fieldWithPath("data.address").type(JsonFieldType.STRING).description("동행 주소"),
+                                fieldWithPath("data.lat").type(JsonFieldType.NUMBER).description("위도"),
+                                fieldWithPath("data.lng").type(JsonFieldType.NUMBER).description("경도"),
+                                fieldWithPath("data.nationName").type(JsonFieldType.STRING).description("국가"),
+                                fieldWithPath("data.nationCode").type(JsonFieldType.STRING).description("국가 코드"),
+                                fieldWithPath("data.continent").type(JsonFieldType.NUMBER).description("대륙 코드"),
+                                fieldWithPath("data.tags").type(JsonFieldType.ARRAY).description("태그"),
+                                fieldWithPath("data.companionStatus").type(JsonFieldType.BOOLEAN).description("동행 완료 여부")
+                        )));
     }
 
     private static class Post {
