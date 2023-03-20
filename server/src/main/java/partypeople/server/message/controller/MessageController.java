@@ -54,6 +54,14 @@ public class MessageController {
         );
     }
 
+    @PatchMapping("/{message-id}")
+    public ResponseEntity patchMessage(@PathVariable("message-id") Long messageId,
+                                       @RequestBody MessageDto.Patch requestBody) {
+        messageService.changeMessageStatus(messageId, requestBody.isRead());
+
+        return ResponseEntity.ok().build();
+    }
+
     @DeleteMapping("/{message-id}")
     public ResponseEntity deleteMessage(@PathVariable("message-id") Long messageId) {
         messageService.deleteMessage(messageId);

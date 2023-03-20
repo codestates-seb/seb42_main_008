@@ -23,6 +23,13 @@ public class MessageDto {
 
     @Getter
     @Setter
+    public static class Patch {
+        private boolean read;
+    }
+
+
+    @Getter
+    @Setter
     public static class Response {
         private Long messageId;
         private String content;
