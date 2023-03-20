@@ -51,9 +51,8 @@ export const userInfo = atom({
 // 리뷰 작성 정보
 export const reviewInfo = atom({
   key: 'reviewInfo',
-  default: {
-    reviewMemberId: 0,
-  },
+  default: false,
+  effects_UNSTABLE: [persistAtom],
 });
 
 // export type { userInfoTypes, userInfoType };

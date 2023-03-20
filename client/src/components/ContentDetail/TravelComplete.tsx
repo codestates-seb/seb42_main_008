@@ -4,14 +4,14 @@ import { partProps } from 'interfaces/ContentDetail.interface';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
-import { userInfo } from 'states/userState';
+import { reviewInfo, userInfo } from 'states/userState';
 import styled from 'styled-components';
 
 const TravelComplete = ({ detail, part, setPart }: partProps) => {
   const params = useParams();
   const { contentId } = params;
   const { memberId } = useRecoilValue(userInfo);
-  //const setReviewId = useSetRecoilState(reviewInfo);
+  const review = useRecoilValue(reviewInfo);
 
   // 리뷰 작성 모달
   const [firstModal, setFirstModal] = useState<boolean>(false);
@@ -53,7 +53,11 @@ const TravelComplete = ({ detail, part, setPart }: partProps) => {
               </div>
               {/* 작성자ID === 현재 로그인ID ? 탭 안에 리뷰작성 버튼 : (여행 참여자ID === 현재 로그인ID ? : 리뷰작성 버튼 : null) */}
               {/* 리뷰 작성 완료 ? 완료 : 리뷰버튼 */}
-              {detail.memberId === memberId ? (
+              {review ? (
+                <div className="btn-wrapper">
+                  <button className="btn">완료</button>
+                </div>
+              ) : detail.memberId === memberId ? (
                 <div className="btn-wrapper">
                   <button
                     className="btn"
