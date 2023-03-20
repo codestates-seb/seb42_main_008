@@ -142,6 +142,8 @@ public class CompanionDto {
 
     @Getter
     @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
     public static class ReviewedMember {
         private Long memberId;
     }

@@ -492,6 +492,35 @@ public class CompanionControllerTest {
                 );
     }
 
+    @Test
+    @DisplayName("Get Reviewed Member Test")
+    void getReviewedMemberTest() throws Exception {
+        // given
+        Long companionId = 1L;
+        Long memberId = 2L;
+
+        CompanionDto.ReviewedMember response = new CompanionDto.ReviewedMember(memberId);
+        List<CompanionDto.ReviewedMember> responses = new ArrayList<>(List.of(response));
+
+        given(companionService.findReviewedMember(companionId, memberId)).willReturn(responses);
+
+
+        // when
+        ResultActions actions = mockMvc.perform(
+                get("/companions/{companion-id}/reviewers", companionId)
+                        .param("memberId", String.valueOf(memberId))
+        );
+
+
+        // then
+        actions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data").isArray())
+                .andExpect(jsonPath("$.data[0].memberId").value(responses.get(0).getMemberId()));
+
+
+    }
+
 
     private static class Post {
         @NotBlank
