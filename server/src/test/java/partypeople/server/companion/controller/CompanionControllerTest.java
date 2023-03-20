@@ -516,9 +516,21 @@ public class CompanionControllerTest {
         actions
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data").isArray())
-                .andExpect(jsonPath("$.data[0].memberId").value(responses.get(0).getMemberId()));
-
-
+                .andExpect(jsonPath("$.data[0].memberId").value(responses.get(0).getMemberId()))
+                .andDo(document("get-reviewed-members",
+                        getRequestPreProcessor(),
+                        getResponsePreProcessor(),
+                        requestParameters(
+                                parameterWithName("memberId").description("현재 로그인된 회원 식별자")
+                        ),
+                        pathParameters(
+                                parameterWithName("companion-id").description("동행글 식별자")
+                        ),
+                        responseFields(
+                                fieldWithPath("data").type(JsonFieldType.ARRAY).description("결과 데이터"),
+                                fieldWithPath("data[].memberId").type(JsonFieldType.NUMBER).description("회원 식별자")
+                        )
+                ));
     }
 
 
