@@ -157,6 +157,9 @@ public class CompanionControllerTest {
                 "일본 유니버셜스튜디오",
                 123.45678,
                 123.12345,
+                "일본",
+                "jpn",
+                2,
                 new ArrayList<>(Arrays.asList("내향", "테마파크")),
                 false
         );
@@ -190,6 +193,9 @@ public class CompanionControllerTest {
                 .andExpect(jsonPath("$.data.address").value(response.getAddress()))
                 .andExpect(jsonPath("$.data.lat").value(response.getLat()))
                 .andExpect(jsonPath("$.data.lng").value(response.getLng()))
+                .andExpect(jsonPath("$.data.nationName").value(response.getNationName()))
+                .andExpect(jsonPath("$.data.nationCode").value(response.getNationCode()))
+                .andExpect(jsonPath("$.data.continent").value(response.getContinent()))
                 .andExpect(jsonPath("$.data.tags").isArray())
                 .andExpect(jsonPath("$.data.companionStatus").value(response.isCompanionStatus()))
                 .andDo(document("patch-companion",
@@ -224,6 +230,9 @@ public class CompanionControllerTest {
                                 fieldWithPath("data.address").type(JsonFieldType.STRING).description("동행 주소"),
                                 fieldWithPath("data.lat").type(JsonFieldType.NUMBER).description("위도"),
                                 fieldWithPath("data.lng").type(JsonFieldType.NUMBER).description("경도"),
+                                fieldWithPath("data.nationName").type(JsonFieldType.STRING).description("국가"),
+                                fieldWithPath("data.nationCode").type(JsonFieldType.STRING).description("국가 코드"),
+                                fieldWithPath("data.continent").type(JsonFieldType.NUMBER).description("대륙 코드"),
                                 fieldWithPath("data.tags").type(JsonFieldType.ARRAY).description("태그"),
                                 fieldWithPath("data.companionStatus").type(JsonFieldType.BOOLEAN).description("동행 완료 여부")
                         )));
@@ -251,6 +260,12 @@ public class CompanionControllerTest {
                                 parameterWithName("companion-id").description("동행글 식별자")
                         )
                 ));
+
+    }
+
+    @Test
+    @DisplayName("Companion Get Test")
+    void getCompanionTest() throws Exception {
 
     }
 
