@@ -502,7 +502,7 @@ public class CompanionControllerTest {
         CompanionDto.ReviewedMember response = new CompanionDto.ReviewedMember(memberId);
         List<CompanionDto.ReviewedMember> responses = new ArrayList<>(List.of(response));
 
-        given(companionService.findReviewedMember(companionId, memberId)).willReturn(responses);
+        given(companionService.findReviewedMember(Mockito.anyLong(), Mockito.anyLong())).willReturn(responses);
 
 
         // when
@@ -533,6 +533,83 @@ public class CompanionControllerTest {
                 ));
     }
 
+    @Test
+    @DisplayName("Get Companions By Keyword")
+    void getCompanionsByKeywordTest() throws Exception {
+        // given
+        int page = 1;
+        int size = 10;
+        String sortDir = "DESC";
+        String sortBy = "createdAt";
+        String condition = "title";
+        String keyword = "유니버셜";
+        String nationCode = "jpn";
+        String date = "2023-03-20";
+
+        Companion companion = new Companion();
+        CompanionDto.Response response = new CompanionDto.Response(
+                1L,
+                2L,
+                "member2",
+                100,
+                "일본 유니버셜 같이 가요",
+                "일본 유니버셜 가고싶은데 혼자라 부끄러워요ㅠ 같이 가실 분 구함~",
+                LocalDate.of(2023, 3, 20),
+                LocalDate.of(2023, 3, 10),
+                "일본 유니버셜스튜디오",
+                123.45678,
+                123.12345,
+                "일본",
+                "jpn",
+                2,
+                new ArrayList<>(Arrays.asList("내향", "테마파크")),
+                false
+        );
+
+        Page<Companion> companionPage = new PageImpl<>(List.of(companion));
+        List<CompanionDto.Response> responses = new ArrayList<>(List.of(response));
+
+        given(companionService.findCompanionByKeyword(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyString(),
+                Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString())).willReturn(companionPage);
+        given(mapper.companionsToCompanionResponseDtos(Mockito.anyList())).willReturn(responses);
+
+
+        // when
+        ResultActions actions = mockMvc.perform(
+                get("/companions/search")
+                        .param("page", String.valueOf(page))
+                        .param("size", String.valueOf(size))
+                        .param("sortDir", sortDir)
+                        .param("sortBy", sortBy)
+                        .param("condition", condition)
+                        .param("keyword", keyword)
+                        .param("nationCode", nationCode)
+                        .param("date", date)
+        );
+
+
+        // then
+        actions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data").isArray())
+                .andExpect(jsonPath("$.data[0].companionId").value(responses.get(0).getCompanionId()))
+                .andExpect(jsonPath("$.data[0].memberId").value(responses.get(0).getMemberId()))
+                .andExpect(jsonPath("$.data[0].nickname").value(responses.get(0).getNickname()))
+                .andExpect(jsonPath("$.data[0].score").value(responses.get(0).getScore()))
+                .andExpect(jsonPath("$.data[0].title").value(responses.get(0).getTitle()))
+                .andExpect(jsonPath("$.data[0].content").value(responses.get(0).getContent()))
+                .andExpect(jsonPath("$.data[0].date").exists())
+                .andExpect(jsonPath("$.data[0].createdAt").exists())
+                .andExpect(jsonPath("$.data[0].address").value(responses.get(0).getAddress()))
+                .andExpect(jsonPath("$.data[0].lat").value(responses.get(0).getLat()))
+                .andExpect(jsonPath("$.data[0].lng").value(responses.get(0).getLng()))
+                .andExpect(jsonPath("$.data[0].nationName").value(responses.get(0).getNationName()))
+                .andExpect(jsonPath("$.data[0].nationCode").value(responses.get(0).getNationCode()))
+                .andExpect(jsonPath("$.data[0].continent").value(responses.get(0).getContinent()))
+                .andExpect(jsonPath("$.data[0].tags").isArray())
+                .andExpect(jsonPath("$.data[0].companionStatus").value(responses.get(0).isCompanionStatus()));
+
+    }
 
     private static class Post {
         @NotBlank
