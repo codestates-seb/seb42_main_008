@@ -1,6 +1,6 @@
 import NoteModal from 'components/NoteModal/NoteModal';
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { FaEnvelope } from 'react-icons/fa';
 import { RiLogoutBoxRLine } from 'react-icons/ri';
@@ -13,6 +13,7 @@ import axios from 'axios';
 const Header = () => {
   const isLogin = useRecoilValue(loginState);
   const token = useRecoilValue(userToken);
+  const navigate = useNavigate();
 
   const handleLogout = async () => {
     try {
@@ -24,6 +25,8 @@ const Header = () => {
         }
       );
       localStorage.clear();
+      navigate('/');
+      window.location.reload();
     } catch (error) {
       console.log(error);
     }

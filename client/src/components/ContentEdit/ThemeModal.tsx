@@ -103,7 +103,7 @@ const ThemeModal = ({
       event.preventDefault();
       try {
         const response = await axios.patch(
-          `${process.env.REACT_APP_TEST_SERVER}/companions/${contentId}`,
+          `${process.env.REACT_APP_SERVER}/companions/${contentId}`,
           {
             title: titleInput,
             content: contentInput,

@@ -42,7 +42,7 @@ const Message = ({ note }: Props) => {
     if (window.confirm('쪽지를 삭제하시겠습니까?')) {
       try {
         await axios.delete(
-          `${process.env.REACT_APP_TEST_SERVER}/messages/${note.messageId}`
+          `${process.env.REACT_APP_SERVER}/messages/${note.messageId}`
         );
         alert('쪽지가 삭제되었어요');
         setIsNoteOpen(false);
