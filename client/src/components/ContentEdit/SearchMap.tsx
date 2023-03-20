@@ -3,7 +3,7 @@ import {
   GoogleMap,
   LoadScript,
   LoadScriptProps,
-  Marker,
+  MarkerF,
 } from '@react-google-maps/api';
 import styled from 'styled-components';
 import { FaMapMarkerAlt } from 'react-icons/fa';
@@ -113,7 +113,7 @@ const SearchMap: React.FC<Props> = ({
           onClick={handleMapClick}
         >
           {markerPosition && (
-            <Marker
+            <MarkerF
               position={
                 markerPosition && {
                   lat: markerPosition.lat,
