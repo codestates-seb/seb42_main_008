@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { MemberBox } from 'components/Login/MemberStyled';
 import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
@@ -223,22 +224,7 @@ const Container = styled.main`
   align-items: center;
   justify-content: center;
 `;
-const SignUpBox = styled.section`
-  background-color: white;
-  width: 400px;
-  padding: 50px;
-  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.15);
-  border-radius: 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  h2 {
-    margin-bottom: 25px;
-  }
-  form {
-    width: 100%;
-  }
+const SignUpBox = styled(MemberBox)`
   .group {
     display: flex;
     flex-direction: column;

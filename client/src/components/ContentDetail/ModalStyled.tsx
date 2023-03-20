@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const StyledModal = styled.div`
+export const ModalStyled = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
