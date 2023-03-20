@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { reviewInfo, userInfo } from 'states/userState';
 import styled from 'styled-components';
+import { StyledModal } from 'styles/ContentDetail/StyledModal';
 import Swal from 'sweetalert2';
 
 const ThirdReviewModal = ({
@@ -178,20 +179,7 @@ const BackGround = styled.section`
   width: 100%;
   height: 100%;
 `;
-const ModalView = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: white;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 50%;
-  height: 40%;
-  text-align: center;
-  border-radius: 30px;
-  box-shadow: 5px 5px 10px 5px rgba(0, 0, 0, 0.25);
+const ModalView = styled(StyledModal)`
   @media screen and (max-width: 992px) {
     width: 500px;
     height: 300px;

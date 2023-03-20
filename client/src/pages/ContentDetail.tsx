@@ -1,10 +1,9 @@
 import axios from 'axios';
 import CompanionTab from 'components/ContentDetail/CompanionTab';
 import ContentWriter from 'components/ContentDetail/ContentWriter';
+import SearchMap from 'components/ContentDetail/SearchMap';
 import TravelComplete from 'components/ContentDetail/TravelComplete';
 import Loader from 'components/Loader';
-// import TravelComplete from 'components/ContentDetail/TravelComplete';
-// import Participants from 'components/ContentDetail/Participants';
 import { detailInfo } from 'interfaces/ContentDetail.interface';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -61,7 +60,7 @@ const ContentDetail = () => {
               <div className="bottom-box">
                 <h2>{detail.title}</h2>
                 <h4>작성날짜: {detail.createdAt}</h4>
-                {/* <SearchMap detail={detail} /> */}
+                <SearchMap detail={detail} />
                 <div
                   id="content"
                   dangerouslySetInnerHTML={{ __html: detail.content }}

@@ -6,6 +6,7 @@ import { useParams } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { reviewInfo, userInfo } from 'states/userState';
 import styled from 'styled-components';
+import { StyledTabBox } from 'styles/ContentDetail/StyledCompanion';
 
 const TravelComplete = ({ detail, part, setPart }: partProps) => {
   const params = useParams();
@@ -116,37 +117,10 @@ const Container = styled.section`
   }
 `;
 
-const TabBox = styled.ul`
-  background-color: #dcdcdc;
-  color: rgba(73, 73, 73, 0.5);
-  font-weight: bold;
-  display: flex;
-  flex-direction: row;
-  justify-items: center;
-  align-items: center;
-  list-style: none;
-  width: 100%;
-  cursor: pointer;
+const TabBox = styled(StyledTabBox)`
   > li {
     width: 100%;
     text-align: center;
-  }
-  .menu {
-    padding: 15px;
-  }
-  .focused {
-    background-color: #d9506a;
-    color: white;
-  }
-  @media screen and (max-width: 768px) {
-    .menu {
-      padding: 10px;
-    }
-  }
-  @media screen and (max-width: 576px) {
-    .menu {
-      padding: 10px;
-    }
   }
 `;
 

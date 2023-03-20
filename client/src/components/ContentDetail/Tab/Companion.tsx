@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { userInfo } from 'states/userState';
 import styled from 'styled-components';
+import { StyledCompanionList } from 'styles/ContentDetail/StyledCompanion';
 import Swal from 'sweetalert2';
 
 const Companion = ({ detail, sub, setSub, setPart }: companionProps) => {
@@ -188,7 +189,6 @@ export default Companion;
 
 const Container = styled.section`
   display: flex;
-  /* justify-content: center; */
   align-items: center;
   flex-direction: column;
   width: 100%;
@@ -209,82 +209,11 @@ const Container = styled.section`
   }
 `;
 
-const Content = styled.ul`
-  text-align: left;
-  list-style: none;
-  width: 100%;
-  height: 100%;
+const Content = styled(StyledCompanionList)`
   display: flex;
   justify-content: flex-start;
   align-items: center;
   flex-direction: column;
-  overflow: scroll;
-  ::-webkit-scrollbar {
-    display: none;
-  }
-  li {
-    width: 100%;
-    border: 1px solid #cccccc;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 1.2rem;
-    padding: 5px;
-    .companion-info {
-      display: flex;
-      justify-content: flex-start;
-      align-items: center;
-      width: 50%;
-      .img {
-        margin-right: 5px;
-        width: 30px;
-        height: 30px;
-        border-radius: 100%;
-        background-repeat: no-repeat;
-        background-size: cover;
-        background-position: center;
-      }
-    }
-    .btn-wrapper {
-      width: 50%;
-      display: flex;
-      justify-content: space-around;
-      > :nth-child(1) {
-        background-color: #81d05b;
-      }
-      > :nth-child(2) {
-        background-color: #ff624d;
-      }
-      .btn {
-        cursor: pointer;
-        padding: 0px 10px;
-        font-size: 1rem;
-        color: white;
-        border: none;
-        border-radius: 15px;
-      }
-    }
-  }
-  @media screen and (max-width: 768px) {
-    > li {
-      font-size: 0.8rem;
-      .btn-wrapper {
-        .btn {
-          font-size: 0.8rem;
-        }
-      }
-    }
-  }
-  @media screen and (max-width: 576px) {
-    > li {
-      font-size: 0.8rem;
-      .btn-wrapper {
-        .btn {
-          font-size: 0.8rem;
-        }
-      }
-    }
-  }
 `;
 
 /* TODO:
