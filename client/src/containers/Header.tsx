@@ -49,16 +49,15 @@ const Header = () => {
   };
 
   // 쪽지 목록 불러오기
-  const [notes, setNotes] = useState();
-  useEffect(() => {
-    axios
-      .get(`${process.env.REACT_APP_SERVER}/messages?memberId=${memberId}`)
-      .then(response => {
-        setNotes(response.data.data);
-      })
-      .catch(error => console.log(error));
-  }, []);
-  console.log(notes);
+  // const [notes, setNotes] = useState();
+  // useEffect(() => {
+  //   axios
+  //     .get(`${process.env.REACT_APP_SERVER}/messages?memberId=${memberId}`)
+  //     .then(response => {
+  //       setNotes(response.data.data);
+  //     })
+  //     .catch(error => console.log(error));
+  // }, []);
 
   // 안읽은 쪽지 개수확인
   const [notRead, setNotRead] = useState();
@@ -74,7 +73,10 @@ const Header = () => {
       console.log(error);
       eventSource.close();
     };
-  }, [notes]);
+    return () => {
+      eventSource.close();
+    };
+  }, [memberId]);
 
   return (
     <HeaderBox>
