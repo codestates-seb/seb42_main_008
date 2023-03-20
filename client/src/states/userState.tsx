@@ -24,7 +24,7 @@ export const userDecodeToken = atom({
   effects_UNSTABLE: [persistAtom],
 });
 
-// 유저 정보
+// 로그인 유저 정보
 export const userInfo = atom({
   key: 'userInfo',
   default: {
@@ -40,6 +40,14 @@ export const userInfo = atom({
     exp: 1679033773,
   },
   effects_UNSTABLE: [persistAtom],
+});
+
+// 리뷰 작성 정보
+export const reviewInfo = atom({
+  key: 'reviewInfo',
+  default: {
+    reviewMemberId: 0,
+  },
 });
 
 // export type { userInfoTypes, userInfoType };

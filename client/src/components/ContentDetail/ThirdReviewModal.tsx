@@ -1,10 +1,15 @@
+import axios from 'axios';
 import { thirdModal } from 'interfaces/ContentDetail.interface';
 import { useState } from 'react';
 import { CiFaceFrown, CiFaceMeh, CiFaceSmile } from 'react-icons/ci';
+import { useNavigate } from 'react-router-dom';
+import { useRecoilValue } from 'recoil';
+import { reviewInfo, userInfo } from 'states/userState';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
 
 const ThirdReviewModal = ({
+  detail,
   setFirstModal,
   setSecondModal,
   setThirdModal,
@@ -15,21 +20,29 @@ const ThirdReviewModal = ({
     setFirstModal(false);
   };
 
+  const { memberId } = useRecoilValue(userInfo);
+  const { reviewMemberId } = useRecoilValue(reviewInfo);
+  const navigate = useNavigate();
   const [good, setGood] = useState<boolean>(false);
   const [soso, setSoso] = useState<boolean>(false);
   const [bad, setBad] = useState<boolean>(false);
+  const [score, setScore] = useState<number>(0);
+  const [content, setContent] = useState<string>('');
 
   // 1점
   const handleGood = () => {
     setGood(!good);
+    setScore(1);
   };
   // 0점
   const handleSoso = () => {
     setSoso(!soso);
+    setScore(0);
   };
   // -1점
   const handleBad = () => {
     setBad(!bad);
+    setScore(-1);
   };
 
   if (good && soso && bad) {
@@ -53,6 +66,58 @@ const ThirdReviewModal = ({
       title: '하나만 선택해주세요',
     });
   }
+
+  const handleContentWrite = (
+    event: React.ChangeEvent<HTMLTextAreaElement>
+  ) => {
+    setContent(event.target.value);
+  };
+
+  // 리뷰 또 쓰려고 하면 막기
+  const handleReviewWrite = async () => {
+    if (memberId !== detail.memberId) {
+      // 참여자가 작성자에게 쓰는 리뷰
+      await axios
+        .post(`${process.env.REACT_APP_SERVER}/reviews`, {
+          memberId,
+          reviewedMemberId: detail.memberId,
+          companionId: detail.companionId,
+          score,
+          content,
+        })
+        .then(() => {
+          Swal.fire(
+            'Thank you',
+            '다음에도 좋은 동행 되시길 바랍니다',
+            'success'
+          );
+          navigate('/');
+        })
+        .catch(error => console.log(error));
+    } else {
+      // 작성자가 참여자에게 쓰는 리뷰
+      await axios
+        .post(`${process.env.REACT_APP_SERVER}/reviews`, {
+          memberId,
+          reviewedMemberId: reviewMemberId,
+          companionId: detail.companionId,
+          score,
+          content,
+        })
+        .then(() => {
+          console.log(reviewMemberId);
+          Swal.fire(
+            'Thank you',
+            '다음에도 좋은 동행 되시길 바랍니다',
+            'success'
+          );
+          navigate('/');
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    }
+  };
 
   return (
     <Container>
@@ -80,8 +145,11 @@ const ThirdReviewModal = ({
               </button>
             </BtnWrapper>
             <ReviewForm onSubmit={handleThirdModal}>
-              <textarea placeholder="리뷰를 작성해주세요..!"></textarea>
-              <button>리뷰 작성</button>
+              <textarea
+                placeholder="리뷰를 작성해주세요..!"
+                onChange={handleContentWrite}
+              ></textarea>
+              <button onClick={handleReviewWrite}>리뷰 작성</button>
             </ReviewForm>
           </Score>
         </ModalView>

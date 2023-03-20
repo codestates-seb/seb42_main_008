@@ -70,7 +70,7 @@ const ContentDetail = () => {
         <RightBox>
           <ContentWriter detail={detail} sub={sub} setSub={setSub} />
           {detail.companionStatus ? (
-            <TravelComplete />
+            <TravelComplete detail={detail} part={part} setPart={setPart} />
           ) : (
             <CompanionTab
               detail={detail}
@@ -80,10 +80,6 @@ const ContentDetail = () => {
               setPart={setPart}
             />
           )}
-
-          {/* 여행완료 ? TravelComplete : Companion */}
-          {/* newDate 함수 호출해서 지금 시간이랑 비교 후 지나있으면 상태변경 */}
-          {/* newDate(현재날짜) 보다 크면? 년도 비교한번, 월비교한번, 일자비교한번, 시간비교한번 */}
         </RightBox>
       </ContentDetailBox>
     </Container>

@@ -15,15 +15,18 @@ interface participantList {
 }
 
 interface firstModal {
+  detail: detailInfo;
   setFirstModal: (newValue: boolean) => void;
 }
 
 interface secondModal {
+  detail: detailInfo;
   setFirstModal: (newValue: boolean) => void;
   setSecondModal: (newValue: boolean) => void;
 }
 
 interface thirdModal {
+  detail: detailInfo;
   setFirstModal: (newValue: boolean) => void;
   setSecondModal: (newValue: boolean) => void;
   setThirdModal: (newValue: boolean) => void;
@@ -77,8 +80,6 @@ interface partApply {
 
 interface partProps {
   detail: detailInfo;
-  sub: subApply[];
-  setSub: (newValue: subApply[]) => void;
   part: partApply[];
   setPart: (newValue: partApply[]) => void;
 }
