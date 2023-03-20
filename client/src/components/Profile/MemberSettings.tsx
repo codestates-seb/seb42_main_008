@@ -66,7 +66,7 @@ const MemberSettings = ({ member, setCurrentTab }: MemberSettingsProps) => {
       });
       return;
     }
-    if (!validation.nicknameUnique) {
+    if (!validation.nicknameUnique && validation.nicknameUnique !== undefined) {
       Swal.fire({
         icon: 'error',
         title: '수정할 수 없습니다',
@@ -84,9 +84,21 @@ const MemberSettings = ({ member, setCurrentTab }: MemberSettingsProps) => {
       confirmButtonText: '확인',
     }).then(async result => {
       if (result.isConfirmed) {
-        await customAxios.patch(`/members/${loginUser.memberId}`, {
-          ...memberData,
-        });
+        const data =
+          memberData.password !== ''
+            ? {
+                ...memberData,
+              }
+            : {
+                nickname: memberData.nickname,
+                content: memberData.content,
+              };
+
+        if (memberData.profile) {
+          data.profile = memberData.profile;
+        }
+
+        await customAxios.patch(`/members/${loginUser.memberId}`, data);
         if (memberData.nickname) {
           setLoginUser({
             ...loginUser,
