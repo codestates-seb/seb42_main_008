@@ -12,7 +12,6 @@ const ListItems = ({ listData, isLoading }: ListItemProps) => {
   const isLogin = useRecoilValue(loginState);
 
   const handleClickItem = (id: number) => {
-    console.log(isLogin);
     if (!isLogin) {
       Swal.fire({
         icon: 'question',

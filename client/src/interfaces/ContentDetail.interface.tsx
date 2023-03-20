@@ -77,6 +77,8 @@ interface partApply {
 
 interface partProps {
   detail: detailInfo;
+  sub: subApply[];
+  setSub: (newValue: subApply[]) => void;
   part: partApply[];
   setPart: (newValue: partApply[]) => void;
 }

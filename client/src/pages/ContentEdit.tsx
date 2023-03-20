@@ -50,10 +50,72 @@ const ContentEdit = () => {
 
   // 대륙 선택 옵션
   const [continentSelect, setContinentSelect] = useState('');
+
+  // 대륙 번호 받기
+  const [continentNumber, setContinentNumber] = useState();
+
   // 나라 선택
   const [countrySelect, setCountrySelect] = useState('국가선택');
+
   // 나라 코드
   const [countryCode, setCountryCode] = useState('');
+
+  // 제목
+  const [titleInput, setTitleInput] = useState('');
+
+  // 내용
+  const [contentInput, setContentInput] = useState('');
+
+  // 여행 시작일
+  const [startDate, setStartDate] = useState<Date | null>(null);
+  // 여행 종료일
+  const [endDate, setEndDate] = useState<Date | null>(null);
+  // 세부 주소 정보
+  const [savedAddress, setSavedAddress] = useState<string | null>(null);
+  // lat, lng 위치 정보
+  const [markerLocation, setMarkerLocation] = useState({
+    lat: 37.2635727,
+    lng: 127.0286009,
+  });
+
+  useEffect(() => {
+    axios
+      .get(`${process.env.REACT_APP_SERVER}/companions/${contentId}`)
+      .then(response => {
+        setContinentNumber(response.data.data.continent);
+        setCountrySelect(response.data.data.nationName);
+        setCountryCode(response.data.data.nationCode);
+        setTitleInput(response.data.data.title);
+        setContentInput(response.data.data.content);
+        const dateObj = new Date(response.data.data.date);
+        setStartDate(dateObj);
+        setSavedAddress(response.data.data.address);
+        setMarkerLocation({
+          lat: response.data.data.lat,
+          lng: response.data.data.lng,
+        });
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }, []);
+
+  // 대륙 번호에 맞춰 대륙 문자열 변경
+  useEffect(() => {
+    if (continentNumber === 1) {
+      setContinentSelect('africa');
+    } else if (continentNumber === 2) {
+      setContinentSelect('asia');
+    } else if (continentNumber === 3) {
+      setContinentSelect('europe');
+    } else if (continentNumber === 4) {
+      setContinentSelect('northAmerica');
+    } else if (continentNumber === 5) {
+      setContinentSelect('oceania');
+    } else if (continentNumber === 6) {
+      setContinentSelect('southAmerica');
+    }
+  }, [continentNumber]);
 
   // 대륙 초기화시 나라,코드리셋
   useEffect(() => {
@@ -100,21 +162,7 @@ const ContentEdit = () => {
   const handleCountryModal = () => {
     setCountryModal(!countryModal);
   };
-  // 제목
-  const [titleInput, setTitleInput] = useState('');
-  // 내용
-  const [contentInput, setContentInput] = useState('');
-  // 여행 시작일
-  const [startDate, setStartDate] = useState<Date | null>(null);
-  // 여행 종료일
-  const [endDate, setEndDate] = useState<Date | null>(null);
-  // 세부 주소 정보
-  const [savedAddress, setSavedAddress] = useState<string | null>(null);
-  // lat, lng 위치 정보
-  const [markerLocation, setMarkerLocation] = useState({
-    lat: 37.2635727,
-    lng: 127.0286009,
-  });
+
   // 선택한 성향 태그 배열
   const [selectedTendencies, setSelectedTendencies] = useState<string[]>([]);
   // 성향 모달
@@ -159,46 +207,11 @@ const ContentEdit = () => {
     }
   };
 
-  //타이틀받기
-  useEffect(() => {
-    axios
-      .get(`${process.env.REACT_APP_SERVER}/companions/${contentId}`)
-      .then(response => {
-        setTitleInput(response.data.data.title);
-      })
-      .catch(error => {
-        console.log(error);
-      });
-  }, []);
-
-  // 내용받기
-  useEffect(() => {
-    axios
-      .get(`${process.env.REACT_APP_SERVER}/companions/${contentId}`)
-      .then(response => {
-        setContentInput(response.data.data.content);
-      })
-      .catch(error => {
-        console.log(error);
-      });
-  }, []);
-
   //날짜 받기
   //원래 값 형태로 한번 바꿔준 dateObj
   // startDate 는 원래 날짜 형태
   // 온체인지 이벤트에 넣으려면 이렇게 바꿔줘야하고
   // 온체인지로 상태변경한 startDate를 다시 요청가능한 형태로 변경
-  useEffect(() => {
-    axios
-      .get(`${process.env.REACT_APP_SERVER}/companions/${contentId}`)
-      .then(response => {
-        const dateObj = new Date(response.data.data.date);
-        setStartDate(dateObj);
-      })
-      .catch(error => {
-        console.log(error);
-      });
-  }, []);
 
   let formattedDate = '';
   if (startDate) {
@@ -207,35 +220,6 @@ const ContentEdit = () => {
     const day = String(startDate.getDate()).padStart(2, '0');
     formattedDate = `${year}-${month}-${day}`;
   }
-
-  // 위치받기
-  useEffect(() => {
-    axios
-      .get(`${process.env.REACT_APP_SERVER}/companions/${contentId}`)
-      .then(response => {
-        setMarkerLocation({
-          lat: response.data.data.lat,
-          lng: response.data.data.lng,
-        });
-      })
-      .catch(error => {
-        console.log(error);
-      });
-  }, []);
-  useEffect(() => {
-    console.log(markerLocation);
-  }, [markerLocation]);
-  //주소 명칭 받기
-  useEffect(() => {
-    axios
-      .get(`${process.env.REACT_APP_SERVER}/companions/${contentId}`)
-      .then(response => {
-        setSavedAddress(response.data.data.address);
-      })
-      .catch(error => {
-        console.log(error);
-      });
-  }, []);
 
   return (
     <ContentAddContainer>

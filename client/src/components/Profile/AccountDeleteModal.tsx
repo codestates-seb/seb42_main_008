@@ -3,6 +3,8 @@ import { AccountDeleteModalProps } from 'interfaces/Profile.interface';
 import React, { useState } from 'react';
 import { IoMdClose } from 'react-icons/io';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useSetRecoilState } from 'recoil';
+import { loginState } from 'states/userState';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
 import ModalScrollDisable from 'utils/ModalScrollDisable';
@@ -14,6 +16,7 @@ const AccountDeleteModal = ({
   const navigate = useNavigate();
   const { memberId } = useParams();
   const [password, setPassword] = useState<string>('');
+  const setIsLogin = useSetRecoilState(loginState);
 
   const handleModalClose = () => {
     setIsShowDeleteModal(false);
@@ -32,7 +35,6 @@ const AccountDeleteModal = ({
       });
       return;
     }
-
     handleModalClose();
     Swal.fire({
       title: '정말 탈퇴하시겠습니까?',
@@ -47,6 +49,7 @@ const AccountDeleteModal = ({
     }).then(result => {
       if (result.isConfirmed) {
         requestDeleteAccount();
+        setIsLogin(false);
       } else if (result.dismiss === Swal.DismissReason.cancel) {
         Swal.fire('Cancelled', '취소되었습니다 :)', 'info');
       }
@@ -64,7 +67,13 @@ const AccountDeleteModal = ({
         navigate('/');
       })
       .catch(error => {
-        console.log(error);
+        if (error.response.status === 403) {
+          Swal.fire({
+            icon: 'error',
+            title: '탈퇴가 취소되었습니다',
+            text: '비밀번호가 틀립니다! 다시 시도해주세요.',
+          });
+        }
       });
   };
 

@@ -9,7 +9,7 @@ import Swal from 'sweetalert2';
 import { getScoreIcon } from 'utils/getScoreIcon';
 
 const ContentWriter = ({ detail, sub, setSub }: subProps) => {
-  const { profile, memberId } = useRecoilValue(userInfo);
+  const { profile, memberId, nickname } = useRecoilValue(userInfo);
   const params = useParams();
   const { contentId } = params;
 
@@ -46,6 +46,9 @@ const ContentWriter = ({ detail, sub, setSub }: subProps) => {
   // 만약 이미 신청한 사람이라면, alert 창 띄우기
   // 신청자 배열 or 참여자 배열에 있는 id === userInfo의 memberId ? 이미 신청한 동행입니다. : 신청되었습니다
   const handleApply = async () => {
+    // if() {
+    // 만약 이미 참여한 사람이라면, alert 창 띄우기
+    // } else {52줄~}
     Swal.fire({
       title: '동행신청 하시겠습니까?',
       icon: 'warning',
@@ -64,6 +67,13 @@ const ContentWriter = ({ detail, sub, setSub }: subProps) => {
             Swal.fire('Applied!', '동행이 신청되었습니다!', 'success');
             setSub(sub);
             getSubList();
+            const content = `작성하신 동행글에 ${nickname} 님이 동행을 신청하였습니다.`;
+            axios.post(`${process.env.REACT_APP_SERVER}/messages`, {
+              content,
+              senderId: 1,
+              receiverId: detail.memberId,
+              companionId: contentId,
+            });
           })
           .catch(() => {
             Swal.fire('Failed!', '이미 신청한 동행입니다!', 'error');
