@@ -1,5 +1,6 @@
 import axios from 'axios';
 import GoogleLogin from 'components/Login/GoogleLogin';
+import { MemberBox } from 'components/Login/MemberStyled';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilState, useSetRecoilState } from 'recoil';
@@ -94,22 +95,7 @@ const Container = styled.main`
     color: #5d62a0;
   }
 `;
-const LoginBox = styled.section`
-  background-color: white;
-  width: 400px;
-  padding: 50px;
-  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.15);
-  border-radius: 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  h2 {
-    margin-bottom: 25px;
-  }
-  form {
-    width: 100%;
-  }
+const LoginBox = styled(MemberBox)`
   .group {
     display: flex;
     flex-direction: column;
