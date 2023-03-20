@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { StyledTabBox } from 'components/ContentDetail/CompanionStyled';
 import FirstReviewModal from 'components/ContentDetail/FirstReviewModal';
 import { partProps } from 'interfaces/ContentDetail.interface';
 import { useEffect, useState } from 'react';
@@ -6,7 +7,6 @@ import { useParams } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { reviewInfo, userInfo } from 'states/userState';
 import styled from 'styled-components';
-import { StyledTabBox } from 'styles/ContentDetail/StyledCompanion';
 
 const TravelComplete = ({ detail, part, setPart }: partProps) => {
   const params = useParams();

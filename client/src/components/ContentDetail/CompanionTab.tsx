@@ -1,3 +1,4 @@
+import { StyledTabBox } from 'components/ContentDetail/CompanionStyled';
 import Participants from 'components/ContentDetail/Tab//Participants';
 import Companion from 'components/ContentDetail/Tab/Companion';
 import {
@@ -6,7 +7,6 @@ import {
 } from 'interfaces/ContentDetail.interface';
 import { useState } from 'react';
 import styled from 'styled-components';
-import { StyledTabBox } from 'styles/ContentDetail/StyledCompanion';
 
 const CompanionTab = ({
   detail,

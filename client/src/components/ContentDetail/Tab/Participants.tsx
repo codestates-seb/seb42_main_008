@@ -1,11 +1,11 @@
 import axios from 'axios';
+import { StyledCompanionList } from 'components/ContentDetail/CompanionStyled';
 import { companionProps } from 'interfaces/ContentDetail.interface';
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { userInfo } from 'states/userState';
 import styled from 'styled-components';
-import { StyledCompanionList } from 'styles/ContentDetail/StyledCompanion';
 import Swal from 'sweetalert2';
 
 const Participants = ({ detail, setSub, part, setPart }: companionProps) => {
