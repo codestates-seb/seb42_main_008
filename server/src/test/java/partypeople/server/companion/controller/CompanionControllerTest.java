@@ -477,9 +477,19 @@ public class CompanionControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data").isArray())
                 .andExpect(jsonPath("$.data[0].nationCode").value(responses.get(0).getNationCode()))
-                .andExpect(jsonPath("$.data[0].companionsCount").value(responses.get(0).getCompanionsCount()));
-
-
+                .andExpect(jsonPath("$.data[0].companionsCount").value(responses.get(0).getCompanionsCount()))
+                .andDo(document("get-counts-of-companions-by-continent",
+                        getRequestPreProcessor(),
+                        getResponsePreProcessor(),
+                        requestParameters(
+                                parameterWithName("continent").description("대륙 식별자")
+                        ),
+                        responseFields(
+                                fieldWithPath("data").type(JsonFieldType.ARRAY).description("결과 데이터"),
+                                fieldWithPath("data[].nationCode").type(JsonFieldType.STRING).description("국가 코드"),
+                                fieldWithPath("data[].companionsCount").type(JsonFieldType.NUMBER).description("동행글 수"))
+                        )
+                );
     }
 
 
