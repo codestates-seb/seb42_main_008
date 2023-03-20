@@ -266,7 +266,57 @@ public class CompanionControllerTest {
     @Test
     @DisplayName("Companion Get Test")
     void getCompanionTest() throws Exception {
+        // given
+        Long companionId = 1L;
 
+        CompanionDto.Response response = new CompanionDto.Response(
+                1L,
+                2L,
+                "member2",
+                100,
+                "일본 유니버셜 같이 가요",
+                "일본 유니버셜 가고싶은데 혼자라 부끄러워요ㅠ 같이 가실 분 구함~",
+                LocalDate.of(2023, 3, 20),
+                LocalDate.of(2023, 3, 10),
+                "일본 유니버셜스튜디오",
+                123.45678,
+                123.12345,
+                "일본",
+                "jpn",
+                2,
+                new ArrayList<>(Arrays.asList("내향", "테마파크")),
+                false
+        );
+
+        given(companionService.findCompanion(Mockito.anyLong())).willReturn(new Companion());
+        given(mapper.companionToCompanionResponseDto(Mockito.any(Companion.class))).willReturn(response);
+
+
+        // when
+        ResultActions actions = mockMvc.perform(
+                get("/companions/{companion-id}", companionId)
+        );
+
+
+        // then
+        actions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.companionId").value(response.getCompanionId()))
+                .andExpect(jsonPath("$.data.memberId").value(response.getMemberId()))
+                .andExpect(jsonPath("$.data.nickname").value(response.getNickname()))
+                .andExpect(jsonPath("$.data.score").value(response.getScore()))
+                .andExpect(jsonPath("$.data.title").value(response.getTitle()))
+                .andExpect(jsonPath("$.data.content").value(response.getContent()))
+                .andExpect(jsonPath("$.data.date").exists())
+                .andExpect(jsonPath("$.data.createdAt").exists())
+                .andExpect(jsonPath("$.data.address").value(response.getAddress()))
+                .andExpect(jsonPath("$.data.lat").value(response.getLat()))
+                .andExpect(jsonPath("$.data.lng").value(response.getLng()))
+                .andExpect(jsonPath("$.data.nationName").value(response.getNationName()))
+                .andExpect(jsonPath("$.data.nationCode").value(response.getNationCode()))
+                .andExpect(jsonPath("$.data.continent").value(response.getContinent()))
+                .andExpect(jsonPath("$.data.tags").isArray())
+                .andExpect(jsonPath("$.data.companionStatus").value(response.isCompanionStatus()));
     }
 
     private static class Post {
