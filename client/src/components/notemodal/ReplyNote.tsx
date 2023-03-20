@@ -38,7 +38,7 @@ const ReplyNote = ({
   const handleSubmitReply = async (event: any) => {
     event.preventDefault();
     try {
-      await axios.post(`${process.env.REACT_APP_TEST_SERVER}/messages`, {
+      await axios.post(`${process.env.REACT_APP_SERVER}/messages`, {
         content: replyInput,
         senderId: user.memberId,
         receiverId: note.sender.id,
