@@ -23,7 +23,6 @@ export const editValidationCheck = ({
     if (nickname.length >= 2 && nickname.length <= 10) {
       nicknameValid = true;
     } else if (nickname === memberNickname) {
-      console.log('nickname 변경 x!');
       nicknameValid = true;
     } else {
       nicknameValid = false;
@@ -46,11 +45,9 @@ export const editValidationCheck = ({
       passwordValid = true;
     } else if (password === '' || password === undefined) {
       passwordValid = true;
-      console.log('비밀번호 변경 X');
     } else {
       passwordValid = false;
     }
-    console.log(passwordValid);
   }
 
   // * passwordCheck
@@ -58,7 +55,6 @@ export const editValidationCheck = ({
     if (passwordCheck === password) {
       passwordCheckValid = true;
     } else if (passwordCheck === '' || passwordCheck === undefined) {
-      console.log('비번체크x');
       passwordCheckValid = true;
     } else {
       passwordCheckValid = false;

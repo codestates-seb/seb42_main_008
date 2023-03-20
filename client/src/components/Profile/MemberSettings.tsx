@@ -58,7 +58,6 @@ const MemberSettings = ({ member, setCurrentTab }: MemberSettingsProps) => {
   };
 
   const handleSubmitClick = () => {
-    console.log(validation.nicknameUnique);
     if (!validation.totalValid) {
       Swal.fire({
         icon: 'error',
