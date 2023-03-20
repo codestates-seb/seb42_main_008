@@ -1,6 +1,6 @@
 import axios from 'axios';
+import GoogleLogin from 'components/Login/GoogleLogin';
 import { useState } from 'react';
-import { FcGoogle } from 'react-icons/fc';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { loginState, userInfo, userToken } from 'states/userState';
@@ -73,11 +73,7 @@ const Login = () => {
             <span>OR</span>
             <hr />
           </div>
-          <div className="btn-wrapper">
-            <button id="btn-google">
-              <GoogleLogo />
-            </button>
-          </div>
+          <GoogleLogin />
         </OauthLoginBox>
       </LoginBox>
     </Container>
@@ -198,10 +194,6 @@ const OauthLoginBox = styled.section`
     height: 40px;
     border-radius: 100%;
   }
-`;
-const GoogleLogo = styled(FcGoogle)`
-  width: 100%;
-  height: 100%;
 `;
 
 /* TODO:

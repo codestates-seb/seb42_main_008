@@ -1,45 +1,58 @@
-// import axios from 'axios';
-// import { useEffect } from 'react';
+import { useEffect } from 'react';
 import { FcGoogle } from 'react-icons/fc';
+import { useNavigate } from 'react-router-dom';
+import { useSetRecoilState } from 'recoil';
+import {
+  loginState,
+  userInfo,
+  userRefreshToken,
+  userToken,
+} from 'states/userState';
 import styled from 'styled-components';
 
 const GoogleLogin = () => {
-  // const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
-  // const clientSecret = process.env.REACT_APP_GOOGLE_CLIENT_SECRET;
-  // const redirectURI = process.env.REACT_APP_REDIRECT_URI;
-  // const googleOAuthURL = `https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id=${clientId}&scope=openid%20profile%20email&redirect_uri=${redirectURI}`;
-  // const code: string | null = new URL(window.location.href).searchParams.get(
-  //   'code'
-  // );
+  const navigate = useNavigate();
+  const setIsLogin = useSetRecoilState(loginState);
+  const setToken = useSetRecoilState(userToken);
+  const setUser = useSetRecoilState(userInfo);
+  const setRefreshToken = useSetRecoilState(userRefreshToken);
+  const BASE_URL = process.env.REACT_APP_SERVER;
+  const accessToken: string | null = new URL(
+    window.location.href
+  ).searchParams.get('access_token');
+  const refreshToken: string | null = new URL(
+    window.location.href
+  ).searchParams.get('refresh_token');
 
   const googleLoginHandler = () => {
-    window.location.assign(
-      'https://3ba2-1-237-37-135.jp.ngrok.io/members/login/google'
-    );
+    window.location.assign(`${BASE_URL}/members/login/google`);
   };
 
-  // const googleLoginRequest = async () => {
-  //   await axios
-  //     .post(`${process.env.REACT_APP_TEST_SERVER}/members/google`, {
-  //       client_id: clientId,
-  //       client_secret: clientSecret,
-  //       code: code,
-  //       grant_type: 'authorization_code',
-  //     })
-  //     .then(resp => {
-  //       console.log(resp);
-  //     })
-  //     .catch(error => {
-  //       console.log(error);
-  //     });
-  // };
+  const googleLoginAction = (accessToken: string) => {
+    const base64Url = accessToken.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(
+      window
+        .atob(base64)
+        .split('')
+        .map(function (c) {
+          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        })
+        .join('')
+    );
+    const userData = JSON.parse(jsonPayload);
+    setUser(userData);
+    setToken('Bearer ' + accessToken);
+    setIsLogin(true);
+  };
 
-  // useEffect(() => {
-  //   console.log(`code :  ${code}`);
-  //   if (code) {
-  //     googleLoginRequest();
-  //   }
-  // }, [code]);
+  useEffect(() => {
+    if (accessToken && refreshToken) {
+      setRefreshToken(refreshToken);
+      googleLoginAction(accessToken);
+      navigate('/');
+    }
+  }, [accessToken, refreshToken]);
 
   return (
     <div className="btn-wrapper">
