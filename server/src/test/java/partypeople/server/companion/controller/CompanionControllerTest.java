@@ -534,7 +534,7 @@ public class CompanionControllerTest {
     }
 
     @Test
-    @DisplayName("Get Companions By Keyword")
+    @DisplayName("Get Companions By Keyword Test")
     void getCompanionsByKeywordTest() throws Exception {
         // given
         int page = 1;
