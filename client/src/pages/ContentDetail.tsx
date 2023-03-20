@@ -1,9 +1,9 @@
 import axios from 'axios';
 import CompanionTab from 'components/ContentDetail/CompanionTab';
 import ContentWriter from 'components/ContentDetail/ContentWriter';
+import SearchMap from 'components/ContentDetail/SearchMap';
 import TravelComplete from 'components/ContentDetail/TravelComplete';
-// import TravelComplete from 'components/ContentDetail/TravelComplete';
-// import Participants from 'components/ContentDetail/Participants';
+import Loader from 'components/Loader';
 import { detailInfo } from 'interfaces/ContentDetail.interface';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -14,6 +14,7 @@ const ContentDetail = () => {
   const { contentId } = useParams<{ contentId: string }>();
   const [sub, setSub] = useState<any>();
   const [part, setPart] = useState<any>();
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const [detail, setDetail] = useState<detailInfo>({
     companionId: 0,
@@ -37,6 +38,7 @@ const ContentDetail = () => {
       .get(`${process.env.REACT_APP_SERVER}/companions/${contentId}`)
       .then(res => {
         setDetail(res.data.data);
+        setIsLoading(true);
       })
       .catch(error => {
         console.log(error);
@@ -46,41 +48,47 @@ const ContentDetail = () => {
   return (
     <Container>
       <ContentDetailBox>
-        <LeftBox>
-          <div className="top-box">
-            <h1>{getDateString(detail.date).shortDateStr}</h1>
-            <h3>{detail.address}</h3>
-          </div>
-          <div className="bottom-box">
-            <h2>{detail.title}</h2>
-            <h4>작성날짜: {detail.createdAt}</h4>
-            {/* <SearchMap detail={detail} /> */}
-            <div
-              id="content"
-              dangerouslySetInnerHTML={{ __html: detail.content }}
-            ></div>
-            <div id="tag-box">
-              {detail &&
-                detail.tags.map((el, index: number) => (
-                  <li key={index}>{el}</li>
-                ))}
-            </div>
-          </div>
-        </LeftBox>
-        <RightBox>
-          <ContentWriter detail={detail} sub={sub} setSub={setSub} />
-          {detail.companionStatus ? (
-            <TravelComplete detail={detail} part={part} setPart={setPart} />
-          ) : (
-            <CompanionTab
-              detail={detail}
-              sub={sub}
-              setSub={setSub}
-              part={part}
-              setPart={setPart}
-            />
-          )}
-        </RightBox>
+        {!isLoading ? (
+          <Loader />
+        ) : (
+          <>
+            <LeftBox>
+              <div className="top-box">
+                <h1>{getDateString(detail.date).shortDateStr}</h1>
+                <h3>{detail.address}</h3>
+              </div>
+              <div className="bottom-box">
+                <h2>{detail.title}</h2>
+                <h4>작성날짜: {detail.createdAt}</h4>
+                <SearchMap detail={detail} />
+                <div
+                  id="content"
+                  dangerouslySetInnerHTML={{ __html: detail.content }}
+                ></div>
+                <div id="tag-box">
+                  {detail &&
+                    detail.tags.map((el, index: number) => (
+                      <li key={index}>{el}</li>
+                    ))}
+                </div>
+              </div>
+            </LeftBox>
+            <RightBox>
+              <ContentWriter detail={detail} sub={sub} setSub={setSub} />
+              {detail.companionStatus ? (
+                <TravelComplete detail={detail} part={part} setPart={setPart} />
+              ) : (
+                <CompanionTab
+                  detail={detail}
+                  sub={sub}
+                  setSub={setSub}
+                  part={part}
+                  setPart={setPart}
+                />
+              )}
+            </RightBox>
+          </>
+        )}
       </ContentDetailBox>
     </Container>
   );

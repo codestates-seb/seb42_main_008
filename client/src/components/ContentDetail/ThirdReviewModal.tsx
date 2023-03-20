@@ -3,9 +3,10 @@ import { thirdModal } from 'interfaces/ContentDetail.interface';
 import { useState } from 'react';
 import { CiFaceFrown, CiFaceMeh, CiFaceSmile } from 'react-icons/ci';
 import { useNavigate } from 'react-router-dom';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { reviewInfo, userInfo } from 'states/userState';
 import styled from 'styled-components';
+import { StyledModal } from 'styles/ContentDetail/StyledModal';
 import Swal from 'sweetalert2';
 
 const ThirdReviewModal = ({
@@ -22,13 +23,13 @@ const ThirdReviewModal = ({
   };
 
   const { memberId } = useRecoilValue(userInfo);
-  const { reviewMemberId } = useRecoilValue(reviewInfo);
   const navigate = useNavigate();
   const [good, setGood] = useState<boolean>(false);
   const [soso, setSoso] = useState<boolean>(false);
   const [bad, setBad] = useState<boolean>(false);
   const [score, setScore] = useState<number>(0);
   const [content, setContent] = useState<string>('');
+  const [review, setReview] = useRecoilState(reviewInfo);
 
   // 1점
   const handleGood = () => {
@@ -92,6 +93,7 @@ const ThirdReviewModal = ({
             '다음에도 좋은 동행 되시길 바랍니다',
             'success'
           );
+          setReview(!review);
           navigate('/');
         })
         .catch(error => console.log(error));
@@ -106,12 +108,12 @@ const ThirdReviewModal = ({
           content,
         })
         .then(() => {
-          console.log(reviewMemberId);
           Swal.fire(
             'Thank you',
             '다음에도 좋은 동행 되시길 바랍니다',
             'success'
           );
+          setReview(!review);
           navigate('/');
         })
         .catch(error => {
@@ -177,20 +179,7 @@ const BackGround = styled.section`
   width: 100%;
   height: 100%;
 `;
-const ModalView = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: white;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 50%;
-  height: 40%;
-  text-align: center;
-  border-radius: 30px;
-  box-shadow: 5px 5px 10px 5px rgba(0, 0, 0, 0.25);
+const ModalView = styled(StyledModal)`
   @media screen and (max-width: 992px) {
     width: 500px;
     height: 300px;
