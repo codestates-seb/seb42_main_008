@@ -17,6 +17,12 @@ export const userToken = atom({
   effects_UNSTABLE: [persistAtom],
 });
 
+export const userRefreshToken = atom({
+  key: 'userRefreshToken',
+  default: '',
+  effects_UNSTABLE: [persistAtom],
+});
+
 // 로그인 토큰 디코딩 정보
 export const userDecodeToken = atom({
   key: 'userTokenLoading',
