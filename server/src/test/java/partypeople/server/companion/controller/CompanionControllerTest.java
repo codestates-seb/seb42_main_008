@@ -347,7 +347,7 @@ public class CompanionControllerTest {
     }
 
     @Test
-    @DisplayName("Companion Get By Nation Test")
+    @DisplayName("Companions Get By Nation Test")
     void getCompanionsByNationTest() throws Exception {
         // given
         int page = 1;
@@ -413,7 +413,41 @@ public class CompanionControllerTest {
                 .andExpect(jsonPath("$.data[0].nationCode").value(responses.get(0).getNationCode()))
                 .andExpect(jsonPath("$.data[0].continent").value(responses.get(0).getContinent()))
                 .andExpect(jsonPath("$.data[0].tags").isArray())
-                .andExpect(jsonPath("$.data[0].companionStatus").value(responses.get(0).isCompanionStatus()));
+                .andExpect(jsonPath("$.data[0].companionStatus").value(responses.get(0).isCompanionStatus()))
+                .andDo(document("get-companions-by-nation",
+                        getRequestPreProcessor(),
+                        getResponsePreProcessor(),
+                        requestParameters(
+                                parameterWithName("page").description("페이지 번호").optional(),
+                                parameterWithName("size").description("페이지 당 동행글 수").optional(),
+                                parameterWithName("sortDir").description("정렬 방향").optional(),
+                                parameterWithName("sortBy").description("정렬 기준").optional(),
+                                parameterWithName("nationCode").description("국가 코드")
+                        ),
+                        responseFields(
+                                fieldWithPath("data").type(JsonFieldType.ARRAY).description("결과 데이터"),
+                                fieldWithPath("data[].companionId").type(JsonFieldType.NUMBER).description("동행글 식별자"),
+                                fieldWithPath("data[].memberId").type(JsonFieldType.NUMBER).description("작성자 식별자"),
+                                fieldWithPath("data[].nickname").type(JsonFieldType.STRING).description("작성자 닉네임"),
+                                fieldWithPath("data[].score").type(JsonFieldType.NUMBER).description("작성자 점수"),
+                                fieldWithPath("data[].title").type(JsonFieldType.STRING).description("동행글 제목"),
+                                fieldWithPath("data[].content").type(JsonFieldType.STRING).description("동행글 내용"),
+                                fieldWithPath("data[].createdAt").type(JsonFieldType.STRING).description("동행글 작성 날짜"),
+                                fieldWithPath("data[].date").type(JsonFieldType.STRING).description("동행 날짜"),
+                                fieldWithPath("data[].address").type(JsonFieldType.STRING).description("동행 주소"),
+                                fieldWithPath("data[].lat").type(JsonFieldType.NUMBER).description("위도"),
+                                fieldWithPath("data[].lng").type(JsonFieldType.NUMBER).description("경도"),
+                                fieldWithPath("data[].nationName").type(JsonFieldType.STRING).description("국가"),
+                                fieldWithPath("data[].nationCode").type(JsonFieldType.STRING).description("국가 코드"),
+                                fieldWithPath("data[].continent").type(JsonFieldType.NUMBER).description("대륙 코드"),
+                                fieldWithPath("data[].tags").type(JsonFieldType.ARRAY).description("태그"),
+                                fieldWithPath("data[].companionStatus").type(JsonFieldType.BOOLEAN).description("동행 완료 여부"),
+                                fieldWithPath("pageInfo").type(JsonFieldType.OBJECT).description("페이지 정보"),
+                                fieldWithPath("pageInfo.page").type(JsonFieldType.NUMBER).description("현재 페이지"),
+                                fieldWithPath("pageInfo.size").type(JsonFieldType.NUMBER).description("페이지 당 동행글 수"),
+                                fieldWithPath("pageInfo.totalElements").type(JsonFieldType.NUMBER).description("총 동행글 수"),
+                                fieldWithPath("pageInfo.totalPages").type(JsonFieldType.NUMBER).description("총 페이지 수")
+                        )));
     }
 
     private static class Post {
