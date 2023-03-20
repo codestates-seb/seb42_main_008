@@ -105,7 +105,7 @@ const ThemeModal = ({
       event.preventDefault();
       try {
         const response = await axios.post(
-          `${process.env.REACT_APP_TEST_SERVER}/companions`,
+          `${process.env.REACT_APP_SERVER}/companions`,
           {
             title: titleInput,
             content: contentInput,

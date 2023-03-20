@@ -34,9 +34,7 @@ const NoteModal = ({ setNoteModal }: Props) => {
 
   useEffect(() => {
     axios
-      .get(
-        `${process.env.REACT_APP_TEST_SERVER}/messages?memberId=${user.memberId}`
-      )
+      .get(`${process.env.REACT_APP_SERVER}/messages?memberId=${user.memberId}`)
       .then(response => {
         setAllNotes(response.data.data);
       })

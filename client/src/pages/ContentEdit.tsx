@@ -162,7 +162,7 @@ const ContentEdit = () => {
   //타이틀받기
   useEffect(() => {
     axios
-      .get(`${process.env.REACT_APP_TEST_SERVER}/companions/${contentId}`)
+      .get(`${process.env.REACT_APP_SERVER}/companions/${contentId}`)
       .then(response => {
         setTitleInput(response.data.data.title);
       })
@@ -174,7 +174,7 @@ const ContentEdit = () => {
   // 내용받기
   useEffect(() => {
     axios
-      .get(`${process.env.REACT_APP_TEST_SERVER}/companions/${contentId}`)
+      .get(`${process.env.REACT_APP_SERVER}/companions/${contentId}`)
       .then(response => {
         setContentInput(response.data.data.content);
       })
@@ -190,7 +190,7 @@ const ContentEdit = () => {
   // 온체인지로 상태변경한 startDate를 다시 요청가능한 형태로 변경
   useEffect(() => {
     axios
-      .get(`${process.env.REACT_APP_TEST_SERVER}/companions/${contentId}`)
+      .get(`${process.env.REACT_APP_SERVER}/companions/${contentId}`)
       .then(response => {
         const dateObj = new Date(response.data.data.date);
         setStartDate(dateObj);
@@ -211,7 +211,7 @@ const ContentEdit = () => {
   // 위치받기
   useEffect(() => {
     axios
-      .get(`${process.env.REACT_APP_TEST_SERVER}/companions/${contentId}`)
+      .get(`${process.env.REACT_APP_SERVER}/companions/${contentId}`)
       .then(response => {
         setMarkerLocation({
           lat: response.data.data.lat,
@@ -228,7 +228,7 @@ const ContentEdit = () => {
   //주소 명칭 받기
   useEffect(() => {
     axios
-      .get(`${process.env.REACT_APP_TEST_SERVER}/companions/${contentId}`)
+      .get(`${process.env.REACT_APP_SERVER}/companions/${contentId}`)
       .then(response => {
         setSavedAddress(response.data.data.address);
       })
