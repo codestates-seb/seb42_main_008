@@ -57,10 +57,11 @@ public class CompanionService {
 
     public Companion updateCompanion(Companion companion) {
         Companion findCompanion = findVerifiedCompanionById(companion.getCompanionId());
-        if (companion.getNation() != null) {
+        if (companion.getNation() != null && !findCompanion.getNation().getName().equals(companion.getNation().getName())) {
             Nation nation = nationService.findNation(companion.getNation());
-            findCompanion.setNation(nation);
             companion.setNation(nation);
+        } else if (companion.getNation() != null) {
+            companion.setNation(findCompanion.getNation());
         }
 
         Optional.ofNullable(companion.getCompanionTags()).ifPresent(companionTags -> {
