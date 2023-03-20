@@ -44,6 +44,12 @@ public class MessageService {
     }
 
     @Transactional
+    public void changeMessageStatus(Long messageId, boolean read) {
+        Message message = findVerifiedMessage(messageId);
+        message.setRead(read);
+    }
+
+    @Transactional
     public void deleteMessage(Long messageId) {
         messageRepository.deleteById(messageId);
     }
