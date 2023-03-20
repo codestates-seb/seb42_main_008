@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { subProps } from 'interfaces/ContentDetail.interface';
+import { partProps } from 'interfaces/ContentDetail.interface';
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
@@ -7,10 +7,10 @@ import { userInfo } from 'states/userState';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
 
-const Companion = ({ detail, sub, setSub }: subProps) => {
+const Companion = ({ detail, sub, setSub, setPart }: partProps) => {
   const params = useParams();
   const { contentId } = params;
-  const { memberId } = useRecoilValue(userInfo);
+  const { memberId, nickname } = useRecoilValue(userInfo);
 
   const handleCancel = async () => {
     Swal.fire({
@@ -31,6 +31,13 @@ const Companion = ({ detail, sub, setSub }: subProps) => {
             Swal.fire('Deleted!', '취소되었습니다', 'success');
             setSub(sub);
             getSubList();
+            const content = `작성하신 동행글에 ${nickname} 님이 동행신청을 취소하였습니다.`;
+            axios.post(`${process.env.REACT_APP_SERVER}/messages`, {
+              content,
+              senderId: 1,
+              receiverId: detail.memberId,
+              companionId: contentId,
+            });
           })
           .catch(error => console.log(error));
       }
@@ -51,6 +58,20 @@ const Companion = ({ detail, sub, setSub }: subProps) => {
     getSubList();
   }, []);
 
+  const getPartList = () => {
+    axios
+      .get(
+        `${process.env.REACT_APP_SERVER}/companions/${contentId}/participants`
+      )
+      .then(res => {
+        setPart(res.data.data);
+      });
+  };
+
+  useEffect(() => {
+    getPartList();
+  }, []);
+
   const handleAccept = async (memberId: number) => {
     Swal.fire({
       title: '동행신청을 수락하시겠습니까?',
@@ -64,12 +85,19 @@ const Companion = ({ detail, sub, setSub }: subProps) => {
         await axios
           .patch(
             `${process.env.REACT_APP_SERVER}/companions/${contentId}/subscribers`,
-            // 신청자의 memberId 를 보내줘야 하는듯..?
             { memberId }
           )
           .then(() => {
             Swal.fire('Accepted!', '확인되었습니다', 'success');
             setSub(sub);
+            getSubList();
+            const content = `신청하신 동행글에 ${detail.nickname} 님이 동행을 수락하였습니다.`;
+            axios.post(`${process.env.REACT_APP_SERVER}/messages`, {
+              content,
+              senderId: 1,
+              receiverId: memberId,
+              companionId: contentId,
+            });
           })
           .catch(error => {
             console.log(error);
@@ -96,6 +124,14 @@ const Companion = ({ detail, sub, setSub }: subProps) => {
           .then(() => {
             Swal.fire('Deleted!', '거절되었습니다', 'success');
             setSub(sub);
+            getSubList();
+            const content = `신청하신 동행글에 ${detail.nickname} 님이 동행을 거절하였습니다.`;
+            axios.post(`${process.env.REACT_APP_SERVER}/messages`, {
+              content,
+              senderId: 1,
+              receiverId: memberId,
+              companionId: contentId,
+            });
           })
           .catch(error => console.log(error));
       }

@@ -44,9 +44,21 @@ const CompanionTab = ({
         ))}
       </TabBox>
       {currentTab === 0 ? (
-        <Companion detail={detail} sub={sub} setSub={setSub} />
+        <Companion
+          detail={detail}
+          sub={sub}
+          setSub={setSub}
+          part={part}
+          setPart={setPart}
+        />
       ) : (
-        <Participants detail={detail} part={part} setPart={setPart} />
+        <Participants
+          detail={detail}
+          sub={sub}
+          setSub={setSub}
+          part={part}
+          setPart={setPart}
+        />
       )}
     </Container>
   );
