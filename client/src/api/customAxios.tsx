@@ -1,8 +1,8 @@
 import axios from 'axios';
-import { useRecoilValue } from 'recoil';
-import { userToken } from 'states/userState';
+// import { useRecoilValue } from 'recoil';
+// import { userToken } from 'states/userState';
 
-const authToken = useRecoilValue(userToken);
+// const authToken = useRecoilValue(userToken);
 axios.defaults.withCredentials = true;
 
 const customAxios = axios.create({
@@ -10,7 +10,7 @@ const customAxios = axios.create({
   headers: {
     'Content-Type': 'application/json',
     'Access-Control-Allow-Origin': '*',
-    Authorization: authToken,
+    // Authorization: authToken,
   },
 });
 
