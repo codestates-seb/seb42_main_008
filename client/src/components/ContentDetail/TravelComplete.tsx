@@ -11,12 +11,14 @@ const TravelComplete = ({ detail, part, setPart }: partProps) => {
   const params = useParams();
   const { contentId } = params;
   const { memberId } = useRecoilValue(userInfo);
-  // const setReviewId = useSetRecoilState(reviewInfo);
+  //const setReviewId = useSetRecoilState(reviewInfo);
 
   // 리뷰 작성 모달
   const [firstModal, setFirstModal] = useState<boolean>(false);
-  const handleFirstModal = () => {
+  const [reviewId, setReviewId] = useState(0);
+  const handleFirstModal = (reviewMemberId: number) => {
     setFirstModal(!firstModal);
+    setReviewId(reviewMemberId);
   };
 
   const getPartList = () => {
@@ -53,13 +55,19 @@ const TravelComplete = ({ detail, part, setPart }: partProps) => {
               {/* 리뷰 작성 완료 ? 완료 : 리뷰버튼 */}
               {detail.memberId === memberId ? (
                 <div className="btn-wrapper">
-                  <button className="btn" onClick={() => handleFirstModal()}>
+                  <button
+                    className="btn"
+                    onClick={() => handleFirstModal(el.memberId)}
+                  >
                     리뷰
                   </button>
                 </div>
               ) : memberId === el.memberId ? (
                 <div className="btn-wrapper">
-                  <button className="btn" onClick={() => handleFirstModal()}>
+                  <button
+                    className="btn"
+                    onClick={() => handleFirstModal(el.memberId)}
+                  >
                     작성자 리뷰
                   </button>
                 </div>
@@ -71,7 +79,11 @@ const TravelComplete = ({ detail, part, setPart }: partProps) => {
         )}
       </Content>
       {firstModal ? (
-        <FirstReviewModal detail={detail} setFirstModal={setFirstModal} />
+        <FirstReviewModal
+          detail={detail}
+          setFirstModal={setFirstModal}
+          reviewId={reviewId}
+        />
       ) : null}
     </Container>
   );

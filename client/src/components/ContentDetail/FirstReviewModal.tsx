@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import Swal from 'sweetalert2';
 import ModalScrollDisable from 'utils/ModalScrollDisable';
 
-const FirstReviewModal = ({ detail, setFirstModal }: firstModal) => {
+const FirstReviewModal = ({ detail, setFirstModal, reviewId }: firstModal) => {
   const navigate = useNavigate();
   const handleFirstModal = () => {
     setFirstModal(false);
@@ -40,6 +40,7 @@ const FirstReviewModal = ({ detail, setFirstModal }: firstModal) => {
           detail={detail}
           setFirstModal={setFirstModal}
           setSecondModal={setSecondModal}
+          reviewId={reviewId}
         />
       ) : null}
     </Container>

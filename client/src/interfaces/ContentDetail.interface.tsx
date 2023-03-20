@@ -17,16 +17,19 @@ interface participantList {
 interface firstModal {
   detail: detailInfo;
   setFirstModal: (newValue: boolean) => void;
+  reviewId: number;
 }
 
 interface secondModal {
   detail: detailInfo;
   setFirstModal: (newValue: boolean) => void;
   setSecondModal: (newValue: boolean) => void;
+  reviewId: number;
 }
 
 interface thirdModal {
   detail: detailInfo;
+  reviewId: number;
   setFirstModal: (newValue: boolean) => void;
   setSecondModal: (newValue: boolean) => void;
   setThirdModal: (newValue: boolean) => void;

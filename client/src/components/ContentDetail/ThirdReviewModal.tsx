@@ -13,6 +13,7 @@ const ThirdReviewModal = ({
   setFirstModal,
   setSecondModal,
   setThirdModal,
+  reviewId,
 }: thirdModal) => {
   const handleThirdModal = () => {
     setThirdModal(false);
@@ -99,7 +100,7 @@ const ThirdReviewModal = ({
       await axios
         .post(`${process.env.REACT_APP_SERVER}/reviews`, {
           memberId,
-          reviewedMemberId: reviewMemberId,
+          reviewedMemberId: reviewId,
           companionId: detail.companionId,
           score,
           content,

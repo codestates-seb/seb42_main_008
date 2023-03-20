@@ -7,6 +7,7 @@ const SecondReviewModal = ({
   detail,
   setFirstModal,
   setSecondModal,
+  reviewId,
 }: secondModal) => {
   const handleSecondModal = () => {
     setSecondModal(false);
@@ -36,6 +37,7 @@ const SecondReviewModal = ({
           setFirstModal={setFirstModal}
           setSecondModal={setSecondModal}
           setThirdModal={setThirdModal}
+          reviewId={reviewId}
         />
       ) : null}
     </Container>
