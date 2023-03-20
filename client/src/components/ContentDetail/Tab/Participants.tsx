@@ -7,10 +7,10 @@ import { userInfo } from 'states/userState';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
 
-const Participants = ({ part, setPart }: partProps) => {
+const Participants = ({ detail, setSub, part, setPart }: partProps) => {
   const params = useParams();
   const { contentId } = params;
-  const { memberId } = useRecoilValue(userInfo);
+  const { memberId, nickname } = useRecoilValue(userInfo);
 
   const handleCancel = async () => {
     Swal.fire({
@@ -31,11 +31,32 @@ const Participants = ({ part, setPart }: partProps) => {
             Swal.fire('Deleted!', '취소되었습니다', 'success');
             setPart(part);
             getPartList();
+            const content = `작성하신 동행글에 ${nickname} 님이 동행참여를 취소하였습니다.`;
+            axios.post(`${process.env.REACT_APP_SERVER}/messages`, {
+              content,
+              senderId: 1,
+              receiverId: detail.memberId,
+              companionId: contentId,
+            });
           })
           .catch(error => console.log(error));
       }
     });
   };
+
+  const getSubList = () => {
+    axios
+      .get(
+        `${process.env.REACT_APP_SERVER}/companions/${contentId}/subscribers`
+      )
+      .then(res => {
+        setSub(res.data.data);
+      });
+  };
+
+  useEffect(() => {
+    getSubList();
+  }, []);
 
   const getPartList = () => {
     axios
