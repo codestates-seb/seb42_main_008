@@ -42,34 +42,6 @@ const ContentDetail = () => {
       });
   }, []);
 
-  // 신청자 조회
-  useEffect(() => {
-    axios
-      .get(
-        `${process.env.REACT_APP_SERVER}/companions/${contentId}/subscribers`
-      )
-      .then(res => {
-        setSub(res.data.data);
-      })
-      .catch(error => {
-        console.log(error);
-      });
-  }, []);
-
-  // 참여자 조회
-  useEffect(() => {
-    axios
-      .get(
-        `${process.env.REACT_APP_SERVER}/companions/${contentId}/participants`
-      )
-      .then(res => {
-        setPart(res.data.data);
-      })
-      .catch(error => {
-        console.log(error);
-      });
-  }, []);
-
   return (
     <Container>
       <ContentDetailBox>

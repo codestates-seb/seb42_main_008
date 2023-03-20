@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { subProps } from 'interfaces/ContentDetail.interface';
+import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { userInfo } from 'states/userState';
@@ -45,21 +46,45 @@ const ContentWriter = ({ detail, sub, setSub }: subProps) => {
   // 만약 이미 신청한 사람이라면, alert 창 띄우기
   // 신청자 배열 or 참여자 배열에 있는 id === userInfo의 memberId ? 이미 신청한 동행입니다. : 신청되었습니다
   const handleApply = async () => {
-    await axios
-      .post(
-        `${process.env.REACT_APP_SERVER}/companions/${contentId}/subscribers`,
-        {
-          memberId,
-        }
+    Swal.fire({
+      title: '동행신청 하시겠습니까?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: '네, 신청합니다',
+    }).then(async result => {
+      if (result.isConfirmed) {
+        await axios
+          .post(
+            `${process.env.REACT_APP_SERVER}/companions/${contentId}/subscribers`,
+            { memberId }
+          )
+          .then(() => {
+            Swal.fire('Applied!', '동행이 신청되었습니다!', 'success');
+            setSub(sub);
+            getSubList();
+          })
+          .catch(() => {
+            Swal.fire('Failed!', '이미 신청한 동행입니다!', 'error');
+          });
+      }
+    });
+  };
+
+  const getSubList = () => {
+    axios
+      .get(
+        `${process.env.REACT_APP_SERVER}/companions/${contentId}/subscribers`
       )
-      .then(() => {
-        Swal.fire('Applied!', '동행이 신청되었습니다!', 'success');
-        setSub(sub);
-      })
-      .catch(() => {
-        Swal.fire('Failed!', '이미 신청한 동행입니다!', 'error');
+      .then(res => {
+        setSub(res.data.data);
       });
   };
+
+  useEffect(() => {
+    getSubList();
+  }, []);
 
   const handleProfile = () => {
     navigate(`/${detail.memberId}/profile`);
