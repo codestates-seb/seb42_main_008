@@ -1,6 +1,7 @@
 import axios from 'axios';
 import CompanionTab from 'components/ContentDetail/CompanionTab';
 import ContentWriter from 'components/ContentDetail/ContentWriter';
+import TravelComplete from 'components/ContentDetail/TravelComplete';
 // import TravelComplete from 'components/ContentDetail/TravelComplete';
 // import Participants from 'components/ContentDetail/Participants';
 import { detailInfo } from 'interfaces/ContentDetail.interface';
@@ -68,17 +69,17 @@ const ContentDetail = () => {
         </LeftBox>
         <RightBox>
           <ContentWriter detail={detail} sub={sub} setSub={setSub} />
-          <CompanionTab
-            detail={detail}
-            sub={sub}
-            setSub={setSub}
-            part={part}
-            setPart={setPart}
-          />
-          {/* 여행완료 ? TravelComplete : Companion */}
-          {/* newDate 함수 호출해서 지금 시간이랑 비교 후 지나있으면 상태변경 */}
-          {/* newDate(현재날짜) 보다 크면? 년도 비교한번, 월비교한번, 일자비교한번, 시간비교한번 */}
-          {/* <TravelComplete /> */}
+          {detail.companionStatus ? (
+            <TravelComplete detail={detail} part={part} setPart={setPart} />
+          ) : (
+            <CompanionTab
+              detail={detail}
+              sub={sub}
+              setSub={setSub}
+              part={part}
+              setPart={setPart}
+            />
+          )}
         </RightBox>
       </ContentDetailBox>
     </Container>

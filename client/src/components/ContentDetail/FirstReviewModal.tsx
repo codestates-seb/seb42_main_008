@@ -1,11 +1,17 @@
 import SecondReviewModal from 'components/ContentDetail/SecondReviewModal';
 import { firstModal } from 'interfaces/ContentDetail.interface';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import Swal from 'sweetalert2';
+import ModalScrollDisable from 'utils/ModalScrollDisable';
 
-const FirstReviewModal = ({ setFirstModal }: firstModal) => {
+const FirstReviewModal = ({ detail, setFirstModal, reviewId }: firstModal) => {
+  const navigate = useNavigate();
   const handleFirstModal = () => {
     setFirstModal(false);
+    Swal.fire('Thank you', '다음에도 좋은 동행 되시길 바랍니다', 'success');
+    navigate('/');
   };
 
   // 두번째 리뷰 모달 상태
@@ -16,6 +22,7 @@ const FirstReviewModal = ({ setFirstModal }: firstModal) => {
 
   return (
     <Container>
+      <ModalScrollDisable />
       <BackGround onClick={handleFirstModal}>
         <ModalView onClick={event => event.stopPropagation()}>
           {/* 작상자는 {작성자ID}로 수정 예정*/}
@@ -30,8 +37,10 @@ const FirstReviewModal = ({ setFirstModal }: firstModal) => {
       </BackGround>
       {secondModal ? (
         <SecondReviewModal
+          detail={detail}
           setFirstModal={setFirstModal}
           setSecondModal={setSecondModal}
+          reviewId={reviewId}
         />
       ) : null}
     </Container>
