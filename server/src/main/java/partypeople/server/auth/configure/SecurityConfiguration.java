@@ -5,13 +5,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.config.oauth2.client.CommonOAuth2Provider;
+import org.springframework.security.oauth2.client.registration.ClientRegistration;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -22,12 +24,12 @@ import partypeople.server.auth.filter.JwtAuthorizationFilter;
 import partypeople.server.auth.handler.MemberAuthenticationEntryPoint;
 import partypeople.server.auth.handler.MemberAuthenticationFailureHandler;
 import partypeople.server.auth.handler.MemberAuthenticationSuccessHandler;
+import partypeople.server.auth.handler.OAuth2MemberSuccessHandler;
 import partypeople.server.auth.jwt.JwtTokenizer;
 import partypeople.server.auth.utils.CustomAuthorityUtils;
 import partypeople.server.member.service.MemberService;
 
 import java.util.Arrays;
-import java.util.logging.Filter;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -40,14 +42,20 @@ public class SecurityConfiguration {
     private final JwtTokenizer jwtTokenizer;
     private final CustomAuthorityUtils authorityUtils;
     private final RedisTemplate<String, String> redisTemplate;
-    private final AuthService authService;
     private final MemberService memberService;
 
-//    @Value("${spring.security.oauth2.client.registration.google.clientId}")
+//    @Value("${GOOGLE_OAUTH_CLIENT_ID}")
 //    private String clientId;
 //
-//    @Value("${spring.security.oauth2.client.registration.google.clientSecret}")
+//    @Value("${GOOGLE_OAUTH_CLIENT_PW}")
 //    private String clientSecret;
+
+    @Value("${spring.security.oauth2.client.registration.google.clientId}")
+    private String clientId;
+
+    @Value("${spring.security.oauth2.client.registration.google.clientSecret}")
+    private String clientSecret;
+
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -60,10 +68,6 @@ public class SecurityConfiguration {
             .and()
             .formLogin().disable()
             .httpBasic().disable()  //UsernamePasswordAuthenticationFilter 필터 끊기?
-//            .logout()
-//            .logoutUrl("/members/logout")
-//            .logoutSuccessUrl("/members/login")
-//            .and()
             .exceptionHandling()
             .authenticationEntryPoint(new MemberAuthenticationEntryPoint())
             .and()
@@ -72,34 +76,34 @@ public class SecurityConfiguration {
             .authorizeHttpRequests(authorize -> authorize
 //                .antMatchers(HttpMethod.PATCH, "/members/*").hasRole("USER")
                 .anyRequest().permitAll()
+            )
+            .oauth2Login(oAuth2 -> oAuth2
+                .authorizationEndpoint()
+                .baseUri("/members/login")
+                .and()
+                .successHandler(new OAuth2MemberSuccessHandler(jwtTokenizer, authorityUtils, memberService))
+                .failureHandler(new MemberAuthenticationFailureHandler())
             );
-//            .oauth2Login(oAuth2 -> oAuth2
-//                .authorizationEndpoint()
-//                .baseUri("/members/login")
-//                .and()
-//                .successHandler(new OAuth2MemberSuccessHandler(jwtTokenizer, authorityUtils, memberService))
-//                .failureHandler(new MemberAuthenticationFailureHandler())
-//            );
 
         return http.build();
     }
 
-//    @Bean
-//    public ClientRegistrationRepository clientRegistrationRepository() {
-//        var clientRegistration = clientRegistration();
-//
-//        return new InMemoryClientRegistrationRepository(clientRegistration);
-//    }
+    @Bean
+    public ClientRegistrationRepository clientRegistrationRepository() {
+        var clientRegistration = clientRegistration();
 
-//    private ClientRegistration clientRegistration() {
-//        return CommonOAuth2Provider
-//            .GOOGLE
-//            .getBuilder("google")
-//            .clientId(clientId)
-//            .clientSecret(clientSecret)
-////            .redirectUri()
-//            .build();
-//    }
+        return new InMemoryClientRegistrationRepository(clientRegistration);
+    }
+
+    private ClientRegistration clientRegistration() {
+        return CommonOAuth2Provider
+            .GOOGLE
+            .getBuilder("google")
+            .clientId(clientId)
+            .clientSecret(clientSecret)
+//            .redirectUri()
+            .build();
+    }
 
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
@@ -120,7 +124,7 @@ public class SecurityConfiguration {
         public void configure(HttpSecurity builder) {
             AuthenticationManager authenticationManager = builder.getSharedObject(AuthenticationManager.class);
 
-            JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager, jwtTokenizer,authService,memberService);
+            JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager, jwtTokenizer,memberService);
             jwtAuthenticationFilter.setFilterProcessesUrl("/members/login");
             jwtAuthenticationFilter.setAuthenticationSuccessHandler(new MemberAuthenticationSuccessHandler());
             jwtAuthenticationFilter.setAuthenticationFailureHandler(new MemberAuthenticationFailureHandler());

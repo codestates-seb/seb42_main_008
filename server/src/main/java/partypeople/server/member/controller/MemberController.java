@@ -68,11 +68,9 @@ public class MemberController {
 
     @GetMapping("/{member-id}")
     public ResponseEntity getMember(@PathVariable("member-id") long memberId,
-                                    @RequestParam Long loginMemberId
-    ) {
+                                    @RequestParam Long loginMemberId) {
+
         Member member = memberService.findMember(memberId);
-        //service
-//        member.setScore(memberService.scoreCal(member));
         member.setFollowerCount(Math.toIntExact(followService.followerCount(member)));
         member.setFollowingCount(Math.toIntExact(followService.followingCount(member)));
         Boolean followerStatus = followService.followerStatusUpdate(member, loginMemberId);

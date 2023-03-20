@@ -60,6 +60,7 @@ public class MemberDto {
     }
 
     @Getter
+    @Setter
     public static class Nickname {
         @NotBlank
         private String nickname;

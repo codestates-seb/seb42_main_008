@@ -7,8 +7,10 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.io.Encoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import partypeople.server.auth.AuthService;
 import partypeople.server.member.entity.Member;
 
 import java.nio.charset.StandardCharsets;
@@ -20,6 +22,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 @Component
+@RequiredArgsConstructor
 public class JwtTokenizer {
     @Getter
     @Value("${jwt.key}")
@@ -32,6 +35,8 @@ public class JwtTokenizer {
     @Getter
     @Value("${jwt.refresh-token-expiration-minutes}")
     private int refreshTokenExpirationMinutes;
+
+    private final AuthService authService;
 
     public String encodeBase64SecretKey(String secretKey) {
         return Encoders.BASE64.encode(secretKey.getBytes(StandardCharsets.UTF_8));
@@ -120,6 +125,7 @@ public class JwtTokenizer {
         return accessToken;
     }
 
+
     private Claims extractAllClaims(String token) {
         Key key = getKeyFromBase64EncodedKey(encodeBase64SecretKey(secretKey));
 
@@ -141,5 +147,18 @@ public class JwtTokenizer {
 
         long now = new Date().getTime();
         return expiration.getTime() - now;
+    }
+
+    public String delegateRefreshToken(Member member) {
+        String subject = member.getEmail();
+        Date expiration = getTokenExpiration(getRefreshTokenExpirationMinutes());
+
+        String base64EncodedSecretKey = encodeBase64SecretKey(getSecretKey());
+        String refreshToken = generateRefreshToken(subject, expiration, base64EncodedSecretKey);
+
+        Long refreshTokenExp = getExpiration(refreshToken);
+
+        authService.redisSetRefreshToken(refreshTokenExp,refreshToken,subject);
+        return refreshToken;
     }
 }

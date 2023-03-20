@@ -13,12 +13,19 @@ import org.springframework.context.annotation.Import;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import partypeople.server.InitDb;
+import partypeople.server.companion.dto.CompanionDto;
+import partypeople.server.companion.entity.Companion;
 import partypeople.server.companion.mapper.CompanionMapper;
 import partypeople.server.config.SecurityConfigurationTest;
 import partypeople.server.controller.MemberControllerTest;
+import partypeople.server.dto.SingleResponseDto;
 import partypeople.server.member.dto.MemberDto;
 import partypeople.server.member.entity.Member;
 import partypeople.server.member.mapper.MemberMapper;
@@ -26,6 +33,7 @@ import partypeople.server.member.service.FollowService;
 import partypeople.server.member.service.MemberService;
 import partypeople.server.review.mapper.ReviewMapper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.BDDMockito.given;
@@ -33,10 +41,8 @@ import static org.mockito.Mockito.doNothing;
 import static org.springframework.restdocs.headers.HeaderDocumentation.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.restdocs.snippet.Attributes.key;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static partypeople.server.util.ApiDocumentUtils.getRequestPreProcessor;
@@ -51,7 +57,6 @@ public class MemberControllerRestDocsTest {
     private MockMvc mockMvc;
     @MockBean
     private MemberService memberService;
-
     @MockBean
     private MemberMapper memberMapper;
 
@@ -116,20 +121,6 @@ public class MemberControllerRestDocsTest {
                         responseHeaders(
                                 headerWithName(HttpHeaders.LOCATION).description("Location header. 등록된 리소스의 URI (ex) /members/{member-id}")
                         )
-//                        responseFields(
-//                                fieldWithPath("status").description("응답 상태 코드").attributes(
-//                                        key("constraints").value("201")
-//                                ),
-//                                fieldWithPath("message").description("응답 메시지"),
-//                                fieldWithPath("data").description("응답 데이터").optional(),
-//                                fieldWithPath("error").description("에러 정보").optional(),
-//                                subsectionWithPath("error.code").description("에러 코드").attributes(
-//                                        key("constraints").value("400, 401, 404, 500")
-//                                ),
-//                                subsectionWithPath("error.message").description("에러 메시지").attributes(
-//                                        key("constraints").value("예: 유효하지 않은 요청입니다.")
-//                                )
-//                        )
                 ));
     }
 
@@ -236,7 +227,6 @@ public class MemberControllerRestDocsTest {
     @Test
     @DisplayName("로그아웃")
     public void logoutMemberTest() throws Exception {
-        //만료안된 토큰 자동으로 만들어주는 방법 ..? TODO..
         String accessToken = "Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlcyI6WyJVU0VSIl0sIm1lbWJlclN0YXR1cyI6Ik1FTUJFUl9BQ1RJVkUiLCJlbWFpbCI6InppcGNrczEzODFAZ21haWwyLmNvbSIsIm1lbWJlcklkIjoyLCJzdWIiOiJ6aXBja3MxMzgxQGdtYWlsMi5jb20iLCJpYXQiOjE2NzkwMTU0NDcsImV4cCI6MTY3OTAxNjA0N30.2c_jkLcbh3MEVkWc4wGEUpVHKc0qyngL2_UahF7nri9UvxhwhawjYSul_4MuaV49";
 
         doNothing().when(memberService).logout(accessToken);
@@ -295,26 +285,189 @@ public class MemberControllerRestDocsTest {
 
     }
 
-//    @Test
-//    @DisplayName("회원조회")
-//    public void getMemberTest() throws Exception {
-//        // given
-//        MemberDto.Response response = MemberDto.Response.builder()
-//                .email("postmember@gmail.com")
-//                .nickname("nickname")
-//                .profile("profile")
-//                .content("content")
-//                .gender("male/fema")
-//
-//                .build();
-//
-//        String content = gson.toJson(post);
-//
-//        Member mockResultMember = new Member();
-//        mockResultMember.setMemberId(1L);
-//
-//        given(memberMapper.memberPostToMember(Mockito.any(MemberDto.Post.class))).willReturn(new Member());
-//        given(memberService.createMember(Mockito.any(Member.class))).willReturn(mockResultMember);
-//
-//    }
+    @Test
+    @DisplayName("회원조회")
+    public void getMemberTest() throws Exception {
+        // given
+        Long memberId = 1L;
+        MemberDto.Response response = MemberDto.Response.builder()
+                .email("postmember@gmail.com")
+                .nickname("nickname")
+                .profile("profile")
+                .content("content")
+                .gender("male")
+                .score(0)
+                .followerCount(0)
+                .followingCount(0)
+                .followerStatus(false)
+                .memberStatus("활동중")
+                .memberId(1L)
+                .build();
+
+        given(memberService.findMember(memberId)).willReturn(new Member());
+        given(memberMapper.memberToMemberResponse(Mockito.any(Member.class),Mockito.anyBoolean())).willReturn(response);
+
+        MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
+        queryParams.add("loginMemberId","2");
+
+        //when
+        ResultActions actions =
+                mockMvc.perform(
+                        get("/members/{member-id}",memberId)
+                                .params(queryParams)
+                                .accept(MediaType.APPLICATION_JSON)
+                                .contentType(MediaType.APPLICATION_JSON)
+                );
+
+        //then
+        actions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.memberId").value(response.getMemberId()))
+                .andExpect(jsonPath("$.data.email").value(response.getEmail()))
+                .andExpect(jsonPath("$.data.nickname").value(response.getNickname()))
+                .andExpect(jsonPath("$.data.profile").value(response.getProfile()))
+                .andExpect(jsonPath("$.data.content").value(response.getContent()))
+                .andExpect(jsonPath("$.data.gender").value(response.getGender()))
+                .andExpect(jsonPath("$.data.score").value(response.getScore()))
+                .andExpect(jsonPath("$.data.followerCount").value(response.getFollowerCount()))
+                .andExpect(jsonPath("$.data.followingCount").value(response.getFollowingCount()))
+                .andExpect(jsonPath("$.data.followerStatus").value(response.getFollowerStatus()))
+                .andExpect(jsonPath("$.data.memberStatus").value(response.getMemberStatus()))
+                .andDo(document(
+                                "get-member",
+                                getRequestPreProcessor(),
+                                getResponsePreProcessor(),
+                                pathParameters(
+                                        parameterWithName("member-id").description("회원 식별자 (조회하려는 회원의 식별자)")
+                                ),
+                                requestParameters(
+                                        parameterWithName("loginMemberId").description("현재 로그인한 회원의 식별자")
+                                ),
+                                responseFields(
+                                        fieldWithPath("data.memberId").description("조회한 회원 식별자").attributes(
+                                                key("constraints").value("ID")
+                                        ),
+                                        fieldWithPath("data.email").description("조회한 회원 이메일주소").attributes(
+                                                key("constraints").value("E-mail 형식")
+                                        ),
+                                        fieldWithPath("data.nickname").description("회원 닉네임"),
+                                        fieldWithPath("data.profile").description("회원 프로필"),
+                                        fieldWithPath("data.content").description("회원 자기소개글"),
+                                        fieldWithPath("data.gender").description("회원 성별").attributes(
+                                                key("constraints").value("NONE / MALE / FEMALE")
+                                        ),
+                                        fieldWithPath("data.score").description("회원 점수").attributes(
+                                                key("constraints").value("기본점수 50점")
+                                        ),
+                                        fieldWithPath("data.followerCount").description("회원 팔로워 수"),
+                                        fieldWithPath("data.followingCount").description("회원 팔로잉 수"),
+                                        fieldWithPath("data.memberStatus").description("회원 상태").attributes(
+                                                key("constraints").value("활동중 / 탈퇴 상태")
+                                        ),
+                                        fieldWithPath("data.followerStatus").description("팔로워 상태").attributes(
+                                                key("constraints").value("로그인한 회원이 조회한 회원을 팔로워 했는지 여부 (True/False)")
+                                        ),
+                                        fieldWithPath("data.createdAt").description("회원 생성 시간").ignored(),
+                                        fieldWithPath("data.modifiedAt").description("회원 수정 시간").ignored()
+                                )
+                        )
+                );
+
+    }
+
+    @Test
+    @DisplayName("닉네임 중복 체크")
+    public void nicknameCheckTest() throws Exception {
+        MemberDto.Nickname nickname = new MemberDto.Nickname();
+        nickname.setNickname("nickname");
+        String content = gson.toJson(nickname);
+        doNothing().when(memberService).verifyExistsNickname(Mockito.anyString());
+
+        ResultActions actions =
+                mockMvc.perform(
+                        post("/members/nickname")
+                                .accept(MediaType.APPLICATION_JSON)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(content)
+                );
+
+        actions
+                .andExpect(status().isOk())
+                .andDo(document(
+                                "nickname-check",
+                                getRequestPreProcessor(),
+                                getResponsePreProcessor(),
+                                requestFields(
+                                        List.of(
+                                                fieldWithPath("nickname").type(JsonFieldType.STRING).description("확인 할 닉네임")
+                                        )
+                                )
+                        )
+                );
+    }
+
+    @Test
+    @DisplayName("신청한 글 조회")
+    public void getSubscriberListTest() throws Exception {
+        Long memberId = 1L;
+        List<CompanionDto.ResponseMember> responses = new ArrayList<>();
+        responses.add(InitDb.response1);
+        responses.add(InitDb.response2);
+        responses.add(InitDb.response3);
+
+        given(memberService.findAllSubscriberById(Mockito.anyLong())).willReturn(new ArrayList<Companion>());
+        given(companionMapper.companionsToCompanionResponseMembers(Mockito.anyList())).willReturn(responses);
+
+        //when
+        ResultActions actions =
+                mockMvc.perform(
+                        get("/members/{member-id}/subscribers",memberId)
+                                .accept(MediaType.APPLICATION_JSON)
+                                .contentType(MediaType.APPLICATION_JSON)
+                );
+
+        //then
+        actions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data").isArray())
+                .andDo(document(
+                                "get-subscriberList",
+                                getRequestPreProcessor(),
+                                getResponsePreProcessor(),
+                                pathParameters(
+                                        parameterWithName("member-id").description("회원 식별자")
+                                ),
+//                                requestParameters(
+//                                        parameterWithName("loginMemberId").description("현재 로그인한 회원의 식별자")
+//                                ),
+                                responseFields(
+                                        fieldWithPath("data[].memberId").description("조회한 회원 식별자").attributes(
+                                                key("constraints").value("ID")
+                                        ),
+                                        fieldWithPath("data.email").description("조회한 회원 이메일주소").attributes(
+                                                key("constraints").value("E-mail 형식")
+                                        ),
+                                        fieldWithPath("data.nickname").description("회원 닉네임"),
+                                        fieldWithPath("data.profile").description("회원 프로필"),
+                                        fieldWithPath("data.content").description("회원 자기소개글"),
+                                        fieldWithPath("data.gender").description("회원 성별").attributes(
+                                                key("constraints").value("NONE / MALE / FEMALE")
+                                        ),
+                                        fieldWithPath("data.score").description("회원 점수").attributes(
+                                                key("constraints").value("기본점수 50점")
+                                        ),
+                                        fieldWithPath("data.followerCount").description("회원 팔로워 수"),
+                                        fieldWithPath("data.followingCount").description("회원 팔로잉 수"),
+                                        fieldWithPath("data.memberStatus").description("회원 상태").attributes(
+                                                key("constraints").value("활동중 / 탈퇴 상태")
+                                        ),
+                                        fieldWithPath("data.followerStatus").description("팔로워 상태").attributes(
+                                                key("constraints").value("로그인한 회원이 조회한 회원을 팔로워 했는지 여부 (True/False)")
+                                        ),
+                                        fieldWithPath("data.createdAt").description("회원 생성 시간").ignored(),
+                                        fieldWithPath("data.modifiedAt").description("회원 수정 시간").ignored()
+                                )
+                        )
+                );
+    }
 }
