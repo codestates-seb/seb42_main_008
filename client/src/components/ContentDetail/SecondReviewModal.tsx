@@ -3,7 +3,12 @@ import { secondModal } from 'interfaces/ContentDetail.interface';
 import { useState } from 'react';
 import styled from 'styled-components';
 
-const SecondReviewModal = ({ setFirstModal, setSecondModal }: secondModal) => {
+const SecondReviewModal = ({
+  detail,
+  setFirstModal,
+  setSecondModal,
+  reviewId,
+}: secondModal) => {
   const handleSecondModal = () => {
     setSecondModal(false);
   };
@@ -28,9 +33,11 @@ const SecondReviewModal = ({ setFirstModal, setSecondModal }: secondModal) => {
       </BackGround>
       {thirdModal ? (
         <ThirdReviewModal
+          detail={detail}
           setFirstModal={setFirstModal}
           setSecondModal={setSecondModal}
           setThirdModal={setThirdModal}
+          reviewId={reviewId}
         />
       ) : null}
     </Container>

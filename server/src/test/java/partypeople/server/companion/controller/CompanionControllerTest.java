@@ -10,6 +10,8 @@ import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDoc
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
@@ -63,7 +65,7 @@ public class CompanionControllerTest {
     private TagService tagService;
 
     @Test
-    @DisplayName("Companion Post Test")
+    @DisplayName("Post Companion Test")
     void postCompanionTest() throws Exception {
         // given
         Post request = new Post(
@@ -122,7 +124,7 @@ public class CompanionControllerTest {
     }
 
     @Test
-    @DisplayName("Companion Patch Test")
+    @DisplayName("Patch Companion Test")
     void patchCompanionTest() throws Exception {
         // given
         Patch request = new Patch(1L,
@@ -239,7 +241,7 @@ public class CompanionControllerTest {
     }
 
     @Test
-    @DisplayName("Companion Delete Test")
+    @DisplayName("Delete Companion Test")
     void deleteCompanionTest() throws Exception {
         // given
         doNothing().when(companionService).deleteCompanion(Mockito.anyLong());
@@ -264,8 +266,385 @@ public class CompanionControllerTest {
     }
 
     @Test
-    @DisplayName("Companion Get Test")
+    @DisplayName("Get Companion Test")
     void getCompanionTest() throws Exception {
+        // given
+        Long companionId = 1L;
+
+        CompanionDto.Response response = new CompanionDto.Response(
+                1L,
+                2L,
+                "member2",
+                100,
+                "일본 유니버셜 같이 가요",
+                "일본 유니버셜 가고싶은데 혼자라 부끄러워요ㅠ 같이 가실 분 구함~",
+                LocalDate.of(2023, 3, 20),
+                LocalDate.of(2023, 3, 10),
+                "일본 유니버셜스튜디오",
+                123.45678,
+                123.12345,
+                "일본",
+                "jpn",
+                2,
+                new ArrayList<>(Arrays.asList("내향", "테마파크")),
+                false
+        );
+
+        given(companionService.findCompanion(Mockito.anyLong())).willReturn(new Companion());
+        given(mapper.companionToCompanionResponseDto(Mockito.any(Companion.class))).willReturn(response);
+
+
+        // when
+        ResultActions actions = mockMvc.perform(
+                get("/companions/{companion-id}", companionId)
+        );
+
+
+        // then
+        actions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.companionId").value(response.getCompanionId()))
+                .andExpect(jsonPath("$.data.memberId").value(response.getMemberId()))
+                .andExpect(jsonPath("$.data.nickname").value(response.getNickname()))
+                .andExpect(jsonPath("$.data.score").value(response.getScore()))
+                .andExpect(jsonPath("$.data.title").value(response.getTitle()))
+                .andExpect(jsonPath("$.data.content").value(response.getContent()))
+                .andExpect(jsonPath("$.data.date").exists())
+                .andExpect(jsonPath("$.data.createdAt").exists())
+                .andExpect(jsonPath("$.data.address").value(response.getAddress()))
+                .andExpect(jsonPath("$.data.lat").value(response.getLat()))
+                .andExpect(jsonPath("$.data.lng").value(response.getLng()))
+                .andExpect(jsonPath("$.data.nationName").value(response.getNationName()))
+                .andExpect(jsonPath("$.data.nationCode").value(response.getNationCode()))
+                .andExpect(jsonPath("$.data.continent").value(response.getContinent()))
+                .andExpect(jsonPath("$.data.tags").isArray())
+                .andExpect(jsonPath("$.data.companionStatus").value(response.isCompanionStatus()))
+                .andDo(document("get-companion",
+                        getRequestPreProcessor(),
+                        getResponsePreProcessor(),
+                        pathParameters(
+                                parameterWithName("companion-id").description("동행글 식별자")
+                        ),
+                        responseFields(
+                                fieldWithPath("data").type(JsonFieldType.OBJECT).description("결과 데이터"),
+                                fieldWithPath("data.companionId").type(JsonFieldType.NUMBER).description("동행글 식별자"),
+                                fieldWithPath("data.memberId").type(JsonFieldType.NUMBER).description("작성자 식별자"),
+                                fieldWithPath("data.nickname").type(JsonFieldType.STRING).description("작성자 닉네임"),
+                                fieldWithPath("data.score").type(JsonFieldType.NUMBER).description("작성자 점수"),
+                                fieldWithPath("data.title").type(JsonFieldType.STRING).description("동행글 제목"),
+                                fieldWithPath("data.content").type(JsonFieldType.STRING).description("동행글 내용"),
+                                fieldWithPath("data.createdAt").type(JsonFieldType.STRING).description("동행글 작성 날짜"),
+                                fieldWithPath("data.date").type(JsonFieldType.STRING).description("동행 날짜"),
+                                fieldWithPath("data.address").type(JsonFieldType.STRING).description("동행 주소"),
+                                fieldWithPath("data.lat").type(JsonFieldType.NUMBER).description("위도"),
+                                fieldWithPath("data.lng").type(JsonFieldType.NUMBER).description("경도"),
+                                fieldWithPath("data.nationName").type(JsonFieldType.STRING).description("국가"),
+                                fieldWithPath("data.nationCode").type(JsonFieldType.STRING).description("국가 코드"),
+                                fieldWithPath("data.continent").type(JsonFieldType.NUMBER).description("대륙 코드"),
+                                fieldWithPath("data.tags").type(JsonFieldType.ARRAY).description("태그"),
+                                fieldWithPath("data.companionStatus").type(JsonFieldType.BOOLEAN).description("동행 완료 여부")
+                        )));
+    }
+
+    @Test
+    @DisplayName("Get Companions By Nation Test")
+    void getCompanionsByNationTest() throws Exception {
+        // given
+        int page = 1;
+        int size = 10;
+        String sortDir = "DESC";
+        String sortBy = "createdAt";
+        String nationCode = "jpn";
+
+        Companion companion = new Companion();
+        CompanionDto.Response response = new CompanionDto.Response(
+                1L,
+                2L,
+                "member2",
+                100,
+                "일본 유니버셜 같이 가요",
+                "일본 유니버셜 가고싶은데 혼자라 부끄러워요ㅠ 같이 가실 분 구함~",
+                LocalDate.of(2023, 3, 20),
+                LocalDate.of(2023, 3, 10),
+                "일본 유니버셜스튜디오",
+                123.45678,
+                123.12345,
+                "일본",
+                "jpn",
+                2,
+                new ArrayList<>(Arrays.asList("내향", "테마파크")),
+                false
+        );
+
+        Page<Companion> companionPage = new PageImpl<>(List.of(companion));
+        List<CompanionDto.Response> responses = new ArrayList<>(List.of(response));
+
+        given(companionService.findCompanionsByNation(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString())).willReturn(companionPage);
+        given(mapper.companionsToCompanionResponseDtos(Mockito.anyList())).willReturn(responses);
+
+
+        // when
+        ResultActions actions = mockMvc.perform(
+                get("/companions/nations")
+                        .param("page", String.valueOf(page))
+                        .param("size", String.valueOf(size))
+                        .param("sortDir", sortDir)
+                        .param("sortBy", sortBy)
+                        .param("nationCode", nationCode)
+        );
+
+
+        // then
+        actions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data").isArray())
+                .andExpect(jsonPath("$.data[0].companionId").value(responses.get(0).getCompanionId()))
+                .andExpect(jsonPath("$.data[0].memberId").value(responses.get(0).getMemberId()))
+                .andExpect(jsonPath("$.data[0].nickname").value(responses.get(0).getNickname()))
+                .andExpect(jsonPath("$.data[0].score").value(responses.get(0).getScore()))
+                .andExpect(jsonPath("$.data[0].title").value(responses.get(0).getTitle()))
+                .andExpect(jsonPath("$.data[0].content").value(responses.get(0).getContent()))
+                .andExpect(jsonPath("$.data[0].date").exists())
+                .andExpect(jsonPath("$.data[0].createdAt").exists())
+                .andExpect(jsonPath("$.data[0].address").value(responses.get(0).getAddress()))
+                .andExpect(jsonPath("$.data[0].lat").value(responses.get(0).getLat()))
+                .andExpect(jsonPath("$.data[0].lng").value(responses.get(0).getLng()))
+                .andExpect(jsonPath("$.data[0].nationName").value(responses.get(0).getNationName()))
+                .andExpect(jsonPath("$.data[0].nationCode").value(responses.get(0).getNationCode()))
+                .andExpect(jsonPath("$.data[0].continent").value(responses.get(0).getContinent()))
+                .andExpect(jsonPath("$.data[0].tags").isArray())
+                .andExpect(jsonPath("$.data[0].companionStatus").value(responses.get(0).isCompanionStatus()))
+                .andDo(document("get-companions-by-nation",
+                        getRequestPreProcessor(),
+                        getResponsePreProcessor(),
+                        requestParameters(
+                                parameterWithName("page").description("페이지 번호").optional(),
+                                parameterWithName("size").description("페이지 당 동행글 수").optional(),
+                                parameterWithName("sortDir").description("정렬 방향").optional(),
+                                parameterWithName("sortBy").description("정렬 기준").optional(),
+                                parameterWithName("nationCode").description("국가 코드")
+                        ),
+                        responseFields(
+                                fieldWithPath("data").type(JsonFieldType.ARRAY).description("결과 데이터"),
+                                fieldWithPath("data[].companionId").type(JsonFieldType.NUMBER).description("동행글 식별자"),
+                                fieldWithPath("data[].memberId").type(JsonFieldType.NUMBER).description("작성자 식별자"),
+                                fieldWithPath("data[].nickname").type(JsonFieldType.STRING).description("작성자 닉네임"),
+                                fieldWithPath("data[].score").type(JsonFieldType.NUMBER).description("작성자 점수"),
+                                fieldWithPath("data[].title").type(JsonFieldType.STRING).description("동행글 제목"),
+                                fieldWithPath("data[].content").type(JsonFieldType.STRING).description("동행글 내용"),
+                                fieldWithPath("data[].createdAt").type(JsonFieldType.STRING).description("동행글 작성 날짜"),
+                                fieldWithPath("data[].date").type(JsonFieldType.STRING).description("동행 날짜"),
+                                fieldWithPath("data[].address").type(JsonFieldType.STRING).description("동행 주소"),
+                                fieldWithPath("data[].lat").type(JsonFieldType.NUMBER).description("위도"),
+                                fieldWithPath("data[].lng").type(JsonFieldType.NUMBER).description("경도"),
+                                fieldWithPath("data[].nationName").type(JsonFieldType.STRING).description("국가"),
+                                fieldWithPath("data[].nationCode").type(JsonFieldType.STRING).description("국가 코드"),
+                                fieldWithPath("data[].continent").type(JsonFieldType.NUMBER).description("대륙 코드"),
+                                fieldWithPath("data[].tags").type(JsonFieldType.ARRAY).description("태그"),
+                                fieldWithPath("data[].companionStatus").type(JsonFieldType.BOOLEAN).description("동행 완료 여부"),
+                                fieldWithPath("pageInfo").type(JsonFieldType.OBJECT).description("페이지 정보"),
+                                fieldWithPath("pageInfo.page").type(JsonFieldType.NUMBER).description("현재 페이지"),
+                                fieldWithPath("pageInfo.size").type(JsonFieldType.NUMBER).description("페이지 당 동행글 수"),
+                                fieldWithPath("pageInfo.totalElements").type(JsonFieldType.NUMBER).description("총 동행글 수"),
+                                fieldWithPath("pageInfo.totalPages").type(JsonFieldType.NUMBER).description("총 페이지 수")
+                        )));
+    }
+
+    @Test
+    @DisplayName("Get Counts Of Companions By Continent Test")
+    void getCountsOfCompanionsByContinentTest() throws Exception {
+        // given
+        int continent = 2;
+        Companion companion = new Companion();
+        CompanionDto.ContinentResponse response = new CompanionDto.ContinentResponse("jpn", 1);
+
+        List<Companion> companions = new ArrayList<>(List.of(companion));
+        List<CompanionDto.ContinentResponse> responses = new ArrayList<>(List.of(response));
+
+        given(companionService.findCompanionsByContinent(Mockito.anyInt())).willReturn(companions);
+        given(mapper.companionsToContinentResponseDtos(Mockito.anyList())).willReturn(responses);
+
+
+        // when
+        ResultActions actions = mockMvc.perform(
+                get("/companions/continents")
+                        .param("continent", String.valueOf(continent))
+        );
+
+
+        // then
+        actions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data").isArray())
+                .andExpect(jsonPath("$.data[0].nationCode").value(responses.get(0).getNationCode()))
+                .andExpect(jsonPath("$.data[0].companionsCount").value(responses.get(0).getCompanionsCount()))
+                .andDo(document("get-counts-of-companions-by-continent",
+                        getRequestPreProcessor(),
+                        getResponsePreProcessor(),
+                        requestParameters(
+                                parameterWithName("continent").description("대륙 식별자")
+                        ),
+                        responseFields(
+                                fieldWithPath("data").type(JsonFieldType.ARRAY).description("결과 데이터"),
+                                fieldWithPath("data[].nationCode").type(JsonFieldType.STRING).description("국가 코드"),
+                                fieldWithPath("data[].companionsCount").type(JsonFieldType.NUMBER).description("동행글 수"))
+                        )
+                );
+    }
+
+    @Test
+    @DisplayName("Get Reviewed Member Test")
+    void getReviewedMemberTest() throws Exception {
+        // given
+        Long companionId = 1L;
+        Long memberId = 2L;
+
+        CompanionDto.ReviewedMember response = new CompanionDto.ReviewedMember(memberId);
+        List<CompanionDto.ReviewedMember> responses = new ArrayList<>(List.of(response));
+
+        given(companionService.findReviewedMember(Mockito.anyLong(), Mockito.anyLong())).willReturn(responses);
+
+
+        // when
+        ResultActions actions = mockMvc.perform(
+                get("/companions/{companion-id}/reviewers", companionId)
+                        .param("memberId", String.valueOf(memberId))
+        );
+
+
+        // then
+        actions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data").isArray())
+                .andExpect(jsonPath("$.data[0].memberId").value(responses.get(0).getMemberId()))
+                .andDo(document("get-reviewed-members",
+                        getRequestPreProcessor(),
+                        getResponsePreProcessor(),
+                        requestParameters(
+                                parameterWithName("memberId").description("현재 로그인된 회원 식별자")
+                        ),
+                        pathParameters(
+                                parameterWithName("companion-id").description("동행글 식별자")
+                        ),
+                        responseFields(
+                                fieldWithPath("data").type(JsonFieldType.ARRAY).description("결과 데이터"),
+                                fieldWithPath("data[].memberId").type(JsonFieldType.NUMBER).description("회원 식별자")
+                        )
+                ));
+    }
+
+    @Test
+    @DisplayName("Get Companions By Keyword Test")
+    void getCompanionsByKeywordTest() throws Exception {
+        // given
+        int page = 1;
+        int size = 10;
+        String sortDir = "DESC";
+        String sortBy = "createdAt";
+        String condition = "title";
+        String keyword = "유니버셜";
+        String nationCode = "jpn";
+        String date = "2023-03-20";
+
+        Companion companion = new Companion();
+        CompanionDto.Response response = new CompanionDto.Response(
+                1L,
+                2L,
+                "member2",
+                100,
+                "일본 유니버셜 같이 가요",
+                "일본 유니버셜 가고싶은데 혼자라 부끄러워요ㅠ 같이 가실 분 구함~",
+                LocalDate.of(2023, 3, 20),
+                LocalDate.of(2023, 3, 10),
+                "일본 유니버셜스튜디오",
+                123.45678,
+                123.12345,
+                "일본",
+                "jpn",
+                2,
+                new ArrayList<>(Arrays.asList("내향", "테마파크")),
+                false
+        );
+
+        Page<Companion> companionPage = new PageImpl<>(List.of(companion));
+        List<CompanionDto.Response> responses = new ArrayList<>(List.of(response));
+
+        given(companionService.findCompanionByKeyword(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyString(),
+                Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyString())).willReturn(companionPage);
+        given(mapper.companionsToCompanionResponseDtos(Mockito.anyList())).willReturn(responses);
+
+
+        // when
+        ResultActions actions = mockMvc.perform(
+                get("/companions/search")
+                        .param("page", String.valueOf(page))
+                        .param("size", String.valueOf(size))
+                        .param("sortDir", sortDir)
+                        .param("sortBy", sortBy)
+                        .param("condition", condition)
+                        .param("keyword", keyword)
+                        .param("nationCode", nationCode)
+                        .param("date", date)
+        );
+
+
+        // then
+        actions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data").isArray())
+                .andExpect(jsonPath("$.data[0].companionId").value(responses.get(0).getCompanionId()))
+                .andExpect(jsonPath("$.data[0].memberId").value(responses.get(0).getMemberId()))
+                .andExpect(jsonPath("$.data[0].nickname").value(responses.get(0).getNickname()))
+                .andExpect(jsonPath("$.data[0].score").value(responses.get(0).getScore()))
+                .andExpect(jsonPath("$.data[0].title").value(responses.get(0).getTitle()))
+                .andExpect(jsonPath("$.data[0].content").value(responses.get(0).getContent()))
+                .andExpect(jsonPath("$.data[0].date").exists())
+                .andExpect(jsonPath("$.data[0].createdAt").exists())
+                .andExpect(jsonPath("$.data[0].address").value(responses.get(0).getAddress()))
+                .andExpect(jsonPath("$.data[0].lat").value(responses.get(0).getLat()))
+                .andExpect(jsonPath("$.data[0].lng").value(responses.get(0).getLng()))
+                .andExpect(jsonPath("$.data[0].nationName").value(responses.get(0).getNationName()))
+                .andExpect(jsonPath("$.data[0].nationCode").value(responses.get(0).getNationCode()))
+                .andExpect(jsonPath("$.data[0].continent").value(responses.get(0).getContinent()))
+                .andExpect(jsonPath("$.data[0].tags").isArray())
+                .andExpect(jsonPath("$.data[0].companionStatus").value(responses.get(0).isCompanionStatus()))
+                .andDo(document("get-companions-by-keyword",
+                        getRequestPreProcessor(),
+                        getResponsePreProcessor(),
+                        requestParameters(
+                                parameterWithName("page").description("페이지 번호").optional(),
+                                parameterWithName("size").description("페이지 당 동행글 수").optional(),
+                                parameterWithName("sortDir").description("정렬 방향").optional(),
+                                parameterWithName("sortBy").description("정렬 기준").optional(),
+                                parameterWithName("condition").description("검색 조건"),
+                                parameterWithName("keyword").description("검색어"),
+                                parameterWithName("nationCode").description("국가 코드"),
+                                parameterWithName("date").description("날짜")
+                        ),
+                        responseFields(
+                                fieldWithPath("data").type(JsonFieldType.ARRAY).description("결과 데이터"),
+                                fieldWithPath("data[].companionId").type(JsonFieldType.NUMBER).description("동행글 식별자"),
+                                fieldWithPath("data[].memberId").type(JsonFieldType.NUMBER).description("작성자 식별자"),
+                                fieldWithPath("data[].nickname").type(JsonFieldType.STRING).description("작성자 닉네임"),
+                                fieldWithPath("data[].score").type(JsonFieldType.NUMBER).description("작성자 점수"),
+                                fieldWithPath("data[].title").type(JsonFieldType.STRING).description("동행글 제목"),
+                                fieldWithPath("data[].content").type(JsonFieldType.STRING).description("동행글 내용"),
+                                fieldWithPath("data[].createdAt").type(JsonFieldType.STRING).description("동행글 작성 날짜"),
+                                fieldWithPath("data[].date").type(JsonFieldType.STRING).description("동행 날짜"),
+                                fieldWithPath("data[].address").type(JsonFieldType.STRING).description("동행 주소"),
+                                fieldWithPath("data[].lat").type(JsonFieldType.NUMBER).description("위도"),
+                                fieldWithPath("data[].lng").type(JsonFieldType.NUMBER).description("경도"),
+                                fieldWithPath("data[].nationName").type(JsonFieldType.STRING).description("국가"),
+                                fieldWithPath("data[].nationCode").type(JsonFieldType.STRING).description("국가 코드"),
+                                fieldWithPath("data[].continent").type(JsonFieldType.NUMBER).description("대륙 코드"),
+                                fieldWithPath("data[].tags").type(JsonFieldType.ARRAY).description("태그"),
+                                fieldWithPath("data[].companionStatus").type(JsonFieldType.BOOLEAN).description("동행 완료 여부"),
+                                fieldWithPath("pageInfo").type(JsonFieldType.OBJECT).description("페이지 정보"),
+                                fieldWithPath("pageInfo.page").type(JsonFieldType.NUMBER).description("현재 페이지"),
+                                fieldWithPath("pageInfo.size").type(JsonFieldType.NUMBER).description("페이지 당 동행글 수"),
+                                fieldWithPath("pageInfo.totalElements").type(JsonFieldType.NUMBER).description("총 동행글 수"),
+                                fieldWithPath("pageInfo.totalPages").type(JsonFieldType.NUMBER).description("총 페이지 수")
+                        )));
 
     }
 

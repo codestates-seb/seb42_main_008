@@ -30,10 +30,17 @@ const TextEdit = ({
     const { value } = event.target;
     setValue(value);
     if (type === 'nickname') {
-      setValidation(cur => ({
-        ...cur,
-        nicknameUnique: false,
-      }));
+      if (value !== member.nickname) {
+        setValidation(cur => ({
+          ...cur,
+          nicknameUnique: false,
+        }));
+      } else if (value === member.nickname) {
+        setValidation(cur => ({
+          ...cur,
+          nicknameUnique: true,
+        }));
+      }
     }
   };
 
@@ -69,7 +76,13 @@ const TextEdit = ({
     }));
     setValidation(cur => ({
       ...cur,
-      ...editValidationCheck({ nickname, content, password, passwordCheck }),
+      ...editValidationCheck({
+        nickname,
+        content,
+        password,
+        passwordCheck,
+        memberNickname: member.nickname,
+      }),
     }));
   }, [nickname, content, password, passwordCheck]);
 
@@ -90,7 +103,7 @@ const TextEdit = ({
           </UniqueCheckButton>
         </div>
         {!validation.nicknameValid && (
-          <ValidMessage>2글자 이상 10글자 미만으로 입력해주세요.</ValidMessage>
+          <ValidMessage>2글자 이상 10글자 이하로 입력해주세요.</ValidMessage>
         )}
       </NicknameEdit>
       <ContentEdit
