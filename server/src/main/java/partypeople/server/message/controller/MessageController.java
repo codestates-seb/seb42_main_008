@@ -72,7 +72,7 @@ public class MessageController {
 
     @GetMapping(value = "/not-read/{member-id}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public ResponseEntity<SseEmitter> connect(@PathVariable("member-id") @Positive Long memberId) {
-        SseEmitter emitter = new SseEmitter(60 * 1000L * 10);
+        SseEmitter emitter = new SseEmitter(10 * 1000L);
         sseEmitters.add(memberId, emitter);
         sseEmitters.count(memberId);
         return ResponseEntity.ok(emitter);
