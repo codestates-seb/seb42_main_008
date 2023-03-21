@@ -1,10 +1,10 @@
 import axios from 'axios';
-import { thirdModal } from 'interfaces/ContentDetail.interface';
-import { useState } from 'react';
+import { reviewerInfo, thirdModal } from 'interfaces/ContentDetail.interface';
+import { useEffect, useState } from 'react';
 import { CiFaceFrown, CiFaceMeh, CiFaceSmile } from 'react-icons/ci';
-import { useNavigate } from 'react-router-dom';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import { reviewInfo, userInfo } from 'states/userState';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useRecoilValue } from 'recoil';
+import { userInfo } from 'states/userState';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
 
@@ -21,6 +21,8 @@ const ThirdReviewModal = ({
     setFirstModal(false);
   };
 
+  const params = useParams();
+  const { contentId } = params;
   const { memberId } = useRecoilValue(userInfo);
   const navigate = useNavigate();
   const [good, setGood] = useState<boolean>(false);
@@ -28,7 +30,7 @@ const ThirdReviewModal = ({
   const [bad, setBad] = useState<boolean>(false);
   const [score, setScore] = useState<number>(0);
   const [content, setContent] = useState<string>('');
-  const [review, setReview] = useRecoilState(reviewInfo);
+  const [reviewed, setReviewed] = useState<reviewerInfo>();
 
   // 1점
   const handleGood = () => {
@@ -74,6 +76,24 @@ const ThirdReviewModal = ({
     setContent(event.target.value);
   };
 
+  const getReviewList = () => {
+    axios
+      .get(
+        `${process.env.REACT_APP_SERVER}/companions/${contentId}/reviewers`,
+        {
+          params: { memberId },
+        }
+      )
+      .then(res => {
+        setReviewed(res.data.data);
+      });
+  };
+
+  useEffect(() => {
+    getReviewList();
+    console.log(reviewed);
+  }, []);
+
   // 리뷰 또 쓰려고 하면 막기
   const handleReviewWrite = async () => {
     if (memberId !== detail.memberId) {
@@ -92,7 +112,6 @@ const ThirdReviewModal = ({
             '다음에도 좋은 동행 되시길 바랍니다',
             'success'
           );
-          setReview(!review);
           navigate('/');
         })
         .catch(error => console.log(error));
@@ -112,7 +131,6 @@ const ThirdReviewModal = ({
             '다음에도 좋은 동행 되시길 바랍니다',
             'success'
           );
-          setReview(!review);
           navigate('/');
         })
         .catch(error => {
