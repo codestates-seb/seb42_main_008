@@ -52,14 +52,8 @@ dependencies {
 
 	asciidoctorExtensions 'org.springframework.restdocs:spring-restdocs-asciidoctor'
 
-//	implementation 'org.springframework.cloud:spring-cloud-starter-aws-parameter-store-config'
-}
 
-//dependencyManagement {
-//	imports {
-//		mavenBom "org.springframework.cloud:spring-cloud-starter-parent:Hoxton.SR12"
-//	}
-//}
+}
 
 tasks.named('test') {
 	outputs.dir snippetsDir

@@ -191,7 +191,7 @@ public class MemberController {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + reissueAT);
 
-        return ResponseEntity.ok().headers(headers).body("reissueAT");
+        return ResponseEntity.ok().headers(headers).build();
     }
 
     @PostMapping("/reissue-password/{member-id}")

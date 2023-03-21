@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -18,7 +19,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import partypeople.server.auth.AuthService;
 import partypeople.server.auth.filter.JwtAuthenticationFilter;
 import partypeople.server.auth.filter.JwtAuthorizationFilter;
 import partypeople.server.auth.handler.MemberAuthenticationEntryPoint;
@@ -35,20 +35,12 @@ import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 @EnableWebSecurity
-//@EnableWebSecurity(debug = true)
 @RequiredArgsConstructor
 public class SecurityConfiguration {
-
     private final JwtTokenizer jwtTokenizer;
     private final CustomAuthorityUtils authorityUtils;
     private final RedisTemplate<String, String> redisTemplate;
     private final MemberService memberService;
-
-//    @Value("${GOOGLE_OAUTH_CLIENT_ID}")
-//    private String clientId;
-//
-//    @Value("${GOOGLE_OAUTH_CLIENT_PW}")
-//    private String clientSecret;
 
     @Value("${spring.security.oauth2.client.registration.google.clientId}")
     private String clientId;
@@ -74,7 +66,7 @@ public class SecurityConfiguration {
             .apply(new CustomFilterConfigurer())
             .and()
             .authorizeHttpRequests(authorize -> authorize
-//                .antMatchers(HttpMethod.PATCH, "/members/*").hasRole("USER")
+                .antMatchers(HttpMethod.PATCH, "/members/*").hasRole("USER")
                 .anyRequest().permitAll()
             )
             .oauth2Login(oAuth2 -> oAuth2

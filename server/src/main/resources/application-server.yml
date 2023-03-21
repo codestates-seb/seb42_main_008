@@ -15,7 +15,7 @@ spring:
     port: 6379
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: none
     database: mysql
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     properties:
@@ -45,9 +45,3 @@ jwt:
   refresh-token-expiration-minutes: 300
 config:
   domain: ${AWS_S3_ENDPOINT}
-aws:
-  paramstore:
-    enabled: true
-    prefix: /spring-boot-aws
-    name: partypeople
-    profileSeparator:

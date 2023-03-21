@@ -4,6 +4,7 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.security.SignatureException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -12,6 +13,8 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 import partypeople.server.auth.jwt.JwtTokenizer;
 import partypeople.server.auth.utils.CustomAuthorityUtils;
+import partypeople.server.exception.BusinessLogicException;
+import partypeople.server.exception.ExceptionCode;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -25,7 +28,6 @@ import java.util.Map;
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
     private final JwtTokenizer jwtTokenizer;
     private final CustomAuthorityUtils authorityUtils;
-
     private final RedisTemplate<String, String> redisTemplate;
 
     @Override
@@ -43,7 +45,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    //jwt 만에 authentication을 holder에 저장
     private void setAuthenticationToContext(Map<String, Object> claims) {
         String username = (String) claims.get("email");
         List<GrantedAuthority> authorities = authorityUtils.createAuthorities((List)claims.get("roles"));
@@ -57,17 +58,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         return authorization == null || !authorization.startsWith("Bearer");
     }
 
-//    private  verifyJws(HttpServletRequest request) {
-//        String jws = request.getHeader("Authorization").replace("Bearer ", "");
-//
-//        String isLogout = (String)redisTemplate.opsForValue().get(jws); //access token 확인
-//
-//        String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(jwtTokenizer.getSecretKey());
-//        Map<String, Object> claims = jwtTokenizer.getClaims(jws, base64EncodedSecretKey).getBody();
-//
-//        return claims;
-//    }
-
     private void verifyJws(HttpServletRequest request) {
         String jws = request.getHeader("Authorization").replace("Bearer ", "");
 
@@ -76,9 +66,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
         String isLogout = (String)redisTemplate.opsForValue().get(jws); //redis안 블랙리스트 확인
         if (ObjectUtils.isEmpty(isLogout)) {
-            setAuthenticationToContext(claims);//정상토큰을 context에 저장
+            setAuthenticationToContext(claims);
         }
-
     }
-
 }

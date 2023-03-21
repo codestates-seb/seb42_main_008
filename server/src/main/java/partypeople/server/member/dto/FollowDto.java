@@ -11,6 +11,7 @@ import javax.validation.constraints.Pattern;
 
 public class FollowDto {
     @Getter
+    @Builder
     public static class Post {
         private Long followerId;
 

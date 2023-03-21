@@ -1,6 +1,7 @@
 package partypeople.server.message.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import partypeople.server.exception.BusinessLogicException;
@@ -40,6 +41,7 @@ public class MessageService {
     }
 
     public List<Message> findMessages(Long memberId) {
+//        return messageRepository.findByReceiverMemberId(memberId, Sort.by(Sort.Direction.DESC, "messageId"));
         return messageRepository.findByReceiverMemberId(memberId);
     }
 
