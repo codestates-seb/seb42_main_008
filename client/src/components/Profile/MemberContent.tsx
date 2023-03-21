@@ -35,7 +35,9 @@ const MemberContent = ({
             key={idx}
             role="presentation"
             onClick={() => handleTabClick(idx)}
-            className={currentTab === idx ? 'active' : undefined}
+            className={`content-tab ${
+              currentTab === idx ? 'active' : undefined
+            }`}
           >
             {item}
           </li>
@@ -64,7 +66,7 @@ const Tabs = styled.ul`
   display: flex;
   margin-bottom: 30px;
 
-  > li {
+  .content-tab {
     flex: 1;
     border: 2px solid #feb35c;
     padding: 12px;
@@ -96,7 +98,7 @@ const Tabs = styled.ul`
   }
 
   @media screen and (max-width: 576px) {
-    > li {
+    .content-tab {
       font-size: 0.8rem;
     }
   }

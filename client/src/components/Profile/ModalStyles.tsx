@@ -25,15 +25,15 @@ export const ModalContent = styled.div`
   padding-top: 30px;
   overflow: hidden;
 
-  > div {
+  .modal-title-wrapper {
     width: 100%;
     padding: 0 30px;
     margin-bottom: 20px;
     display: flex;
     justify-content: space-between;
-    > h1 {
-      font-size: 1.4rem;
-    }
+  }
+  .modal-title {
+    font-size: 1.4rem;
   }
 
   @media screen and (max-width: 576px) {

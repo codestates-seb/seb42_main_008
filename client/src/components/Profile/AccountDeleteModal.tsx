@@ -82,13 +82,15 @@ const AccountDeleteModal = ({
       <ModalScrollDisable />
       <ModalBG onClick={handleModalClose}></ModalBG>
       <DeleteModalContent>
-        <div>
-          <h1>비밀번호 확인</h1>
+        <div className="modal-title-wrapper">
+          <h1 className="modal-title">비밀번호 확인</h1>
           <CloseButton onClick={handleModalClose}>
             <IoMdClose />
           </CloseButton>
         </div>
-        <p>탈퇴하시려면 현재 계정 비밀번호를 입력해주세요.</p>
+        <p className="modal-desc">
+          탈퇴하시려면 현재 계정 비밀번호를 입력해주세요.
+        </p>
         <PasswordInput
           type="password"
           value={password}
@@ -108,27 +110,28 @@ const DeleteModalContent = styled(ModalContent)`
   align-items: center;
   flex-direction: column;
 
-  > div {
+  .modal-title-wrapper {
     padding: 0;
     margin-bottom: 10px;
   }
-  > p {
+  .modal-desc {
     width: 100%;
     color: #555;
   }
 
   @media screen and (max-width: 576px) {
-    h1 {
+    width: 80%;
+    .modal-title-wrapper {
       font-size: 1.3rem;
     }
-    > p {
+    .modal-desc {
       font-size: 0.9rem;
     }
   }
 `;
 
 const PasswordInput = styled.input`
-  width: 90%;
+  width: 100%;
   border-radius: 30px;
   font-size: 1rem;
   border: 1px solid #222;
