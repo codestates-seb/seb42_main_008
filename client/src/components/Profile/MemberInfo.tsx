@@ -141,9 +141,9 @@ const MemberInfo = ({ member, setMember }: MemberInfoProps) => {
               팔로잉 {member.followingCount}
             </span>
           </section>
-          <section className="content">
-            <p>{member.content}</p>
-          </section>
+          <div className="content">
+            <p className="content-text">{member.content}</p>
+          </div>
         </ContentWrapper>
       </InfoContainer>
     </>
@@ -259,11 +259,16 @@ const ContentWrapper = styled.section`
     }
   }
   .content {
+    width: 100%;
     display: flex;
     align-items: flex-start;
     justify-content: flex-start;
-    > p {
+    .content-text {
+      width: 100%;
+      word-break: break-all;
       text-align: left;
+      display: flex;
+      justify-content: flex-start;
     }
   }
 
@@ -281,6 +286,10 @@ const ContentWrapper = styled.section`
     }
     .follows {
       justify-content: center;
+    }
+    .content {
+      width: 90%;
+      align-self: center;
     }
   }
   @media screen and (max-width: 576px) {

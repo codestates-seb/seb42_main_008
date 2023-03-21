@@ -1,4 +1,4 @@
-import axios from 'axios';
+import customAxios from 'api/customAxios';
 import { ModalBG, ModalContent } from 'components/Profile/ModalStyles';
 import { SearchOption } from 'interfaces/ContentList.interface';
 import React, { useState } from 'react';
@@ -14,7 +14,6 @@ interface Props {
 }
 
 const GenderSelect = ({ setIsShowModal }: Props) => {
-  const url = process.env.REACT_APP_TEST_SERVER;
   const [gender, setGender] = useState<SearchOption>({
     value: '',
     field: '',
@@ -49,8 +48,8 @@ const GenderSelect = ({ setIsShowModal }: Props) => {
       confirmButtonText: 'Yes, delete it!',
     }).then(async result => {
       if (result.isConfirmed) {
-        await axios
-          .patch(`${url}/members/${loginUser.memberId}`, {
+        await customAxios
+          .patch(`/members/${loginUser.memberId}`, {
             gender: gender.value,
           })
           .then(() => {

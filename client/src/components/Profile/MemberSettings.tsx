@@ -229,7 +229,7 @@ const SubmitButton = styled(StyledButton)`
 const AccountDelete = styled.div`
   position: absolute;
   bottom: 40px;
-  right: 40px;
+  right: 0px;
   color: #888;
   font-size: 0.9rem;
   cursor: pointer;

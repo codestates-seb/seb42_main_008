@@ -1,7 +1,6 @@
 import customAxios from 'api/customAxios';
 import { TextEditProps } from 'interfaces/Profile.interface';
 import React, { useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
 import styled from 'styled-components';
 import { StyledButton } from 'styles/StyledButton';
 import Swal from 'sweetalert2';
@@ -48,7 +47,10 @@ const TextEdit = ({
     await customAxios
       .post('/members/nickname', { nickname })
       .then(() => {
-        toast.success('사용 가능한 닉네임입니다.');
+        Swal.fire({
+          icon: 'success',
+          text: '사용 가능한 닉네임입니다',
+        });
         setValidation(cur => ({
           ...cur,
           nicknameUnique: true,
@@ -57,8 +59,7 @@ const TextEdit = ({
       .catch(() => {
         Swal.fire({
           icon: 'error',
-          title: '중복된 닉네임입니다',
-          text: '다른 닉네임을 입력해 주세요',
+          text: '중복된 닉네임입니다',
         });
         setValidation(cur => ({
           ...cur,

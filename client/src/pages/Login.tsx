@@ -35,13 +35,11 @@ const Login = () => {
       .then(res => {
         setCookie('accessToken', res.headers.authorization, {
           path: '/',
-          httpOnly: true,
           sameSite: 'none',
           secure: true,
         });
         setCookie('refreshToken', res.headers.refresh, {
           path: '/',
-          httpOnly: true,
           sameSite: 'none',
           secure: true,
         });
