@@ -49,5 +49,5 @@ logging:
         orm:
 jwt:
   key: partypeople5437895438023498342098039248230932580325809
-  access-token-expiration-minutes: 1
+  access-token-expiration-minutes: 10
   refresh-token-expiration-minutes: 300
