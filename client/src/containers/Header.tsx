@@ -60,7 +60,7 @@ const Header = () => {
   // }, []);
 
   // 안읽은 쪽지 개수확인
-  const [notRead, setNotRead] = useState();
+  const [notRead, setNotRead] = useState(0);
   useEffect(() => {
     if (isLogin === true) {
       const eventSource = new EventSource(
@@ -72,13 +72,15 @@ const Header = () => {
       });
       eventSource.onerror = error => {
         console.log(error);
-        eventSource.close();
+        if (eventSource.readyState !== EventSource.CLOSED) {
+          eventSource.close();
+        }
       };
       return () => {
         eventSource.close();
       };
     }
-  }, [memberId]);
+  }, [isLogin]);
 
   return (
     <HeaderBox>
