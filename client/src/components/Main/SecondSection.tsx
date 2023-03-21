@@ -1,5 +1,7 @@
 import { useScroll } from 'hooks/useScroll';
 import { useNavigate } from 'react-router-dom';
+import { useRecoilState } from 'recoil';
+import { loginState } from 'states/userState';
 import styled from 'styled-components';
 import ImageFilter from '../../styles/ImageFilter';
 import { SectionWrapper } from './SectionWrapper';
@@ -7,10 +9,14 @@ import { SectionWrapper } from './SectionWrapper';
 const SecondSection = () => {
   const navigate = useNavigate();
   const scrollY = useScroll();
+  const isLogin = useRecoilState(loginState);
 
   const handleButtonClick = () => {
-    navigate('/signup');
-    // ! 로그인 구현될 경우 만약 로그인 되어있으면 파티 구하기 페이지로 navigate
+    if (isLogin) {
+      navigate('/continents');
+    } else {
+      navigate('/signup');
+    }
   };
 
   return (
