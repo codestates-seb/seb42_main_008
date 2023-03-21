@@ -7,11 +7,11 @@ import { RiLogoutBoxRLine } from 'react-icons/ri';
 import { GiHamburgerMenu } from 'react-icons/gi';
 import Menu from 'components/Header/Menu';
 import LogoutMenu from 'components/Header/LogoutMenu';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { loginState, userInfo, userToken } from 'states/userState';
 import axios from 'axios';
 const Header = () => {
-  const isLogin = useRecoilValue(loginState);
+  const [isLogin, setIsLogin] = useRecoilState(loginState);
   const token = useRecoilValue(userToken);
   const navigate = useNavigate();
   //멤버아이디
@@ -28,7 +28,7 @@ const Header = () => {
       );
       localStorage.clear();
       navigate('/');
-      window.location.reload();
+      setIsLogin(false);
     } catch (error) {
       console.log(error);
     }
@@ -60,23 +60,27 @@ const Header = () => {
   // }, []);
 
   // 안읽은 쪽지 개수확인
-  const [notRead, setNotRead] = useState();
+  const [notRead, setNotRead] = useState(0);
   useEffect(() => {
-    const eventSource = new EventSource(
-      `${process.env.REACT_APP_SERVER}/messages/not-read/${memberId}`
-    );
-    eventSource.addEventListener('notReadCount', event => {
-      const data = JSON.parse(event.data);
-      setNotRead(data.data.notReadCount);
-    });
-    eventSource.onerror = error => {
-      console.log(error);
-      eventSource.close();
-    };
-    return () => {
-      eventSource.close();
-    };
-  }, [memberId]);
+    if (isLogin === true) {
+      const eventSource = new EventSource(
+        `${process.env.REACT_APP_SERVER}/messages/not-read/${memberId}`
+      );
+      eventSource.addEventListener('notReadCount', event => {
+        const data = JSON.parse(event.data);
+        setNotRead(data.data.notReadCount);
+      });
+      eventSource.onerror = error => {
+        console.log(error);
+        if (eventSource.readyState !== EventSource.CLOSED) {
+          eventSource.close();
+        }
+      };
+      return () => {
+        eventSource.close();
+      };
+    }
+  }, [isLogin]);
 
   return (
     <HeaderBox>

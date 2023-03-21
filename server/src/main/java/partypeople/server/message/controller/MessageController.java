@@ -14,6 +14,7 @@ import partypeople.server.message.service.MessageService;
 import partypeople.server.message.sse.SseEmitters;
 import partypeople.server.utils.UriCreator;
 
+import javax.validation.constraints.Positive;
 import java.net.URI;
 import java.util.List;
 
@@ -70,7 +71,7 @@ public class MessageController {
     }
 
     @GetMapping(value = "/not-read/{member-id}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public ResponseEntity<SseEmitter> connect(@PathVariable("member-id")Long memberId) {
+    public ResponseEntity<SseEmitter> connect(@PathVariable("member-id") @Positive Long memberId) {
         SseEmitter emitter = new SseEmitter(60 * 1000L * 10);
         sseEmitters.add(memberId, emitter);
         sseEmitters.count(memberId);

@@ -50,8 +50,8 @@ const FollowModal = ({
       <ModalScrollDisable />
       <ModalBG onClick={handleModalClose}></ModalBG>
       <ModalContent>
-        <div>
-          <h1>{isFollower ? '팔로워' : '팔로잉'}</h1>
+        <div className="modal-title-wrapper">
+          <h1 className="modal-title">{isFollower ? '팔로워' : '팔로잉'}</h1>
           <CloseButton onClick={handleModalClose}>
             <IoMdClose />
           </CloseButton>
@@ -66,10 +66,11 @@ const FollowModal = ({
                   onClick={() => handleUserClick(follower.memberId)}
                 >
                   <img
+                    className="user-profile"
                     src={follower.profile}
                     alt={follower.nickname + 'profile'}
                   />
-                  <span>{follower.nickname}</span>
+                  <span className="user-nickname">{follower.nickname}</span>
                 </FollowUser>
               ))}
             </FollowList>
@@ -85,10 +86,11 @@ const FollowModal = ({
                 onClick={() => handleUserClick(following.memberId)}
               >
                 <img
+                  className="user-profile"
                   src={following.profile}
                   alt={following.nickname + 'profile'}
                 />
-                <span>{following.nickname}</span>
+                <span className="user-nickname">{following.nickname}</span>
               </FollowUser>
             ))}
           </FollowList>
@@ -108,6 +110,7 @@ const FollowList = styled.ul`
   align-items: center;
   overflow: auto;
   padding: 0 30px;
+  color: #222;
 `;
 
 const FollowUser = styled.li`
@@ -120,7 +123,7 @@ const FollowUser = styled.li`
   background-color: #fff;
   cursor: pointer;
 
-  > img {
+  .user-profile {
     width: 40px;
     height: 40px;
     object-fit: cover;

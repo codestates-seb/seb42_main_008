@@ -8,6 +8,9 @@ interface ListData extends MyCompanion {
   content: string;
   tags: string[];
   score?: number | null;
+  nationCode: string;
+  nationName: string;
+  continent: number;
 }
 
 // * 국가별 조회시 필요한 Query String

@@ -47,7 +47,7 @@ const ListComponent = ({ datas, titleHead, titleBody }: ListComponentProps) => {
 
   return (
     <ListWrapper>
-      <h1>{titleHead + titleBody}동행</h1>
+      <h1 className="list-title">{titleHead + titleBody}동행</h1>
       {datas.length !== 0 ? (
         <Slider {...settings}>
           {datas.map((item, idx) => (
@@ -56,12 +56,14 @@ const ListComponent = ({ datas, titleHead, titleBody }: ListComponentProps) => {
               onClick={() => handleClickItem(item.companionId)}
             >
               {item.companionStatus && <DoneItem></DoneItem>}
-              <h1>{getDateString(item.date).shortDateStr}</h1>
+              <h1 className="item-date">
+                {getDateString(item.date).shortDateStr}
+              </h1>
               <ItemAddress>
-                <span>
+                <span className="marker-icon">
                   <FaMapMarkerAlt size={25} />
                 </span>
-                <p>{item.address}</p>
+                <p className="item-address">{item.address}</p>
               </ItemAddress>
               <Flag isDone={item.companionStatus}></Flag>
               <ItemFlagText>
@@ -82,7 +84,7 @@ const ListWrapper = styled.section`
   display: flex;
   flex-direction: column;
 
-  > h1 {
+  .list-title {
     font-size: 1.2rem;
   }
 
@@ -112,9 +114,10 @@ const MemberListItem = styled(ListItem)`
   height: 150px;
   padding-left: 0;
 
-  > h1 {
+  .item-date {
     display: flex;
     justify-content: flex-end;
+    font-size: 1.7rem;
   }
   :hover {
     transform: translateY(-3px);

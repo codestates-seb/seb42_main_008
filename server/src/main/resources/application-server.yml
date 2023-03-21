@@ -1,4 +1,18 @@
 spring:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${GOOGLE_MAIL_ID}
+    password: ${GOOGLE_MAIL_PW}
+    properties:
+      mail:
+        smtp:
+          starttls:
+            enable: true
+            required: true
+  redis:
+    host: 127.0.0.1
+    port: 6379
   jpa:
     hibernate:
       ddl-auto: create
@@ -9,7 +23,7 @@ spring:
       jdbc:
         time_zone: Asia/Seoul
   datasource:
-    url: jdbc:mysql://${DATABASE_URL}/pre_project?useSSL=false&characterEncoding=UTF-8&serverTimezone=UTC&useLegacyDatetimeCode=false
+    url: jdbc:mysql://${DATABASE_URL}/partypeople?useSSL=false&characterEncoding=UTF-8&serverTimezone=Asia/Seoul&useLegacyDatetimeCode=false
     username: ${DATABASE_USERNAME}
     password: ${DATABASE_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver

@@ -69,10 +69,12 @@ const GenderSelect = ({ setIsShowModal }: Props) => {
       <ModalScrollDisable />
       <ModalBG></ModalBG>
       <SelectModalContent>
-        <div>
-          <h1>🎉 가입을 환영합니다! 🎉</h1>
+        <div className="modal-title-wrapper">
+          <h1 className="modal-title">🎉 가입을 환영합니다! 🎉</h1>
         </div>
-        <p>더 나은 동행자찾기 경험을 위해 성별을 선택해주세요!</p>
+        <p className="modal-desc">
+          더 나은 동행자찾기 경험을 위해 성별을 선택해주세요!
+        </p>
         <GenderSelectList>
           <GenderSelectItem>
             <input
@@ -107,19 +109,19 @@ const SelectModalContent = styled(ModalContent)`
   display: flex;
   align-items: center;
   flex-direction: column;
-  > div {
+  .modal-title-wrapper {
     padding: 0;
     margin-bottom: 10px;
   }
-  > p {
+  .modal-desc {
     width: 100%;
   }
 
   @media screen and (max-width: 576px) {
-    > div h1 {
+    .modal-title {
       font-size: 1.3rem;
     }
-    > p {
+    .modal-desc {
       font-size: 0.9rem;
     }
   }

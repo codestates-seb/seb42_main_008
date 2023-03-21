@@ -1,5 +1,7 @@
 import { useScroll } from 'hooks/useScroll';
 import { useNavigate } from 'react-router-dom';
+import { useRecoilState } from 'recoil';
+import { loginState } from 'states/userState';
 import styled from 'styled-components';
 import ImageFilter from '../../styles/ImageFilter';
 import { SectionWrapper } from './SectionWrapper';
@@ -7,10 +9,14 @@ import { SectionWrapper } from './SectionWrapper';
 const SecondSection = () => {
   const navigate = useNavigate();
   const scrollY = useScroll();
+  const isLogin = useRecoilState(loginState);
 
   const handleButtonClick = () => {
-    navigate('/signup');
-    // ! 로그인 구현될 경우 만약 로그인 되어있으면 파티 구하기 페이지로 navigate
+    if (isLogin) {
+      navigate('/continents');
+    } else {
+      navigate('/signup');
+    }
   };
 
   return (
@@ -19,8 +25,8 @@ const SecondSection = () => {
         <Desc>
           {scrollY > 200 && (
             <>
-              <h1>Party People</h1>
-              <p>
+              <h1 className="second-title">Party People</h1>
+              <p className="second-desc">
                 Lorem Ipsum is simply dummy text of the printing and typesetting
                 industry. Lorem Ipsum has been the industry&apos;s standard
                 dummy text ever since the 1500s, when an unknown printer took a
@@ -71,8 +77,8 @@ const SecondWrapper = styled(SectionWrapper)`
   .showDesc {
     opacity: 1;
     transform: translateX(0);
-    h1,
-    p {
+    .second-title,
+    .second-desc {
       animation: slidein 0.3s linear;
       animation-delay: 0.1s;
     }
@@ -123,8 +129,8 @@ const SecondWrapper = styled(SectionWrapper)`
     .showDesc {
       opacity: 1;
       transform: translateY(0);
-      h1,
-      p {
+      .second-title,
+      .second-desc {
         animation: slideup 0.3s linear;
         animation-delay: 0.1s;
       }
@@ -179,37 +185,37 @@ const Desc = styled.div`
   align-items: center;
   justify-content: center;
 
-  h1 {
+  .second-title {
     width: 100%;
     margin-bottom: 10px;
   }
 
-  p {
+  .second-desc {
     line-height: 1.7rem;
   }
 
   @media screen and (max-width: 1280px) {
-    p {
+    .second-desc {
       line-height: 1.5rem;
     }
   }
   @media screen and (max-width: 992px) {
-    p {
+    .second-desc {
       line-height: 1.4rem;
       font-size: 0.9rem;
     }
   }
   @media screen and (max-width: 768px) {
-    p {
+    .second-desc {
       line-height: 1.7rem;
       font-size: 1rem;
     }
   }
   @media screen and (max-width: 576px) {
-    h1 {
+    .second-title {
       font-size: 1.2rem;
     }
-    p {
+    .second-desc {
       line-height: 1.4rem;
     }
   }

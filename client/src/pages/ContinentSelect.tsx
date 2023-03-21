@@ -27,13 +27,13 @@ const ContinentSelect = () => {
   return (
     <Container>
       <Title>
-        <h1>파티 구하러 가기</h1>
+        <h1 className="title-text">파티 구하러 가기</h1>
       </Title>
       <MapContainer>
         <MapChart handleMarkerClick={handleMarkerClick} />
       </MapContainer>
       <ContinentList>
-        <ul>
+        <ul className="continent-list">
           {CONTINENTS.map((continent, idx) => (
             <ContinentContent
               key={idx}
@@ -44,7 +44,7 @@ const ContinentSelect = () => {
               onClick={() => handleMarkerClick(continent.code)}
             >
               <ImageFilter></ImageFilter>
-              <p>
+              <p className="continent-name">
                 {continent.name}&nbsp;&nbsp;
                 <MdArrowForwardIos />
               </p>
@@ -75,7 +75,7 @@ const Title = styled.div`
   display: flex;
   align-items: center;
   padding: 30px;
-  > h1 {
+  .title-text {
     color: #fff;
     font-weight: 800;
     font-size: 1.8rem;
@@ -84,7 +84,7 @@ const Title = styled.div`
     height: 60px;
   }
   @media screen and (max-width: 576px) {
-    > h1 {
+    .title-text {
       font-size: 1.5rem;
     }
   }
@@ -122,7 +122,7 @@ const ContinentList = styled.section`
   justify-content: center;
   background-color: #5d62a0;
   padding: auto;
-  > ul {
+  .continent-list {
     width: 100%;
     padding: 50px 100px;
     display: grid;
@@ -131,7 +131,7 @@ const ContinentList = styled.section`
   }
   @media screen and (max-width: 768px) {
     background-color: #fff;
-    > ul {
+    .continent-list {
       padding: 50px;
       padding-top: 100px;
       grid-template-columns: repeat(2, 1fr);
@@ -139,7 +139,7 @@ const ContinentList = styled.section`
     }
   }
   @media screen and (max-width: 576px) {
-    > ul {
+    .continent-list {
       grid-template-columns: repeat(1, 1fr);
       grid-template-rows: repeat(6, 200px);
     }
@@ -153,7 +153,7 @@ const ContinentContent = styled.li`
   background-size: cover;
   background-position: center;
   cursor: pointer;
-  > p {
+  .continent-name {
     width: 100%;
     height: 80px;
     position: absolute;

@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
-import ModalScrollDisable from 'utils/ModalScrollDisable';
+// import ModalScrollDisable from 'utils/ModalScrollDisable';
 
 const FirstReviewModal = ({ detail, setFirstModal, reviewId }: firstModal) => {
   const navigate = useNavigate();
@@ -22,7 +22,7 @@ const FirstReviewModal = ({ detail, setFirstModal, reviewId }: firstModal) => {
 
   return (
     <Container>
-      <ModalScrollDisable />
+      {/* <ModalScrollDisable /> */}
       <BackGround onClick={handleFirstModal}>
         <ModalView onClick={event => event.stopPropagation()}>
           {/* 작상자는 {작성자ID}로 수정 예정*/}
