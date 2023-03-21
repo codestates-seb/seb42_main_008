@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { userInfo } from 'states/userState';
 import styled from 'styled-components';
+import Swal from 'sweetalert2';
 
 type LatLng = {
   lat: number;
@@ -131,7 +132,10 @@ const ThemeModal = ({
         console.log(formattedDate);
       }
     } else {
-      alert('하나 이상 선택해주세요!');
+      Swal.fire({
+        icon: 'error',
+        text: '하나 이상 선택해주세요!',
+      });
     }
   };
 
@@ -176,7 +180,7 @@ export default ThemeModal;
 const ThemeBox = styled.div`
   display: flex;
   width: 550px;
-  height: 800px;
+  height: auto;
   border-radius: 20px;
   background-color: white;
   position: fixed;
@@ -186,15 +190,22 @@ const ThemeBox = styled.div`
   flex-direction: column;
   font-size: 2rem;
   z-index: 50;
+  overflow-y: auto;
   @media screen and (max-width: 768px) {
     width: 450px;
-    height: 720px;
+    height: auto;
     font-size: 1.5rem;
   }
   @media screen and (max-width: 576px) {
     width: 350px;
-    height: 560px;
+    height: auto;
     font-size: 1.2rem;
+  }
+  @media screen and (max-height: 1000px) {
+    height: 500px;
+  }
+  @media screen and (max-height: 650px) {
+    height: 300px;
   }
   .theme-box {
     padding: 40px;
@@ -237,6 +248,12 @@ const ThemeBox = styled.div`
     width: 100%;
     justify-content: space-around;
     padding-top: 30px;
+    @media screen and (max-height: 1000px) {
+      padding-bottom: 20px;
+    }
+    @media screen and (max-height: 650px) {
+      padding-bottom: 20px;
+    }
     > button:first-child {
       border: none;
       width: 96px;
