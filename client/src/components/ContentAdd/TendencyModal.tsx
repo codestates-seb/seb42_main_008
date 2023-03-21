@@ -1,16 +1,16 @@
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
+
 import styled from 'styled-components';
+import Swal from 'sweetalert2';
 
 type Props = {
   setIsTendencyModal: (newValue: boolean) => void;
   setIsThemeModal: (newValue: boolean) => void;
-  selectedTendencies: string[];
   setSelectedTendencies: Dispatch<SetStateAction<string[]>>;
 };
 const TendencyModal = ({
   setIsTendencyModal,
   setIsThemeModal,
-  selectedTendencies,
   setSelectedTendencies,
 }: Props) => {
   const handleModalClose = () => {
@@ -32,31 +32,27 @@ const TendencyModal = ({
 
   // 성향을 1개 골라야 다음 모달로 넘어가도록
 
+  const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
+
+  const handleCheckboxClick = (option: string) => {
+    if (selectedOptions.includes(option)) {
+      setSelectedOptions(selectedOptions.filter(item => item !== option));
+    } else {
+      if (selectedOptions.length < 2) {
+        setSelectedOptions([...selectedOptions, option]);
+      }
+    }
+  };
   const handleTendencySubmit = () => {
-    if (selectedTendencies.length >= 1) {
+    if (selectedOptions.length >= 1) {
+      setSelectedTendencies(selectedOptions);
       setIsThemeModal(true);
       setIsTendencyModal(false);
     } else {
-      alert('하나 이상 선택해주세요!');
-    }
-  };
-
-  // 고른 성향 배열 안에 문자열 형태
-
-  const handleCheckboxClick = (event: React.MouseEvent<HTMLInputElement>) => {
-    const target = event.currentTarget;
-    const option = target.value;
-    if (target.checked) {
-      if (selectedTendencies.length < 2) {
-        setSelectedTendencies(item => [...item, option]);
-      } else {
-        target.checked = false;
-      }
-    } else {
-      const index = selectedTendencies.indexOf(option);
-      if (index !== -1) {
-        setSelectedTendencies(item => item.filter(thing => thing !== option));
-      }
+      Swal.fire({
+        icon: 'error',
+        text: '하나 이상 선택해주세요!',
+      });
     }
   };
   return (
@@ -74,7 +70,8 @@ const TendencyModal = ({
                 <input
                   type="checkbox"
                   value={theme}
-                  onClick={handleCheckboxClick}
+                  checked={selectedOptions.includes(theme)}
+                  onClick={() => handleCheckboxClick(theme)}
                 ></input>
                 {theme}
               </label>
@@ -82,7 +79,7 @@ const TendencyModal = ({
           ))}
         </TendencyContent>
         <div className="selected-tendency">
-          {selectedTendencies.map((tendency, index) => (
+          {selectedOptions.map((tendency, index) => (
             <div key={index}>{tendency}</div>
           ))}
         </div>
@@ -100,7 +97,7 @@ export default TendencyModal;
 const TendencyBox = styled.div`
   display: flex;
   width: 550px;
-  height: 800px;
+  height: auto;
   border-radius: 20px;
   background-color: white;
   position: fixed;
@@ -110,15 +107,22 @@ const TendencyBox = styled.div`
   flex-direction: column;
   font-size: 2rem;
   z-index: 50;
+  overflow-y: auto;
   @media screen and (max-width: 768px) {
     width: 450px;
-    height: 720px;
+    height: auto;
     font-size: 1.5rem;
   }
   @media screen and (max-width: 576px) {
     width: 350px;
-    height: 560px;
+    height: auto;
     font-size: 1.2rem;
+  }
+  @media screen and (max-height: 1000px) {
+    height: 500px;
+  }
+  @media screen and (max-height: 650px) {
+    height: 300px;
   }
   .overlay {
     position: fixed;
@@ -170,6 +174,12 @@ const TendencyBox = styled.div`
     width: 100%;
     justify-content: space-around;
     padding-top: 30px;
+    @media screen and (max-height: 1000px) {
+      padding-bottom: 20px;
+    }
+    @media screen and (max-height: 650px) {
+      padding-bottom: 20px;
+    }
     > button:first-child {
       border: none;
       width: 96px;
