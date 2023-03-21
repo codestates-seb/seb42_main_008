@@ -119,9 +119,6 @@ const MemberListItem = styled(ListItem)`
     justify-content: flex-end;
     font-size: 1.7rem;
   }
-  .item-address {
-    -webkit-line-clamp: 3;
-  }
   :hover {
     transform: translateY(-3px);
     box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);

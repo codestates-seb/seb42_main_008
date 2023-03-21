@@ -160,11 +160,12 @@ export const Address = styled.div`
   }
   .item-address {
     font-weight: 600;
+    font-size: 0.9rem;
     text-overflow: ellipsis;
     overflow: hidden;
     display: -webkit-box;
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: 4;
+    -webkit-line-clamp: 3;
   }
 
   @media screen and (max-width: 576px) {
