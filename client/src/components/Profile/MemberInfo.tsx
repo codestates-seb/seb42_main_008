@@ -265,8 +265,10 @@ const ContentWrapper = styled.section`
     justify-content: flex-start;
     .content-text {
       width: 100%;
-      flex-wrap: wrap;
       word-break: break-all;
+      text-align: left;
+      display: flex;
+      justify-content: flex-start;
     }
   }
 
