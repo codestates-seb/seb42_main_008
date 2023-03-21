@@ -2,17 +2,19 @@ import ThirdReviewModal from 'components/ContentDetail/ThirdReviewModal';
 import { secondModal } from 'interfaces/ContentDetail.interface';
 import { useState } from 'react';
 import styled from 'styled-components';
+import ModalScrollDisable from 'utils/ModalScrollDisable';
+import { StyledModal } from './CompanionStyled';
 
 const SecondReviewModal = ({
   detail,
   setFirstModal,
   setSecondModal,
   reviewId,
+  score,
+  setScore,
+  content,
+  setContent,
 }: secondModal) => {
-  const handleSecondModal = () => {
-    setSecondModal(false);
-  };
-
   const [thirdModal, setThirdModal] = useState(false);
   const handleThirdModal = () => {
     setThirdModal(!thirdModal);
@@ -20,9 +22,10 @@ const SecondReviewModal = ({
 
   return (
     <Container>
-      <BackGround onClick={handleSecondModal}>
-        <ModalView onClick={event => event.stopPropagation()}>
-          <h3>{detail.memberId}님이 여행에 참석하셨나요?</h3>
+      <ModalScrollDisable />
+      <BackGround>
+        <ModalView>
+          <h3>{detail.nickname}님이(가) 여행에 참여하셨나요?</h3>
           <div className="btn-wrapper">
             <button onClick={handleThirdModal}>네! 참석했습니다.</button>
             <button onClick={handleThirdModal}>
@@ -38,6 +41,10 @@ const SecondReviewModal = ({
           setSecondModal={setSecondModal}
           setThirdModal={setThirdModal}
           reviewId={reviewId}
+          score={score}
+          setScore={setScore}
+          content={content}
+          setContent={setContent}
         />
       ) : null}
     </Container>
@@ -46,7 +53,7 @@ const SecondReviewModal = ({
 
 export default SecondReviewModal;
 
-const Container = styled.main`
+const Container = styled.section`
   width: 100%;
   height: 100%;
 `;
@@ -62,23 +69,7 @@ const BackGround = styled.section`
   width: 100%;
   height: 100%;
 `;
-const ModalView = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  background-color: white;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 50%;
-  height: 40%;
-  text-align: center;
-  border-radius: 30px;
-  padding: 30px;
-  box-shadow: 5px 5px 10px 5px rgba(0, 0, 0, 0.25);
-
+const ModalView = styled(StyledModal)`
   h3 {
     padding-bottom: 30px;
   }

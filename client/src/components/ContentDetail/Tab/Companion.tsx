@@ -1,4 +1,4 @@
-import axios from 'axios';
+import customAxios from 'api/customAxios';
 import { StyledCompanionList } from 'components/ContentDetail/CompanionStyled';
 import { companionProps } from 'interfaces/ContentDetail.interface';
 import { useEffect } from 'react';
@@ -23,17 +23,16 @@ const Companion = ({ detail, sub, setSub, setPart }: companionProps) => {
       confirmButtonText: '네, 취소합니다',
     }).then(async result => {
       if (result.isConfirmed) {
-        await axios
-          .delete(
-            `${process.env.REACT_APP_SERVER}/companions/${contentId}/subscribers`,
-            { data: { memberId } }
-          )
+        await customAxios
+          .delete(`/companions/${contentId}/subscribers`, {
+            data: { memberId },
+          })
           .then(() => {
             Swal.fire('Deleted!', '취소되었습니다', 'success');
             setSub(sub);
             getSubList();
             const content = `작성하신 동행글에 ${nickname} 님이 동행신청을 취소하였습니다.`;
-            axios.post(`${process.env.REACT_APP_SERVER}/messages`, {
+            customAxios.post(`/messages`, {
               content,
               senderId: 1,
               receiverId: detail.memberId,
@@ -46,13 +45,9 @@ const Companion = ({ detail, sub, setSub, setPart }: companionProps) => {
   };
 
   const getSubList = () => {
-    axios
-      .get(
-        `${process.env.REACT_APP_SERVER}/companions/${contentId}/subscribers`
-      )
-      .then(res => {
-        setSub(res.data.data);
-      });
+    customAxios.get(`/companions/${contentId}/subscribers`).then(res => {
+      setSub(res.data.data);
+    });
   };
 
   useEffect(() => {
@@ -60,13 +55,9 @@ const Companion = ({ detail, sub, setSub, setPart }: companionProps) => {
   }, []);
 
   const getPartList = () => {
-    axios
-      .get(
-        `${process.env.REACT_APP_SERVER}/companions/${contentId}/participants`
-      )
-      .then(res => {
-        setPart(res.data.data);
-      });
+    customAxios.get(`/companions/${contentId}/participants`).then(res => {
+      setPart(res.data.data);
+    });
   };
 
   useEffect(() => {
@@ -83,17 +74,14 @@ const Companion = ({ detail, sub, setSub, setPart }: companionProps) => {
       confirmButtonText: '네, 수락합니다',
     }).then(async result => {
       if (result.isConfirmed) {
-        await axios
-          .patch(
-            `${process.env.REACT_APP_SERVER}/companions/${contentId}/subscribers`,
-            { memberId }
-          )
+        await customAxios
+          .patch(`/companions/${contentId}/subscribers`, { memberId })
           .then(() => {
             Swal.fire('Accepted!', '확인되었습니다', 'success');
             setSub(sub);
             getSubList();
             const content = `신청하신 동행글에 ${detail.nickname} 님이 동행을 수락하였습니다.`;
-            axios.post(`${process.env.REACT_APP_SERVER}/messages`, {
+            customAxios.post(`/messages`, {
               content,
               senderId: 1,
               receiverId: memberId,
@@ -117,17 +105,16 @@ const Companion = ({ detail, sub, setSub, setPart }: companionProps) => {
       confirmButtonText: '네, 거절합니다',
     }).then(async result => {
       if (result.isConfirmed) {
-        await axios
-          .delete(
-            `${process.env.REACT_APP_SERVER}/companions/${contentId}/subscribers`,
-            { data: { memberId } }
-          )
+        await customAxios
+          .delete(`/companions/${contentId}/subscribers`, {
+            data: { memberId },
+          })
           .then(() => {
             Swal.fire('Deleted!', '거절되었습니다', 'success');
             setSub(sub);
             getSubList();
             const content = `신청하신 동행글에 ${detail.nickname} 님이 동행을 거절하였습니다.`;
-            axios.post(`${process.env.REACT_APP_SERVER}/messages`, {
+            customAxios.post(`/messages`, {
               content,
               senderId: 1,
               receiverId: memberId,

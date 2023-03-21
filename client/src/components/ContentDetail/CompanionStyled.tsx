@@ -103,3 +103,20 @@ export const StyledTabBox = styled.ul`
     }
   }
 `;
+export const StyledModal = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  background-color: white;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 50%;
+  height: 40%;
+  text-align: center;
+  border-radius: 30px;
+  padding: 30px;
+  box-shadow: 5px 5px 10px 5px rgba(0, 0, 0, 0.25);
+`;

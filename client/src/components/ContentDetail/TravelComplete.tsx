@@ -70,10 +70,18 @@ const TravelComplete = ({ detail, part, setPart }: partProps) => {
                 ></div>
                 <div>{el.nickname}</div>
               </div>
-              {memberId !== el.memberId &&
-              detail.memberId !== memberId ? null : reviewed &&
-                reviewed.length !== 0 &&
-                reviewed.some((rv: any) => rv.memberId === el.memberId) ? (
+              {memberId !== el.memberId && detail.memberId !== memberId ? (
+                <div className="btn-wrapper">
+                  <button className="btn other">완료</button>
+                </div>
+              ) : (reviewed &&
+                  reviewed.length !== 0 &&
+                  reviewed.some((rv: any) => rv.memberId === el.memberId)) ||
+                (reviewed &&
+                  reviewed.length !== 0 &&
+                  reviewed.some(
+                    (rv: any) => rv.memberId === detail.memberId
+                  )) ? (
                 <div className="btn-wrapper">
                   <button className="btn">완료</button>
                 </div>
@@ -83,24 +91,28 @@ const TravelComplete = ({ detail, part, setPart }: partProps) => {
                     className="btn"
                     onClick={() => handleFirstModal(el.memberId)}
                   >
-                    리뷰 {el.memberId}
+                    리뷰
                   </button>
                 </div>
-              ) : memberId === el.memberId &&
-                reviewed &&
-                reviewed.length !== 0 &&
-                reviewed.some((rv: any) => rv.memberId !== detail.memberId) ? (
+              ) : (memberId === el.memberId &&
+                  reviewed &&
+                  reviewed.length !== 0 &&
+                  reviewed.some(
+                    (rv: any) => rv.memberId === detail.memberId
+                  )) ||
+                (memberId === el.memberId &&
+                  reviewed &&
+                  reviewed.length !== 0 &&
+                  reviewed.some(
+                    (rv: any) => rv.memberId === el.memberId
+                  )) ? null : (
                 <div className="btn-wrapper">
                   <button
                     className="btn"
                     onClick={() => handleFirstModal(el.memberId)}
                   >
-                    작성자 리뷰
+                    작성자 리뷰 하기
                   </button>
-                </div>
-              ) : (
-                <div className="btn-wrapper">
-                  <button className="btn">완료</button>
                 </div>
               )}
             </li>
@@ -161,6 +173,7 @@ const Content = styled.ul`
   justify-items: center;
   align-items: center;
   overflow: scroll;
+  padding: 10px 0px;
   ::-webkit-scrollbar {
     display: none;
   }
@@ -200,6 +213,11 @@ const Content = styled.ul`
         border: none;
         border-radius: 15px;
         background-color: #feb35c;
+        &.other {
+          cursor: default;
+          background-color: transparent;
+          opacity: 0;
+        }
       }
     }
   }
