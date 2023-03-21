@@ -328,7 +328,6 @@ const ContentEdit = () => {
           <TendencyModal
             setIsTendencyModal={setIsTendencyModal}
             setIsThemeModal={setIsThemeModal}
-            selectedTendencies={selectedTendencies}
             setSelectedTendencies={setSelectedTendencies}
           />
         </div>

@@ -222,7 +222,8 @@ const CountrySelect = () => {
                       ','
                     )},travel
                   )`,
-                  backgroundSize: `100% 100%`,
+                  backgroundSize: `cover`,
+                  backgroundPosition: 'center',
                   backgroundRepeat: `no-repeat`,
                   cursor: 'pointer',
                 }}
@@ -246,9 +247,10 @@ const CountrySelect = () => {
                       /[a-zA-Z]/g
                     )},travel
                   )`,
-                      backgroundSize: `100% 100%`,
                       backgroundRepeat: `no-repeat`,
                       cursor: 'pointer',
+                      backgroundSize: `cover`,
+                      backgroundPosition: 'center',
                     }}
                   >
                     <div>
@@ -282,7 +284,8 @@ const CountryListContainer = styled.div`
     height: 300px;
     width: 100%;
     background-repeat: no-repeat;
-    background-size: 100% 100%;
+    background-size: cover;
+    background-position: center;
     color: white;
     font-weight: bold;
     > h1 {

@@ -10,6 +10,7 @@ import TendencyModal from 'components/ContentAdd/TendencyModal';
 import countries from '../assets/countries.json';
 import ThemeModal from 'components/ContentAdd/ThemeModal';
 import SearchMap from 'components/ContentAdd/SearchMap';
+import Swal from 'sweetalert2';
 
 registerLocale('ko', ko);
 
@@ -119,27 +120,45 @@ const ContentAdd = () => {
 
   const handleContentSubmit = () => {
     if (!titleInput) {
-      alert('글 제목을 입력해주세요!');
+      Swal.fire({
+        icon: 'error',
+        text: '글 제목을 입력해주세요',
+      });
       return;
     }
     if (!contentInput.replace(/<\/?p>/gi, '')) {
-      alert('글 내용을 작성해주세요!');
+      Swal.fire({
+        icon: 'error',
+        text: '글 내용을 작성해주세요',
+      });
       return;
     }
     if (!startDate || !endDate) {
-      alert('날짜를 입력해주세요!');
+      Swal.fire({
+        icon: 'error',
+        text: '날짜를 입력해주세요',
+      });
       return;
     }
     if (!savedAddress) {
-      alert('위치를 입력해주세요!');
+      Swal.fire({
+        icon: 'error',
+        text: '위치를 입력해주세요',
+      });
       return;
     }
     if (continentSelect === '대륙선택') {
-      alert('대륙을 선택해주세요!');
+      Swal.fire({
+        icon: 'error',
+        text: '대륙을 선택해주세요!',
+      });
       return;
     }
     if (countrySelect === '국가선택') {
-      alert('나라를 선택해주세요!');
+      Swal.fire({
+        icon: 'error',
+        text: '국가를 선택해주세요!',
+      });
     }
     if (
       titleInput &&
@@ -266,7 +285,6 @@ const ContentAdd = () => {
           <TendencyModal
             setIsTendencyModal={setIsTendencyModal}
             setIsThemeModal={setIsThemeModal}
-            selectedTendencies={selectedTendencies}
             setSelectedTendencies={setSelectedTendencies}
           />
         </div>
