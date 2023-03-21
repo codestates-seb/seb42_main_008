@@ -1,26 +1,31 @@
-import { GoogleMap, LoadScript, MarkerF } from '@react-google-maps/api';
+import { GoogleMap, MarkerF, useLoadScript } from '@react-google-maps/api';
 import { MdLocationOn } from 'react-icons/md';
 import styled from 'styled-components';
 
 const SearchMap = ({ detail }: any) => {
+  const googleMapKey: any = process.env.REACT_APP_API_KEY;
+  const { isLoaded } = useLoadScript({
+    googleMapsApiKey: googleMapKey,
+  });
   const center = {
     lat: detail.lat,
     lng: detail.lng,
   };
-  // googleMapKey 타입
-  const googleMapKey: any = process.env.REACT_APP_API_KEY;
-  return (
+
+  return isLoaded ? (
     <MapContent>
-      <LoadScript googleMapsApiKey={googleMapKey}>
-        <GoogleMap mapContainerStyle={containerStyle} center={center} zoom={13}>
-          <MarkerF position={center} />
-        </GoogleMap>
-        <MapPlace>
-          <LocationPin />
-          {detail.address}
-        </MapPlace>
-      </LoadScript>
+      {/* <LoadScript googleMapsApiKey={googleMapKey}> */}
+      <GoogleMap mapContainerStyle={containerStyle} center={center} zoom={13}>
+        <MarkerF position={center} />
+      </GoogleMap>
+      <MapPlace>
+        <LocationPin />
+        {detail.address}
+      </MapPlace>
+      {/* </LoadScript> */}
     </MapContent>
+  ) : (
+    <></>
   );
 };
 
