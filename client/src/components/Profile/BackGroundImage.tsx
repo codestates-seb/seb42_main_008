@@ -6,7 +6,7 @@ const BackGroundImage = () => {
   return (
     <BgWrapper>
       <ImageFilter></ImageFilter>
-      <img src={imgLinks[2]} alt="profileBackground" />
+      <img className="bg-img" src={imgLinks[2]} alt="profileBackground" />
     </BgWrapper>
   );
 };
@@ -18,7 +18,7 @@ const BgWrapper = styled.section`
   align-items: center;
   justify-content: center;
   position: absolute;
-  > img {
+  .bg-img {
     width: 100%;
     height: 100%;
     object-fit: cover;

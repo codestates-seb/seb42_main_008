@@ -5,18 +5,19 @@ import { partProps } from 'interfaces/ContentDetail.interface';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
-import { reviewInfo, userInfo } from 'states/userState';
+import { userInfo } from 'states/userState';
 import styled from 'styled-components';
 
 const TravelComplete = ({ detail, part, setPart }: partProps) => {
   const params = useParams();
   const { contentId } = params;
   const { memberId } = useRecoilValue(userInfo);
-  const review = useRecoilValue(reviewInfo);
 
-  // 리뷰 작성 모달
   const [firstModal, setFirstModal] = useState<boolean>(false);
   const [reviewId, setReviewId] = useState(0);
+  // * 리뷰 작성한 사람 모음
+  const [reviewed, setReviewed] = useState<any>();
+
   const handleFirstModal = (reviewMemberId: number) => {
     setFirstModal(!firstModal);
     setReviewId(reviewMemberId);
@@ -36,6 +37,23 @@ const TravelComplete = ({ detail, part, setPart }: partProps) => {
     getPartList();
   }, []);
 
+  const getReviewList = () => {
+    axios
+      .get(
+        `${process.env.REACT_APP_SERVER}/companions/${contentId}/reviewers`,
+        {
+          params: { memberId },
+        }
+      )
+      .then(res => {
+        setReviewed(res.data.data);
+      });
+  };
+
+  useEffect(() => {
+    getReviewList();
+  }, []);
+
   return (
     <Container>
       <TabBox>
@@ -52,9 +70,10 @@ const TravelComplete = ({ detail, part, setPart }: partProps) => {
                 ></div>
                 <div>{el.nickname}</div>
               </div>
-              {/* 작성자ID === 현재 로그인ID ? 탭 안에 리뷰작성 버튼 : (여행 참여자ID === 현재 로그인ID ? : 리뷰작성 버튼 : null) */}
-              {/* 리뷰 작성 완료 ? 완료 : 리뷰버튼 */}
-              {review ? (
+              {memberId !== el.memberId &&
+              detail.memberId !== memberId ? null : reviewed &&
+                reviewed.length !== 0 &&
+                reviewed.some((rv: any) => rv.memberId === el.memberId) ? (
                 <div className="btn-wrapper">
                   <button className="btn">완료</button>
                 </div>
@@ -64,10 +83,13 @@ const TravelComplete = ({ detail, part, setPart }: partProps) => {
                     className="btn"
                     onClick={() => handleFirstModal(el.memberId)}
                   >
-                    리뷰
+                    리뷰 {el.memberId}
                   </button>
                 </div>
-              ) : memberId === el.memberId ? (
+              ) : memberId === el.memberId &&
+                reviewed &&
+                reviewed.length !== 0 &&
+                reviewed.some((rv: any) => rv.memberId !== detail.memberId) ? (
                 <div className="btn-wrapper">
                   <button
                     className="btn"
@@ -76,7 +98,11 @@ const TravelComplete = ({ detail, part, setPart }: partProps) => {
                     작성자 리뷰
                   </button>
                 </div>
-              ) : null}
+              ) : (
+                <div className="btn-wrapper">
+                  <button className="btn">완료</button>
+                </div>
+              )}
             </li>
           ))
         ) : (
