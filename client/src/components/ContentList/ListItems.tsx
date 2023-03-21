@@ -43,14 +43,16 @@ const ListItems = ({ listData, isLoading }: ListItemProps) => {
               key={idx}
               onClick={() => handleClickItem(item.companionId)}
             >
-              <h1>{getDateString(item.date).shortDateStr}</h1>
+              <h1 className="item-date">
+                {getDateString(item.date).shortDateStr}
+              </h1>
               <Address>
-                <span>
+                <span className="marker-icon">
                   <FaMapMarkerAlt size={25} />
                 </span>
-                <p>{item.address}</p>
+                <p className="item-address">{item.address}</p>
               </Address>
-              <h2>{item.title}</h2>
+              <h2 className="item-title">{item.title}</h2>
               <TagsList>
                 {item.tags.map((tag, idx) => (
                   <Tag key={idx}>{tag}</Tag>
@@ -120,12 +122,17 @@ export const ListItem = styled.article`
   overflow: hidden;
   cursor: pointer;
 
-  > h1 {
+  .item-date {
     font-size: 2.3rem;
   }
-  > h2 {
+  .item-title {
     width: 100%;
     font-size: 1.1rem;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
   }
 
   :hover {
@@ -145,14 +152,26 @@ export const Address = styled.div`
   justify-content: flex-end;
   text-align: right;
 
-  > span {
+  .marker-icon {
     display: flex;
     align-items: center;
     justify-content: center;
     margin-right: 7px;
   }
-  > p {
+  .item-address {
     font-weight: 600;
+    font-size: 0.9rem;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+  }
+
+  @media screen and (max-width: 576px) {
+    .item-address {
+      -webkit-line-clamp: 2;
+    }
   }
 `;
 
