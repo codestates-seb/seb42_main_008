@@ -337,7 +337,8 @@ const TitleBox = styled.div`
   width: 100%;
   height: 300px;
   background-repeat: no-repeat;
-  background-size: 100% 100%;
+  background-size: cover;
+  background-position: center;
   color: white;
   font-weight: bold;
   > h1 {
