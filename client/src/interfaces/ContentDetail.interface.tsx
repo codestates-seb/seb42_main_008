@@ -20,6 +20,10 @@ interface detailInfo {
   companionStatus: boolean;
 }
 
+interface reviewerInfo {
+  reviewId: number;
+}
+
 // * 첫번째 리뷰 모달
 interface firstModal {
   detail: detailInfo;
@@ -90,4 +94,5 @@ export type {
   subProps,
   partProps,
   companionProps,
+  reviewerInfo,
 };
