@@ -33,6 +33,6 @@ public class ReviewService {
 
     @Transactional(readOnly = true)
     public List<Review> getReviewsByCompanionIdAndMemberId(Long companionId, Long memberId) {
-        return reviewRepository.findByCompanionCompanionIdAndMemberMemberId(companionId, memberId, Sort.by(Sort.Direction.ASC, "reviewedMember.memberId"));
+        return reviewRepository.findByCompanionCompanionIdAndMemberMemberIdAndReviewedMemberMemberIdNot(companionId, memberId, memberId);
     }
 }
