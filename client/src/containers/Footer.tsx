@@ -6,8 +6,8 @@ const Footer = () => {
     <FooterBox>
       <div className="partypeople">PartyPeople</div>
       <div className="names">
-        <div className="name">FE: 조은선, 김상교, 장장미</div>
-        <div className="name">BE: 이승철, 조국선, 홍수경</div>
+        <div className="name">조은선, 김상교, 장장미</div>
+        <div className="name">이승철, 조국선, 홍수경</div>
       </div>
       <p>
         <a
