@@ -27,7 +27,10 @@ module.exports = {
     'import/no-extraneous-dependencies': 0,
     'no-shadow': 0,
     'react/prop-types': 0,
-    'react/jsx-filename-extension': [2, { extensions: ['.js', '.jsx', '.ts', '.tsx'] }],
+    'react/jsx-filename-extension': [
+      2,
+      { extensions: ['.js', '.jsx', '.ts', '.tsx'] },
+    ],
     'jsx-a11y/no-noninteractive-element-interactions': 0,
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
