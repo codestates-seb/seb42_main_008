@@ -7,11 +7,11 @@ import { RiLogoutBoxRLine } from 'react-icons/ri';
 import { GiHamburgerMenu } from 'react-icons/gi';
 import Menu from 'components/Header/Menu';
 import LogoutMenu from 'components/Header/LogoutMenu';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { loginState, userInfo, userToken } from 'states/userState';
 import axios from 'axios';
 const Header = () => {
-  const isLogin = useRecoilValue(loginState);
+  const [isLogin, setIsLogin] = useRecoilState(loginState);
   const token = useRecoilValue(userToken);
   const navigate = useNavigate();
   //멤버아이디
@@ -28,7 +28,7 @@ const Header = () => {
       );
       localStorage.clear();
       navigate('/');
-      window.location.reload();
+      setIsLogin(false);
     } catch (error) {
       console.log(error);
     }
