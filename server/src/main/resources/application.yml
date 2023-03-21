@@ -19,6 +19,9 @@ spring:
       path: /h2
   datasource:
     url: jdbc:h2:mem:test
+    hikari:
+      connection-timeout: 3000
+      maximum-pool-size: 10
   jpa:
     hibernate:
       ddl-auto: create
