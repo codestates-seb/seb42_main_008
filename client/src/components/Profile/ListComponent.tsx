@@ -56,12 +56,14 @@ const ListComponent = ({ datas, titleHead, titleBody }: ListComponentProps) => {
               onClick={() => handleClickItem(item.companionId)}
             >
               {item.companionStatus && <DoneItem></DoneItem>}
-              <h1>{getDateString(item.date).shortDateStr}</h1>
+              <h1 className="item-date">
+                {getDateString(item.date).shortDateStr}
+              </h1>
               <ItemAddress>
-                <span>
+                <span className="marker-icon">
                   <FaMapMarkerAlt size={25} />
                 </span>
-                <p>{item.address}</p>
+                <p className="item-address">{item.address}</p>
               </ItemAddress>
               <Flag isDone={item.companionStatus}></Flag>
               <ItemFlagText>
@@ -112,9 +114,13 @@ const MemberListItem = styled(ListItem)`
   height: 150px;
   padding-left: 0;
 
-  > h1 {
+  .item-date {
     display: flex;
     justify-content: flex-end;
+    font-size: 1.7rem;
+  }
+  .item-address {
+    -webkit-line-clamp: 3;
   }
   :hover {
     transform: translateY(-3px);
