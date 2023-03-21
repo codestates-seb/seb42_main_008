@@ -347,7 +347,6 @@ const RightBox = styled.section`
     display: flex;
     flex-direction: row;
     width: 100%;
-    height: 100vh;
     overflow: scroll;
     ::-webkit-scrollbar {
       display: none;

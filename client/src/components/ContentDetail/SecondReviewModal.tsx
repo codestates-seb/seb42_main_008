@@ -22,7 +22,7 @@ const SecondReviewModal = ({
     <Container>
       <BackGround onClick={handleSecondModal}>
         <ModalView onClick={event => event.stopPropagation()}>
-          <h3>작성자님이 여행에 참석하셨나요?</h3>
+          <h3>{detail.memberId}님이 여행에 참석하셨나요?</h3>
           <div className="btn-wrapper">
             <button onClick={handleThirdModal}>네! 참석했습니다.</button>
             <button onClick={handleThirdModal}>

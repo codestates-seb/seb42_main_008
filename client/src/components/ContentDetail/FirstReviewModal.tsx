@@ -26,7 +26,7 @@ const FirstReviewModal = ({ detail, setFirstModal, reviewId }: firstModal) => {
       <BackGround onClick={handleFirstModal}>
         <ModalView onClick={event => event.stopPropagation()}>
           {/* 작상자는 {작성자ID}로 수정 예정*/}
-          <h3>작성자와의 여행에 참석하셨나요?</h3>
+          <h3>{detail.memberId}와의 여행에 참석하셨나요?</h3>
           <div className="btn-wrapper">
             <button onClick={handleSecondModal}>네! 참석했습니다.</button>
             <button onClick={handleFirstModal}>
