@@ -1,3 +1,4 @@
+import { StyledTabBox } from 'components/ContentDetail/CompanionStyled';
 import Participants from 'components/ContentDetail/Tab//Participants';
 import Companion from 'components/ContentDetail/Tab/Companion';
 import {
@@ -18,11 +19,9 @@ const CompanionTab = ({
   const companionTabs: contentsTab[] = [
     {
       tabName: '신청자',
-      content: [],
     },
     {
       tabName: '참여자',
-      content: [],
     },
   ];
 
@@ -68,7 +67,6 @@ export default CompanionTab;
 
 const Container = styled.section`
   display: flex;
-  /* justify-content: center; */
   align-items: center;
   flex-direction: column;
   padding: 10px;
@@ -90,36 +88,9 @@ const Container = styled.section`
   }
 `;
 
-const TabBox = styled.ul`
-  background-color: #dcdcdc;
-  color: rgba(73, 73, 73, 0.5);
-  font-weight: bold;
-  display: flex;
-  flex-direction: row;
-  justify-items: center;
-  align-items: center;
-  list-style: none;
-  width: 100%;
-  cursor: pointer;
+const TabBox = styled(StyledTabBox)`
   > li {
     width: 50%;
     text-align: center;
-  }
-  .menu {
-    padding: 15px;
-  }
-  .focused {
-    background-color: #d9506a;
-    color: white;
-  }
-  @media screen and (max-width: 768px) {
-    .menu {
-      padding: 10px;
-    }
-  }
-  @media screen and (max-width: 576px) {
-    .menu {
-      padding: 10px;
-    }
   }
 `;

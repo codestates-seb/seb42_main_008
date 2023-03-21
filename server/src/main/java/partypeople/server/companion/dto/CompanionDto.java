@@ -129,8 +129,11 @@ public class CompanionDto {
         private LocalDate date;
         private boolean companionStatus;
     }
+
     @Getter
     @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
     public static class ContinentResponse {
         private String nationCode;
 
@@ -139,6 +142,8 @@ public class CompanionDto {
 
     @Getter
     @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
     public static class ReviewedMember {
         private Long memberId;
     }

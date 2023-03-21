@@ -43,12 +43,7 @@ const ContentWriter = ({ detail, sub, setSub }: subProps) => {
     });
   };
 
-  // 만약 이미 신청한 사람이라면, alert 창 띄우기
-  // 신청자 배열 or 참여자 배열에 있는 id === userInfo의 memberId ? 이미 신청한 동행입니다. : 신청되었습니다
   const handleApply = async () => {
-    // if() {
-    // 만약 이미 참여한 사람이라면, alert 창 띄우기
-    // } else {52줄~}
     Swal.fire({
       title: '동행신청 하시겠습니까?',
       icon: 'warning',
@@ -116,9 +111,6 @@ const ContentWriter = ({ detail, sub, setSub }: subProps) => {
         </div>
       </WriterInfo>
       <ButtonBox>
-        {/* 여행완료? 리뷰작성 버튼 : (작성자ID === 현재 로그인ID ?  수정, 삭제 버튼 : 동행신청, 프로필보기 버튼) */}
-        {/* 참여자 탭에서는 버튼 안보이도록 수정하기 */}
-        {/* 수정페이지 내비게이트 추가 */}
         {detail.memberId === memberId ? (
           <>
             <button className="btn" onClick={handleUpdate}>
@@ -126,6 +118,12 @@ const ContentWriter = ({ detail, sub, setSub }: subProps) => {
             </button>
             <button className="btn" onClick={handleDelete}>
               동행글 삭제
+            </button>
+          </>
+        ) : detail.companionStatus ? (
+          <>
+            <button className="btn" onClick={handleProfile}>
+              프로필 보기
             </button>
           </>
         ) : (
@@ -277,6 +275,9 @@ const ButtonBox = styled.section`
     font-size: 1.2rem;
     cursor: pointer;
   }
+  .yellow {
+    background: #feb35c;
+  }
   @media screen and (max-width: 768px) {
     .btn {
       background-color: #d9d9d9;
@@ -287,10 +288,16 @@ const ButtonBox = styled.section`
       font-size: 0.7rem;
       cursor: pointer;
     }
+    .yellow {
+      background: #feb35c;
+    }
   }
   @media screen and (max-width: 576px) {
     > * {
       font-size: 0.5rem;
+    }
+    .yellow {
+      background: #feb35c;
     }
   }
 `;

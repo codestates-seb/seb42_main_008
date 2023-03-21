@@ -3,7 +3,12 @@ import { secondModal } from 'interfaces/ContentDetail.interface';
 import { useState } from 'react';
 import styled from 'styled-components';
 
-const SecondReviewModal = ({ setFirstModal, setSecondModal }: secondModal) => {
+const SecondReviewModal = ({
+  detail,
+  setFirstModal,
+  setSecondModal,
+  reviewId,
+}: secondModal) => {
   const handleSecondModal = () => {
     setSecondModal(false);
   };
@@ -28,9 +33,11 @@ const SecondReviewModal = ({ setFirstModal, setSecondModal }: secondModal) => {
       </BackGround>
       {thirdModal ? (
         <ThirdReviewModal
+          detail={detail}
           setFirstModal={setFirstModal}
           setSecondModal={setSecondModal}
           setThirdModal={setThirdModal}
+          reviewId={reviewId}
         />
       ) : null}
     </Container>
@@ -71,6 +78,7 @@ const ModalView = styled.div`
   border-radius: 30px;
   padding: 30px;
   box-shadow: 5px 5px 10px 5px rgba(0, 0, 0, 0.25);
+
   h3 {
     padding-bottom: 30px;
   }
