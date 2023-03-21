@@ -71,7 +71,7 @@ const TendencyModal = ({
                   type="checkbox"
                   value={theme}
                   checked={selectedOptions.includes(theme)}
-                  onClick={() => handleCheckboxClick(theme)}
+                  onChange={() => handleCheckboxClick(theme)}
                 ></input>
                 {theme}
               </label>

@@ -130,6 +130,7 @@ const ThemeModal = ({
         console.log(typeof contentInput);
         console.log(startDate);
         console.log(formattedDate);
+        console.log(allTags);
       }
     } else {
       Swal.fire({
