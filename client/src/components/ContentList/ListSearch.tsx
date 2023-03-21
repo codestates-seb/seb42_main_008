@@ -111,7 +111,7 @@ const ListSearch = ({
   return (
     <SearchBox>
       <DateSearch>
-        <label htmlFor="datePicker">
+        <label className="datepicker-label" htmlFor="datePicker">
           <FaCalendarDay color="#fff" size={22} />
         </label>
         <DatePicker
@@ -122,7 +122,7 @@ const ListSearch = ({
       </DateSearch>
       <Stroke></Stroke>
       <KeywordSearch>
-        <select onChange={handleChangeOption}>
+        <select className="search-condition" onChange={handleChangeOption}>
           {searchOptions.map((item, idx) => (
             <option key={idx} value={item.field}>
               {item.value}
@@ -130,7 +130,12 @@ const ListSearch = ({
           ))}
         </select>
         <SearchInput>
-          <input type="text" value={keyword} onChange={handleInputChange} />
+          <input
+            className="search-input"
+            type="text"
+            value={keyword}
+            onChange={handleInputChange}
+          />
           {keyword.length !== 0 && (
             <span className="clear" onClick={handleClearClick}>
               <HiOutlineX size={19} />
@@ -176,7 +181,7 @@ const DateSearch = styled.div`
   align-items: center;
   justify-content: center;
   z-index: 6;
-  > label {
+  .datepicker-label {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -216,7 +221,7 @@ const KeywordSearch = styled.div`
   align-items: center;
   gap: 10px;
   justify-content: space-between;
-  > select {
+  .search-condition {
     width: 90px;
     border-radius: 30px;
     border: 1px solid #fff;
@@ -237,7 +242,7 @@ const KeywordSearch = styled.div`
     width: 100%;
   }
   @media screen and (max-width: 576px) {
-    > select {
+    .search-condition {
       width: 70px;
       font-size: 1rem;
     }
@@ -255,21 +260,18 @@ const SearchInput = styled.div`
   color: #fff;
   position: relative;
 
-  > span {
+  .clear {
     position: absolute;
     right: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-  }
-
-  .clear {
     right: 10px;
     opacity: 0.7;
   }
 
-  > input {
+  .search-input {
     width: 100%;
     height: 100%;
     display: flex;

@@ -35,7 +35,7 @@ const ListTitle = () => {
       }}
     >
       <TitleText>
-        <h1>{names.en.toUpperCase()}</h1>
+        <h1 className="title-en">{names.en.toUpperCase()}</h1>
         <AddContentbutton onClick={handleButtonClick}>
           {names.ko}에서의 동행 찾기
         </AddContentbutton>
@@ -66,26 +66,23 @@ const TitleText = styled.div`
   color: #fff;
   text-align: center;
   text-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
-  > h1 {
+  .title-en {
     font-weight: 800;
     font-size: 4rem;
   }
 
   @media screen and (max-width: 992px) {
-    > h1 {
+    .title-en {
       font-size: 3.5rem;
     }
   }
   @media screen and (max-width: 768px) {
-    > h1 {
+    .title-en {
       font-size: 3rem;
-    }
-    > h2 {
-      font-size: 1.3rem;
     }
   }
   @media screen and (max-width: 576px) {
-    > h1 {
+    .title-en {
       font-size: 2.3rem;
     }
   }

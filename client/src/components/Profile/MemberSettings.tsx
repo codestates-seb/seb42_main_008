@@ -135,7 +135,9 @@ const MemberSettings = ({ member, setCurrentTab }: MemberSettingsProps) => {
             style={{ backgroundImage: `url(${profile})` }}
           ></div>
           <UploadButton>
-            <label htmlFor="file-input">사진 선택</label>
+            <label className="file-input-label" htmlFor="file-input">
+              사진 선택
+            </label>
             <input type="file" id="file-input" onChange={onFileChange} />
           </UploadButton>
         </ImageUpload>
@@ -199,7 +201,7 @@ const ImageUpload = styled.section`
 
 const UploadButton = styled.div`
   margin-top: 20px;
-  > label {
+  .file-input-label {
     padding: 5px 10px;
     height: 50px;
     background-color: #feb35c;
@@ -215,7 +217,7 @@ const UploadButton = styled.div`
       transition: 0.3s;
     }
   }
-  > input {
+  #file-input {
     display: none;
   }
 `;

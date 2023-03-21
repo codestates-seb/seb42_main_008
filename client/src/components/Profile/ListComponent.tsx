@@ -47,7 +47,7 @@ const ListComponent = ({ datas, titleHead, titleBody }: ListComponentProps) => {
 
   return (
     <ListWrapper>
-      <h1>{titleHead + titleBody}동행</h1>
+      <h1 className="list-title">{titleHead + titleBody}동행</h1>
       {datas.length !== 0 ? (
         <Slider {...settings}>
           {datas.map((item, idx) => (
@@ -84,7 +84,7 @@ const ListWrapper = styled.section`
   display: flex;
   flex-direction: column;
 
-  > h1 {
+  .list-title {
     font-size: 1.2rem;
   }
 

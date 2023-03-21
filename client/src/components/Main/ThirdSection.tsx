@@ -43,8 +43,8 @@ const ThirdSection = () => {
           >
             <img src={item.imgURL} alt={item.title} />
             <DescText>
-              <h1>{item.title}</h1>
-              <p>{item.desc}</p>
+              <h1 className="third-title">{item.title}</h1>
+              <p className="third-desc">{item.desc}</p>
             </DescText>
           </DescArticle>
         ))}
@@ -59,10 +59,10 @@ const ThirdWrapper = styled(SectionWrapper)`
   .show {
     opacity: 1;
     transform: translateY(0);
-    div h1 {
+    .third-title {
       animation: showup 0.5s linear;
     }
-    div p {
+    .third-desc {
       animation: showup 0.5s linear;
       animation-delay: 0.1s;
     }
@@ -127,26 +127,27 @@ const DescText = styled.div`
   width: 100%;
   padding: 0 20px;
 
-  > h1 {
+  .third-title {
     font-size: 1.3rem;
     margin-bottom: 5px;
   }
 
   @media screen and (max-width: 992px) {
-    h1 {
+    .third-title {
       font-size: 1rem;
     }
-    p {
+    .third-desc {
       font-size: 0.9rem;
     }
   }
   @media screen and (max-width: 768px) {
-    h1 {
+    .third-title {
       font-size: 1.3rem;
     }
-    p {
+    .third-desc {
       font-size: 1rem;
     }
   }
 `;
+
 export default ThirdSection;

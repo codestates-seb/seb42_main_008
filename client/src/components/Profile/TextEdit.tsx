@@ -91,9 +91,10 @@ const TextEdit = ({
       <NicknameEdit
         className={!validation.nicknameValid ? 'valid-false' : undefined}
       >
-        <h1>닉네임</h1>
-        <div>
+        <h1 className="edit-title nickname-title">닉네임</h1>
+        <div className="nickname-input-wrapper">
           <input
+            className="edit-input nickname-input"
             type="text"
             value={nickname}
             onChange={event => handleChange(event, setNickname, 'nickname')}
@@ -113,19 +114,20 @@ const TextEdit = ({
             : undefined
         }
       >
-        <div>
-          <h1>자기소개</h1>
+        <div className="content-title-wrapper">
+          <h1 className="edit-title">자기소개</h1>
           <span
-            className={
+            className={`content-length ${
               !validation.contentValid && content?.length !== 0
                 ? 'over-length'
                 : undefined
-            }
+            }`}
           >
             ({content?.length}/100)
           </span>
         </div>
         <textarea
+          className="edit-input edit-textarea"
           value={content}
           onChange={event => handleChange(event, setContent, 'content')}
         />
@@ -141,6 +143,7 @@ const TextEdit = ({
           className={!validation.passwordValid ? 'valid-false' : undefined}
         >
           <input
+            className="edit-input"
             type="password"
             value={password}
             onChange={event => handleChange(event, setPassword, 'password')}
@@ -157,6 +160,7 @@ const TextEdit = ({
           className={!validation.passwordCheckValid ? 'valid-false' : undefined}
         >
           <input
+            className="edit-input"
             type="password"
             value={passwordCheck}
             onChange={event =>
@@ -179,16 +183,13 @@ const TextEditWrapper = styled.section`
   flex-direction: column;
   gap: 20px;
 
-  input {
+  .edit-input {
     width: 100%;
     display: flex;
     align-items: center;
     font-size: 1rem;
     border-radius: 30px;
     border: 1px solid #888;
-  }
-  input,
-  textarea {
     padding: 5px 10px;
     :focus {
       :focus {
@@ -197,13 +198,11 @@ const TextEditWrapper = styled.section`
       }
     }
   }
-  h1 {
+  .edit-title {
     margin-bottom: 5px;
   }
-
   .valid-false {
-    input,
-    textarea {
+    .edit-input {
       border: 1px solid red;
       :focus {
         outline: none;
@@ -221,12 +220,12 @@ const TextEditWrapper = styled.section`
 
 const NicknameEdit = styled.div`
   width: 100%;
-  > div {
+  .nickname-input-wrapper {
     display: flex;
     gap: 10px;
-    > input {
-      width: calc(100% - 100px);
-    }
+  }
+  .nickname-input {
+    width: calc(100% - 100px);
   }
 `;
 
@@ -240,11 +239,11 @@ const UniqueCheckButton = styled(StyledButton)`
 
 const ContentEdit = styled.div`
   width: 100%;
-  > div {
+  .content-title-wrapper {
     width: 100%;
     display: flex;
     justify-content: space-between;
-    > span {
+    .content-length {
       color: #333;
       font-size: 0.9rem;
     }
@@ -252,11 +251,9 @@ const ContentEdit = styled.div`
       color: red;
     }
   }
-  textarea {
-    width: 100%;
+  .edit-textarea {
     resize: none;
     border-radius: 10px;
-    border: 1px solid #888;
     height: 100px;
   }
 `;
