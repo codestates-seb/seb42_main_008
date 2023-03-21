@@ -60,23 +60,27 @@ const Header = () => {
   // }, []);
 
   // 안읽은 쪽지 개수확인
-  const [notRead, setNotRead] = useState();
+  const [notRead, setNotRead] = useState(0);
   useEffect(() => {
-    const eventSource = new EventSource(
-      `${process.env.REACT_APP_SERVER}/messages/not-read/${memberId}`
-    );
-    eventSource.addEventListener('notReadCount', event => {
-      const data = JSON.parse(event.data);
-      setNotRead(data.data.notReadCount);
-    });
-    eventSource.onerror = error => {
-      console.log(error);
-      eventSource.close();
-    };
-    return () => {
-      eventSource.close();
-    };
-  }, [memberId]);
+    if (isLogin === true) {
+      const eventSource = new EventSource(
+        `${process.env.REACT_APP_SERVER}/messages/not-read/${memberId}`
+      );
+      eventSource.addEventListener('notReadCount', event => {
+        const data = JSON.parse(event.data);
+        setNotRead(data.data.notReadCount);
+      });
+      eventSource.onerror = error => {
+        console.log(error);
+        if (eventSource.readyState !== EventSource.CLOSED) {
+          eventSource.close();
+        }
+      };
+      return () => {
+        eventSource.close();
+      };
+    }
+  }, [isLogin]);
 
   return (
     <HeaderBox>
