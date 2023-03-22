@@ -20,6 +20,10 @@ type Countries = {
 };
 let countries: Countries[] = [];
 
+interface Props {
+  filteredCountry: any;
+}
+
 const CountrySelect = () => {
   const { continent } = useParams<{ continent: string }>();
   const navigate = useNavigate();
@@ -248,7 +252,6 @@ const CountrySelect = () => {
       navigate('/login');
     }
   };
-
   return (
     <CountryListContainer>
       <div
@@ -264,7 +267,7 @@ const CountrySelect = () => {
           글 작성하기
         </div>
       </div>
-      <CountryListBox>
+      <CountryListBox filteredCountry={filteredCountry}>
         <div className="countrybox">
           <ul className="hot-country">
             {countries.map((country, index) => (
@@ -395,7 +398,7 @@ const CountryListContainer = styled.div`
   }
 `;
 
-const CountryListBox = styled.section`
+const CountryListBox = styled.section<Props>`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -411,7 +414,8 @@ const CountryListBox = styled.section`
     min-height: 600px;
     margin-top: 20px;
     height: 100%;
-    grid-template-columns: 7fr 3fr;
+    grid-template-columns: ${(props: any) =>
+      props.filteredCountry.length !== 0 ? `7fr 3fr` : `10fr 0fr`};
 
     @media screen and (max-width: 768px) {
       display: flex;
