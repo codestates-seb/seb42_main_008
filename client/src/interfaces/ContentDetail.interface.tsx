@@ -8,6 +8,7 @@ interface detailInfo {
   companionId: number;
   memberId: number;
   nickname: string;
+  profile: string;
   score: number;
   title: string;
   content: string;
