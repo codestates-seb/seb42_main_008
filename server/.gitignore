@@ -4,7 +4,6 @@ build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
-!**/src/main/**/init/
 
 ### STS ###
 .apt_generated
@@ -37,3 +36,4 @@ out/
 ### VS Code ###
 .vscode/
 /src/main/resources/application-local.yml
+/src/main/java/partypeople/server/init/
