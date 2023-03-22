@@ -43,13 +43,9 @@ const GoogleLogin = () => {
     if (accessToken && refreshToken) {
       setCookie('accessToken', 'Bearer' + accessToken, {
         path: '/',
-        sameSite: 'none',
-        secure: true,
       });
       setCookie('refreshToken', refreshToken, {
         path: '/',
-        sameSite: 'none',
-        secure: true,
       });
       googleLoginAction(accessToken);
       navigate('/');
