@@ -4,7 +4,6 @@ build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
-!**/src/main/**/init/
 
 ### STS ###
 .apt_generated
@@ -38,4 +37,3 @@ out/
 .vscode/
 /src/main/resources/application-local.yml
 /src/main/java/partypeople/server/init/
-/src/main/java/partypeople/server/init/InitDb.java
