@@ -75,7 +75,13 @@ const ContentDetail = () => {
               </BottomBox>
             </LeftBox>
             <RightBox>
-              <ContentWriter detail={detail} sub={sub} setSub={setSub} />
+              <ContentWriter
+                detail={detail}
+                sub={sub}
+                setSub={setSub}
+                part={part}
+                setPart={setPart}
+              />
               {detail.companionStatus ? (
                 <TravelComplete detail={detail} part={part} setPart={setPart} />
               ) : (
