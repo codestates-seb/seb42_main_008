@@ -9,7 +9,7 @@ import Swal from 'sweetalert2';
 import { getScoreIcon } from 'utils/getScoreIcon';
 
 const ContentWriter = ({ detail, sub, setSub }: subProps) => {
-  const { profile, memberId, nickname } = useRecoilValue(userInfo);
+  const { memberId, nickname } = useRecoilValue(userInfo);
   const params = useParams();
   const { contentId } = params;
 
@@ -90,7 +90,7 @@ const ContentWriter = ({ detail, sub, setSub }: subProps) => {
       <WriterInfo>
         <div
           className="img"
-          style={{ backgroundImage: `url(${profile})` }}
+          style={{ backgroundImage: `url(${detail.profile})` }}
         ></div>
         <div className="info-wrapper">
           <div id="nickname">{detail.nickname}</div>
@@ -230,7 +230,6 @@ const WriterInfo = styled.section`
   }
   @media screen and (max-width: 576px) {
     font-size: 0.5rem;
-    height: 100vh;
     .info-wrapper {
       #nickname {
         font-size: 1rem;

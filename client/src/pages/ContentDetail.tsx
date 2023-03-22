@@ -20,6 +20,7 @@ const ContentDetail = () => {
     companionId: 0,
     memberId: 0,
     nickname: '',
+    profile: '',
     score: 0,
     title: '',
     content: '',
@@ -138,7 +139,7 @@ const ContentDetailBox = styled.section`
   }
   @media screen and (max-width: 576px) {
     width: 100%;
-    height: 100vh;
+    height: 100%;
   }
 `;
 
@@ -165,9 +166,6 @@ const LeftBox = styled.section`
       font-size: 2.8rem;
       padding-right: 30px;
     }
-    h3 {
-      font-size: 1.5rem;
-    }
   }
   .bottom-box {
     display: flex;
@@ -189,6 +187,16 @@ const LeftBox = styled.section`
       height: 100%;
       font-size: 1.3rem;
       padding-bottom: 10px;
+      p {
+        width: 100%;
+        word-break: break-all;
+        img {
+          width: 500px;
+          height: 500px;
+          object-fit: scale-down;
+          word-break: break-all;
+        }
+      }
     }
     #tag-box {
       display: flex;
@@ -237,9 +245,6 @@ const LeftBox = styled.section`
         font-size: 2rem;
         padding-right: 30px;
       }
-      h3 {
-        font-size: 1rem;
-      }
     }
     .bottom-box {
       h2 {
@@ -274,9 +279,6 @@ const LeftBox = styled.section`
           font-size: 2rem;
           padding-right: 30px;
         }
-        h3 {
-          font-size: 1rem;
-        }
       }
       .bottom-box {
         h2 {
@@ -303,16 +305,13 @@ const LeftBox = styled.section`
     }
     @media screen and (max-width: 576px) {
       width: 100%;
-      height: 100vh;
+      height: 100%;
       border: none;
       .top-box {
         border-bottom: 10px solid #feb35c;
         h1 {
           font-size: 2rem;
           padding-right: 30px;
-        }
-        h3 {
-          font-size: 1rem;
         }
       }
       .bottom-box {
@@ -364,7 +363,7 @@ const RightBox = styled.section`
   }
   @media screen and (max-width: 576px) {
     width: 100%;
-    height: 100vh;
+    /* height: 100vh; */
     display: flex;
     flex-direction: column;
   }
