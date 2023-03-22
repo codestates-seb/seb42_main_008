@@ -26,6 +26,7 @@ const Header = () => {
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
       confirmButtonText: '네, 로그아웃 할게요',
+      cancelButtonText: '아니요',
     }).then(async result => {
       if (result.isConfirmed) {
         customAxios
@@ -33,7 +34,7 @@ const Header = () => {
             headers: { Authorization: token },
           })
           .then(() => {
-            Swal.fire('Logout!', 'Your file has been deleted.', 'success');
+            Swal.fire('Logout!', '로그아웃 되었어요!', 'success');
             localStorage.clear();
             navigate('/');
             setIsLogin(false);
