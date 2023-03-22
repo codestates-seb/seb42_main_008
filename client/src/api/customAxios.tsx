@@ -49,8 +49,6 @@ customAxios.interceptors.response.use(
           .then(resp => {
             setCookie('accessToken', resp.headers.authorization, {
               path: '/',
-              sameSite: 'none',
-              secure: true,
             });
           });
         const newAccessToken = getCookie('accessToken');
