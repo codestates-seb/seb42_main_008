@@ -23,7 +23,7 @@ const MemberInfo = ({ member, setMember }: MemberInfoProps) => {
   const noteData = {
     messageId: 0,
     content: '',
-    companionId: 0,
+    companionId: 1,
     createdAt: getDateString(new Date()).fullDateStr,
     read: false,
     sender: {
