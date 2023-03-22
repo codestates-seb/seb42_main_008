@@ -41,7 +41,7 @@ const GoogleLogin = () => {
 
   useEffect(() => {
     if (accessToken && refreshToken) {
-      setCookie('accessToken', 'Bearer' + accessToken, {
+      setCookie('accessToken', 'Bearer ' + accessToken, {
         path: '/',
       });
       setCookie('refreshToken', refreshToken, {
