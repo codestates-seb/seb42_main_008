@@ -35,6 +35,7 @@ module.exports = {
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
     '@typescript-eslint/no-inferrable-types': 0,
+    "@typescript-eslint/no-explicit-any": "off"
   },
   settings: {
     'import/resolver': {
