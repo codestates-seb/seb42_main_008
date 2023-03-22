@@ -75,6 +75,7 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
     private Member saveMember(OAuth2User oAuth2User) {
         String email = String.valueOf(oAuth2User.getAttributes().get("email"));
         String profile = String.valueOf(oAuth2User.getAttributes().get("picture"));
+        String name = String.valueOf(oAuth2User.getAttributes().get("name"));
 
         List<String> authorities = authorityUtils.createRoles(email);
 
@@ -83,7 +84,7 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
         member.setEmail(email);
         member.setRoles(authorities);
         member.setPassword("google"+UUID.randomUUID());
-        member.setNickname(email);
+        member.setNickname(name);
         member.setProfile(profile);
         return memberService.createMember(member);
     }
