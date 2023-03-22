@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { FaRegEnvelope } from 'react-icons/fa';
 import { GrClose } from 'react-icons/gr';
-import axios from 'axios';
 import { useRecoilValue } from 'recoil';
 import { userInfo } from 'states/userState';
+import customAxios from 'api/customAxios';
+import Swal from 'sweetalert2';
 
 interface NoteMessage {
   messageId: number;
@@ -37,18 +38,31 @@ const ReplyNote = ({
   // 답장보내기
   const handleSubmitReply = async (event: any) => {
     event.preventDefault();
-    try {
-      await axios.post(`${process.env.REACT_APP_SERVER}/messages`, {
-        content: replyInput,
-        senderId: user.memberId,
-        receiverId: note.sender.id,
-        companionId: note.companionId,
-      });
-      alert('쪽지를 보냈어요!');
-      setIsReplyOpen(false);
-    } catch (error) {
-      console.log(error);
-    }
+    Swal.fire({
+      title: '쪽지를 보내시겠습니까?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: '네, 쪽지를 보냅니다',
+    }).then(async result => {
+      if (result.isConfirmed) {
+        await customAxios
+          .post(`/messages`, {
+            content: replyInput,
+            senderId: user.memberId,
+            receiverId: note.sender.id,
+            companionId: note.companionId,
+          })
+          .then(() => {
+            Swal.fire('Applied!', '쪽지를 보냈습니다!', 'success');
+            setIsReplyOpen(false);
+          })
+          .catch(error => {
+            console.log(error);
+          });
+      }
+    });
   };
   return (
     <ReplyBox onClick={handleOverlayClick}>

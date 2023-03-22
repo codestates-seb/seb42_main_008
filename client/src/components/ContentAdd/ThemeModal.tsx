@@ -1,4 +1,4 @@
-import axios from 'axios';
+import customAxios from 'api/customAxios';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
@@ -98,29 +98,26 @@ const ThemeModal = ({
 
   // 멤버아이디
   const user = useRecoilValue(userInfo);
-  console.log(user.memberId);
+
   // 모든 양식 제출 post 요청
   // 멤버아이디는 토큰받아 입력 // 대륙은 정수?
   const handleAllSubmit = async (event: any) => {
     if (selectedThemes.length >= 1) {
       event.preventDefault();
       try {
-        const response = await axios.post(
-          `${process.env.REACT_APP_SERVER}/companions`,
-          {
-            title: titleInput,
-            content: contentInput,
-            date: formattedDate,
-            address: savedAddress,
-            lat: markerLocation.lat,
-            lng: markerLocation.lng,
-            nationName: countrySelect,
-            nationCode: countryCode,
-            continent: continentNumber,
-            tags: allTags,
-            memberId: user.memberId,
-          }
-        );
+        const response = await customAxios.post(`/companions`, {
+          title: titleInput,
+          content: contentInput,
+          date: formattedDate,
+          address: savedAddress,
+          lat: markerLocation.lat,
+          lng: markerLocation.lng,
+          nationName: countrySelect,
+          nationCode: countryCode,
+          continent: continentNumber,
+          tags: allTags,
+          memberId: user.memberId,
+        });
         setIsThemeModal(false);
         console.log(response.headers);
         navigate(`/${continentSelect}/${countryCode}`);
