@@ -2,10 +2,10 @@ name: client
 on:
   push:
     branches: 
-            - main
+            - dev
   pull_request: 
     branches: 
-            - main
+            - dev
 jobs:
   build:
     runs-on: ubuntu-20.04
@@ -19,6 +19,7 @@ jobs:
         run: |
           echo "REACT_APP_CLIENT_ID=${{ secrets.REACT_APP_CLIENT_ID }}" >> .env
           echo "REACT_APP_API_KEY=${{ secrets.REACT_APP_API_KEY }}" >> .env
+          echo "REACT_APP_SERVER=${{ secrets.REACT_APP_SERVER }}" >> .env
           cat .env
       - name: Build
         run: npm run build
