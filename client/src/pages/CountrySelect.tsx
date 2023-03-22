@@ -5,8 +5,8 @@ import randomCountries from '../assets/countries.json';
 import { useRecoilValue } from 'recoil';
 import { loginState } from 'states/userState';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import Swal from 'sweetalert2';
+import customAxios from 'api/customAxios';
 const randomCountriesPick: RandomCountries = randomCountries;
 type RandomCountries = {
   [key: string]: {
@@ -43,10 +43,8 @@ const CountrySelect = () => {
   //현재 대륙에서 나라 글작성된 국가리스트 받아오기
   const [countryList, setCountryList] = useState([]);
   useEffect(() => {
-    axios
-      .get(
-        `${process.env.REACT_APP_SERVER}/companions/continents?continent=${continentNumber}`
-      )
+    customAxios
+      .get(`/companions/continents?continent=${continentNumber}`)
       .then(response => {
         setCountryList(response.data.data);
       })

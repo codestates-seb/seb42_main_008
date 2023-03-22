@@ -1,4 +1,4 @@
-import axios from 'axios';
+import customAxios from 'api/customAxios';
 import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
@@ -103,21 +103,18 @@ const ThemeModal = ({
     if (selectedThemes.length >= 1) {
       event.preventDefault();
       try {
-        const response = await axios.patch(
-          `${process.env.REACT_APP_SERVER}/companions/${contentId}`,
-          {
-            title: titleInput,
-            content: contentInput,
-            date: formattedDate,
-            address: savedAddress,
-            lat: markerLocation.lat,
-            lng: markerLocation.lng,
-            nationName: countrySelect,
-            nationCode: countryCode,
-            continent: continentNumber,
-            tags: allTags,
-          }
-        );
+        const response = await customAxios.patch(`/companions/${contentId}`, {
+          title: titleInput,
+          content: contentInput,
+          date: formattedDate,
+          address: savedAddress,
+          lat: markerLocation.lat,
+          lng: markerLocation.lng,
+          nationName: countrySelect,
+          nationCode: countryCode,
+          continent: continentNumber,
+          tags: allTags,
+        });
         setIsThemeModal(false);
         console.log(response.headers);
         navigate(`/${continentSelect}/${countryCode}`);

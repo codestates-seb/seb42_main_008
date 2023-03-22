@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import axios from 'axios';
 import ReadNote from './ReadNote';
 import ReplyNote from './ReplyNote';
+import customAxios from 'api/customAxios';
+import Swal from 'sweetalert2';
 
 interface NoteMessage {
   messageId: number;
@@ -32,10 +33,7 @@ const Message = ({ note }: Props) => {
   const handleOpenNote = async (event: any) => {
     event.preventDefault();
     try {
-      await axios.patch(
-        `${process.env.REACT_APP_SERVER}/messages/${note.messageId}`,
-        { read: true }
-      );
+      await customAxios.patch(`/messages/${note.messageId}`, { read: true });
       setIsNoteOpen(!isNoteOpen);
       setIsRead(true);
     } catch (error) {
@@ -55,18 +53,25 @@ const Message = ({ note }: Props) => {
 
   const handelDeleteNote = async (event: any) => {
     event.preventDefault();
-    if (window.confirm('쪽지를 삭제하시겠습니까?')) {
-      try {
-        await axios.delete(
-          `${process.env.REACT_APP_SERVER}/messages/${note.messageId}`
-        );
-        alert('쪽지가 삭제되었어요');
-        setIsNoteOpen(false);
-        window.location.reload();
-      } catch (error) {
-        console.log(error);
+    Swal.fire({
+      title: '쪽지를 삭제하시겠습니까?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!',
+    }).then(async result => {
+      if (result.isConfirmed) {
+        await customAxios
+          .delete(`/messages/${note.messageId}`)
+          .then(() => {
+            Swal.fire('Deleted!', 'Your file has been deleted.', 'success');
+          })
+          .catch(error => {
+            console.log(error);
+          });
       }
-    }
+    });
   };
 
   return (
