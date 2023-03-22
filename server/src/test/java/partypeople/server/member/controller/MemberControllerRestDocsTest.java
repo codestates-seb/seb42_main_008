@@ -112,7 +112,7 @@ public class MemberControllerRestDocsTest {
         actions
                 .andExpect(status().isCreated())
                 .andDo(document(
-                        "post-member",
+                        "[member] post-member",
                         getRequestPreProcessor(),
                         getResponsePreProcessor(),
                         requestFields(
@@ -164,7 +164,7 @@ public class MemberControllerRestDocsTest {
         actions
                 .andExpect(status().isOk())
                 .andDo(document(
-                        "patch-member",
+                        "[member] patch-member",
                         getRequestPreProcessor(),
                         getResponsePreProcessor(),
                         pathParameters(
@@ -216,7 +216,7 @@ public class MemberControllerRestDocsTest {
         actions
                 .andExpect(status().isOk())
                 .andDo(document(
-                        "login-member",
+                        "[member] login-member",
                         getRequestPreProcessor(),
                         getResponsePreProcessor(),
                         responseHeaders(
@@ -252,7 +252,7 @@ public class MemberControllerRestDocsTest {
         actions
                 .andExpect(status().isOk())
                 .andDo(document(
-                        "logout-member",
+                        "[member] logout-member",
                         getRequestPreProcessor(),
                         getResponsePreProcessor(),
                                 requestHeaders(
@@ -284,7 +284,7 @@ public class MemberControllerRestDocsTest {
         actions
                 .andExpect(status().isNoContent())
                 .andDo(document(
-                                "delete-member",
+                                "[member] delete-member",
                                 getRequestPreProcessor(),
                                 getResponsePreProcessor(),
                                 pathParameters(
@@ -314,7 +314,7 @@ public class MemberControllerRestDocsTest {
         actions
                 .andExpect(status().isOk())
                 .andDo(document(
-                                "reissue-accessToken",
+                                "[member] reissue-accessToken",
                                 getRequestPreProcessor(),
                                 getResponsePreProcessor(),
                                 requestHeaders(
@@ -387,7 +387,7 @@ public class MemberControllerRestDocsTest {
                 .andExpect(jsonPath("$.data.followerStatus").value(response.getFollowerStatus()))
                 .andExpect(jsonPath("$.data.memberStatus").value(response.getMemberStatus()))
                 .andDo(document(
-                                "get-member",
+                                "[member] get-member",
                                 getRequestPreProcessor(),
                                 getResponsePreProcessor(),
                                 pathParameters(
@@ -447,7 +447,7 @@ public class MemberControllerRestDocsTest {
         actions
                 .andExpect(status().isOk())
                 .andDo(document(
-                                "nickname-check",
+                                "[member] nickname-check",
                                 getRequestPreProcessor(),
                                 getResponsePreProcessor(),
                                 requestFields(
@@ -484,7 +484,7 @@ public class MemberControllerRestDocsTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data").isArray())
                 .andDo(document(
-                                "get-subscriberList",
+                                "[member] get-subscriberList",
                                 getRequestPreProcessor(),
                                 getResponsePreProcessor(),
                                 pathParameters(
@@ -536,7 +536,7 @@ public class MemberControllerRestDocsTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data").isArray())
                 .andDo(document(
-                                "get-participantList",
+                                "[member] get-participantList",
                                 getRequestPreProcessor(),
                                 getResponsePreProcessor(),
                                 pathParameters(
@@ -588,7 +588,7 @@ public class MemberControllerRestDocsTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data").isArray())
                 .andDo(document(
-                                "get-writerList",
+                                "[member] get-writerList",
                                 getRequestPreProcessor(),
                                 getResponsePreProcessor(),
                                 pathParameters(
@@ -640,7 +640,7 @@ public class MemberControllerRestDocsTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data").isArray())
                 .andDo(document(
-                                "get-reviewList",
+                                "[member] get-reviewList",
                                 getRequestPreProcessor(),
                                 getResponsePreProcessor(),
                                 pathParameters(
@@ -685,7 +685,7 @@ public class MemberControllerRestDocsTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.followerStatus").value(followerStatus.getFollowerStatus()))
                 .andDo(document(
-                        "post-follow",
+                        "[follow] post-follow",
                         getRequestPreProcessor(),
                         getResponsePreProcessor(),
                         requestFields(
@@ -727,7 +727,7 @@ public class MemberControllerRestDocsTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data").isArray())
                 .andDo(document(
-                                "get-followingList",
+                                "[follow] get-followingList",
                                 getRequestPreProcessor(),
                                 getResponsePreProcessor(),
                                 pathParameters(
@@ -768,7 +768,7 @@ public class MemberControllerRestDocsTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data").isArray())
                 .andDo(document(
-                                "get-followerList",
+                                "[follow] get-followerList",
                                 getRequestPreProcessor(),
                                 getResponsePreProcessor(),
                                 pathParameters(
