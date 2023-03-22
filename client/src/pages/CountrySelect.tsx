@@ -6,6 +6,7 @@ import { useRecoilValue } from 'recoil';
 import { loginState } from 'states/userState';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import Swal from 'sweetalert2';
 const randomCountriesPick: RandomCountries = randomCountries;
 type RandomCountries = {
   [key: string]: {
@@ -242,7 +243,10 @@ const CountrySelect = () => {
     if (login === true) {
       navigate('/add');
     } else {
-      alert('로그인이 필요한 서비스입니다');
+      Swal.fire({
+        icon: 'error',
+        text: '로그인이 필요한 서비스입니다',
+      });
       navigate('/login');
     }
   };
@@ -419,7 +423,7 @@ const CountryListBox = styled.section`
     }
   }
   .hot-country {
-    width: 70%;
+    width: 100%;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: repeat(2, 1fr);
@@ -429,7 +433,7 @@ const CountryListBox = styled.section`
       width: 80%;
       flex-direction: column;
       margin-top: 20px;
-      height: 400px;
+      height: 600px;
       grid-template-columns: repeat(1, 1fr);
       grid-template-rows: repeat(4, 1fr);
     }
@@ -472,7 +476,7 @@ const CountryListBox = styled.section`
     }
   }
   .random-country {
-    width: 30%;
+    /* width: 30%; */
     display: grid;
     grid-template-rows: repeat(1fr);
 
