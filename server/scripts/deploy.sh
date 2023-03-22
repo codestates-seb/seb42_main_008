@@ -30,5 +30,5 @@ DEPLOY_JAR=$DEPLOY_PATH$JAR_NAME
 echo "> DEPLOY_JAR 배포"    >> /home/ubuntu/action/deploy.log
 source /home/ubuntu/.bashprofile
 source /home/ssm-user/.bashrc
-echo printenv >> /home/ubuntu/action/deploy.log
+printenv >> /home/ubuntu/action/deploy.log
 sudo nohup java -jar $DEPLOY_JAR --spring.profiles.active=server >> /home/ubuntu/deploy.log 2>/home/ubuntu/action/deploy_err.log &
