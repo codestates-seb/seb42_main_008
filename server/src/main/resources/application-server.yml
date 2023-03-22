@@ -1,0 +1,51 @@
+spring:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${GOOGLE_MAIL_ID}
+    password: ${GOOGLE_MAIL_PW}
+    properties:
+      mail:
+        smtp:
+          starttls:
+            enable: true
+            required: true
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
+      repositories:
+        enabled: false
+  jpa:
+    hibernate:
+      ddl-auto: none
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    properties:
+      hibernate.default_batch_fetch_size: 500
+      jdbc:
+        time_zone: Asia/Seoul
+  datasource:
+    url: jdbc:mysql://${DATABASE_URL}/partypeople?useSSL=false&characterEncoding=UTF-8&serverTimezone=Asia/Seoul&useLegacyDatetimeCode=false
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      connection-timeout: 3000
+      maximum-pool-size: 20
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            clientId: ${GOOGLE_CLIENT_ID}
+            clientSecret: ${GOOGLE_CLIENT_SECRET}
+            scope:
+              - email
+              - profile
+jwt:
+  key: ${JWT_SECRET_KEY}
+  access-token-expiration-minutes: 10
+  refresh-token-expiration-minutes: 300
+config:
+  domain: ${AWS_S3_ENDPOINT}
