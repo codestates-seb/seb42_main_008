@@ -66,7 +66,18 @@ public class SecurityConfiguration {
             .apply(new CustomFilterConfigurer())
             .and()
             .authorizeHttpRequests(authorize -> authorize
+                .antMatchers(HttpMethod.POST, "/members/follows").hasRole("USER")
+                .antMatchers(HttpMethod.DELETE, "/members/*").hasRole("USER")
                 .antMatchers(HttpMethod.PATCH, "/members/*").hasRole("USER")
+                .antMatchers(HttpMethod.GET, "/members/**").hasRole("USER")
+                .antMatchers(HttpMethod.GET,
+                    "/companions/continents",
+                    "/companions/nations",
+                    "/companions/search").permitAll()
+                .antMatchers(
+                    "/companions/**",
+                    "/messages/**",
+                    "/reviews/**").hasRole("USER")
                 .anyRequest().permitAll()
             )
             .oauth2Login(oAuth2 -> oAuth2
