@@ -2,10 +2,10 @@ name: client
 on:
   push:
     branches:
-      - main
+      - dev
   pull_request:
     branches:
-      - main
+      - dev
 jobs:
   build:
     runs-on: ubuntu-20.04
