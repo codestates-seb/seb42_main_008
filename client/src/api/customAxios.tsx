@@ -2,14 +2,13 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 import { getCookie, setCookie } from 'utils/userCookies';
 
-axios.defaults.withCredentials = true;
-
 const customAxios = axios.create({
   baseURL: process.env.REACT_APP_SERVER,
   headers: {
     'Content-Type': 'application/json',
     'Access-Control-Allow-Origin': '*',
   },
+  withCredentials: true,
 });
 
 customAxios.interceptors.request.use(config => {
