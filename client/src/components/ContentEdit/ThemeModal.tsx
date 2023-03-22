@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
+import Swal from 'sweetalert2';
 
 type LatLng = {
   lat: number;
@@ -126,7 +127,10 @@ const ThemeModal = ({
         console.log(startDate);
       }
     } else {
-      alert('하나 이상 선택해주세요!');
+      Swal.fire({
+        icon: 'error',
+        text: '하나 이상 선택해주세요!',
+      });
     }
   };
 

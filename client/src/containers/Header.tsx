@@ -1,4 +1,4 @@
-import NoteModal from 'components/NoteModal/NoteModal';
+import NoteModal from 'components/MessageModal/NoteModal';
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';

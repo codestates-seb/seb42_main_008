@@ -11,7 +11,7 @@ import { StyledButton } from 'styles/StyledButton';
 import { useRecoilValue } from 'recoil';
 import { userInfo } from 'states/userState';
 import { getDateString } from 'utils/getDateString';
-import ReplyNote from 'components/NoteModal/ReplyNote';
+import ReplyNote from 'components/MessageModal/ReplyNote';
 import { ModalBG } from './ModalStyles';
 
 const MemberInfo = ({ member, setMember }: MemberInfoProps) => {
