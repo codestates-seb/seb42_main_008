@@ -1,5 +1,6 @@
 package partypeople.server.message.repository;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import partypeople.server.message.entity.Message;

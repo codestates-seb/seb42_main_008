@@ -1,0 +1,11 @@
+= PARTYPEOPLE API
+:sectnums:
+:toc: left
+:toclevels: 4
+:toc-title: Table of Contents
+:source-highlighter: prettify
+
+v1.0.0, 2023.03.14
+
+== MemberController
+=== 회원 등록

@@ -5,7 +5,6 @@ import io.jsonwebtoken.security.SignatureException;
 import lombok.RequiredArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.tomcat.util.http.parser.Authorization;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -158,11 +157,11 @@ public class MemberService {
             Long expiration = jwtTokenizer.getExpiration(refreshToken);
             //유효기간 안
             //DB안의 발행토큰인지 확인
-            String value = redisTemplate.opsForValue().get(refreshToken);
+            String value = redisTemplate.opsForValue().get(jwtTokenizer.extractEmail(refreshToken));
             if (ObjectUtils.isEmpty(value)) {
                 throw new BusinessLogicException(ExceptionCode.REFRESH_TOKEN_ERROR);
             } else {
-                Member member = findMember(value);
+                Member member = findMember(jwtTokenizer.extractEmail(refreshToken));
 
                 return jwtTokenizer.delegateAccessToken(member);
             }

@@ -5,6 +5,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import partypeople.server.member.entity.Member;
+import partypeople.server.member.repository.MemberRepository;
 import partypeople.server.member.service.MemberService;
 import partypeople.server.review.entity.Review;
 import partypeople.server.review.repository.ReviewRepository;

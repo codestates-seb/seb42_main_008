@@ -10,9 +10,12 @@ spring:
           starttls:
             enable: true
             required: true
-  redis:
-    host: 127.0.0.1
-    port: 6379
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
+      repositories:
+        enabled: false
   h2:
     console:
       enabled: true
@@ -34,8 +37,8 @@ spring:
       client:
         registration:
           google:
-            client-id:
-            client-secret:
+            clientId: ${GOOGLE_OAUTH_CLIENT_ID}
+            clientSecret: ${GOOGLE_OAUTH_CLIENT_PW}
             scope:
               - email
               - profile
@@ -44,11 +47,7 @@ logging:
     org:
       springframework:
         orm:
-          jpa: DEBUG
 jwt:
   key: partypeople5437895438023498342098039248230932580325809
   access-token-expiration-minutes: 10
   refresh-token-expiration-minutes: 300
-
-#config:
-#  domain: ${AWS_S3_ENDPOINT}

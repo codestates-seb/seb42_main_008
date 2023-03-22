@@ -13,7 +13,6 @@ import java.util.concurrent.TimeUnit;
 @EnableAsync
 @RequiredArgsConstructor
 public class AuthService {
-    private final JwtTokenizer jwtTokenizer;
     private final RedisTemplate<String, String> redisTemplate;
     @Async
     public void redisSetRefreshToken(Long refreshTokenExp,String refreshToken,String subject) {

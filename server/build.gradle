@@ -25,12 +25,10 @@ ext {
 }
 
 dependencies {
-
-
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
-//	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -54,14 +52,8 @@ dependencies {
 
 	asciidoctorExtensions 'org.springframework.restdocs:spring-restdocs-asciidoctor'
 
-//	implementation 'org.springframework.cloud:spring-cloud-starter-aws-parameter-store-config'
-}
 
-//dependencyManagement {
-//	imports {
-//		mavenBom "org.springframework.cloud:spring-cloud-starter-parent:Hoxton.SR12"
-//	}
-//}
+}
 
 tasks.named('test') {
 	outputs.dir snippetsDir
@@ -69,9 +61,9 @@ tasks.named('test') {
 }
 
 tasks.named('asciidoctor') {
+	dependsOn test
 	configurations "asciidoctorExtensions"
 	inputs.dir snippetsDir
-	dependsOn test
 }
 
 task copyDocument(type: Copy) {
