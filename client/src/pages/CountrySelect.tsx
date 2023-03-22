@@ -4,6 +4,9 @@ import { FaChevronRight } from 'react-icons/fa';
 import randomCountries from '../assets/countries.json';
 import { useRecoilValue } from 'recoil';
 import { loginState } from 'states/userState';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import Swal from 'sweetalert2';
 const randomCountriesPick: RandomCountries = randomCountries;
 type RandomCountries = {
   [key: string]: {
@@ -20,6 +23,37 @@ let countries: Countries[] = [];
 const CountrySelect = () => {
   const { continent } = useParams<{ continent: string }>();
   const navigate = useNavigate();
+
+  // 대륙에 맞는 대륙번호
+  let continentNumber: number;
+  if (continent === 'africa') {
+    continentNumber = 1;
+  } else if (continent === 'asia') {
+    continentNumber = 2;
+  } else if (continent === 'europe') {
+    continentNumber = 3;
+  } else if (continent === 'northAmerica') {
+    continentNumber = 4;
+  } else if (continent === 'oceania') {
+    continentNumber = 5;
+  } else if (continent === 'southAmerica') {
+    continentNumber = 6;
+  }
+
+  //현재 대륙에서 나라 글작성된 국가리스트 받아오기
+  const [countryList, setCountryList] = useState([]);
+  useEffect(() => {
+    axios
+      .get(
+        `${process.env.REACT_APP_SERVER}/companions/continents?continent=${continentNumber}`
+      )
+      .then(response => {
+        setCountryList(response.data.data);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }, []);
 
   // 타이틀
   let title = '';
@@ -159,24 +193,45 @@ const CountrySelect = () => {
       },
     ];
   }
-
+  // 변경 : 해당대륙으로만 필터된 배열
+  // 이 배열에서 글이 작성된 국가만 가져와야함
+  //countryList 배열 = [{nationCode:'jpn',companionsCount:3}]
   let filteredrandomCountriesPick: any = [];
   if (continent !== undefined) {
-    filteredrandomCountriesPick = randomCountriesPick[continent]
-      .sort(() => Math.random() - 0.5)
-      .slice(0, 11);
+    filteredrandomCountriesPick = randomCountriesPick[continent];
   }
-  // 코드값들로 배열변환, 일치하는지 통과 판별 some()
-  const excludedCountries = countries
-    .map(obj => obj.code)
-    .filter(code =>
-      filteredrandomCountriesPick.some((country: any) => country.code === code)
-    )
-    .slice(0, 4);
 
-  filteredrandomCountriesPick = filteredrandomCountriesPick
-    .filter((country: any) => !excludedCountries.includes(country.code))
-    .slice(0, 7);
+  const codes = countries.map((country: any) => country.code);
+
+  const nationCodeChange = countryList
+    .filter((country: any) => {
+      return !codes.includes(country.nationCode);
+    })
+    .sort((a: any, b: any) => b.companionsCount - a.companionsCount);
+  const nationCode = nationCodeChange.map((country: any) => country.nationCode);
+
+  //정렬 미치겠다!!!!!!!!!!
+  const filteredCountry = filteredrandomCountriesPick
+    .filter((country: any) => nationCode.includes(country.code))
+    .sort((a: any, b: any) => {
+      const indexA = nationCode.indexOf(a.code);
+      const indexB = nationCode.indexOf(b.code);
+      return indexA - indexB;
+    });
+
+  // 위 배열 상태는 유명 4개국가는 제외시켜놓은, 글이 작성된 국가의 국가코드로만 이루어진 배열
+
+  // 코드값들로 배열변환, 일치하는지 통과 판별 some() >> 걸러야되는 4개국가
+  // const excludedCountries = countries
+  //   .map(obj => obj.code)
+  //   .filter(code =>
+  //     filteredrandomCountriesPick.some((country: any) => country.code === code)
+  //   )
+  //   .slice(0, 4);
+  // 유명국가 4개를 제거하고 7개 잘라내기
+  // filteredrandomCountriesPick = filteredrandomCountriesPick
+  //   .filter((country: any) => !excludedCountries.includes(country.code))
+  //   .slice(0, 7);
 
   const handleCountryClick = (code: string): void => {
     navigate(`/${continent}/${code}`);
@@ -188,7 +243,10 @@ const CountrySelect = () => {
     if (login === true) {
       navigate('/add');
     } else {
-      alert('로그인이 필요한 서비스입니다');
+      Swal.fire({
+        icon: 'error',
+        text: '로그인이 필요한 서비스입니다',
+      });
       navigate('/login');
     }
   };
@@ -235,31 +293,30 @@ const CountrySelect = () => {
             ))}
           </ul>
           <ul className="random-country">
-            {continent !== undefined &&
-              filteredrandomCountriesPick.map((country: any, index: number) => {
-                return (
-                  <li
-                    onClick={() => handleCountryClick(country.code)}
-                    key={index}
-                    style={{
-                      backgroundImage: `url(
-                    https://source.unsplash.com/featured/?${country.name.match(
-                      /[a-zA-Z]/g
-                    )},travel
-                  )`,
-                      backgroundRepeat: `no-repeat`,
-                      cursor: 'pointer',
-                      backgroundSize: `cover`,
-                      backgroundPosition: 'center',
-                    }}
-                  >
-                    <div>
-                      <div>{country.name.match(/[a-zA-Z\s]+/g)}</div>
-                      <FaChevronRight />
-                    </div>
-                  </li>
-                );
-              })}
+            {filteredCountry.map((country: any, index: number) => {
+              return (
+                <li
+                  key={index}
+                  onClick={() => handleCountryClick(country.code)}
+                  style={{
+                    backgroundImage: `url(
+              https://source.unsplash.com/featured/?${country.name.match(
+                /[a-zA-Z]/g
+              )},travel
+            )`,
+                    backgroundRepeat: `no-repeat`,
+                    cursor: 'pointer',
+                    backgroundSize: `cover`,
+                    backgroundPosition: 'center',
+                  }}
+                >
+                  <div>
+                    <div>{country.name.match(/[a-zA-Z\s]+/g)}</div>
+                    <FaChevronRight />
+                  </div>
+                </li>
+              );
+            })}
           </ul>
         </div>
       </CountryListBox>
@@ -275,6 +332,7 @@ const CountryListContainer = styled.div`
   width: 100%;
   position: relative;
   align-items: center;
+  height: 100%;
 
   .country-name-box {
     display: flex;
@@ -347,12 +405,14 @@ const CountryListBox = styled.section`
   position: relative;
   margin-top: 20px;
   margin-bottom: 20px;
+  height: 100%;
 
   .countrybox {
     display: flex;
     width: 80%;
     min-height: 600px;
     margin-top: 20px;
+    height: 100%;
 
     @media screen and (max-width: 768px) {
       display: flex;
@@ -363,7 +423,7 @@ const CountryListBox = styled.section`
     }
   }
   .hot-country {
-    width: 70%;
+    width: 100%;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: repeat(2, 1fr);
@@ -373,7 +433,9 @@ const CountryListBox = styled.section`
       width: 80%;
       flex-direction: column;
       margin-top: 20px;
+      height: 600px;
       grid-template-columns: repeat(1, 1fr);
+      grid-template-rows: repeat(4, 1fr);
     }
     > li {
       border: 0.5px solid black;
@@ -414,9 +476,9 @@ const CountryListBox = styled.section`
     }
   }
   .random-country {
-    width: 30%;
+    /* width: 30%; */
     display: grid;
-    grid-template-rows: repeat(7, 1fr);
+    grid-template-rows: repeat(1fr);
 
     @media screen and (max-width: 768px) {
       display: grid;

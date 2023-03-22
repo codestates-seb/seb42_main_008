@@ -37,6 +37,10 @@ interface secondModal {
   setFirstModal: (newValue: boolean) => void;
   setSecondModal: (newValue: boolean) => void;
   reviewId: number;
+  score: number;
+  setScore: (newValue: number) => void;
+  content: string;
+  setContent: (newValue: string) => void;
 }
 
 // * 세번째 리뷰 모달
@@ -46,6 +50,10 @@ interface thirdModal {
   setSecondModal: (newValue: boolean) => void;
   setThirdModal: (newValue: boolean) => void;
   reviewId: number;
+  score: number;
+  setScore: (newValue: number) => void;
+  content: string;
+  setContent: (newValue: string) => void;
 }
 
 // * 동행자 정보

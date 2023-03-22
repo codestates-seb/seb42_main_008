@@ -1,19 +1,19 @@
-import axios from 'axios';
+import customAxios from 'api/customAxios';
 import GoogleLogin from 'components/Login/GoogleLogin';
 import { MemberBox } from 'components/Login/MemberStyled';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilState, useSetRecoilState } from 'recoil';
-import { loginState, userInfo, userToken } from 'states/userState';
+import { loginState, userInfo } from 'states/userState';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
+import { setCookie } from 'utils/userCookies';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const [isLogin, setIsLogin] = useRecoilState(loginState);
-  const setToken = useSetRecoilState(userToken);
   const setUser = useSetRecoilState(userInfo);
 
   const navigate = useNavigate();
@@ -27,13 +27,22 @@ const Login = () => {
 
   const handleSubmtiLogin = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    await axios
-      .post(`${process.env.REACT_APP_TEST_SERVER}/members/login`, {
+    customAxios
+      .post(`/members/login`, {
         email: email.trim(),
         password: password.trim(),
       })
       .then(res => {
-        setToken(res.headers.authorization);
+        setCookie('accessToken', res.headers.authorization, {
+          path: '/',
+          sameSite: 'none',
+          secure: true,
+        });
+        setCookie('refreshToken', res.headers.refresh, {
+          path: '/',
+          sameSite: 'none',
+          secure: true,
+        });
         const decodeToken = res.headers.authorization
           .split(' ')[1]
           .split('.')[1];
@@ -52,6 +61,7 @@ const Login = () => {
         console.log(error);
       });
   };
+
   return (
     <Container>
       <h1>PartyPeople</h1>
@@ -181,15 +191,3 @@ const OauthLoginBox = styled.section`
     border-radius: 100%;
   }
 `;
-
-/* TODO:
-1. 기본 구조 * 
-2. 유효성 검사
-2-1. 둘 다 value 가 없을 경우
-2-2. 이메일이 비어있을 경우
-2-3. 이메일이 가입되지 않은 이메일인 경우
-2-4. 이메일이 올바르지 않은 형식일 경우
-2-5. 비밀번호가 비어있을 경우
-2-6. 비밀번호가 가입되지 않은 비밀번호인 경우
-2-7. 비밀번호가 올바르지 않은 경우
- */

@@ -1,4 +1,4 @@
-import axios from 'axios';
+import customAxios from 'api/customAxios';
 import { subProps } from 'interfaces/ContentDetail.interface';
 import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -18,7 +18,6 @@ const ContentWriter = ({ detail, sub, setSub }: subProps) => {
     navigate(`/${contentId}/edit`);
   };
 
-  // 클릭 시 글 삭제 추가
   const handleDelete = () => {
     Swal.fire({
       title: '삭제하시겠습니까?',
@@ -29,10 +28,8 @@ const ContentWriter = ({ detail, sub, setSub }: subProps) => {
       confirmButtonText: 'Yes, delete it!',
     }).then(async result => {
       if (result.isConfirmed) {
-        await axios
-          .delete(
-            `${process.env.REACT_APP_TEST_SERVER}/companions/${detail.companionId}`
-          )
+        await customAxios
+          .delete(`/companions/${detail.companionId}`)
           .then(() => {
             Swal.fire('Deleted!', 'Your file has been deleted.', 'success');
             console.log('delete!');
@@ -53,17 +50,14 @@ const ContentWriter = ({ detail, sub, setSub }: subProps) => {
       confirmButtonText: '네, 신청합니다',
     }).then(async result => {
       if (result.isConfirmed) {
-        await axios
-          .post(
-            `${process.env.REACT_APP_SERVER}/companions/${contentId}/subscribers`,
-            { memberId }
-          )
+        await customAxios
+          .post(`/companions/${contentId}/subscribers`, { memberId })
           .then(() => {
             Swal.fire('Applied!', '동행이 신청되었습니다!', 'success');
             setSub(sub);
             getSubList();
             const content = `작성하신 동행글에 ${nickname} 님이 동행을 신청하였습니다.`;
-            axios.post(`${process.env.REACT_APP_SERVER}/messages`, {
+            customAxios.post(`/messages`, {
               content,
               senderId: 1,
               receiverId: detail.memberId,
@@ -78,13 +72,9 @@ const ContentWriter = ({ detail, sub, setSub }: subProps) => {
   };
 
   const getSubList = () => {
-    axios
-      .get(
-        `${process.env.REACT_APP_SERVER}/companions/${contentId}/subscribers`
-      )
-      .then(res => {
-        setSub(res.data.data);
-      });
+    customAxios.get(`/companions/${contentId}/subscribers`).then(res => {
+      setSub(res.data.data);
+    });
   };
 
   useEffect(() => {

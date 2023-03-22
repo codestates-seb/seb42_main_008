@@ -1,12 +1,14 @@
-import axios from 'axios';
-import { reviewerInfo, thirdModal } from 'interfaces/ContentDetail.interface';
-import { useEffect, useState } from 'react';
+import customAxios from 'api/customAxios';
+import { thirdModal } from 'interfaces/ContentDetail.interface';
+import { useState } from 'react';
 import { CiFaceFrown, CiFaceMeh, CiFaceSmile } from 'react-icons/ci';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { userInfo } from 'states/userState';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
+import ModalScrollDisable from 'utils/ModalScrollDisable';
+import { StyledModal } from './CompanionStyled';
 
 const ThirdReviewModal = ({
   detail,
@@ -14,6 +16,10 @@ const ThirdReviewModal = ({
   setSecondModal,
   setThirdModal,
   reviewId,
+  score,
+  setScore,
+  content,
+  setContent,
 }: thirdModal) => {
   const handleThirdModal = () => {
     setThirdModal(false);
@@ -21,16 +27,14 @@ const ThirdReviewModal = ({
     setFirstModal(false);
   };
 
-  const params = useParams();
-  const { contentId } = params;
+  // const params = useParams();
+  // const { contentId } = params;
   const { memberId } = useRecoilValue(userInfo);
   const navigate = useNavigate();
   const [good, setGood] = useState<boolean>(false);
   const [soso, setSoso] = useState<boolean>(false);
   const [bad, setBad] = useState<boolean>(false);
-  const [score, setScore] = useState<number>(0);
-  const [content, setContent] = useState<string>('');
-  const [reviewed, setReviewed] = useState<reviewerInfo>();
+  // const [reviewed, setReviewed] = useState<reviewerInfo>();
 
   // 1점
   const handleGood = () => {
@@ -76,30 +80,30 @@ const ThirdReviewModal = ({
     setContent(event.target.value);
   };
 
-  const getReviewList = () => {
-    axios
-      .get(
-        `${process.env.REACT_APP_SERVER}/companions/${contentId}/reviewers`,
-        {
-          params: { memberId },
-        }
-      )
-      .then(res => {
-        setReviewed(res.data.data);
-      });
-  };
+  // const getReviewList = () => {
+  //   customAxios
+  //     .get(`/companions/${contentId}/reviewers`, {
+  //       params: { memberId },
+  //     })
+  //     .then(res => {
+  //       setReviewed(res.data.data);
+  //     })
+  //     .catch(error => {
+  //       console.log(error);
+  //       console.log(reviewed);
+  //     });
+  // };
 
-  useEffect(() => {
-    getReviewList();
-    console.log(reviewed);
-  }, []);
+  // useEffect(() => {
+  //   getReviewList();
+  // }, []);
 
-  // 리뷰 또 쓰려고 하면 막기
+  // * 리뷰 또 쓰려고 하면 막기
   const handleReviewWrite = async () => {
     if (memberId !== detail.memberId) {
-      // 참여자가 작성자에게 쓰는 리뷰
-      await axios
-        .post(`${process.env.REACT_APP_SERVER}/reviews`, {
+      // * 참여자가 작성자에게 쓰는 리뷰
+      await customAxios
+        .post(`/reviews`, {
           memberId,
           reviewedMemberId: detail.memberId,
           companionId: detail.companionId,
@@ -116,9 +120,9 @@ const ThirdReviewModal = ({
         })
         .catch(error => console.log(error));
     } else {
-      // 작성자가 참여자에게 쓰는 리뷰
-      await axios
-        .post(`${process.env.REACT_APP_SERVER}/reviews`, {
+      // * 작성자가 참여자에게 쓰는 리뷰
+      await customAxios
+        .post(`/reviews`, {
           memberId,
           reviewedMemberId: reviewId,
           companionId: detail.companionId,
@@ -141,8 +145,9 @@ const ThirdReviewModal = ({
 
   return (
     <Container>
+      <ModalScrollDisable />
       <BackGround>
-        <ModalView onClick={event => event.stopPropagation()}>
+        <ModalView>
           <Score>
             <BtnWrapper>
               <button
@@ -180,7 +185,7 @@ const ThirdReviewModal = ({
 
 export default ThirdReviewModal;
 
-const Container = styled.main`
+const Container = styled.section`
   width: 100%;
   height: 100%;
 `;
@@ -196,22 +201,7 @@ const BackGround = styled.section`
   width: 100%;
   height: 100%;
 `;
-const ModalView = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  background-color: white;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 50%;
-  height: 40%;
-  text-align: center;
-  border-radius: 30px;
-  padding: 30px;
-  box-shadow: 5px 5px 10px 5px rgba(0, 0, 0, 0.25);
+const ModalView = styled(StyledModal)`
   @media screen and (max-width: 992px) {
     width: 500px;
     height: 300px;

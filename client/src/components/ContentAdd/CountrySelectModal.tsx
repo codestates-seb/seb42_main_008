@@ -2,6 +2,7 @@ import React, { Dispatch, SetStateAction } from 'react';
 import styled from 'styled-components';
 import { GrClose } from 'react-icons/gr';
 import countries from '../../assets/countries.json';
+import Swal from 'sweetalert2';
 const countriesPick: Countries = countries;
 type Countries = {
   [key: string]: {
@@ -24,7 +25,10 @@ const CountrySelectModal = ({
 }: Props) => {
   if (!continentSelect || continentSelect === '대륙선택') {
     setCountryModal(false);
-    alert('대륙을 선택해주세요');
+    Swal.fire({
+      icon: 'error',
+      text: '대륙을 선택해주세요',
+    });
   }
 
   const handleModal = () => {

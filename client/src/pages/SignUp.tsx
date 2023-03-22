@@ -1,4 +1,4 @@
-import axios from 'axios';
+import customAxios from 'api/customAxios';
 import { MemberBox } from 'components/Login/MemberStyled';
 import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -22,10 +22,7 @@ const SignUp = () => {
   const [isPwCheck, setIsPwCheck] = useState(false);
 
   const navigate = useNavigate();
-  // const url = process.env.REACT_APP_SERVER;
-  const url = process.env.REACT_APP_TEST_SERVER;
 
-  // 이메일 유효성 검사
   const handleChangeEmail = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const emailRegex =
@@ -44,11 +41,6 @@ const SignUp = () => {
     []
   );
 
-  // const handleCheckEmail = () => {
-  //   Swal.fire('', '추후 추가 예정입니다');
-  // };
-
-  // 닉네임 유효성 검사
   const handleChangeNickame = useCallback<
     (event: React.ChangeEvent<HTMLInputElement>) => void
   >(event => {
@@ -64,8 +56,8 @@ const SignUp = () => {
 
   // 닉네임 중복확인 버튼
   const handleCheckNickname = async () => {
-    await axios
-      .post(`${url}/members/nickname`, {
+    await customAxios
+      .post(`/members/nickname`, {
         nickname,
       })
       .then(res => {
@@ -81,7 +73,6 @@ const SignUp = () => {
       });
   };
 
-  // 비밀번호 유효성 검사
   const handleChangePassword = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const passwordRegex = /^(?=.*[a-zA-Z])(?=.*[0-9]).{8,25}$/;
@@ -101,7 +92,6 @@ const SignUp = () => {
     []
   );
 
-  // 비밀번호 확인 유효성 검사
   const handleChangePwCheck = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const passwordConfirmCurrent = event.target.value;
@@ -128,9 +118,8 @@ const SignUp = () => {
     ) {
       Swal.fire('', '양식을 다시 확인해주세요');
     } else {
-      // 회원가입에 성공할 시 로그인 페이지로 이동 (추후 조건 추가하기)
-      await axios
-        .post(`${url}/members`, {
+      await customAxios
+        .post(`/members`, {
           email,
           nickname,
           password,

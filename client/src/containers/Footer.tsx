@@ -4,10 +4,10 @@ import styled from 'styled-components';
 const Footer = () => {
   return (
     <FooterBox>
-      <div className="partypeople">PartyPeople</div>
+      <div className="partypeople">Party People</div>
       <div className="names">
-        <div className="name">FE: 조은선, 김상교, 장장미</div>
-        <div className="name">BE: 이승철, 조국선, 홍수경</div>
+        <div className="name">조은선, 김상교, 장장미</div>
+        <div className="name">이승철, 조국선, 홍수경</div>
       </div>
       <p>
         <a
@@ -39,6 +39,7 @@ const FooterBox = styled.footer`
   }
   .partypeople {
     font-size: 1.5rem;
+    font-family: 'Lobster', cursive;
   }
   .names {
     padding-left: 10px;

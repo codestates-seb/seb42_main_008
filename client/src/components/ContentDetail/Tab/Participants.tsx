@@ -1,4 +1,4 @@
-import axios from 'axios';
+import customAxios from 'api/customAxios';
 import { StyledCompanionList } from 'components/ContentDetail/CompanionStyled';
 import { companionProps } from 'interfaces/ContentDetail.interface';
 import { useEffect } from 'react';
@@ -23,17 +23,16 @@ const Participants = ({ detail, setSub, part, setPart }: companionProps) => {
       confirmButtonText: '네, 취소합니다',
     }).then(async result => {
       if (result.isConfirmed) {
-        await axios
-          .delete(
-            `${process.env.REACT_APP_TEST_SERVER}/companions/${contentId}/participants`,
-            { data: { memberId } }
-          )
+        await customAxios
+          .delete(`/companions/${contentId}/participants`, {
+            data: { memberId },
+          })
           .then(() => {
             Swal.fire('Deleted!', '취소되었습니다', 'success');
             setPart(part);
             getPartList();
             const content = `작성하신 동행글에 ${nickname} 님이 동행참여를 취소하였습니다.`;
-            axios.post(`${process.env.REACT_APP_SERVER}/messages`, {
+            customAxios.post(`/messages`, {
               content,
               senderId: 1,
               receiverId: detail.memberId,
@@ -46,13 +45,9 @@ const Participants = ({ detail, setSub, part, setPart }: companionProps) => {
   };
 
   const getSubList = () => {
-    axios
-      .get(
-        `${process.env.REACT_APP_SERVER}/companions/${contentId}/subscribers`
-      )
-      .then(res => {
-        setSub(res.data.data);
-      });
+    customAxios.get(`/companions/${contentId}/subscribers`).then(res => {
+      setSub(res.data.data);
+    });
   };
 
   useEffect(() => {
@@ -60,13 +55,9 @@ const Participants = ({ detail, setSub, part, setPart }: companionProps) => {
   }, []);
 
   const getPartList = () => {
-    axios
-      .get(
-        `${process.env.REACT_APP_SERVER}/companions/${contentId}/participants`
-      )
-      .then(res => {
-        setPart(res.data.data);
-      });
+    customAxios.get(`/companions/${contentId}/participants`).then(res => {
+      setPart(res.data.data);
+    });
   };
 
   useEffect(() => {

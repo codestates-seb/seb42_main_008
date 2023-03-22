@@ -1,4 +1,4 @@
-import axios from 'axios';
+import customAxios from 'api/customAxios';
 import CompanionTab from 'components/ContentDetail/CompanionTab';
 import ContentWriter from 'components/ContentDetail/ContentWriter';
 import SearchMap from 'components/ContentDetail/SearchMap';
@@ -34,8 +34,8 @@ const ContentDetail = () => {
 
   // 글 세부조회
   useEffect(() => {
-    axios
-      .get(`${process.env.REACT_APP_SERVER}/companions/${contentId}`)
+    customAxios
+      .get(`/companions/${contentId}`)
       .then(res => {
         setDetail(res.data.data);
         setIsLoading(true);
@@ -347,7 +347,6 @@ const RightBox = styled.section`
     display: flex;
     flex-direction: row;
     width: 100%;
-    height: 100vh;
     overflow: scroll;
     ::-webkit-scrollbar {
       display: none;

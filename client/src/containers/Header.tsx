@@ -1,4 +1,4 @@
-import NoteModal from 'components/NoteModal/NoteModal';
+import NoteModal from 'components/MessageModal/NoteModal';
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
@@ -196,8 +196,11 @@ const HeaderBox = styled.header`
     }
   }
   .logo {
-    font-size: 2rem;
+    font-size: 2.1rem;
     font-weight: bold;
+    font-family: 'Lobster', cursive;
+    position: relative;
+    bottom: 2px;
   }
 
   .mobile-menu {

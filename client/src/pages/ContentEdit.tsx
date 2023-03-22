@@ -7,11 +7,12 @@ import 'react-datepicker/dist/react-datepicker.css';
 import ko from 'date-fns/locale/ko';
 import countries from '../assets/countries.json';
 import { useParams } from 'react-router-dom';
-import axios from 'axios';
 import SearchMap from 'components/ContentEdit/SearchMap';
 import CountrySelectModal from 'components/ContentEdit/CountrySelectModal';
 import TendencyModal from 'components/ContentEdit/TendencyModal';
 import ThemeModal from 'components/ContentEdit/ThemeModal';
+import Swal from 'sweetalert2';
+import customAxios from 'api/customAxios';
 
 registerLocale('ko', ko);
 
@@ -79,8 +80,8 @@ const ContentEdit = () => {
   });
 
   useEffect(() => {
-    axios
-      .get(`${process.env.REACT_APP_SERVER}/companions/${contentId}`)
+    customAxios
+      .get(`/companions/${contentId}`)
       .then(response => {
         setContinentNumber(response.data.data.continent);
         setCountrySelect(response.data.data.nationName);
@@ -172,27 +173,45 @@ const ContentEdit = () => {
 
   const handleContentSubmit = () => {
     if (!titleInput) {
-      alert('글 제목을 입력해주세요!');
+      Swal.fire({
+        icon: 'error',
+        text: '글 제목을 입력해주세요',
+      });
       return;
     }
     if (!contentInput.replace(/<\/?p>/gi, '')) {
-      alert('글 내용을 작성해주세요!');
+      Swal.fire({
+        icon: 'error',
+        text: '글 내용을 작성해주세요',
+      });
       return;
     }
     if (!startDate || !endDate) {
-      alert('날짜를 입력해주세요!');
+      Swal.fire({
+        icon: 'error',
+        text: '날짜를 입력해주세요',
+      });
       return;
     }
     if (!savedAddress) {
-      alert('위치를 입력해주세요!');
+      Swal.fire({
+        icon: 'error',
+        text: '위치를 입력해주세요',
+      });
       return;
     }
     if (continentSelect === '대륙선택') {
-      alert('대륙을 선택해주세요!');
+      Swal.fire({
+        icon: 'error',
+        text: '대륙을 선택해주세요!',
+      });
       return;
     }
     if (countrySelect === '국가선택') {
-      alert('나라를 선택해주세요!');
+      Swal.fire({
+        icon: 'error',
+        text: '국가를 선택해주세요!',
+      });
     }
     if (
       titleInput &&
@@ -380,7 +399,8 @@ const TitleBox = styled.div`
   width: 100%;
   height: 300px;
   background-repeat: no-repeat;
-  background-size: 100% 100%;
+  background-size: cover;
+  background-position: center;
   color: white;
   font-weight: bold;
   > h1 {

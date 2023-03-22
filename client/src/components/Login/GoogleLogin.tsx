@@ -2,20 +2,14 @@ import { useEffect } from 'react';
 import { FcGoogle } from 'react-icons/fc';
 import { useNavigate } from 'react-router-dom';
 import { useSetRecoilState } from 'recoil';
-import {
-  loginState,
-  userInfo,
-  userRefreshToken,
-  userToken,
-} from 'states/userState';
+import { loginState, userInfo } from 'states/userState';
 import styled from 'styled-components';
+import { setCookie } from 'utils/userCookies';
 
 const GoogleLogin = () => {
   const navigate = useNavigate();
   const setIsLogin = useSetRecoilState(loginState);
-  const setToken = useSetRecoilState(userToken);
   const setUser = useSetRecoilState(userInfo);
-  const setRefreshToken = useSetRecoilState(userRefreshToken);
   const BASE_URL = process.env.REACT_APP_SERVER;
   const accessToken: string | null = new URL(
     window.location.href
@@ -42,13 +36,21 @@ const GoogleLogin = () => {
     );
     const userData = JSON.parse(jsonPayload);
     setUser(userData);
-    setToken('Bearer ' + accessToken);
+    setCookie('accessToken', 'Bearer' + accessToken, {
+      path: '/',
+      sameSite: 'none',
+      secure: true,
+    });
     setIsLogin(true);
   };
 
   useEffect(() => {
     if (accessToken && refreshToken) {
-      setRefreshToken(refreshToken);
+      setCookie('refreshToken', 'Bearer' + refreshToken, {
+        path: '/',
+        sameSite: 'none',
+        secure: true,
+      });
       googleLoginAction(accessToken);
       navigate('/');
     }
