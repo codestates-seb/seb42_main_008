@@ -34,6 +34,7 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 @Slf4j
 public class MemberService {
+    private final static int NICKNAME_MAX_SIZE = 10;
     private final CompanionRepository companionRepository;
     private final MemberRepository memberRepository;
     private final CustomBeanUtils<Member> beanUtils;
@@ -221,5 +222,27 @@ public class MemberService {
             password[i] = alphanum.charAt(random.nextInt(alphanum.length()));
         }
         return new String(password);
+    }
+
+    public String oauthNickCheck(String name) {
+        List<String> nicknames = memberRepository.findAllNicknames();
+
+        if (!(nicknames.contains(name)) && name.length() <= NICKNAME_MAX_SIZE) {
+            return name;
+        }
+
+        String randomNickname;
+        do{
+            randomNickname = generateRandomString();
+        } while (nicknames.contains(randomNickname));
+        return randomNickname;
+    }
+
+    private String generateRandomString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("G_");
+        sb.append(generateRandomPassword());
+
+        return sb.toString();
     }
 }
