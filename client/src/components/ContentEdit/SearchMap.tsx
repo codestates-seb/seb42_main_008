@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import {
   GoogleMap,
-  LoadScript,
   LoadScriptProps,
   MarkerF,
+  useLoadScript,
 } from '@react-google-maps/api';
 import styled from 'styled-components';
 import { FaMapMarkerAlt } from 'react-icons/fa';
@@ -26,8 +26,11 @@ const SearchMap: React.FC<Props> = ({
   setMarkerLocation,
 }) => {
   // 구글 api
-  const googlekey: any = process.env.REACT_APP_API_KEY;
-
+  const googleKey: any = process.env.REACT_APP_API_KEY;
+  const { isLoaded } = useLoadScript({
+    googleMapsApiKey: googleKey,
+    libraries,
+  });
   const initialCenter = {
     lat: 37.5665,
     lng: 126.978,
@@ -99,38 +102,38 @@ const SearchMap: React.FC<Props> = ({
     );
   };
 
-  return (
-    <LoadScript googleMapsApiKey={googlekey} libraries={libraries}>
-      <div>
-        <SearchForm onSubmit={handleSearchClick}>
-          <input type="text" onChange={handlePlaceSelect} />
-          <button type="submit">Search</button>
-        </SearchForm>
-        <GoogleMap
-          mapContainerStyle={containerStyle}
-          center={center}
-          zoom={10}
-          onClick={handleMapClick}
-        >
-          {markerPosition && (
-            <MarkerF
-              position={
-                markerPosition && {
-                  lat: markerPosition.lat,
-                  lng: markerPosition.lng,
-                }
-              }
-            />
-          )}
-        </GoogleMap>
+  return isLoaded ? (
+    <div>
+      <SearchForm onSubmit={handleSearchClick}>
+        <input type="text" onChange={handlePlaceSelect} />
+        <button type="submit">Search</button>
+      </SearchForm>
+      <GoogleMap
+        mapContainerStyle={containerStyle}
+        center={center}
+        zoom={10}
+        onClick={handleMapClick}
+      >
         {markerPosition && (
-          <AddressRender>
-            <FaMapMarkerAlt className="mark-icon" />
-            <div>{savedAddress}</div>
-          </AddressRender>
+          <MarkerF
+            position={
+              markerPosition && {
+                lat: markerPosition.lat,
+                lng: markerPosition.lng,
+              }
+            }
+          />
         )}
-      </div>
-    </LoadScript>
+      </GoogleMap>
+      {markerPosition && (
+        <AddressRender>
+          <FaMapMarkerAlt className="mark-icon" />
+          <div>{savedAddress}</div>
+        </AddressRender>
+      )}
+    </div>
+  ) : (
+    <></>
   );
 };
 
