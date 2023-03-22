@@ -63,17 +63,17 @@ const TravelComplete = ({ detail, part, setPart }: partProps) => {
         {part && part.length !== 0 ? (
           part.map((el: any, index: number) => (
             <li key={index}>
-              <div className="companion-info">
+              <CompanionInfo>
                 <div
                   className="img"
                   style={{ backgroundImage: `url(${el.profile})` }}
                 ></div>
                 <div>{el.nickname}</div>
-              </div>
+              </CompanionInfo>
               {memberId !== el.memberId && detail.memberId !== memberId ? (
-                <div className="btn-wrapper">
-                  <button className="btn other">완료</button>
-                </div>
+                <ButtonBox>
+                  <button className="other">완료</button>
+                </ButtonBox>
               ) : (reviewed &&
                   reviewed.length !== 0 &&
                   reviewed.some((rv: any) => rv.memberId === el.memberId)) ||
@@ -82,18 +82,15 @@ const TravelComplete = ({ detail, part, setPart }: partProps) => {
                   reviewed.some(
                     (rv: any) => rv.memberId === detail.memberId
                   )) ? (
-                <div className="btn-wrapper">
-                  <button className="btn">완료</button>
-                </div>
+                <ButtonBox>
+                  <button>완료</button>
+                </ButtonBox>
               ) : detail.memberId === memberId ? (
-                <div className="btn-wrapper">
-                  <button
-                    className="btn"
-                    onClick={() => handleFirstModal(el.memberId)}
-                  >
+                <ButtonBox>
+                  <button onClick={() => handleFirstModal(el.memberId)}>
                     리뷰
                   </button>
-                </div>
+                </ButtonBox>
               ) : (memberId === el.memberId &&
                   reviewed &&
                   reviewed.length !== 0 &&
@@ -106,14 +103,11 @@ const TravelComplete = ({ detail, part, setPart }: partProps) => {
                   reviewed.some(
                     (rv: any) => rv.memberId === el.memberId
                   )) ? null : (
-                <div className="btn-wrapper">
-                  <button
-                    className="btn"
-                    onClick={() => handleFirstModal(el.memberId)}
-                  >
+                <ButtonBox>
+                  <button onClick={() => handleFirstModal(el.memberId)}>
                     작성자 리뷰 하기
                   </button>
-                </div>
+                </ButtonBox>
               )}
             </li>
           ))
@@ -156,7 +150,7 @@ const Container = styled.section`
 `;
 
 const TabBox = styled(StyledTabBox)`
-  > li {
+  li {
     width: 100%;
     text-align: center;
   }
@@ -185,72 +179,72 @@ const Content = styled.ul`
     font-size: 1.2rem;
     padding: 5px;
     flex-direction: column;
-    .companion-info {
-      width: 50%;
-      display: flex;
-      justify-content: flex-start;
-      align-items: center;
-      flex-direction: column;
-      .img {
-        margin-right: 5px;
-        width: 50px;
-        height: 50px;
-        border-radius: 100%;
-        background-repeat: no-repeat;
-        background-size: cover;
-        background-position: center;
-      }
-    }
-    .btn-wrapper {
-      padding: 5px;
-      display: flex;
-      justify-content: space-around;
-      .btn {
-        cursor: pointer;
-        padding: 5px 15px;
-        font-size: 1rem;
-        color: white;
-        border: none;
-        border-radius: 15px;
-        background-color: #feb35c;
-        &.other {
-          cursor: default;
-          background-color: transparent;
-          opacity: 0;
-        }
-      }
-    }
   }
   @media screen and (max-width: 768px) {
-    > li {
+    li {
       font-size: 0.8rem;
-      .companion-info {
-        .img {
-          width: 30px;
-          height: 30px;
-        }
-      }
-      .btn-wrapper {
-        .btn {
-          font-size: 0.8rem;
-        }
-      }
     }
   }
   @media screen and (max-width: 576px) {
-    > li {
+    li {
       font-size: 0.8rem;
-      .companion-info {
-        .img {
-          width: 30px;
-          height: 30px;
-        }
-      }
-      .btn-wrapper {
-        .btn {
-          font-size: 0.8rem;
-        }
-      }
+    }
+  }
+`;
+const CompanionInfo = styled.div`
+  width: 50%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: column;
+  .img {
+    margin-right: 5px;
+    width: 50px;
+    height: 50px;
+    border-radius: 100%;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+  }
+  @media screen and (max-width: 768px) {
+    .img {
+      width: 30px;
+      height: 30px;
+    }
+  }
+  @media screen and (max-width: 576px) {
+    .img {
+      width: 30px;
+      height: 30px;
+    }
+  }
+`;
+const ButtonBox = styled.div`
+  padding: 5px;
+  display: flex;
+  justify-content: space-around;
+  button {
+    cursor: pointer;
+    padding: 5px 15px;
+    font-size: 1rem;
+    color: white;
+    border: none;
+    border-radius: 15px;
+    background-color: #feb35c;
+    &.other {
+      cursor: default;
+      background-color: transparent;
+      opacity: 0;
+    }
+  }
+  @media screen and (max-width: 768px) {
+    button {
+      font-size: 0.8rem;
+    }
+  }
+  @media screen and (max-width: 576px) {
+    button {
+      font-size: 0.8rem;
     }
   }
 `;

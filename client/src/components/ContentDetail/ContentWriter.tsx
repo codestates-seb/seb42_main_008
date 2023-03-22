@@ -92,38 +92,28 @@ const ContentWriter = ({ detail, sub, setSub }: subProps) => {
           className="img"
           style={{ backgroundImage: `url(${detail.profile})` }}
         ></div>
-        <div className="info-wrapper">
+        <InfoWrapper>
           <div id="nickname">{detail.nickname}</div>
           <div id="battery">
             <img src={getScoreIcon(detail.score)} alt="score" />
             <div>{detail.score}%</div>
           </div>
-        </div>
+        </InfoWrapper>
       </WriterInfo>
       <ButtonBox>
         {detail.memberId === memberId ? (
           <>
-            <button className="btn" onClick={handleUpdate}>
-              동행글 수정
-            </button>
-            <button className="btn" onClick={handleDelete}>
-              동행글 삭제
-            </button>
+            <Button onClick={handleUpdate}>동행글 수정</Button>
+            <Button onClick={handleDelete}>동행글 삭제</Button>
           </>
         ) : detail.companionStatus ? (
           <>
-            <button className="btn" onClick={handleProfile}>
-              프로필 보기
-            </button>
+            <Button onClick={handleProfile}>프로필 보기</Button>
           </>
         ) : (
           <>
-            <button className="btn" onClick={handleApply}>
-              동행 신청
-            </button>
-            <button className="btn" onClick={handleProfile}>
-              프로필 보기
-            </button>
+            <Button onClick={handleApply}>동행 신청</Button>
+            <Button onClick={handleProfile}>프로필 보기</Button>
           </>
         )}
       </ButtonBox>
@@ -180,14 +170,44 @@ const WriterInfo = styled.section`
     background-size: cover;
     background-position: center;
   }
-  .info-wrapper {
+  @media screen and (max-width: 768px) {
+    .img {
+      width: 150px;
+      height: 150px;
+    }
+  }
+  @media screen and (max-width: 576px) {
+    font-size: 0.5rem;
+  }
+`;
+const InfoWrapper = styled.div`
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
+  padding: 10px 20px;
+  #nickname {
+    font-size: 1.3rem;
+  }
+  #battery {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    > img {
+      width: 60px;
+      height: 50px;
+      padding-right: 10px;
+    }
+  }
+  @media screen and (max-width: 768px) {
     display: flex;
     justify-content: space-around;
     align-items: center;
     width: 100%;
     padding: 10px 20px;
     #nickname {
-      font-size: 1.3rem;
+      font-size: 1rem;
     }
     #battery {
       display: flex;
@@ -195,99 +215,57 @@ const WriterInfo = styled.section`
       align-items: center;
       flex-direction: row;
       > img {
-        width: 60px;
-        height: 50px;
-        padding-right: 10px;
-      }
-    }
-  }
-  @media screen and (max-width: 768px) {
-    .img {
-      width: 150px;
-      height: 150px;
-    }
-    .info-wrapper {
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      width: 100%;
-      padding: 10px 20px;
-      #nickname {
-        font-size: 1rem;
-      }
-      #battery {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: row;
-        > img {
-          width: 50px;
-          height: 40px;
-          padding-right: 5px;
-        }
+        width: 50px;
+        height: 40px;
+        padding-right: 5px;
       }
     }
   }
   @media screen and (max-width: 576px) {
-    font-size: 0.5rem;
-    .info-wrapper {
-      #nickname {
-        font-size: 1rem;
-      }
-      #battery {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: row;
-        > img {
-          width: 50px;
-          height: 40px;
-          padding-right: 5px;
-        }
+    #nickname {
+      font-size: 1rem;
+    }
+    #battery {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: row;
+      > img {
+        width: 50px;
+        height: 40px;
+        padding-right: 5px;
       }
     }
   }
 `;
-
 const ButtonBox = styled.section`
   display: flex;
   justify-content: space-around;
   align-items: center;
   width: 100%;
   padding: 10px 30px;
-  .btn {
-    background-color: #d9d9d9;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 30px;
-    font-size: 1.2rem;
-    cursor: pointer;
-  }
-  .yellow {
-    background: #feb35c;
-  }
-  @media screen and (max-width: 768px) {
-    .btn {
-      background-color: #d9d9d9;
-      color: white;
-      border: none;
-      padding: 5px;
-      border-radius: 30px;
-      font-size: 0.7rem;
-      cursor: pointer;
-    }
-    .yellow {
-      background: #feb35c;
-    }
-  }
   @media screen and (max-width: 576px) {
     > * {
       font-size: 0.5rem;
     }
-    .yellow {
-      background: #feb35c;
-    }
+  }
+`;
+const Button = styled.button`
+  background-color: #d9d9d9;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 30px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  @media screen and (max-width: 768px) {
+    background-color: #d9d9d9;
+    color: white;
+    border: none;
+    padding: 5px;
+    border-radius: 30px;
+    font-size: 0.8rem;
+    cursor: pointer;
   }
 `;
 
