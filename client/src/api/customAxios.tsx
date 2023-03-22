@@ -5,7 +5,7 @@ import { getCookie, setCookie } from 'utils/userCookies';
 axios.defaults.withCredentials = true;
 
 const customAxios = axios.create({
-  baseURL: process.env.REACT_APP_TEST_SERVER,
+  baseURL: process.env.REACT_APP_SERVER,
   headers: {
     'Content-Type': 'application/json',
     'Access-Control-Allow-Origin': '*',
