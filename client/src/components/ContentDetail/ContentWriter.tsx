@@ -1,5 +1,5 @@
 import customAxios from 'api/customAxios';
-import { subProps } from 'interfaces/ContentDetail.interface';
+import { companionProps } from 'interfaces/ContentDetail.interface';
 import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
@@ -8,7 +8,13 @@ import styled from 'styled-components';
 import Swal from 'sweetalert2';
 import { getScoreIcon } from 'utils/getScoreIcon';
 
-const ContentWriter = ({ detail, sub, setSub }: subProps) => {
+const ContentWriter = ({
+  detail,
+  sub,
+  setSub,
+  part,
+  setPart,
+}: companionProps) => {
   const { memberId, nickname } = useRecoilValue(userInfo);
   const params = useParams();
   const { contentId } = params;
@@ -81,6 +87,17 @@ const ContentWriter = ({ detail, sub, setSub }: subProps) => {
     getSubList();
   }, []);
 
+  const getPartList = () => {
+    customAxios.get(`/companions/${contentId}/participants`).then(res => {
+      setPart(res.data.data);
+    });
+  };
+
+  useEffect(() => {
+    getPartList();
+    console.log(part);
+  }, []);
+
   const handleProfile = () => {
     navigate(`/${detail.memberId}/profile`);
   };
@@ -108,6 +125,13 @@ const ContentWriter = ({ detail, sub, setSub }: subProps) => {
           </>
         ) : detail.companionStatus ? (
           <>
+            <Button onClick={handleProfile}>프로필 보기</Button>
+          </>
+        ) : part &&
+          part.length !== 0 &&
+          part.some((part: any) => part.memberId === memberId) ? (
+          <>
+            <Button>참가 신청 완료</Button>
             <Button onClick={handleProfile}>프로필 보기</Button>
           </>
         ) : (
