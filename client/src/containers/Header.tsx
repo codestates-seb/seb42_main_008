@@ -196,8 +196,11 @@ const HeaderBox = styled.header`
     }
   }
   .logo {
-    font-size: 2rem;
+    font-size: 2.1rem;
     font-weight: bold;
+    font-family: 'Lobster', cursive;
+    position: relative;
+    bottom: 2px;
   }
 
   .mobile-menu {
