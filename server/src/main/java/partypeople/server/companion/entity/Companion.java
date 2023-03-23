@@ -5,7 +5,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import partypeople.server.audit.Auditable;
 import partypeople.server.member.entity.Member;
+import partypeople.server.message.entity.Message;
 import partypeople.server.nation.entity.Nation;
+import partypeople.server.review.entity.Review;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -59,11 +61,15 @@ public class Companion extends Auditable {
         }
     }
 
-    //신청자 리스트 추가
-    @OneToMany(mappedBy = "companion", cascade = CascadeType.REMOVE)    //
+    @OneToMany(mappedBy = "companion", cascade = CascadeType.REMOVE)
     private List<Subscriber> subscribers = new ArrayList<>();
 
-    //참여자 리스트 추가
-    @OneToMany(mappedBy = "companion", cascade = CascadeType.REMOVE)    //
+    @OneToMany(mappedBy = "companion", cascade = CascadeType.REMOVE)
     private List<Participant> participants = new ArrayList<>();
+
+    @OneToMany(mappedBy = "companion", cascade = CascadeType.REMOVE)
+    private List<Review> reviews = new ArrayList<>();
+
+    @OneToMany(mappedBy = "companion", cascade = CascadeType.REMOVE)
+    private List<Message> messages = new ArrayList<>();
 }
