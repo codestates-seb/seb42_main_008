@@ -105,6 +105,9 @@ const ContentList = () => {
   }, [searchDatas, page, searchPage]);
 
   useEffect(() => {
+    window.onbeforeunload = function pushRefresh() {
+      window.scrollTo(0, 0);
+    };
     // ! 윈도우 사이즈별 호출 데이터 개수 변경
     window.addEventListener('resize', handleWindowResize);
     handleSize();
