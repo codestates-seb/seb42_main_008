@@ -55,10 +55,6 @@ const CountrySelectModal = ({
             <GrClose onClick={handleModal} cursor="pointer" />
           </div>
         </div>
-        <input
-          className="country-input"
-          placeholder="나라를 입력해주세요.."
-        ></input>
         <ul className="country-content">
           {countriesPick[continentSelect].map((country, index: number) => {
             return (
