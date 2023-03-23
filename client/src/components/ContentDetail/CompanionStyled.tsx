@@ -17,6 +17,7 @@ export const StyledCompanionList = styled.ul`
     align-items: center;
     font-size: 1.2rem;
     padding: 5px;
+    cursor: pointer;
     .companion-info {
       display: flex;
       justify-content: flex-start;

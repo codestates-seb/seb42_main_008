@@ -1,4 +1,5 @@
 import customAxios from 'api/customAxios';
+// import { ModalBG } from 'components/Profile/ModalStyles';
 import { thirdModal } from 'interfaces/ContentDetail.interface';
 import { useState } from 'react';
 import { CiFaceFrown, CiFaceMeh, CiFaceSmile } from 'react-icons/ci';
@@ -7,8 +8,8 @@ import { useRecoilValue } from 'recoil';
 import { userInfo } from 'states/userState';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
-import ModalScrollDisable from 'utils/ModalScrollDisable';
 import { StyledModal } from './CompanionStyled';
+// import ModalScrollDisable from 'utils/ModalScrollDisable';
 
 const ThirdReviewModal = ({
   detail,
@@ -39,40 +40,30 @@ const ThirdReviewModal = ({
   // 1점
   const handleGood = () => {
     setGood(!good);
+    setSoso(false);
+    setBad(false);
     setScore(1);
   };
   // 0점
   const handleSoso = () => {
     setSoso(!soso);
+    setGood(false);
+    setBad(false);
     setScore(0);
   };
   // -1점
   const handleBad = () => {
     setBad(!bad);
     setScore(-1);
+    setGood(false);
+    setSoso(false);
   };
 
-  if (good && soso && bad) {
-    Swal.fire({
-      icon: 'error',
-      title: '하나만 선택해주세요',
-    });
-  } else if (good && soso) {
-    Swal.fire({
-      icon: 'error',
-      title: '하나만 선택해주세요',
-    });
-  } else if (good && bad) {
-    Swal.fire({
-      icon: 'error',
-      title: '하나만 선택해주세요',
-    });
-  } else if (soso && bad) {
-    Swal.fire({
-      icon: 'error',
-      title: '하나만 선택해주세요',
-    });
-  }
+  // const handleCloseModal = () => {
+  //   setThirdModal(false);
+  //   setSecondModal(false);
+  //   setFirstModal(false);
+  // };
 
   const handleContentWrite = (
     event: React.ChangeEvent<HTMLTextAreaElement>
@@ -144,10 +135,12 @@ const ThirdReviewModal = ({
   };
 
   return (
-    <Container>
-      <ModalScrollDisable />
+    <>
+      {/* <Container> */}
+      {/* <ModalScrollDisable /> */}
       <BackGround>
         <ModalView>
+          {/* <ModalBG onClick={handleCloseModal}></ModalBG> */}
           <Score>
             <BtnWrapper>
               <button
@@ -179,16 +172,17 @@ const ThirdReviewModal = ({
           </Score>
         </ModalView>
       </BackGround>
-    </Container>
+      {/* </Container> */}
+    </>
   );
 };
 
 export default ThirdReviewModal;
 
-const Container = styled.section`
-  width: 100%;
-  height: 100%;
-`;
+// const Container = styled.section`
+//   width: 100%;
+//   height: 100%;
+// `;
 const BackGround = styled.section`
   display: flex;
   justify-content: center;

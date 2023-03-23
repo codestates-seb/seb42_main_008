@@ -1,9 +1,9 @@
-import axios from 'axios';
+import customAxios from 'api/customAxios';
 import { StyledTabBox } from 'components/ContentDetail/CompanionStyled';
 import FirstReviewModal from 'components/ContentDetail/FirstReviewModal';
 import { partProps } from 'interfaces/ContentDetail.interface';
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { userInfo } from 'states/userState';
 import styled from 'styled-components';
@@ -18,19 +18,17 @@ const TravelComplete = ({ detail, part, setPart }: partProps) => {
   // * 리뷰 작성한 사람 모음
   const [reviewed, setReviewed] = useState<any>();
 
+  const navigate = useNavigate();
+
   const handleFirstModal = (reviewMemberId: number) => {
     setFirstModal(!firstModal);
     setReviewId(reviewMemberId);
   };
 
   const getPartList = () => {
-    axios
-      .get(
-        `${process.env.REACT_APP_SERVER}/companions/${contentId}/participants`
-      )
-      .then(res => {
-        setPart(res.data.data);
-      });
+    customAxios.get(`/companions/${contentId}/participants`).then(res => {
+      setPart(res.data.data);
+    });
   };
 
   useEffect(() => {
@@ -38,13 +36,10 @@ const TravelComplete = ({ detail, part, setPart }: partProps) => {
   }, []);
 
   const getReviewList = () => {
-    axios
-      .get(
-        `${process.env.REACT_APP_SERVER}/companions/${contentId}/reviewers`,
-        {
-          params: { memberId },
-        }
-      )
+    customAxios
+      .get(`/companions/${contentId}/reviewers`, {
+        params: { memberId },
+      })
       .then(res => {
         setReviewed(res.data.data);
       });
@@ -54,6 +49,10 @@ const TravelComplete = ({ detail, part, setPart }: partProps) => {
     getReviewList();
   }, []);
 
+  const handleMoveProfile = (partMemberId: number) => {
+    navigate(`/${partMemberId}/profile`);
+  };
+
   return (
     <Container>
       <TabBox>
@@ -62,7 +61,7 @@ const TravelComplete = ({ detail, part, setPart }: partProps) => {
       <Content>
         {part && part.length !== 0 ? (
           part.map((el: any, index: number) => (
-            <li key={index}>
+            <li key={index} onClick={() => handleMoveProfile(el.memberId)}>
               <CompanionInfo>
                 <div
                   className="img"
@@ -179,6 +178,7 @@ const Content = styled.ul`
     font-size: 1.2rem;
     padding: 5px;
     flex-direction: column;
+    cursor: pointer;
   }
   @media screen and (max-width: 768px) {
     li {

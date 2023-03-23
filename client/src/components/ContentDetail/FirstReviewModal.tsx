@@ -1,5 +1,6 @@
 import customAxios from 'api/customAxios';
 import SecondReviewModal from 'components/ContentDetail/SecondReviewModal';
+// import { ModalBG } from 'components/Profile/ModalStyles';
 import { firstModal } from 'interfaces/ContentDetail.interface';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -33,18 +34,28 @@ const FirstReviewModal = ({ detail, setFirstModal, reviewId }: firstModal) => {
       .catch(error => console.log(error));
   };
 
-  // 두번째 리뷰 모달 상태
+  // const handleCloseModal = () => {
+  //   setFirstModal(false);
+  // };
+
+  // * 두번째 리뷰 모달 상태
   const [secondModal, setSecondModal] = useState<boolean>(false);
   const handleSecondModal = () => {
     setSecondModal(!secondModal);
   };
 
   return (
-    <Container>
+    <>
       <ModalScrollDisable />
+      {/* <Container> */}
       <BackGround>
         <ModalView>
-          <h3>{detail.nickname}님와(과)의 여행에 참여하셨나요?</h3>
+          {/* <ModalBG onClick={handleCloseModal}></ModalBG> */}
+          {detail.memberId === memberId ? (
+            <h3>이 여행에 참석하셨나요?</h3>
+          ) : (
+            <h3>{detail.nickname}님와(과)의 여행에 참여하셨나요?</h3>
+          )}
           <div className="btn-wrapper">
             <button onClick={handleSecondModal}>네! 참석했습니다.</button>
             <button onClick={handleFirstModal}>
@@ -65,16 +76,17 @@ const FirstReviewModal = ({ detail, setFirstModal, reviewId }: firstModal) => {
           setContent={setContent}
         />
       ) : null}
-    </Container>
+      {/* </Container> */}
+    </>
   );
 };
 
 export default FirstReviewModal;
 
-const Container = styled.section`
-  width: 100%;
-  height: 100%;
-`;
+// const Container = styled.section`
+//   width: 100%;
+//   height: 100%;
+// `;
 const BackGround = styled.section`
   display: flex;
   justify-content: center;
