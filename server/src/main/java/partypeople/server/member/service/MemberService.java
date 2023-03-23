@@ -87,7 +87,8 @@ public class MemberService {
         Member member = findVerifiedMemberById(memberId);
 
         if (passwordEncoder.matches(password, member.getPassword())) {
-            member.setMemberStatus(Member.MemberStatus.MEMBER_QUIT);
+//            member.setMemberStatus(Member.MemberStatus.MEMBER_QUIT);
+            memberRepository.delete(member);
         } else {
             throw new BusinessLogicException(ExceptionCode.PASSWORD_NOT_MATCH);
         }
@@ -99,9 +100,9 @@ public class MemberService {
         Member findMember = optionalMember
             .orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
 
-        if(findMember.getMemberStatus().equals(Member.MemberStatus.MEMBER_QUIT)) {
-            throw new BusinessLogicException(ExceptionCode.WITHDRAWAL_MEMBER);
-        }
+//        if(findMember.getMemberStatus().equals(Member.MemberStatus.MEMBER_QUIT)) {
+//            throw new BusinessLogicException(ExceptionCode.WITHDRAWAL_MEMBER);
+//        }
 
         return findMember;
     }
@@ -111,9 +112,9 @@ public class MemberService {
         Member findMember = optionalMember
             .orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
 
-        if(findMember.getMemberStatus().equals(Member.MemberStatus.MEMBER_QUIT)) {
-            throw new BusinessLogicException(ExceptionCode.WITHDRAWAL_MEMBER);
-        }
+//        if(findMember.getMemberStatus().equals(Member.MemberStatus.MEMBER_QUIT)) {
+//            throw new BusinessLogicException(ExceptionCode.WITHDRAWAL_MEMBER);
+//        }
         return findMember;
     }
 
