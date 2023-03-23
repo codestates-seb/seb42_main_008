@@ -18,6 +18,12 @@ export const StyledCompanionList = styled.ul`
     font-size: 1.2rem;
     padding: 5px;
     cursor: pointer;
+    transition: all 0.2s ease 0s;
+    &:hover {
+      color: black;
+      background-color: white;
+      box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.15);
+    }
     .companion-info {
       display: flex;
       justify-content: flex-start;
@@ -51,6 +57,12 @@ export const StyledCompanionList = styled.ul`
         color: white;
         border: none;
         border-radius: 15px;
+        transition: all 0.2s ease 0s;
+        &:hover {
+          color: black;
+          background-color: white;
+          box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.15);
+        }
       }
     }
   }

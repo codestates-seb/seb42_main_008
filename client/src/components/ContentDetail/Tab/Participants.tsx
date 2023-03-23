@@ -37,7 +37,7 @@ const Participants = ({ detail, setSub, part, setPart }: companionProps) => {
             Swal.fire('Deleted!', '취소되었습니다', 'success');
             setPart(part);
             getPartList();
-            const content = `작성하신 동행글 [${detail.title}] 에 ${nickname} 님이 동행참여를 취소하였습니다.`;
+            const content = `작성하신 동행글 [${detail.title}] 에 [${nickname}] 님이 동행참여를 취소하였습니다.`;
             customAxios.post(`/messages`, {
               content,
               senderId: 1,

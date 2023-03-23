@@ -23,30 +23,26 @@ const ThirdReviewModal = ({
   content,
   setContent,
 }: thirdModal) => {
-  // const params = useParams();
-  // const { contentId } = params;
   const { memberId } = useRecoilValue(userInfo);
   const navigate = useNavigate();
   const [good, setGood] = useState<boolean>(false);
   const [soso, setSoso] = useState<boolean>(false);
   const [bad, setBad] = useState<boolean>(false);
-  // const [reviewed, setReviewed] = useState<reviewerInfo>();
 
-  // 1점
   const handleGood = () => {
     setGood(!good);
     setSoso(false);
     setBad(false);
     setScore(1);
   };
-  // 0점
+
   const handleSoso = () => {
     setSoso(!soso);
     setGood(false);
     setBad(false);
     setScore(0);
   };
-  // -1점
+
   const handleBad = () => {
     setBad(!bad);
     setScore(-1);
@@ -66,24 +62,6 @@ const ThirdReviewModal = ({
     setContent(event.target.value);
   };
 
-  // const getReviewList = () => {
-  //   customAxios
-  //     .get(`/companions/${contentId}/reviewers`, {
-  //       params: { memberId },
-  //     })
-  //     .then(res => {
-  //       setReviewed(res.data.data);
-  //     })
-  //     .catch(error => {
-  //       console.log(error);
-  //       console.log(reviewed);
-  //     });
-  // };
-
-  // useEffect(() => {
-  //   getReviewList();
-  // }, []);
-  //
   const handleReviewWrite = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!good && !soso && !bad) {

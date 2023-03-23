@@ -37,7 +37,7 @@ const Companion = ({ detail, sub, setSub, setPart }: companionProps) => {
             Swal.fire('Deleted!', '취소되었습니다', 'success');
             setSub(sub);
             getSubList();
-            const content = `작성하신 동행글 [${detail.title}] 에 ${nickname} 님이 동행신청을 취소하였습니다.`;
+            const content = `작성하신 동행글 [${detail.title}] 에 [${nickname}] 님이 동행신청을 취소하였습니다.`;
             customAxios.post(`/messages`, {
               content,
               senderId: 1,
@@ -86,7 +86,7 @@ const Companion = ({ detail, sub, setSub, setPart }: companionProps) => {
             Swal.fire('Accepted!', '확인되었습니다', 'success');
             setSub(sub);
             getSubList();
-            const content = `신청하신 동행글 [${detail.title}] 에 ${detail.nickname} 님이 동행을 수락하였습니다.`;
+            const content = `신청하신 동행글 [${detail.title}] 에 [${detail.nickname}] 님이 동행을 수락하였습니다.`;
             customAxios.post(`/messages`, {
               content,
               senderId: 1,
@@ -119,7 +119,7 @@ const Companion = ({ detail, sub, setSub, setPart }: companionProps) => {
             Swal.fire('Deleted!', '거절되었습니다', 'success');
             setSub(sub);
             getSubList();
-            const content = `신청하신 동행글 [${detail.title}] 에 ${detail.nickname} 님이 동행을 거절하였습니다.`;
+            const content = `신청하신 동행글 [${detail.title}] 에 [${detail.nickname}] 님이 동행을 거절하였습니다.`;
             customAxios.post(`/messages`, {
               content,
               senderId: 1,
