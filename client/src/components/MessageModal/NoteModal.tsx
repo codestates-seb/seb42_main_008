@@ -60,7 +60,13 @@ const NoteModal = ({ setNoteModal }: Props) => {
           {allNotes
             .sort((a, b) => b.messageId - a.messageId)
             .map(note => {
-              return <Message key={note.messageId} note={note} />;
+              return (
+                <Message
+                  key={note.messageId}
+                  note={note}
+                  setNoteModal={setNoteModal}
+                />
+              );
             })}
         </ul>
       </div>

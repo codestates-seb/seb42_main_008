@@ -153,7 +153,7 @@ const ReplyBox = styled.div`
   }
   .note-content {
     display: flex;
-    background-color: #d9d9d9;
+    background-color: #e6e4e4;
     margin-top: 15px;
     height: 80%;
     width: 100%;
