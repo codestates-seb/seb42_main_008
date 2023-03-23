@@ -53,6 +53,7 @@ const ListTitle = () => {
       </BackToContinent>
       <TitleText>
         <h1 className="title-en">{names.en.toUpperCase()}</h1>
+        <div className="country-spell">{names.en[0]}</div>
         <AddContentbutton onClick={handleButtonClick}>
           {names.ko}에서의 동행 찾기
         </AddContentbutton>
@@ -64,7 +65,7 @@ const ListTitle = () => {
 
 const ListTitleWrapper = styled.section`
   width: 100%;
-  height: 40vh;
+  height: 50vh;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -72,6 +73,7 @@ const ListTitleWrapper = styled.section`
   background-position: center;
   background-repeat: no-repeat;
   position: relative;
+  padding-top: 40px;
 `;
 
 const TitleText = styled.div`
@@ -79,13 +81,22 @@ const TitleText = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  z-index: 2;
   color: #fff;
   text-align: center;
   text-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
   .title-en {
-    font-weight: 800;
     font-size: 4rem;
+    font-family: 'Archivo Black', sans-serif;
+    z-index: 5;
+    letter-spacing: 2px;
+  }
+  .country-spell {
+    font-size: 20rem;
+    position: absolute;
+    z-index: 3;
+    opacity: 0.3;
+    font-family: 'Alfa Slab One', cursive;
+    /* left: 40%; */
   }
 
   @media screen and (max-width: 992px) {
@@ -108,6 +119,7 @@ const TitleText = styled.div`
 const AddContentbutton = styled(StyledButton)`
   background-color: #fff;
   color: #222;
+  z-index: 5;
   :hover {
     background-color: #feb35c;
     color: #fff;
@@ -137,12 +149,12 @@ const BackToContinent = styled.div`
     position: absolute;
     top: 0;
     left: 0;
-    z-index: 10;
+    z-index: 2;
   }
   .continent-button {
     color: #fff;
     opacity: 1;
-    z-index: 11;
+    z-index: 3;
     position: absolute;
     top: 10px;
     font-size: 1.3rem;

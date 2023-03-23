@@ -173,7 +173,7 @@ const SearchBox = styled.section`
   height: 60px;
   background-color: #feb35c;
   position: absolute;
-  top: 36vh;
+  top: 46vh;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
   display: flex;
   align-items: center;
@@ -184,7 +184,7 @@ const SearchBox = styled.section`
     height: fit-content;
     padding: 10px;
     gap: 5px;
-    top: 34vh;
+    top: 44vh;
     align-items: flex-start;
   }
 `;
