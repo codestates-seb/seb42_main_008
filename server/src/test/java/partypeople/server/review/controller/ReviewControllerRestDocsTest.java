@@ -78,7 +78,7 @@ class ReviewControllerRestDocsTest {
         actions
             .andExpect(status().isCreated())
             .andExpect(header().string(HttpHeaders.LOCATION, is(startsWith("/reviews/"))))
-            .andDo(document("post-review",
+            .andDo(document("[review] post-review",
                 getRequestPreProcessor(),
                 getResponsePreProcessor(),
                 requestFields(
