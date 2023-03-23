@@ -1,12 +1,12 @@
-    |===
-        |필드명|타입|설명|조건
+|===
+|필드명|타입|설명|조건
 
-    {{#fields}}
-        |{{#tableCellContent}}`+{{path}}+`{{/tableCellContent}}
-        |{{#tableCellContent}}`+{{type}}+`{{/tableCellContent}}
-        |{{#tableCellContent}}{{description}}{{/tableCellContent}}
-        |{{#constraints}}{{.}}{{/constraints}}
+{{#fields}}
+|{{#tableCellContent}}`+{{path}}+`{{/tableCellContent}}
+|{{#tableCellContent}}`+{{type}}+`{{/tableCellContent}}
+|{{#tableCellContent}}{{description}}{{/tableCellContent}}
+|{{#constraints}}{{.}}{{/constraints}}
 
-    {{/fields}}
+{{/fields}}
 
-        |===
+|===
