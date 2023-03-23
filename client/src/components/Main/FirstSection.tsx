@@ -7,6 +7,7 @@ import FirstTitle from './FirstTitle';
 import { useEffect, useState } from 'react';
 import ImageFilter from '../../styles/ImageFilter';
 import { useNavigate } from 'react-router-dom';
+import { StyledButton } from 'styles/StyledButton';
 
 export const imgLinks = [
   'https://i.esdrop.com/d/f/XWTMtUmtv1/U9cFP8N5cV.jpg',
@@ -103,18 +104,14 @@ const SlideContent = styled.div`
   }
 `;
 
-const FirstButton = styled.button`
+const FirstButton = styled(StyledButton)`
   position: absolute;
   z-index: 5;
   top: 60%;
   padding: 15px 20px;
-  font-size: 1.2rem;
-  border-radius: 30px;
-  cursor: pointer;
   color: #fff;
   font-weight: 800;
   background-color: #feb35c;
-  border: none;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
   animation: fadein 0.5s linear;
 

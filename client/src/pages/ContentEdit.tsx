@@ -49,6 +49,11 @@ const ContentEdit = () => {
     },
   };
 
+  //취소 라우터
+  const handleCancel = () => {
+    window.history.back();
+  };
+
   // 대륙 선택 옵션
   const [continentSelect, setContinentSelect] = useState('');
 
@@ -69,8 +74,6 @@ const ContentEdit = () => {
 
   // 여행 시작일
   const [startDate, setStartDate] = useState<Date | null>(null);
-  // 여행 종료일
-  const [endDate, setEndDate] = useState<Date | null>(null);
   // 세부 주소 정보
   const [savedAddress, setSavedAddress] = useState<string | null>(null);
   // lat, lng 위치 정보
@@ -119,10 +122,15 @@ const ContentEdit = () => {
   }, [continentNumber]);
 
   // 대륙 초기화시 나라,코드리셋
-  useEffect(() => {
+  // useEffect(() => {
+  //   setCountrySelect('국가선택');
+  //   setCountryCode('');
+  // }, []);
+  const handleContinentChange = (event: any) => {
+    setContinentSelect(event.target.value);
     setCountrySelect('국가선택');
     setCountryCode('');
-  }, [continentSelect]);
+  };
 
   let title = '대륙을 선택하세요!';
   let titleImg =
@@ -186,7 +194,7 @@ const ContentEdit = () => {
       });
       return;
     }
-    if (!startDate || !endDate) {
+    if (!startDate) {
       Swal.fire({
         icon: 'error',
         text: '날짜를 입력해주세요',
@@ -217,7 +225,6 @@ const ContentEdit = () => {
       titleInput &&
       contentInput &&
       startDate &&
-      endDate &&
       savedAddress &&
       continentSelect &&
       countrySelect !== '국가선택'
@@ -251,10 +258,7 @@ const ContentEdit = () => {
           <div>
             <label>
               대륙
-              <select
-                value={continentSelect}
-                onChange={event => setContinentSelect(event.target.value)}
-              >
+              <select value={continentSelect} onChange={handleContinentChange}>
                 <option value="대륙선택">대륙선택</option>
 
                 {Object.keys(countries).map((country, index) => {
@@ -291,19 +295,7 @@ const ContentEdit = () => {
               onChange={(date: Date) => setStartDate(date)}
               selectsStart
               startDate={startDate}
-              endDate={endDate}
               placeholderText="Start Date"
-              dateFormat="yyyy-MM-dd"
-            />
-            ~
-            <DatePicker
-              selected={endDate}
-              onChange={(date: Date) => setEndDate(date)}
-              selectsEnd
-              startDate={startDate}
-              endDate={endDate}
-              minDate={startDate}
-              placeholderText="End Date"
               dateFormat="yyyy-MM-dd"
             />
           </div>
@@ -328,9 +320,14 @@ const ContentEdit = () => {
             }}
           />
         </div>
-        <button className="add-form" onClick={handleContentSubmit}>
-          다음
-        </button>
+        <div className="bottom-button">
+          <button className="add-form" onClick={handleCancel}>
+            작성 취소
+          </button>
+          <button className="add-form" onClick={handleContentSubmit}>
+            다음
+          </button>
+        </div>
       </ContentBox>
       {countryModal ? (
         <div className="overlay">
@@ -583,8 +580,16 @@ const ContentBox = styled.div`
     color: white;
     width: 96px;
     height: 36px;
-    font-size: 1.5rem;
+    font-size: 1rem;
     border-radius: 30px;
     cursor: pointer;
+  }
+  .bottom-button {
+    display: flex;
+    width: 100%;
+    justify-content: space-around;
+    > :first-child {
+      background-color: #cecece;
+    }
   }
 `;

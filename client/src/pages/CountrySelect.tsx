@@ -241,9 +241,15 @@ const CountrySelect = () => {
 
   // 로그인 사용자만 글작성 이동 클릭 라우터
   const login = useRecoilValue(loginState);
+  const countryCode = '';
   const handleMoveAddPage = () => {
     if (login === true) {
-      navigate('/add');
+      navigate('/add', {
+        state: {
+          continent,
+          countryCode,
+        },
+      });
     } else {
       Swal.fire({
         icon: 'error',

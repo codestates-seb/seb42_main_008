@@ -86,7 +86,6 @@ const Message = ({ note }: Props) => {
       </div>
       <div className="message-content" onClick={handleOpenNote}>
         {note.content}
-        {String(isRead)}
       </div>
       {isNoteOpen ? (
         <div className="overlay">

@@ -75,6 +75,7 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
     private Member saveMember(OAuth2User oAuth2User) {
         String email = String.valueOf(oAuth2User.getAttributes().get("email"));
         String profile = String.valueOf(oAuth2User.getAttributes().get("picture"));
+        String name = String.valueOf(oAuth2User.getAttributes().get("name"));
 
         List<String> authorities = authorityUtils.createRoles(email);
 
@@ -83,37 +84,9 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
         member.setEmail(email);
         member.setRoles(authorities);
         member.setPassword("google"+UUID.randomUUID());
-        member.setNickname(email);
+        member.setNickname(memberService.oauthNickCheck(name));
         member.setProfile(profile);
         return memberService.createMember(member);
     }
 
-//    private String delegateAccessToken(Member member) {
-//        Map<String, Object> claims = new HashMap<>();
-//        claims.put("memberId", member.getMemberId());
-//        claims.put("nickname", member.getNickname());
-//        claims.put("email", member.getEmail());
-//        claims.put("profile", member.getProfile());
-//        claims.put("gender", member.getGender());
-//        claims.put("roles", member.getRoles());
-//        claims.put("memberStatus", member.getMemberStatus());
-//
-//        String subject = member.getEmail();
-//        Date expiration = jwtTokenizer.getTokenExpiration(jwtTokenizer.getAccessTokenExpirationMinutes());
-//
-//        String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(jwtTokenizer.getSecretKey());
-//        String accessToken = jwtTokenizer.generateAccessToken(claims, subject, expiration, base64EncodedSecretKey);
-//
-//        return accessToken;
-//    }
-
-//    private String delegateRefreshToken(Member member) {
-//        String subject = member.getEmail();
-//        Date expiration = jwtTokenizer.getTokenExpiration(jwtTokenizer.getRefreshTokenExpirationMinutes());
-//
-//        String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(jwtTokenizer.getSecretKey());
-//        String refreshToken = jwtTokenizer.generateRefreshToken(subject, expiration, base64EncodedSecretKey);
-//
-//        return refreshToken;
-//    }
 }

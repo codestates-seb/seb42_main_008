@@ -13,6 +13,8 @@ import customAxios from 'api/customAxios';
 import { useParams } from 'react-router-dom';
 import { getDateString } from 'utils/getDateString';
 import { StyledButton } from 'styles/StyledButton';
+import { CloseButton } from 'components/Profile/ModalStyles';
+import { IoMdClose } from 'react-icons/io';
 
 const ListSearch = ({
   searchDatas,
@@ -28,11 +30,14 @@ const ListSearch = ({
 }: ListSearchProps) => {
   const { countryCode } = useParams();
   const [date, setDate] = useState<Date>(new Date());
+  const [dateStr, setDateStr] = useState<string>('');
+  const [isDateSearch, setIsDateSearch] = useState<boolean>(false);
   const [keyword, setKeyword] = useState<string>('');
   const [condition, setCondition] = useState<string>('entire');
 
   const handleDateChange = (date: Date) => {
     setDate(date);
+    setDateStr(getDateString(date).fullDateStr);
   };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -59,6 +64,16 @@ const ListSearch = ({
     getSearchData(page);
   };
 
+  const handleIsDateSearchChange = () => {
+    setIsDateSearch(true);
+    setDateStr(getDateString(date).fullDateStr);
+  };
+
+  const handleDateSearchCancel = () => {
+    setIsDateSearch(false);
+    setDateStr('');
+  };
+
   const getSearchData = async (page: number) => {
     setIsLoading(true);
     const params: SearchQueryString = {
@@ -68,9 +83,11 @@ const ListSearch = ({
       sortDir: 'DESC',
       condition,
       keyword,
-      date: getDateString(date).fullDateStr,
+      date: dateStr,
       nationCode: countryCode,
     };
+    console.log(params);
+
     await customAxios.get('/companions/search', { params }).then(resp => {
       setSearchDatas(cur => {
         if (resp.data.pageInfo.totalPages <= resp.data.pageInfo.page) {
@@ -98,6 +115,8 @@ const ListSearch = ({
     setDate(new Date());
     setIsSearch(false);
     setDatas([]);
+    setDateStr('');
+    setIsDateSearch(false);
   };
 
   const searchOptions: SearchOption[] = [
@@ -114,11 +133,22 @@ const ListSearch = ({
         <label className="datepicker-label" htmlFor="datePicker">
           <FaCalendarDay color="#fff" size={22} />
         </label>
-        <DatePicker
-          selected={date}
-          onChange={handleDateChange}
-          id="datePicker"
-        />
+        {isDateSearch ? (
+          <>
+            <DatePicker
+              selected={date}
+              onChange={handleDateChange}
+              id="datePicker"
+            />
+            <DateSearchCancel onClick={handleDateSearchCancel}>
+              <IoMdClose />
+            </DateSearchCancel>
+          </>
+        ) : (
+          <DateSearchButton onClick={handleIsDateSearchChange}>
+            날짜 지정하기
+          </DateSearchButton>
+        )}
       </DateSearch>
       <Stroke></Stroke>
       <KeywordSearch>
@@ -160,7 +190,7 @@ const SearchBox = styled.section`
   height: 60px;
   background-color: #feb35c;
   position: absolute;
-  top: 36vh;
+  top: 46vh;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
   display: flex;
   align-items: center;
@@ -171,7 +201,7 @@ const SearchBox = styled.section`
     height: fit-content;
     padding: 10px;
     gap: 5px;
-    top: 34vh;
+    top: 44vh;
     align-items: flex-start;
   }
 `;
@@ -188,8 +218,15 @@ const DateSearch = styled.div`
     margin-right: 5px;
   }
 
+  .react-datepicker-wrapper {
+    width: 120px;
+  }
+
   .react-datepicker__input-container {
     width: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     > input {
       width: 110px;
       background-color: transparent;
@@ -200,7 +237,8 @@ const DateSearch = styled.div`
       font-weight: 800;
       color: #fff;
       padding: 5px;
-      :focus {
+      :focus,
+      :hover {
         outline: none;
         border-bottom: 1px solid #fff;
       }
@@ -298,7 +336,7 @@ const Buttons = styled.div`
   @media screen and (max-width: 768px) {
     position: absolute;
     right: 10px;
-    top: 15px;
+    top: 10px;
     height: fit-content;
   }
 `;
@@ -326,6 +364,30 @@ const SearchButton = styled(StyledButton)`
 const ClearButton = styled(SearchButton)`
   background-color: #aaa;
   color: #fff;
+`;
+
+const DateSearchButton = styled.div`
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  :hover {
+    text-decoration: underline;
+  }
+`;
+
+const DateSearchCancel = styled(CloseButton)`
+  border: 1px solid #fff;
+  background-color: transparent;
+  color: #fff;
+
+  :hover,
+  :active {
+    background-color: #fff;
+    color: #feb35c;
+  }
 `;
 
 export default ListSearch;
