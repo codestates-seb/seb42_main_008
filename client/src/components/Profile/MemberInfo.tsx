@@ -13,6 +13,8 @@ import { userInfo } from 'states/userState';
 import { getDateString } from 'utils/getDateString';
 import ReplyNote from 'components/MessageModal/ReplyNote';
 import { ModalBG } from './ModalStyles';
+import Swal from 'sweetalert2';
+import { MdReport } from 'react-icons/md';
 
 const MemberInfo = ({ member, setMember }: MemberInfoProps) => {
   const [isFollow, setIsFollow] = useState<boolean>(member.followerStatus);
@@ -23,7 +25,7 @@ const MemberInfo = ({ member, setMember }: MemberInfoProps) => {
   const noteData = {
     messageId: 0,
     content: '',
-    companionId: 0,
+    companionId: 1,
     createdAt: getDateString(new Date()).fullDateStr,
     read: false,
     sender: {
@@ -68,6 +70,14 @@ const MemberInfo = ({ member, setMember }: MemberInfoProps) => {
 
   const handleOverlayClick = (event: React.MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();
+  };
+
+  const handleReportClick = () => {
+    Swal.fire({
+      icon: 'info',
+      title: '이 회원과 문제가 있나요?',
+      text: '회원 신고 기능은 추후에 추가될 예정입니다! 🥲',
+    });
   };
 
   return (
@@ -133,13 +143,23 @@ const MemberInfo = ({ member, setMember }: MemberInfoProps) => {
               </div>
             )}
           </section>
-          <section className="follows">
-            <span onClick={() => handleFollowListClick(true)}>
-              팔로워 {member.followerCount}
-            </span>
-            <span onClick={() => handleFollowListClick(false)}>
-              팔로잉 {member.followingCount}
-            </span>
+          <section className="member-follow-and-report">
+            <div className="follows">
+              <span onClick={() => handleFollowListClick(true)}>
+                팔로워 {member.followerCount}
+              </span>
+              <span onClick={() => handleFollowListClick(false)}>
+                팔로잉 {member.followingCount}
+              </span>
+            </div>
+            {loginUser.memberId !== member.memberId && (
+              <div className="report">
+                <span>
+                  <MdReport />
+                </span>
+                <p onClick={handleReportClick}>회원 신고하기</p>
+              </div>
+            )}
           </section>
           <div className="content">
             <p className="content-text">{member.content}</p>
@@ -251,12 +271,25 @@ const ContentWrapper = styled.section`
       gap: 10px;
     }
   }
-  .follows {
+  .member-follow-and-report {
+    display: flex;
     justify-content: flex-start;
+    align-items: center;
+    gap: 20px;
+  }
+  .follows {
     gap: 20px;
     > span {
       cursor: pointer;
     }
+  }
+  .report {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    color: #d9506a;
   }
   .content {
     width: 100%;
@@ -284,8 +317,9 @@ const ContentWrapper = styled.section`
       flex-direction: column;
       gap: 10px;
     }
-    .follows {
+    .member-follow-and-report {
       justify-content: center;
+      flex-direction: column;
     }
     .content {
       width: 90%;
