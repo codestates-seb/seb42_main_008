@@ -16,8 +16,8 @@ import { ModalBG } from './ModalStyles';
 import Swal from 'sweetalert2';
 import { MdReport } from 'react-icons/md';
 
-const MemberInfo = ({ member, setMember }: MemberInfoProps) => {
-  const [isFollow, setIsFollow] = useState<boolean>(member.followerStatus);
+const MemberInfo = ({ member, setMember, followerStatus }: MemberInfoProps) => {
+  const [isFollow, setIsFollow] = useState<boolean>(followerStatus);
   const [isShowModal, setIsShowModal] = useState<boolean>(false);
   const [isFollower, setIsFollower] = useState<boolean>(true);
   const [isShowNoteModal, setIsShowNoteModal] = useState<boolean>(false);

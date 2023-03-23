@@ -30,6 +30,11 @@ const ThirdSection = () => {
       title: '메신저 기능',
       desc: 'Lorem Ipsum is simply dummy text of the print',
     },
+    {
+      imgURL: 'https://i.esdrop.com/d/f/XWTMtUmtv1/gpGzHnf0Y7.png',
+      title: '동행 평가 기능',
+      desc: 'Lorem Ipsum is simply dummy text of the print',
+    },
   ];
 
   return (
@@ -87,7 +92,7 @@ const ThirdWrapper = styled(SectionWrapper)`
 const DescList = styled.ul`
   width: 1280px;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
 
   @media screen and (max-width: 1280px) {
     width: 100%;
