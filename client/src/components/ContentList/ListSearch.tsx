@@ -13,6 +13,8 @@ import customAxios from 'api/customAxios';
 import { useParams } from 'react-router-dom';
 import { getDateString } from 'utils/getDateString';
 import { StyledButton } from 'styles/StyledButton';
+import { CloseButton } from 'components/Profile/ModalStyles';
+import { IoMdClose } from 'react-icons/io';
 
 const ListSearch = ({
   searchDatas,
@@ -60,6 +62,16 @@ const ListSearch = ({
     }
     setIsSearch(true);
     getSearchData(page);
+  };
+
+  const handleIsDateSearchChange = () => {
+    setIsDateSearch(true);
+    setDateStr(getDateString(date).fullDateStr);
+  };
+
+  const handleDateSearchCancel = () => {
+    setIsDateSearch(false);
+    setDateStr('');
   };
 
   const getSearchData = async (page: number) => {
@@ -122,13 +134,18 @@ const ListSearch = ({
           <FaCalendarDay color="#fff" size={22} />
         </label>
         {isDateSearch ? (
-          <DatePicker
-            selected={date}
-            onChange={handleDateChange}
-            id="datePicker"
-          />
+          <>
+            <DatePicker
+              selected={date}
+              onChange={handleDateChange}
+              id="datePicker"
+            />
+            <DateSearchCancel onClick={handleDateSearchCancel}>
+              <IoMdClose />
+            </DateSearchCancel>
+          </>
         ) : (
-          <DateSearchButton onClick={() => setIsDateSearch(true)}>
+          <DateSearchButton onClick={handleIsDateSearchChange}>
             날짜 지정하기
           </DateSearchButton>
         )}
@@ -201,8 +218,15 @@ const DateSearch = styled.div`
     margin-right: 5px;
   }
 
+  .react-datepicker-wrapper {
+    width: 120px;
+  }
+
   .react-datepicker__input-container {
     width: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     > input {
       width: 110px;
       background-color: transparent;
@@ -213,7 +237,8 @@ const DateSearch = styled.div`
       font-weight: 800;
       color: #fff;
       padding: 5px;
-      :focus {
+      :focus,
+      :hover {
         outline: none;
         border-bottom: 1px solid #fff;
       }
@@ -344,8 +369,24 @@ const ClearButton = styled(SearchButton)`
 const DateSearchButton = styled.div`
   color: #fff;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
   :hover {
     text-decoration: underline;
+  }
+`;
+
+const DateSearchCancel = styled(CloseButton)`
+  border: 1px solid #fff;
+  background-color: transparent;
+  color: #fff;
+
+  :hover,
+  :active {
+    background-color: #fff;
+    color: #feb35c;
   }
 `;
 
