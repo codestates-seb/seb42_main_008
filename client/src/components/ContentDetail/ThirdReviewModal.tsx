@@ -1,15 +1,16 @@
 import customAxios from 'api/customAxios';
-// import { ModalBG } from 'components/Profile/ModalStyles';
+import { CloseButton } from 'components/Profile/ModalStyles';
 import { thirdModal } from 'interfaces/ContentDetail.interface';
 import { useState } from 'react';
 import { CiFaceFrown, CiFaceMeh, CiFaceSmile } from 'react-icons/ci';
+import { IoMdClose } from 'react-icons/io';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { userInfo } from 'states/userState';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
+import ModalScrollDisable from 'utils/ModalScrollDisable';
 import { StyledModal } from './CompanionStyled';
-// import ModalScrollDisable from 'utils/ModalScrollDisable';
 
 const ThirdReviewModal = ({
   detail,
@@ -22,12 +23,6 @@ const ThirdReviewModal = ({
   content,
   setContent,
 }: thirdModal) => {
-  const handleThirdModal = () => {
-    setThirdModal(false);
-    setSecondModal(false);
-    setFirstModal(false);
-  };
-
   // const params = useParams();
   // const { contentId } = params;
   const { memberId } = useRecoilValue(userInfo);
@@ -59,11 +54,11 @@ const ThirdReviewModal = ({
     setSoso(false);
   };
 
-  // const handleCloseModal = () => {
-  //   setThirdModal(false);
-  //   setSecondModal(false);
-  //   setFirstModal(false);
-  // };
+  const handleCloseModal = () => {
+    setThirdModal(false);
+    setSecondModal(false);
+    setFirstModal(false);
+  };
 
   const handleContentWrite = (
     event: React.ChangeEvent<HTMLTextAreaElement>
@@ -88,9 +83,16 @@ const ThirdReviewModal = ({
   // useEffect(() => {
   //   getReviewList();
   // }, []);
-
-  // * 리뷰 또 쓰려고 하면 막기
-  const handleReviewWrite = async () => {
+  //
+  const handleReviewWrite = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!good && !soso && !bad) {
+      Swal.fire({
+        icon: 'error',
+        title: '점수를 선택해주세요.',
+      });
+      return;
+    }
     if (memberId !== detail.memberId) {
       // * 참여자가 작성자에게 쓰는 리뷰
       await customAxios
@@ -102,6 +104,7 @@ const ThirdReviewModal = ({
           content,
         })
         .then(() => {
+          handleCloseModal();
           Swal.fire(
             'Thank you',
             '다음에도 좋은 동행 되시길 바랍니다',
@@ -121,6 +124,7 @@ const ThirdReviewModal = ({
           content,
         })
         .then(() => {
+          handleCloseModal();
           Swal.fire(
             'Thank you',
             '다음에도 좋은 동행 되시길 바랍니다',
@@ -136,11 +140,14 @@ const ThirdReviewModal = ({
 
   return (
     <>
-      {/* <Container> */}
-      {/* <ModalScrollDisable /> */}
+      <ModalScrollDisable />
       <BackGround>
         <ModalView>
-          {/* <ModalBG onClick={handleCloseModal}></ModalBG> */}
+          <div className="close-btn">
+            <CloseButton onClick={handleCloseModal}>
+              <IoMdClose />
+            </CloseButton>
+          </div>
           <Score>
             <BtnWrapper>
               <button
@@ -162,27 +169,22 @@ const ThirdReviewModal = ({
                 <CiFaceFrown />
               </button>
             </BtnWrapper>
-            <ReviewForm onSubmit={handleThirdModal}>
+            <ReviewForm onSubmit={handleReviewWrite}>
               <textarea
                 placeholder="리뷰를 작성해주세요..!"
                 onChange={handleContentWrite}
               ></textarea>
-              <button onClick={handleReviewWrite}>리뷰 작성</button>
+              <button>리뷰 작성</button>
             </ReviewForm>
           </Score>
         </ModalView>
       </BackGround>
-      {/* </Container> */}
     </>
   );
 };
 
 export default ThirdReviewModal;
 
-// const Container = styled.section`
-//   width: 100%;
-//   height: 100%;
-// `;
 const BackGround = styled.section`
   display: flex;
   justify-content: center;
@@ -196,6 +198,17 @@ const BackGround = styled.section`
   height: 100%;
 `;
 const ModalView = styled(StyledModal)`
+  .close-btn {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    width: 100%;
+    justify-self: flex-start;
+    align-self: flex-start;
+  }
+  .modal-content {
+    width: 100%;
+  }
   @media screen and (max-width: 992px) {
     width: 500px;
     height: 300px;
@@ -241,6 +254,7 @@ const BtnWrapper = styled.div`
     width: 100%;
     background-color: transparent;
     border: none;
+    cursor: pointer;
     > * {
       font-size: 2.5rem;
       font-weight: 800;
@@ -266,12 +280,33 @@ const ReviewForm = styled.form`
     width: 80%;
     padding: 10px;
   }
-  > button {
+  button {
     margin-top: 10px;
     background: #feb35c;
     color: white;
     border: none;
     border-radius: 15px;
+    cursor: pointer;
+    transition: all 0.2s ease 0s;
+    &:hover {
+      color: black;
+      background-color: white;
+      box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.15);
+    }
+    &:active {
+      box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.15);
+      position: relative;
+      top: 2px;
+    }
+  }
+  textarea {
+    width: 100%;
+    border: none;
+    resize: none;
+    border: 2px solid #feb35c;
+    &:focus {
+      outline: none;
+    }
   }
 `;
 

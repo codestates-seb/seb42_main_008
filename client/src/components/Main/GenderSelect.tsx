@@ -45,7 +45,8 @@ const GenderSelect = ({ setIsShowModal }: Props) => {
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, delete it!',
+      confirmButtonText: '확인',
+      cancelButtonText: '취소',
     }).then(async result => {
       if (result.isConfirmed) {
         await customAxios

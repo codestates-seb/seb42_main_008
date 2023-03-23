@@ -264,6 +264,7 @@ const CountrySelect = () => {
         className="country-name-box"
         style={{ backgroundImage: `url(${titleImg})` }}
       >
+        <ImageFilter></ImageFilter>
         <h1>{title}</h1>
         <p>동행자를 구하고 싶은 나라를 선택해보세요!</p>
       </div>
@@ -293,6 +294,8 @@ const CountrySelect = () => {
                   cursor: 'pointer',
                 }}
               >
+                <ImageFilter></ImageFilter>
+
                 <div>
                   {country.name} <FaChevronRight />
                 </div>
@@ -317,6 +320,7 @@ const CountrySelect = () => {
                     backgroundPosition: 'center',
                   }}
                 >
+                  <ImageFilter></ImageFilter>
                   <div>
                     <div>{country.name.match(/[a-zA-Z\s]+/g)}</div>
                     <FaChevronRight />
@@ -348,6 +352,7 @@ const CountryListContainer = styled.div`
     justify-content: center;
     height: 300px;
     width: 100%;
+    position: relative;
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
@@ -355,6 +360,7 @@ const CountryListContainer = styled.div`
     font-weight: bold;
     > h1 {
       font-size: 4rem;
+      z-index: 20;
       @media screen and (max-width: 768px) {
         font-size: 3rem;
       }
@@ -364,6 +370,7 @@ const CountryListContainer = styled.div`
     }
     > p {
       font-size: 1rem;
+      z-index: 20;
       @media screen and (max-width: 768px) {
         font-size: 0.8rem;
       }
@@ -436,7 +443,7 @@ const CountryListBox = styled.section<Props>`
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: repeat(2, 1fr);
-
+    position: relative;
     @media screen and (max-width: 768px) {
       display: grid;
       width: 80%;
@@ -452,6 +459,8 @@ const CountryListBox = styled.section<Props>`
       width: 100%;
       height: 100%;
       align-items: flex-end;
+      position: relative;
+
       @media screen and (max-width: 768px) {
         display: flex;
         justify-content: flex-end;
@@ -468,6 +477,7 @@ const CountryListBox = styled.section<Props>`
         font-size: 1.5rem;
         color: white;
         background-color: rgba(0, 0, 0, 0.3);
+        z-index: 20;
         @media screen and (max-width: 768px) {
           display: flex;
           align-items: center;
@@ -487,6 +497,7 @@ const CountryListBox = styled.section<Props>`
   .random-country {
     display: grid;
     grid-template-rows: repeat(1fr);
+    position: relative;
 
     @media screen and (max-width: 768px) {
       display: grid;
@@ -502,6 +513,7 @@ const CountryListBox = styled.section<Props>`
       height: 100%;
       align-items: flex-end;
       justify-content: flex-end;
+      position: relative;
       > div {
         word-wrap: break-word;
         display: flex;
@@ -514,6 +526,7 @@ const CountryListBox = styled.section<Props>`
         padding: 10px;
         color: white;
         background-color: rgba(0, 0, 0, 0.3);
+        z-index: 20;
         @media screen and (max-width: 768px) {
           font-size: 1.2rem;
           flex-direction: row;
@@ -533,6 +546,16 @@ const CountryListBox = styled.section<Props>`
       }
     }
   }
+`;
+
+const ImageFilter = styled.section`
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: #000650;
+  opacity: 0.25;
 `;
 // .random-country //repeat 첫인자에 랜덤으로 들어갈 개수 넣기
 

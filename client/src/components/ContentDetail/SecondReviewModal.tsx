@@ -1,11 +1,12 @@
 import ThirdReviewModal from 'components/ContentDetail/ThirdReviewModal';
-// import { ModalBG } from 'components/Profile/ModalStyles';
+import { CloseButton } from 'components/Profile/ModalStyles';
 import { secondModal } from 'interfaces/ContentDetail.interface';
 import { useState } from 'react';
+import { IoMdClose } from 'react-icons/io';
 import { useRecoilValue } from 'recoil';
 import { userInfo } from 'states/userState';
 import styled from 'styled-components';
-// import ModalScrollDisable from 'utils/ModalScrollDisable';
+import ModalScrollDisable from 'utils/ModalScrollDisable';
 import { StyledModal } from './CompanionStyled';
 
 const SecondReviewModal = ({
@@ -20,32 +21,40 @@ const SecondReviewModal = ({
 }: secondModal) => {
   const [thirdModal, setThirdModal] = useState(false);
   const { memberId } = useRecoilValue(userInfo);
+  // const params = useParams();
+  // const { contentId } = params;
+
   const handleThirdModal = () => {
     setThirdModal(!thirdModal);
   };
 
-  // const handleCloseModal = () => {
-  //   setSecondModal(false);
-  //   setFirstModal(false);
-  // };
+  const handleCloseModal = () => {
+    setSecondModal(false);
+    setFirstModal(false);
+  };
 
   return (
     <>
-      {/* <Container> */}
-      {/* <ModalScrollDisable /> */}
+      <ModalScrollDisable />
       <BackGround>
         <ModalView>
-          {/* <ModalBG onClick={handleCloseModal}></ModalBG> */}
-          {detail.memberId === memberId ? (
-            <h3>해당 참여자가 여행에 참여하셨나요?</h3>
-          ) : (
-            <h3>{detail.nickname}님이(가) 여행에 참여하셨나요?</h3>
-          )}
-          <div className="btn-wrapper">
-            <button onClick={handleThirdModal}>네! 참석했습니다.</button>
-            <button onClick={handleThirdModal}>
-              아니요. 참석하지 않았습니다.
-            </button>
+          <div className="close-btn">
+            <CloseButton onClick={handleCloseModal}>
+              <IoMdClose />
+            </CloseButton>
+          </div>
+          <div className="modal-content">
+            {detail.memberId === memberId ? (
+              <h3>해당 참여자가 여행에 참여하셨나요?</h3>
+            ) : (
+              <h3>[ {detail.nickname} ] 님이 여행에 참여하셨나요?</h3>
+            )}
+            <div className="btn-wrapper">
+              <button onClick={handleThirdModal}>네! 참석했습니다.</button>
+              <button onClick={handleThirdModal}>
+                아니요. 참석하지 않았습니다.
+              </button>
+            </div>
           </div>
         </ModalView>
       </BackGround>
@@ -62,17 +71,12 @@ const SecondReviewModal = ({
           setContent={setContent}
         />
       ) : null}
-      {/* </Container> */}
     </>
   );
 };
 
 export default SecondReviewModal;
 
-// const Container = styled.section`
-//   width: 100%;
-//   height: 100%;
-// `;
 const BackGround = styled.section`
   display: flex;
   justify-content: center;
@@ -86,6 +90,17 @@ const BackGround = styled.section`
   height: 100%;
 `;
 const ModalView = styled(StyledModal)`
+  .close-btn {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    width: 100%;
+    justify-self: flex-start;
+    align-self: flex-start;
+  }
+  .modal-content {
+    width: 100%;
+  }
   h3 {
     padding-bottom: 30px;
   }
@@ -121,10 +136,16 @@ const ModalView = styled(StyledModal)`
         font-size: 15px;
       }
     }
+    .modal-content {
+      font-size: 1rem;
+    }
   }
   @media screen and (max-width: 768px) {
     width: 500px;
     height: 300px;
+    .modal-content {
+      font-size: 1rem;
+    }
   }
   @media screen and (max-width: 576px) {
     width: 300px;
