@@ -4,7 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import partypeople.server.companion.entity.Companion;
+import partypeople.server.companion.entity.Participant;
 import partypeople.server.companion.entity.Subscriber;
+import partypeople.server.companion.repository.ParticipantRepository;
 import partypeople.server.companion.repository.SubscriberRepository;
 import partypeople.server.exception.BusinessLogicException;
 import partypeople.server.exception.ExceptionCode;
@@ -19,6 +21,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class SubscriberService {
     private final SubscriberRepository subscriberRepository;
+    private final ParticipantRepository participantRepository;
     private final CompanionService companionService;
     private final MemberService memberService;
 
@@ -56,8 +59,12 @@ public class SubscriberService {
 
     private void verifySubscriber(Long memberId, Long companionId) {
         Optional<Subscriber> optionalSubscriber = subscriberRepository.findByMemberMemberIdAndCompanionCompanionId(memberId, companionId);
+        Optional<Participant> optionalParticipant = participantRepository.findByMemberMemberIdAndCompanionCompanionId(memberId, companionId);
         if (optionalSubscriber.isPresent()) {
             throw new BusinessLogicException(ExceptionCode.SUBSCRIBER_EXIST);
+        }
+        if (optionalParticipant.isPresent()) {
+            throw new BusinessLogicException(ExceptionCode.PARTICIPANT_EXIST);
         }
     }
 }
