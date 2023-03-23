@@ -27,7 +27,8 @@ const MemberReviews = () => {
   const handleSirenClick = () => {
     Swal.fire({
       icon: 'info',
-      text: '신고 기능은 추후에 추가될 예정입니다!',
+      title: '이 리뷰에 문제가 있나요?',
+      text: '리뷰 신고 기능은 추후에 추가될 예정입니다! 🥲',
     });
   };
 
