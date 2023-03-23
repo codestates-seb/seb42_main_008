@@ -34,6 +34,7 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 @Slf4j
 public class MemberService {
+    private final static int NICKNAME_MAX_SIZE = 10;
     private final CompanionRepository companionRepository;
     private final MemberRepository memberRepository;
     private final CustomBeanUtils<Member> beanUtils;
@@ -146,7 +147,7 @@ public class MemberService {
         } catch (SignatureException se) {
             throw new BusinessLogicException(ExceptionCode.SIGNATURE_ERROR);
         } catch (ExpiredJwtException ee) {
-            throw new BusinessLogicException(ExceptionCode.EXPIRED_ERROR);
+            throw new BusinessLogicException(ExceptionCode.AT_EXPIRED_ERROR);
         } catch (Exception e) {
             throw new BusinessLogicException(ExceptionCode.ACCESS_TOKEN_ERROR);
         }
@@ -221,5 +222,32 @@ public class MemberService {
             password[i] = alphanum.charAt(random.nextInt(alphanum.length()));
         }
         return new String(password);
+    }
+
+    public String oauthNickCheck(String name) {
+        List<String> nicknames = memberRepository.findAllNicknames();
+
+        if (name.length() > NICKNAME_MAX_SIZE) {
+            name = name.substring(0,10);
+        }
+
+        if (!(nicknames.contains(name))) {
+            return name;
+        }
+
+        String randomNickname;
+        do{
+            randomNickname = generateRandomString();
+        } while (nicknames.contains(randomNickname));
+
+        return randomNickname;
+    }
+
+    private String generateRandomString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("G_");
+        sb.append(generateRandomPassword());
+
+        return sb.toString();
     }
 }
