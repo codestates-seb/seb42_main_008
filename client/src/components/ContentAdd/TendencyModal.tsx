@@ -2,6 +2,7 @@ import { Dispatch, SetStateAction, useState } from 'react';
 
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
+import ModalScrollDisable from 'utils/ModalScrollDisable';
 
 type Props = {
   setIsTendencyModal: (newValue: boolean) => void;
@@ -57,6 +58,7 @@ const TendencyModal = ({
   };
   return (
     <TendencyBox>
+      <ModalScrollDisable />
       <div className="tendency-box">
         <div className="tendency-top">
           <h3>원하는 성향을 선택하세요</h3>
@@ -107,7 +109,7 @@ const TendencyBox = styled.div`
   flex-direction: column;
   font-size: 2rem;
   z-index: 50;
-  overflow-y: auto;
+  overflow-y: hidden;
   @media screen and (max-width: 768px) {
     width: 450px;
     height: auto;
@@ -118,7 +120,7 @@ const TendencyBox = styled.div`
     height: auto;
     font-size: 1.2rem;
   }
-  @media screen and (max-height: 1000px) {
+  @media screen and (max-height: 900px) {
     height: 500px;
   }
   @media screen and (max-height: 650px) {
@@ -136,6 +138,7 @@ const TendencyBox = styled.div`
     padding: 40px;
     width: 100%;
     height: 100%;
+    overflow-y: auto;
     > label {
       margin-left: 20px;
       font-size: 1.7rem;
