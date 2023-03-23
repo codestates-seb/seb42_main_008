@@ -28,11 +28,14 @@ const ListSearch = ({
 }: ListSearchProps) => {
   const { countryCode } = useParams();
   const [date, setDate] = useState<Date>(new Date());
+  const [dateStr, setDateStr] = useState<string>('');
+  const [isDateSearch, setIsDateSearch] = useState<boolean>(false);
   const [keyword, setKeyword] = useState<string>('');
   const [condition, setCondition] = useState<string>('entire');
 
   const handleDateChange = (date: Date) => {
     setDate(date);
+    setDateStr(getDateString(date).fullDateStr);
   };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -68,9 +71,11 @@ const ListSearch = ({
       sortDir: 'DESC',
       condition,
       keyword,
-      date: getDateString(date).fullDateStr,
+      date: dateStr,
       nationCode: countryCode,
     };
+    console.log(params);
+
     await customAxios.get('/companions/search', { params }).then(resp => {
       setSearchDatas(cur => {
         if (resp.data.pageInfo.totalPages <= resp.data.pageInfo.page) {
@@ -98,6 +103,8 @@ const ListSearch = ({
     setDate(new Date());
     setIsSearch(false);
     setDatas([]);
+    setDateStr('');
+    setIsDateSearch(false);
   };
 
   const searchOptions: SearchOption[] = [
@@ -114,11 +121,17 @@ const ListSearch = ({
         <label className="datepicker-label" htmlFor="datePicker">
           <FaCalendarDay color="#fff" size={22} />
         </label>
-        <DatePicker
-          selected={date}
-          onChange={handleDateChange}
-          id="datePicker"
-        />
+        {isDateSearch ? (
+          <DatePicker
+            selected={date}
+            onChange={handleDateChange}
+            id="datePicker"
+          />
+        ) : (
+          <DateSearchButton onClick={() => setIsDateSearch(true)}>
+            날짜 지정하기
+          </DateSearchButton>
+        )}
       </DateSearch>
       <Stroke></Stroke>
       <KeywordSearch>
@@ -298,7 +311,7 @@ const Buttons = styled.div`
   @media screen and (max-width: 768px) {
     position: absolute;
     right: 10px;
-    top: 15px;
+    top: 10px;
     height: fit-content;
   }
 `;
@@ -326,6 +339,14 @@ const SearchButton = styled(StyledButton)`
 const ClearButton = styled(SearchButton)`
   background-color: #aaa;
   color: #fff;
+`;
+
+const DateSearchButton = styled.div`
+  color: #fff;
+  cursor: pointer;
+  :hover {
+    text-decoration: underline;
+  }
 `;
 
 export default ListSearch;
