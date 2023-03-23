@@ -5,6 +5,7 @@ import Message from './Message';
 import { useRecoilValue } from 'recoil';
 import { userInfo } from 'states/userState';
 import customAxios from 'api/customAxios';
+import ModalScrollDisable from 'utils/ModalScrollDisable';
 
 type Props = {
   noteModal: boolean;
@@ -43,6 +44,7 @@ const NoteModal = ({ setNoteModal }: Props) => {
 
   return (
     <SideBar>
+      <ModalScrollDisable />
       <div className="modal-contents">
         <div className="note-menu">
           <FaChevronRight

@@ -6,6 +6,7 @@ import { useRecoilValue } from 'recoil';
 import { userInfo } from 'states/userState';
 import customAxios from 'api/customAxios';
 import Swal from 'sweetalert2';
+import ModalScrollDisable from 'utils/ModalScrollDisable';
 
 interface NoteMessage {
   messageId: number;
@@ -66,6 +67,7 @@ const ReplyNote = ({
   };
   return (
     <ReplyBox onClick={handleOverlayClick}>
+      <ModalScrollDisable />
       <div className="note-box">
         <div className="note-top">
           <div className="note-title">
