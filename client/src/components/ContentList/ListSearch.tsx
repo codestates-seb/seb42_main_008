@@ -86,7 +86,6 @@ const ListSearch = ({
       date: dateStr,
       nationCode: countryCode,
     };
-    console.log(params);
 
     await customAxios.get('/companions/search', { params }).then(resp => {
       setSearchDatas(cur => {
