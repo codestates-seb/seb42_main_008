@@ -195,7 +195,7 @@ const SearchBox = styled.section`
   display: flex;
   align-items: center;
   justify-content: space-evenly;
-
+  z-index: 5;
   @media screen and (max-width: 768px) {
     flex-direction: column;
     height: fit-content;
