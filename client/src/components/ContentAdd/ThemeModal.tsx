@@ -30,7 +30,6 @@ const ThemeModal = ({
   setIsThemeModal,
   titleInput,
   contentInput,
-  startDate,
   formattedDate,
   savedAddress,
   markerLocation,
@@ -104,32 +103,40 @@ const ThemeModal = ({
   const handleAllSubmit = async (event: any) => {
     if (selectedThemes.length >= 1) {
       event.preventDefault();
-      try {
-        const response = await customAxios.post(`/companions`, {
-          title: titleInput,
-          content: contentInput,
-          date: formattedDate,
-          address: savedAddress,
-          lat: markerLocation.lat,
-          lng: markerLocation.lng,
-          nationName: countrySelect,
-          nationCode: countryCode,
-          continent: continentNumber,
-          tags: allTags,
-          memberId: user.memberId,
+      Swal.fire({
+        title: '작성 완료하시겠습니까?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: '네, 작성하겠습니다!',
+        cancelButtonText: '아니요',
+      })
+        .then(async result => {
+          if (result.isConfirmed) {
+            await customAxios
+              .post(`/companions`, {
+                title: titleInput,
+                content: contentInput,
+                date: formattedDate,
+                address: savedAddress,
+                lat: markerLocation.lat,
+                lng: markerLocation.lng,
+                nationName: countrySelect,
+                nationCode: countryCode,
+                continent: continentNumber,
+                tags: allTags,
+                memberId: user.memberId,
+              })
+              .then(() => {
+                setIsThemeModal(false);
+                navigate(`/${continentSelect}/${countryCode}`);
+              });
+          }
+        })
+        .catch(error => {
+          console.log(error);
         });
-        setIsThemeModal(false);
-        console.log(response.headers);
-        navigate(`/${continentSelect}/${countryCode}`);
-      } catch (error) {
-        console.log(error);
-        console.log(continentSelect);
-        console.log(countryCode);
-        console.log(contentInput);
-        console.log(startDate);
-        console.log(formattedDate);
-        console.log(allTags);
-      }
     } else {
       Swal.fire({
         icon: 'error',
@@ -167,7 +174,7 @@ const ThemeModal = ({
         </div>
         <div className="theme-bottom">
           <button onClick={handleTendencyOpen}>이전</button>
-          <button onClick={handleAllSubmit}>다음</button>
+          <button onClick={handleAllSubmit}>작성 완료</button>
         </div>
       </div>
     </ThemeBox>
