@@ -14,7 +14,7 @@ type Countries = {
 interface Props {
   setCountryModal: Dispatch<SetStateAction<boolean>>;
   continentSelect: string;
-  setCountrySelect: Dispatch<SetStateAction<string>>;
+  setCountrySelect: Dispatch<SetStateAction<string | undefined>>;
   setCountryCode: Dispatch<SetStateAction<string>>;
 }
 const CountrySelectModal = ({
