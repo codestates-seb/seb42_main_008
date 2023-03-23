@@ -1,7 +1,7 @@
 import ReactQuill from 'react-quill';
 import styled from 'styled-components';
 import 'react-quill/dist/quill.snow.css';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import DatePicker, { registerLocale } from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import ko from 'date-fns/locale/ko';
@@ -11,6 +11,14 @@ import countries from '../assets/countries.json';
 import ThemeModal from 'components/ContentAdd/ThemeModal';
 import SearchMap from 'components/ContentAdd/SearchMap';
 import Swal from 'sweetalert2';
+import { useLocation } from 'react-router-dom';
+const countriesPick: Countries = countries;
+type Countries = {
+  [key: string]: {
+    name: string;
+    code: string;
+  }[];
+};
 
 registerLocale('ko', ko);
 
@@ -43,19 +51,32 @@ const ContentAdd = () => {
       ],
     },
   };
+  // 라우터 이동에 맞춰 국가 대륙
+  const location = useLocation();
+  const { continent, countryCode: locationCode } = location.state;
+  // countries 에 있는 국가의 코드와 받아온 코드의 값이 일치한 부분의 국가이름
+  const continentObj: { name: string; code: string }[] =
+    countriesPick[continent];
+  const countryName = continentObj.find(
+    country => country.code === locationCode
+  )?.name;
+  const koreanRegex = /[가-힣]+/g;
+  const routeKorCountryName = countryName
+    ? countryName.match(koreanRegex)?.join('')
+    : '국가선택';
 
   // 대륙 선택 옵션
-  const [continentSelect, setContinentSelect] = useState('');
+  const [continentSelect, setContinentSelect] = useState(continent);
   // 나라 선택
-  const [countrySelect, setCountrySelect] = useState('국가선택');
+  const [countrySelect, setCountrySelect] = useState(routeKorCountryName);
   // 나라 코드
-  const [countryCode, setCountryCode] = useState('');
+  const [countryCode, setCountryCode] = useState(locationCode);
 
   // 대륙 초기화시 나라,코드리셋
-  useEffect(() => {
-    setCountrySelect('국가선택');
-    setCountryCode('');
-  }, [continentSelect]);
+  // useEffect(() => {
+  //   setCountrySelect('국가선택');
+  //   setCountryCode('');
+  // }, [continentSelect]);
 
   let title = '대륙을 선택하세요!';
   let titleImg =
@@ -102,8 +123,6 @@ const ContentAdd = () => {
   const [contentInput, setContentInput] = useState('');
   // 여행 시작일
   const [startDate, setStartDate] = useState<Date | null>(null);
-  // 여행 종료일
-  const [endDate, setEndDate] = useState<Date | null>(null);
   // 세부 주소 정보
   const [savedAddress, setSavedAddress] = useState<string | null>(null);
   // lat, lng 위치 정보
@@ -133,7 +152,7 @@ const ContentAdd = () => {
       });
       return;
     }
-    if (!startDate || !endDate) {
+    if (!startDate) {
       Swal.fire({
         icon: 'error',
         text: '날짜를 입력해주세요',
@@ -164,7 +183,6 @@ const ContentAdd = () => {
       titleInput &&
       contentInput &&
       startDate &&
-      endDate &&
       savedAddress &&
       continentSelect &&
       countrySelect !== '국가선택'
@@ -180,6 +198,12 @@ const ContentAdd = () => {
     formattedDate = `${year}-${month}-${day}`;
   }
 
+  const handleContinentChange = (event: any) => {
+    setContinentSelect(event.target.value);
+    setCountrySelect('국가선택');
+    setCountryCode('');
+  };
+
   return (
     <ContentAddContainer>
       <TitleBox style={{ backgroundImage: `url(${titleImg})` }}>
@@ -191,10 +215,7 @@ const ContentAdd = () => {
           <div>
             <label>
               대륙
-              <select
-                value={continentSelect}
-                onChange={event => setContinentSelect(event.target.value)}
-              >
+              <select value={continentSelect} onChange={handleContinentChange}>
                 <option value="대륙선택">대륙선택</option>
 
                 {Object.keys(countries).map((country, index) => {
@@ -230,19 +251,7 @@ const ContentAdd = () => {
               onChange={(date: Date) => setStartDate(date)}
               selectsStart
               startDate={startDate}
-              endDate={endDate}
               placeholderText="Start Date"
-              dateFormat="yyyy-MM-dd"
-            />
-            ~
-            <DatePicker
-              selected={endDate}
-              onChange={(date: Date) => setEndDate(date)}
-              selectsEnd
-              startDate={startDate}
-              endDate={endDate}
-              minDate={startDate}
-              placeholderText="End Date"
               dateFormat="yyyy-MM-dd"
             />
           </div>

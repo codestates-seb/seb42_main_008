@@ -1,26 +1,31 @@
 name: client
 on:
   push:
-    branches: 
-            - main
-  pull_request: 
-    branches: 
-            - main
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 jobs:
   build:
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout source code.
         uses: actions/checkout@v2
+      - name: Setting .env
+        run: |
+          echo "REACT_APP_CLIENT_ID=$REACT_APP_CLIENT_ID" >> .env
+          echo "REACT_APP_API_KEY=$REACT_APP_API_KEY" >> .env
+          echo "REACT_APP_SERVER=$REACT_APP_SERVER" >> .env
+          cat .env
+        env:
+          REACT_APP_CLIENT_ID: ${{ secrets.REACT_APP_CLIENT_ID }}
+          REACT_APP_API_KEY: ${{ secrets.REACT_APP_API_KEY }}
+          REACT_APP_SERVER: ${{ secrets.REACT_APP_SERVER }}
+        working-directory: ./client
       - name: Install dependencies
         run: npm install
         working-directory: ./client
-      - name: Setting .env
-        run: |
-          echo "REACT_APP_CLIENT_ID=${{ secrets.REACT_APP_CLIENT_ID }}" >> .env
-          echo "REACT_APP_API_KEY=${{ secrets.REACT_APP_API_KEY }}" >> .env
-          echo "REACT_APP_SERVER=${{ secrets.REACT_APP_SERVER }}" >> .env
-          cat .env
       - name: Build
         run: npm run build
         working-directory: ./client
@@ -33,5 +38,5 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_EC2_METADATA_DISABLED: true
         run: |
-            aws s3 sync ./build s3://partypeople
+          aws s3 sync ./build s3://partypeople
         working-directory: ./client

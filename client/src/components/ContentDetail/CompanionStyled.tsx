@@ -17,11 +17,12 @@ export const StyledCompanionList = styled.ul`
     align-items: center;
     font-size: 1.2rem;
     padding: 5px;
+    cursor: pointer;
     .companion-info {
       display: flex;
       justify-content: flex-start;
       align-items: center;
-      width: 50%;
+      /* width: 80%; */
       .img {
         margin-right: 5px;
         width: 30px;
@@ -30,10 +31,11 @@ export const StyledCompanionList = styled.ul`
         background-repeat: no-repeat;
         background-size: cover;
         background-position: center;
+        object-fit: scale-down;
       }
     }
     .btn-wrapper {
-      width: 50%;
+      width: 30%;
       display: flex;
       justify-content: space-around;
       > :nth-child(1) {
@@ -44,7 +46,7 @@ export const StyledCompanionList = styled.ul`
       }
       .btn {
         cursor: pointer;
-        padding: 0px 10px;
+        padding: 0px 6px;
         font-size: 1rem;
         color: white;
         border: none;

@@ -1,8 +1,11 @@
 import ThirdReviewModal from 'components/ContentDetail/ThirdReviewModal';
+// import { ModalBG } from 'components/Profile/ModalStyles';
 import { secondModal } from 'interfaces/ContentDetail.interface';
 import { useState } from 'react';
+import { useRecoilValue } from 'recoil';
+import { userInfo } from 'states/userState';
 import styled from 'styled-components';
-import ModalScrollDisable from 'utils/ModalScrollDisable';
+// import ModalScrollDisable from 'utils/ModalScrollDisable';
 import { StyledModal } from './CompanionStyled';
 
 const SecondReviewModal = ({
@@ -16,16 +19,28 @@ const SecondReviewModal = ({
   setContent,
 }: secondModal) => {
   const [thirdModal, setThirdModal] = useState(false);
+  const { memberId } = useRecoilValue(userInfo);
   const handleThirdModal = () => {
     setThirdModal(!thirdModal);
   };
 
+  // const handleCloseModal = () => {
+  //   setSecondModal(false);
+  //   setFirstModal(false);
+  // };
+
   return (
-    <Container>
-      <ModalScrollDisable />
+    <>
+      {/* <Container> */}
+      {/* <ModalScrollDisable /> */}
       <BackGround>
         <ModalView>
-          <h3>{detail.nickname}님이(가) 여행에 참여하셨나요?</h3>
+          {/* <ModalBG onClick={handleCloseModal}></ModalBG> */}
+          {detail.memberId === memberId ? (
+            <h3>해당 참여자가 여행에 참여하셨나요?</h3>
+          ) : (
+            <h3>{detail.nickname}님이(가) 여행에 참여하셨나요?</h3>
+          )}
           <div className="btn-wrapper">
             <button onClick={handleThirdModal}>네! 참석했습니다.</button>
             <button onClick={handleThirdModal}>
@@ -47,16 +62,17 @@ const SecondReviewModal = ({
           setContent={setContent}
         />
       ) : null}
-    </Container>
+      {/* </Container> */}
+    </>
   );
 };
 
 export default SecondReviewModal;
 
-const Container = styled.section`
-  width: 100%;
-  height: 100%;
-`;
+// const Container = styled.section`
+//   width: 100%;
+//   height: 100%;
+// `;
 const BackGround = styled.section`
   display: flex;
   justify-content: center;

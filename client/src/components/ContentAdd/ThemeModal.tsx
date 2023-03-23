@@ -1,4 +1,4 @@
-import axios from 'axios';
+import customAxios from 'api/customAxios';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
@@ -20,7 +20,7 @@ type Props = {
   savedAddress: string | null;
   markerLocation: LatLng;
   continentSelect: string;
-  countrySelect: string;
+  countrySelect: string | undefined;
   countryCode: string;
   selectedTendencies: any;
   formattedDate: string;
@@ -30,7 +30,6 @@ const ThemeModal = ({
   setIsThemeModal,
   titleInput,
   contentInput,
-  startDate,
   formattedDate,
   savedAddress,
   markerLocation,
@@ -98,40 +97,46 @@ const ThemeModal = ({
 
   // 멤버아이디
   const user = useRecoilValue(userInfo);
-  console.log(user.memberId);
+
   // 모든 양식 제출 post 요청
   // 멤버아이디는 토큰받아 입력 // 대륙은 정수?
   const handleAllSubmit = async (event: any) => {
     if (selectedThemes.length >= 1) {
       event.preventDefault();
-      try {
-        const response = await axios.post(
-          `${process.env.REACT_APP_SERVER}/companions`,
-          {
-            title: titleInput,
-            content: contentInput,
-            date: formattedDate,
-            address: savedAddress,
-            lat: markerLocation.lat,
-            lng: markerLocation.lng,
-            nationName: countrySelect,
-            nationCode: countryCode,
-            continent: continentNumber,
-            tags: allTags,
-            memberId: user.memberId,
+      Swal.fire({
+        title: '작성 완료하시겠습니까?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: '네, 작성하겠습니다!',
+        cancelButtonText: '아니요',
+      })
+        .then(async result => {
+          if (result.isConfirmed) {
+            await customAxios
+              .post(`/companions`, {
+                title: titleInput,
+                content: contentInput,
+                date: formattedDate,
+                address: savedAddress,
+                lat: markerLocation.lat,
+                lng: markerLocation.lng,
+                nationName: countrySelect,
+                nationCode: countryCode,
+                continent: continentNumber,
+                tags: allTags,
+                memberId: user.memberId,
+              })
+              .then(() => {
+                setIsThemeModal(false);
+                navigate(`/${continentSelect}/${countryCode}`);
+              });
           }
-        );
-        setIsThemeModal(false);
-        console.log(response.headers);
-        navigate(`/${continentSelect}/${countryCode}`);
-      } catch (error) {
-        console.log(error);
-        console.log(continentSelect);
-        console.log(typeof contentInput);
-        console.log(startDate);
-        console.log(formattedDate);
-        console.log(allTags);
-      }
+        })
+        .catch(error => {
+          console.log(error);
+        });
     } else {
       Swal.fire({
         icon: 'error',
@@ -169,7 +174,7 @@ const ThemeModal = ({
         </div>
         <div className="theme-bottom">
           <button onClick={handleTendencyOpen}>이전</button>
-          <button onClick={handleAllSubmit}>다음</button>
+          <button onClick={handleAllSubmit}>작성 완료</button>
         </div>
       </div>
     </ThemeBox>

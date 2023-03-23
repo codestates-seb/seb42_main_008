@@ -36,20 +36,16 @@ const GoogleLogin = () => {
     );
     const userData = JSON.parse(jsonPayload);
     setUser(userData);
-    setCookie('accessToken', 'Bearer' + accessToken, {
-      path: '/',
-      sameSite: 'none',
-      secure: true,
-    });
     setIsLogin(true);
   };
 
   useEffect(() => {
     if (accessToken && refreshToken) {
-      setCookie('refreshToken', 'Bearer' + refreshToken, {
+      setCookie('accessToken', 'Bearer ' + accessToken, {
         path: '/',
-        sameSite: 'none',
-        secure: true,
+      });
+      setCookie('refreshToken', refreshToken, {
+        path: '/',
       });
       googleLoginAction(accessToken);
       navigate('/');

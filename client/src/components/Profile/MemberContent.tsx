@@ -6,22 +6,29 @@ import MemberCompanoins from './MemberCompanoins';
 import MemberSettings from './MemberSettings';
 import { useRecoilValue } from 'recoil';
 import { userInfo } from 'states/userState';
+import { useParams } from 'react-router-dom';
 
 const MemberContent = ({
   member,
   currentTab,
   setCurrentTab,
 }: MemberContentProps) => {
+  const { memberId } = useParams();
   const [tabList, setTabList] = useState<string[]>([]);
   const loginUser = useRecoilValue(userInfo);
 
+  const handleTabList = () => {
+    if (memberId === loginUser.memberId.toString()) {
+      setTabList(['평가 모아보기', `내 동행글`, '계정 관리']);
+    } else {
+      setTabList(['평가 모아보기', `동행글 보기`]);
+    }
+  };
+
   useEffect(() => {
-    setTabList(
-      loginUser.memberId === member?.memberId
-        ? ['평가 모아보기', `내 동행글`, '계정 관리']
-        : ['평가 모아보기', `동행글 보기`]
-    );
-  }, []);
+    handleTabList();
+    setCurrentTab(0);
+  }, [memberId]);
 
   const handleTabClick = (idx: number) => {
     setCurrentTab(idx);

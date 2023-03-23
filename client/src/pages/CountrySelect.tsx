@@ -5,8 +5,8 @@ import randomCountries from '../assets/countries.json';
 import { useRecoilValue } from 'recoil';
 import { loginState } from 'states/userState';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import Swal from 'sweetalert2';
+import customAxios from 'api/customAxios';
 const randomCountriesPick: RandomCountries = randomCountries;
 type RandomCountries = {
   [key: string]: {
@@ -19,6 +19,10 @@ type Countries = {
   code: string;
 };
 let countries: Countries[] = [];
+
+interface Props {
+  filteredCountry: any;
+}
 
 const CountrySelect = () => {
   const { continent } = useParams<{ continent: string }>();
@@ -43,10 +47,8 @@ const CountrySelect = () => {
   //현재 대륙에서 나라 글작성된 국가리스트 받아오기
   const [countryList, setCountryList] = useState([]);
   useEffect(() => {
-    axios
-      .get(
-        `${process.env.REACT_APP_SERVER}/companions/continents?continent=${continentNumber}`
-      )
+    customAxios
+      .get(`/companions/continents?continent=${continentNumber}`)
       .then(response => {
         setCountryList(response.data.data);
       })
@@ -239,9 +241,15 @@ const CountrySelect = () => {
 
   // 로그인 사용자만 글작성 이동 클릭 라우터
   const login = useRecoilValue(loginState);
+  const countryCode = '';
   const handleMoveAddPage = () => {
     if (login === true) {
-      navigate('/add');
+      navigate('/add', {
+        state: {
+          continent,
+          countryCode,
+        },
+      });
     } else {
       Swal.fire({
         icon: 'error',
@@ -250,7 +258,6 @@ const CountrySelect = () => {
       navigate('/login');
     }
   };
-
   return (
     <CountryListContainer>
       <div
@@ -266,7 +273,7 @@ const CountrySelect = () => {
           글 작성하기
         </div>
       </div>
-      <CountryListBox>
+      <CountryListBox filteredCountry={filteredCountry}>
         <div className="countrybox">
           <ul className="hot-country">
             {countries.map((country, index) => (
@@ -397,7 +404,7 @@ const CountryListContainer = styled.div`
   }
 `;
 
-const CountryListBox = styled.section`
+const CountryListBox = styled.section<Props>`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -408,11 +415,13 @@ const CountryListBox = styled.section`
   height: 100%;
 
   .countrybox {
-    display: flex;
+    display: grid;
     width: 80%;
     min-height: 600px;
     margin-top: 20px;
     height: 100%;
+    grid-template-columns: ${(props: any) =>
+      props.filteredCountry.length !== 0 ? `7fr 3fr` : `10fr 0fr`};
 
     @media screen and (max-width: 768px) {
       display: flex;
@@ -476,7 +485,6 @@ const CountryListBox = styled.section`
     }
   }
   .random-country {
-    /* width: 30%; */
     display: grid;
     grid-template-rows: repeat(1fr);
 
@@ -497,9 +505,10 @@ const CountryListBox = styled.section`
       > div {
         word-wrap: break-word;
         display: flex;
+        flex-direction: column;
         font-size: 1.2rem;
         align-items: center;
-        justify-content: flex-end;
+        justify-content: center;
         width: 50%;
         height: 100%;
         padding: 10px;
@@ -507,9 +516,12 @@ const CountryListBox = styled.section`
         background-color: rgba(0, 0, 0, 0.3);
         @media screen and (max-width: 768px) {
           font-size: 1.2rem;
+          flex-direction: row;
+          justify-content: flex-end;
         }
         @media screen and (max-width: 576px) {
           font-size: 0.8rem;
+          justify-content: flex-end;
         }
         div {
           display: flex;

@@ -51,6 +51,7 @@ const SearchMap = ({
           setMarkerPosition(latLng);
           setCenter(latLng);
           setSavedAddress(latLng.address);
+          setMarkerLocation(latLng);
         }
       });
     }

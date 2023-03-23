@@ -9,7 +9,8 @@ import Menu from 'components/Header/Menu';
 import LogoutMenu from 'components/Header/LogoutMenu';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { loginState, userInfo, userToken } from 'states/userState';
-import axios from 'axios';
+import customAxios from 'api/customAxios';
+import Swal from 'sweetalert2';
 const Header = () => {
   const [isLogin, setIsLogin] = useRecoilState(loginState);
   const token = useRecoilValue(userToken);
@@ -18,20 +19,31 @@ const Header = () => {
   const UserInfo = useRecoilValue(userInfo);
   const memberId = UserInfo.memberId;
   const handleLogout = async () => {
-    try {
-      await axios.post(
-        `${process.env.REACT_APP_TEST_SERVER}/members/logout`,
-        null,
-        {
-          headers: { Authorization: token },
-        }
-      );
-      localStorage.clear();
-      navigate('/');
-      setIsLogin(false);
-    } catch (error) {
-      console.log(error);
-    }
+    Swal.fire({
+      title: '로그아웃 하시겠습니까??',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: '네, 로그아웃 할게요',
+      cancelButtonText: '아니요',
+    }).then(async result => {
+      if (result.isConfirmed) {
+        customAxios
+          .post(`/members/logout`, null, {
+            headers: { Authorization: token },
+          })
+          .then(() => {
+            Swal.fire('Logout!', '로그아웃 되었어요!', 'success');
+            localStorage.clear();
+            navigate('/');
+            setIsLogin(false);
+          })
+          .catch(error => {
+            console.log(error);
+          });
+      }
+    });
   };
   //쪽지 모달
   const [noteModal, setNoteModal] = useState(false);

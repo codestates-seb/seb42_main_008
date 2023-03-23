@@ -2,14 +2,13 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 import { getCookie, setCookie } from 'utils/userCookies';
 
-axios.defaults.withCredentials = true;
-
 const customAxios = axios.create({
-  baseURL: process.env.REACT_APP_TEST_SERVER,
+  baseURL: process.env.REACT_APP_SERVER,
   headers: {
     'Content-Type': 'application/json',
     'Access-Control-Allow-Origin': '*',
   },
+  withCredentials: true,
 });
 
 customAxios.interceptors.request.use(config => {
@@ -49,8 +48,6 @@ customAxios.interceptors.response.use(
           .then(resp => {
             setCookie('accessToken', resp.headers.authorization, {
               path: '/',
-              sameSite: 'none',
-              secure: true,
             });
           });
         const newAccessToken = getCookie('accessToken');
@@ -64,7 +61,7 @@ customAxios.interceptors.response.use(
           text: '다시 로그인 해주세요! 🥲',
           icon: 'warning',
           confirmButtonColor: '#3085d6',
-          confirmButtonText: 'Yes, delete it!',
+          confirmButtonText: '확인',
         }).then(() => {
           localStorage.clear();
           const originLocation = location.origin;

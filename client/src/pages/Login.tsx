@@ -35,13 +35,13 @@ const Login = () => {
       .then(res => {
         setCookie('accessToken', res.headers.authorization, {
           path: '/',
-          sameSite: 'none',
-          secure: true,
+          // sameSite: 'none',
+          // secure: true,
         });
         setCookie('refreshToken', res.headers.refresh, {
           path: '/',
-          sameSite: 'none',
-          secure: true,
+          // sameSite: 'none',
+          // secure: true,
         });
         const decodeToken = res.headers.authorization
           .split(' ')[1]
