@@ -1,19 +1,21 @@
 import customAxios from 'api/customAxios';
 import SecondReviewModal from 'components/ContentDetail/SecondReviewModal';
-// import { ModalBG } from 'components/Profile/ModalStyles';
+import { CloseButton } from 'components/Profile/ModalStyles';
 import { firstModal } from 'interfaces/ContentDetail.interface';
 import { useState } from 'react';
+import { IoMdClose } from 'react-icons/io';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { userInfo } from 'states/userState';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
 import ModalScrollDisable from 'utils/ModalScrollDisable';
+import ScrollToTop from 'utils/ScrollToTop';
 import { StyledModal } from './CompanionStyled';
 
 const FirstReviewModal = ({ detail, setFirstModal, reviewId }: firstModal) => {
   const navigate = useNavigate();
-  const { memberId } = useRecoilValue(userInfo);
+  const { memberId, nickname } = useRecoilValue(userInfo);
   const [score, setScore] = useState<number>(0);
   const [content, setContent] = useState<string>('');
 
@@ -34,9 +36,9 @@ const FirstReviewModal = ({ detail, setFirstModal, reviewId }: firstModal) => {
       .catch(error => console.log(error));
   };
 
-  // const handleCloseModal = () => {
-  //   setFirstModal(false);
-  // };
+  const handleCloseModal = () => {
+    setFirstModal(false);
+  };
 
   // * 두번째 리뷰 모달 상태
   const [secondModal, setSecondModal] = useState<boolean>(false);
@@ -46,21 +48,29 @@ const FirstReviewModal = ({ detail, setFirstModal, reviewId }: firstModal) => {
 
   return (
     <>
+      <ScrollToTop />
       <ModalScrollDisable />
-      {/* <Container> */}
       <BackGround>
         <ModalView>
-          {/* <ModalBG onClick={handleCloseModal}></ModalBG> */}
-          {detail.memberId === memberId ? (
-            <h3>이 여행에 참석하셨나요?</h3>
-          ) : (
-            <h3>{detail.nickname}님와(과)의 여행에 참여하셨나요?</h3>
-          )}
-          <div className="btn-wrapper">
-            <button onClick={handleSecondModal}>네! 참석했습니다.</button>
-            <button onClick={handleFirstModal}>
-              아니요. 참석하지 않았습니다.
-            </button>
+          <div className="close-btn">
+            <CloseButton onClick={handleCloseModal}>
+              <IoMdClose />
+            </CloseButton>
+          </div>
+          <div className="modal-content">
+            {detail.memberId === memberId ? (
+              <h3>{detail.nickname} 님은 이 여행에 참석하셨나요?</h3>
+            ) : (
+              <h3>
+                {nickname}은 {detail.nickname}님와(과)의 여행에 참여하셨나요?
+              </h3>
+            )}
+            <div className="btn-wrapper">
+              <button onClick={handleSecondModal}>네! 참석했습니다.</button>
+              <button onClick={handleFirstModal}>
+                아니요. 참석하지 않았습니다.
+              </button>
+            </div>
           </div>
         </ModalView>
       </BackGround>
@@ -76,17 +86,12 @@ const FirstReviewModal = ({ detail, setFirstModal, reviewId }: firstModal) => {
           setContent={setContent}
         />
       ) : null}
-      {/* </Container> */}
     </>
   );
 };
 
 export default FirstReviewModal;
 
-// const Container = styled.section`
-//   width: 100%;
-//   height: 100%;
-// `;
 const BackGround = styled.section`
   display: flex;
   justify-content: center;
@@ -101,6 +106,18 @@ const BackGround = styled.section`
   height: 100%;
 `;
 const ModalView = styled(StyledModal)`
+  box-shadow: 5px 5px 10px 5px rgba(0, 0, 0, 0.25);
+  .close-btn {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    width: 100%;
+    justify-self: flex-start;
+    align-self: flex-start;
+  }
+  .modal-content {
+    width: 100%;
+  }
   h3 {
     padding-bottom: 30px;
   }

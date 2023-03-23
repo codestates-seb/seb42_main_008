@@ -251,7 +251,7 @@ const BottomBox = styled.div`
       word-break: break-all;
       img {
         width: 500px;
-        height: 500px;
+        display: block;
         object-fit: scale-down;
         word-break: break-all;
       }

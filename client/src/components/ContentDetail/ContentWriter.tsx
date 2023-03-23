@@ -131,7 +131,7 @@ const ContentWriter = ({
           part.length !== 0 &&
           part.some((part: any) => part.memberId === memberId) ? (
           <>
-            <Button>참가 신청 완료</Button>
+            <Button disabled>참가 신청 완료</Button>
             <Button onClick={handleProfile}>프로필 보기</Button>
           </>
         ) : (
@@ -282,6 +282,9 @@ const Button = styled.button`
   border-radius: 30px;
   font-size: 1.2rem;
   cursor: pointer;
+  :disabled {
+    cursor: default;
+  }
   @media screen and (max-width: 768px) {
     background-color: #d9d9d9;
     color: white;
