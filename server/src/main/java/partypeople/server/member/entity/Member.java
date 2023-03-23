@@ -71,11 +71,16 @@ public class Member extends Auditable {
     @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)    //
     private List<Review> reviews = new ArrayList<>();
 
+    @OneToMany(mappedBy = "reviewedMember", cascade = CascadeType.REMOVE)    //
+    private List<Review> reviewedMembers = new ArrayList<>();
+
     @OneToMany(mappedBy = "sender", cascade = CascadeType.REMOVE)    //
     private List<Message> senders = new ArrayList<>();
 
     @OneToMany(mappedBy = "receiver", cascade = CascadeType.REMOVE)    //
     private List<Message> receivers = new ArrayList<>();
+
+
     public enum MemberStatus{
         MEMBER_ACTIVE("활동중"),
         MEMBER_QUIT("탈퇴 상태");
