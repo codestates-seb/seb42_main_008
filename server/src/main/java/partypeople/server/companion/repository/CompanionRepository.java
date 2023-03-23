@@ -37,6 +37,14 @@ public interface CompanionRepository extends JpaRepository<Companion, Long> {
     Page<Companion> findInEntire(Pageable pageable, @Param("keyword") String keyword,
                                  @Param("nationCode") String nationCode,
                                  @Param("date")LocalDate date);
+    @Query("SELECT distinct c FROM Companion c join c.companionTags ct join ct.tag t" +
+        " WHERE c.nation.code = :nationCode" +
+        " AND (c.title LIKE %:keyword% OR c.address LIKE %:keyword%" +
+        " OR c.content LIKE %:keyword%" +
+        " OR ct.tag.name LIKE %:keyword%)")
+    @EntityGraph(attributePaths = {"member"})
+    Page<Companion> findInEntire(Pageable pageable, @Param("keyword") String keyword,
+                                 @Param("nationCode") String nationCode);
 
     @Query("SELECT distinct c FROM Companion c join c.companionTags ct join ct.tag t" +
         " WHERE c.date = :date" +
@@ -46,6 +54,12 @@ public interface CompanionRepository extends JpaRepository<Companion, Long> {
     Page<Companion> findInTags(Pageable pageable, @Param("keyword") String keyword,
                                @Param("nationCode") String nationCode,
                                @Param("date")LocalDate date);
+    @Query("SELECT distinct c FROM Companion c join c.companionTags ct join ct.tag t" +
+        " WHERE c.nation.code = :nationCode" +
+        " AND ct.tag.name LIKE %:keyword%")
+    @EntityGraph(attributePaths = {"member"})
+    Page<Companion> findInTags(Pageable pageable, @Param("keyword") String keyword,
+                               @Param("nationCode") String nationCode);
 
     @Query("SELECT distinct c FROM Companion c join c.companionTags ct join ct.tag t" +
         " WHERE c.date = :date" +
@@ -57,6 +71,13 @@ public interface CompanionRepository extends JpaRepository<Companion, Long> {
                                  @Param("date")LocalDate date);
 
     @Query("SELECT distinct c FROM Companion c join c.companionTags ct join ct.tag t" +
+        " WHERE c.nation.code = :nationCode" +
+        " AND c.title LIKE %:keyword%")
+    @EntityGraph(attributePaths = {"member"})
+    Page<Companion> findInTitle(Pageable pageable, @Param("keyword") String keyword,
+                                 @Param("nationCode") String nationCode);
+
+    @Query("SELECT distinct c FROM Companion c join c.companionTags ct join ct.tag t" +
         " WHERE c.date = :date" +
         " AND c.nation.code = :nationCode" +
         " AND c.content LIKE %:keyword%")
@@ -66,6 +87,13 @@ public interface CompanionRepository extends JpaRepository<Companion, Long> {
                                  @Param("date")LocalDate date);
 
     @Query("SELECT distinct c FROM Companion c join c.companionTags ct join ct.tag t" +
+        " WHERE c.nation.code = :nationCode" +
+        " AND c.content LIKE %:keyword%")
+    @EntityGraph(attributePaths = {"member"})
+    Page<Companion> findInContent(Pageable pageable, @Param("keyword") String keyword,
+                                 @Param("nationCode") String nationCode);
+
+    @Query("SELECT distinct c FROM Companion c join c.companionTags ct join ct.tag t" +
         " WHERE c.date = :date" +
         " AND c.nation.code = :nationCode" +
         " AND c.address LIKE %:keyword%")
@@ -73,5 +101,11 @@ public interface CompanionRepository extends JpaRepository<Companion, Long> {
     Page<Companion> findInAddress(Pageable pageable, @Param("keyword") String keyword,
                                  @Param("nationCode") String nationCode,
                                  @Param("date")LocalDate date);
+    @Query("SELECT distinct c FROM Companion c join c.companionTags ct join ct.tag t" +
+        " WHERE c.nation.code = :nationCode" +
+        " AND c.address LIKE %:keyword%")
+    @EntityGraph(attributePaths = {"member"})
+    Page<Companion> findInAddress(Pageable pageable, @Param("keyword") String keyword,
+                                 @Param("nationCode") String nationCode);
 
 }
