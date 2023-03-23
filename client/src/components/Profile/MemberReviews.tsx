@@ -6,6 +6,8 @@ import Swal from 'sweetalert2';
 import { useEffect, useState } from 'react';
 import customAxios from 'api/customAxios';
 import { useParams } from 'react-router-dom';
+import { useRecoilValue } from 'recoil';
+import { userInfo } from 'states/userState';
 
 interface EmojiProps {
   score: number;
@@ -23,6 +25,7 @@ const Emoji = ({ score }: EmojiProps) => {
 const MemberReviews = () => {
   const { memberId } = useParams();
   const [reviews, setReviews] = useState<Review[] | []>([]);
+  const loginUser = useRecoilValue(userInfo);
 
   const handleSirenClick = () => {
     Swal.fire({
@@ -45,7 +48,7 @@ const MemberReviews = () => {
 
   useEffect(() => {
     getReviewData();
-  }, []);
+  }, [memberId]);
 
   return (
     <>
@@ -57,9 +60,11 @@ const MemberReviews = () => {
                 <p>{item.content}</p>
                 <div className="icons">
                   <Emoji score={item.score} />
-                  <span className="siren" onClick={handleSirenClick}>
-                    <GiSiren size={27} color="red" />
-                  </span>
+                  {loginUser.memberId === memberId && (
+                    <span className="siren" onClick={handleSirenClick}>
+                      <GiSiren size={27} color="red" />
+                    </span>
+                  )}
                 </div>
               </ReviewItem>
             ))

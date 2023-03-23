@@ -152,12 +152,14 @@ const MemberInfo = ({ member, setMember }: MemberInfoProps) => {
                 팔로잉 {member.followingCount}
               </span>
             </div>
-            <div className="report">
-              <span>
-                <MdReport />
-              </span>
-              <p onClick={handleReportClick}>회원 신고하기</p>
-            </div>
+            {loginUser.memberId !== member.memberId && (
+              <div className="report">
+                <span>
+                  <MdReport />
+                </span>
+                <p onClick={handleReportClick}>회원 신고하기</p>
+              </div>
+            )}
           </section>
           <div className="content">
             <p className="content-text">{member.content}</p>
