@@ -4,6 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import countries from 'assets/countries.json';
 import { CountryData, CountryNames } from 'interfaces/ContentList.interface';
 import { StyledButton } from 'styles/StyledButton';
+import { MdArrowBackIosNew } from 'react-icons/md';
 
 const ListTitle = () => {
   const navigate = useNavigate();
@@ -11,6 +12,9 @@ const ListTitle = () => {
   const countriesData: CountryData[] = countries[continent as keyof object];
   const countryName = countriesData.filter(item => item.code === countryCode)[0]
     .name;
+  const continentName: string | undefined = continent
+    ? continent[0].toUpperCase() + continent.slice(1)
+    : undefined;
   const names: CountryNames = {
     en: countryName.split('(')[1].slice(0, -1),
     ko: countryName.split('(')[0].slice(0, -1),
@@ -25,6 +29,10 @@ const ListTitle = () => {
     });
   };
 
+  const handleBackClick = () => {
+    navigate(`/${continent}`);
+  };
+
   return (
     <ListTitleWrapper
       style={{
@@ -34,6 +42,15 @@ const ListTitle = () => {
         )},city)`,
       }}
     >
+      <BackToContinent>
+        <div className="continent-button" onClick={handleBackClick}>
+          <span className="back-icon">
+            <MdArrowBackIosNew />
+          </span>
+          {continentName}
+        </div>
+        <div className="background"></div>
+      </BackToContinent>
       <TitleText>
         <h1 className="title-en">{names.en.toUpperCase()}</h1>
         <AddContentbutton onClick={handleButtonClick}>
@@ -103,6 +120,51 @@ const AddContentbutton = styled(StyledButton)`
 
 const Filter = styled(ImageFilter)`
   opacity: 0.35;
+`;
+
+const BackToContinent = styled.div`
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  padding: 0 20px;
+  .background {
+    width: 100%;
+    height: 50px;
+    background-color: black;
+    opacity: 0.4;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10;
+  }
+  .continent-button {
+    color: #fff;
+    opacity: 1;
+    z-index: 11;
+    position: absolute;
+    top: 10px;
+    font-size: 1.3rem;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    opacity: 0.8;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  .back-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  :hover {
+    .continent-button {
+      transform: translateX(-5px);
+      transition: 0.3s;
+      opacity: 1;
+    }
+  }
 `;
 
 export default ListTitle;
