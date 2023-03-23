@@ -141,7 +141,6 @@ const Companion = ({ detail, sub, setSub, setPart }: companionProps) => {
               </div>
               {detail.memberId === memberId ? (
                 <div className="btn-wrapper">
-                  {/* 수락 또는 거절되었을 경우 쪽지 보내기..?! */}
                   <button
                     className="btn"
                     onClick={() => handleAccept(el.memberId)}

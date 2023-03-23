@@ -1,4 +1,4 @@
-import axios from 'axios';
+import customAxios from 'api/customAxios';
 import { StyledTabBox } from 'components/ContentDetail/CompanionStyled';
 import FirstReviewModal from 'components/ContentDetail/FirstReviewModal';
 import { partProps } from 'interfaces/ContentDetail.interface';
@@ -24,13 +24,9 @@ const TravelComplete = ({ detail, part, setPart }: partProps) => {
   };
 
   const getPartList = () => {
-    axios
-      .get(
-        `${process.env.REACT_APP_SERVER}/companions/${contentId}/participants`
-      )
-      .then(res => {
-        setPart(res.data.data);
-      });
+    customAxios.get(`/companions/${contentId}/participants`).then(res => {
+      setPart(res.data.data);
+    });
   };
 
   useEffect(() => {
@@ -38,13 +34,10 @@ const TravelComplete = ({ detail, part, setPart }: partProps) => {
   }, []);
 
   const getReviewList = () => {
-    axios
-      .get(
-        `${process.env.REACT_APP_SERVER}/companions/${contentId}/reviewers`,
-        {
-          params: { memberId },
-        }
-      )
+    customAxios
+      .get(`/companions/${contentId}/reviewers`, {
+        params: { memberId },
+      })
       .then(res => {
         setReviewed(res.data.data);
       });
