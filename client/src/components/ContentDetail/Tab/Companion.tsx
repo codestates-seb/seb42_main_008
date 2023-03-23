@@ -2,7 +2,7 @@ import customAxios from 'api/customAxios';
 import { StyledCompanionList } from 'components/ContentDetail/CompanionStyled';
 import { companionProps } from 'interfaces/ContentDetail.interface';
 import { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { userInfo } from 'states/userState';
 import styled from 'styled-components';
@@ -12,6 +12,12 @@ const Companion = ({ detail, sub, setSub, setPart }: companionProps) => {
   const params = useParams();
   const { contentId } = params;
   const { memberId, nickname } = useRecoilValue(userInfo);
+
+  const navigate = useNavigate();
+
+  const handleMoveProfile = (subMemberId: number) => {
+    navigate(`/${subMemberId}/profile`);
+  };
 
   const handleCancel = async () => {
     Swal.fire({
@@ -131,7 +137,7 @@ const Companion = ({ detail, sub, setSub, setPart }: companionProps) => {
       <Content>
         {sub && sub.length !== 0 ? (
           sub.map((el: any, index: number) => (
-            <li key={index}>
+            <li key={index} onClick={() => handleMoveProfile(el.memberId)}>
               <div className="companion-info">
                 <div
                   className="img"
