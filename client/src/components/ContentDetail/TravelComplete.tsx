@@ -61,17 +61,17 @@ const TravelComplete = ({ detail, part, setPart }: partProps) => {
       <Content>
         {part && part.length !== 0 ? (
           part.map((el: any, index: number) => (
-            <li key={index} onClick={() => handleMoveProfile(el.memberId)}>
-              <CompanionInfo>
+            <li key={index}>
+              <CompanionInfo onClick={() => handleMoveProfile(el.memberId)}>
                 <div
                   className="img"
                   style={{ backgroundImage: `url(${el.profile})` }}
                 ></div>
-                <div>{el.nickname}</div>
+                <div className="nickname">{el.nickname}</div>
               </CompanionInfo>
               {memberId !== el.memberId && detail.memberId !== memberId ? (
                 <ButtonBox>
-                  <button className="other">완료</button>
+                  <button className="other"></button>
                 </ButtonBox>
               ) : (reviewed &&
                   reviewed.length !== 0 &&
@@ -82,12 +82,12 @@ const TravelComplete = ({ detail, part, setPart }: partProps) => {
                     (rv: any) => rv.memberId === detail.memberId
                   )) ? (
                 <ButtonBox>
-                  <button>완료</button>
+                  <button className="complete">리뷰 완료</button>
                 </ButtonBox>
               ) : detail.memberId === memberId ? (
                 <ButtonBox>
                   <button onClick={() => handleFirstModal(el.memberId)}>
-                    리뷰
+                    참여자 리뷰
                   </button>
                 </ButtonBox>
               ) : (memberId === el.memberId &&
@@ -104,7 +104,7 @@ const TravelComplete = ({ detail, part, setPart }: partProps) => {
                   )) ? null : (
                 <ButtonBox>
                   <button onClick={() => handleFirstModal(el.memberId)}>
-                    작성자 리뷰 하기
+                    작성자 리뷰
                   </button>
                 </ButtonBox>
               )}
@@ -140,11 +140,14 @@ const Container = styled.section`
   @media screen and (max-width: 768px) {
     height: 100%;
     * {
-      font-size: 0.8rem;
+      font-size: 1.2rem;
     }
   }
   @media screen and (max-width: 576px) {
     height: 100%;
+    * {
+      font-size: 0.8rem;
+    }
   }
 `;
 
@@ -161,7 +164,7 @@ const Content = styled.ul`
   width: 100%;
   height: 100%;
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, 50%);
   grid-template-rows: repeat(2, 1fr);
   justify-items: center;
   align-items: center;
@@ -192,11 +195,11 @@ const Content = styled.ul`
   }
 `;
 const CompanionInfo = styled.div`
-  width: 50%;
   display: flex;
   justify-content: flex-start;
   align-items: center;
   flex-direction: column;
+  width: 100%;
   .img {
     margin-right: 5px;
     width: 50px;
@@ -205,6 +208,13 @@ const CompanionInfo = styled.div`
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
+  }
+  .nickname {
+    white-space: nowrap;
+    text-align: center;
+    width: 100%;
+    text-overflow: ellipsis;
+    overflow: hidden;
   }
   @media screen and (max-width: 768px) {
     .img {
@@ -236,6 +246,10 @@ const ButtonBox = styled.div`
       background-color: transparent;
       opacity: 0;
     }
+  }
+  .complete {
+    cursor: default;
+    background-color: #d9d9d9;
   }
   @media screen and (max-width: 768px) {
     button {
