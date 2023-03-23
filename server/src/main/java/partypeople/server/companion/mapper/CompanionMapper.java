@@ -81,6 +81,7 @@ public interface CompanionMapper {
 
         response.setMemberId( companion.getMember().getMemberId() );
         response.setNickname( companion.getMember().getNickname() );
+        response.setProfile( companion.getMember().getProfile() );
         response.setScore(companion.getMember().getScore());
         response.setCompanionId( companion.getCompanionId() );
         response.setTitle( companion.getTitle() );
