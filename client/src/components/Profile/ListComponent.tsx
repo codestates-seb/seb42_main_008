@@ -66,8 +66,8 @@ const ListComponent = ({ datas, titleHead, titleBody }: ListComponentProps) => {
                 <p className="item-address">{item.address}</p>
               </ItemAddress>
               <Flag isDone={item.companionStatus}></Flag>
-              <ItemFlagText>
-                {item.companionStatus ? '모집완료' : '모집중'}
+              <ItemFlagText isDone={item.companionStatus}>
+                {item.companionStatus ? '완료' : '모집중'}
               </ItemFlagText>
             </MemberListItem>
           ))}
