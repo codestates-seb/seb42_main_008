@@ -87,7 +87,7 @@ class MessageControllerRestDocsTest {
         actions
             .andExpect(status().isCreated())
             .andExpect(header().string("location", is(startsWith("/messages/"))))
-            .andDo(document("post-message",
+            .andDo(document("[message] post-message",
                 getRequestPreProcessor(),
                 getResponsePreProcessor(),
                 requestFields(
@@ -128,7 +128,7 @@ class MessageControllerRestDocsTest {
             .andExpect(jsonPath("$.data.companionId").value(response.getCompanionId()))
             .andExpect(jsonPath("$.data.sender.id").value(2L))
             .andExpect(jsonPath("$.data.read").value(true))
-            .andDo(document("get-message",
+            .andDo(document("[message] get-message",
                 getRequestPreProcessor(),
                 getResponsePreProcessor(),
                 pathParameters(
@@ -179,7 +179,7 @@ class MessageControllerRestDocsTest {
         MvcResult result = actions
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.data").isArray())
-            .andDo(document("get-message",
+            .andDo(document("[message] get-messages",
                 getRequestPreProcessor(),
                 getResponsePreProcessor(),
                 requestParameters(
@@ -220,7 +220,7 @@ class MessageControllerRestDocsTest {
         //then
         actions
             .andExpect(status().isNoContent())
-            .andDo(document("delete-message",
+            .andDo(document("[message] delete-message",
                 getRequestPreProcessor(),
                 getResponsePreProcessor(),
                 pathParameters(
