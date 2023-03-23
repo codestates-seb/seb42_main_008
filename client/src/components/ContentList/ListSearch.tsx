@@ -92,6 +92,8 @@ const ListSearch = ({
         if (resp.data.pageInfo.totalPages <= resp.data.pageInfo.page) {
           // ! 마지막 페이지일 경우
           setIsLast(true);
+        } else {
+          setIsLast(false);
         }
         setIsLoading(false);
         if (cur !== undefined) {
