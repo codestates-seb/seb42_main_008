@@ -26,7 +26,6 @@ const MemberContent = ({
   };
 
   useEffect(() => {
-    console.log(memberId, loginUser.memberId.toString());
     handleTabList();
     setCurrentTab(0);
   }, [memberId]);
