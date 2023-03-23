@@ -130,6 +130,9 @@ const SignUp = () => {
         })
         .catch(error => {
           console.log(error);
+          Swal.fire('', '중복된 이메일 입니다.');
+          setIsEmail(false);
+          setEmailMessage('중복된 이메일 입니다.');
         });
     }
   };
