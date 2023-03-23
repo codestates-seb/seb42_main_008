@@ -59,10 +59,11 @@ const FirstReviewModal = ({ detail, setFirstModal, reviewId }: firstModal) => {
           </div>
           <div className="modal-content">
             {detail.memberId === memberId ? (
-              <h3>{detail.nickname} 님은 이 여행에 참석하셨나요?</h3>
+              <h3>[ {detail.nickname} ] 님은 이 여행에 참석하셨나요?</h3>
             ) : (
               <h3>
-                {nickname}은 {detail.nickname}님와(과)의 여행에 참여하셨나요?
+                [ {nickname} ] 님은 [ {detail.nickname} ] 님와(과)의 여행에
+                참여하셨나요?
               </h3>
             )}
             <div className="btn-wrapper">
@@ -153,10 +154,16 @@ const ModalView = styled(StyledModal)`
         font-size: 15px;
       }
     }
+    .modal-content {
+      font-size: 1rem;
+    }
   }
   @media screen and (max-width: 768px) {
     width: 500px;
     height: 300px;
+    .modal-content {
+      font-size: 1rem;
+    }
   }
   @media screen and (max-width: 576px) {
     width: 300px;

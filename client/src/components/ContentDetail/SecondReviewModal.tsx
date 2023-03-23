@@ -47,7 +47,7 @@ const SecondReviewModal = ({
             {detail.memberId === memberId ? (
               <h3>해당 참여자가 여행에 참여하셨나요?</h3>
             ) : (
-              <h3>{detail.nickname}님이(가) 여행에 참여하셨나요?</h3>
+              <h3>[ {detail.nickname} ] 님이 여행에 참여하셨나요?</h3>
             )}
             <div className="btn-wrapper">
               <button onClick={handleThirdModal}>네! 참석했습니다.</button>
@@ -77,10 +77,6 @@ const SecondReviewModal = ({
 
 export default SecondReviewModal;
 
-// const Container = styled.section`
-//   width: 100%;
-//   height: 100%;
-// `;
 const BackGround = styled.section`
   display: flex;
   justify-content: center;
@@ -140,10 +136,16 @@ const ModalView = styled(StyledModal)`
         font-size: 15px;
       }
     }
+    .modal-content {
+      font-size: 1rem;
+    }
   }
   @media screen and (max-width: 768px) {
     width: 500px;
     height: 300px;
+    .modal-content {
+      font-size: 1rem;
+    }
   }
   @media screen and (max-width: 576px) {
     width: 300px;
