@@ -62,16 +62,22 @@ const TravelComplete = ({ detail, part, setPart }: partProps) => {
         {part && part.length !== 0 ? (
           part.map((el: any, index: number) => (
             <li key={index}>
-              <CompanionInfo onClick={() => handleMoveProfile(el.memberId)}>
+              <CompanionInfo>
                 <div
                   className="img"
                   style={{ backgroundImage: `url(${el.profile})` }}
+                  onClick={() => handleMoveProfile(el.memberId)}
                 ></div>
-                <div className="nickname">{el.nickname}</div>
+                <div
+                  className="nickname"
+                  onClick={() => handleMoveProfile(el.memberId)}
+                >
+                  {el.nickname}
+                </div>
               </CompanionInfo>
               {memberId !== el.memberId && detail.memberId !== memberId ? (
                 <ButtonBox>
-                  <button className="other"></button>
+                  <button className="other">비활성화 버튼</button>
                 </ButtonBox>
               ) : (reviewed &&
                   reviewed.length !== 0 &&
@@ -111,7 +117,7 @@ const TravelComplete = ({ detail, part, setPart }: partProps) => {
             </li>
           ))
         ) : (
-          <li>동행 참여자가 없습니다. 🥲</li>
+          <li>참여자가 없습니다. 🥲</li>
         )}
       </Content>
       {firstModal ? (
