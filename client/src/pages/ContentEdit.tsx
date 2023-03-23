@@ -49,6 +49,11 @@ const ContentEdit = () => {
     },
   };
 
+  //취소 라우터
+  const handleCancel = () => {
+    window.history.back();
+  };
+
   // 대륙 선택 옵션
   const [continentSelect, setContinentSelect] = useState('');
 
@@ -315,9 +320,14 @@ const ContentEdit = () => {
             }}
           />
         </div>
-        <button className="add-form" onClick={handleContentSubmit}>
-          다음
-        </button>
+        <div className="bottom-button">
+          <button className="add-form" onClick={handleCancel}>
+            작성 취소
+          </button>
+          <button className="add-form" onClick={handleContentSubmit}>
+            다음
+          </button>
+        </div>
       </ContentBox>
       {countryModal ? (
         <div className="overlay">
@@ -570,8 +580,16 @@ const ContentBox = styled.div`
     color: white;
     width: 96px;
     height: 36px;
-    font-size: 1.5rem;
+    font-size: 1rem;
     border-radius: 30px;
     cursor: pointer;
+  }
+  .bottom-button {
+    display: flex;
+    width: 100%;
+    justify-content: space-around;
+    > :first-child {
+      background-color: #cecece;
+    }
   }
 `;
