@@ -15,6 +15,7 @@ const Profile = () => {
   const [member, setMember] = useState<MemberProfile | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [currentTab, setCurrentTab] = useState<number>(0);
+  const [followStatus, setFollowStatus] = useState<boolean>(false);
   const loginUser = useRecoilValue(userInfo);
 
   const getMemberData = () => {
@@ -25,6 +26,7 @@ const Profile = () => {
     // ! 실제 테스트용 코드
     customAxios.get(`/members/${memberId}`, { params }).then(resp => {
       setMember(resp.data.data);
+      setFollowStatus(resp.data.data.followerStatus);
       setIsLoading(false);
     });
   };
@@ -43,7 +45,11 @@ const Profile = () => {
       )}
       {!isLoading && member && (
         <Container>
-          <MemberInfo member={member} setMember={setMember} />
+          <MemberInfo
+            member={member}
+            setMember={setMember}
+            followerStatus={followStatus}
+          />
           <MemberContent
             member={member}
             currentTab={currentTab}

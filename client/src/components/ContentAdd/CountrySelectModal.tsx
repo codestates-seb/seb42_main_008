@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { GrClose } from 'react-icons/gr';
 import countries from '../../assets/countries.json';
 import Swal from 'sweetalert2';
+import ModalScrollDisable from 'utils/ModalScrollDisable';
 const countriesPick: Countries = countries;
 type Countries = {
   [key: string]: {
@@ -48,6 +49,7 @@ const CountrySelectModal = ({
 
   return (
     <CountryBox>
+      <ModalScrollDisable />
       <div className="country-box">
         <div className="country-top">
           <div className="country-title">나라</div>
@@ -86,6 +88,7 @@ const CountryBox = styled.div`
   transform: translate(50%, -50%);
   flex-direction: column;
   font-size: 2rem;
+  overflow-y: hidden;
   @media screen and (max-width: 768px) {
     width: 400px;
     height: 400px;

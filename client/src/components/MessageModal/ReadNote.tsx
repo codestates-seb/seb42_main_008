@@ -2,6 +2,7 @@ import React from 'react';
 import { FaRegEnvelope } from 'react-icons/fa';
 import { GrClose } from 'react-icons/gr';
 import styled from 'styled-components';
+import ModalScrollDisable from 'utils/ModalScrollDisable';
 
 interface NoteMessage {
   messageId: number;
@@ -31,6 +32,7 @@ const ReadNote = ({
 }: Props) => {
   return (
     <ReadBox onClick={handleOverlayClick}>
+      <ModalScrollDisable />
       <div className="note-box">
         <div className="note-top">
           <div className="note-title">

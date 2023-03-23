@@ -68,7 +68,7 @@ const CountrySelect = () => {
       'https://cdn.pixabay.com/photo/2020/07/12/16/40/paris-5397889_1280.jpg';
     countries = [
       {
-        name: 'England',
+        name: 'United Kingdom',
         code: 'gbr',
       },
       {
