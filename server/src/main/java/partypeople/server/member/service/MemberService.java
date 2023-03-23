@@ -147,7 +147,7 @@ public class MemberService {
         } catch (SignatureException se) {
             throw new BusinessLogicException(ExceptionCode.SIGNATURE_ERROR);
         } catch (ExpiredJwtException ee) {
-            throw new BusinessLogicException(ExceptionCode.EXPIRED_ERROR);
+            throw new BusinessLogicException(ExceptionCode.AT_EXPIRED_ERROR);
         } catch (Exception e) {
             throw new BusinessLogicException(ExceptionCode.ACCESS_TOKEN_ERROR);
         }
@@ -227,7 +227,11 @@ public class MemberService {
     public String oauthNickCheck(String name) {
         List<String> nicknames = memberRepository.findAllNicknames();
 
-        if (!(nicknames.contains(name)) && name.length() <= NICKNAME_MAX_SIZE) {
+        if (name.length() > NICKNAME_MAX_SIZE) {
+            name = name.substring(0,10);
+        }
+
+        if (!(nicknames.contains(name))) {
             return name;
         }
 
@@ -235,6 +239,7 @@ public class MemberService {
         do{
             randomNickname = generateRandomString();
         } while (nicknames.contains(randomNickname));
+
         return randomNickname;
     }
 
