@@ -164,18 +164,16 @@ const BackToContinent = styled.div`
     opacity: 0.8;
     cursor: pointer;
     transition: 0.3s;
+    :hover {
+      transform: translateX(-5px);
+      transition: 0.3s;
+      opacity: 1;
+    }
   }
   .back-icon {
     display: flex;
     align-items: center;
     justify-content: center;
-  }
-  :hover {
-    .continent-button {
-      transform: translateX(-5px);
-      transition: 0.3s;
-      opacity: 1;
-    }
   }
 `;
 
