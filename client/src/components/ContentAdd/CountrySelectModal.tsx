@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction } from 'react';
+import React, { Dispatch, SetStateAction, useState } from 'react';
 import styled from 'styled-components';
 import { GrClose } from 'react-icons/gr';
 import countries from '../../assets/countries.json';
@@ -47,6 +47,9 @@ const CountrySelectModal = ({
   // 국가이름 한글만 골라내기
   const koreanRegex = /[가-힣]+/g;
 
+  //나라 검색 필터 추가
+  const [searchCountry, setSearchCountry] = useState('');
+
   return (
     <CountryBox>
       <ModalScrollDisable />
@@ -57,17 +60,24 @@ const CountrySelectModal = ({
             <GrClose onClick={handleModal} cursor="pointer" />
           </div>
         </div>
+        <input
+          className="country-input"
+          placeholder="나라를 입력해주세요.."
+          onChange={event => setSearchCountry(event.target.value)}
+        ></input>
         <ul className="country-content">
-          {countriesPick[continentSelect].map((country, index: number) => {
-            return (
-              <li
-                key={index}
-                onClick={() => handleCountry(country.name, country.code)}
-              >
-                {country.name.match(koreanRegex)?.join('')}
-              </li>
-            );
-          })}
+          {countriesPick[continentSelect]
+            .filter(country => country.name.includes(searchCountry))
+            .map((country, index: number) => {
+              return (
+                <li
+                  key={index}
+                  onClick={() => handleCountry(country.name, country.code)}
+                >
+                  {country.name.match(koreanRegex)?.join('')}
+                </li>
+              );
+            })}
         </ul>
       </div>
     </CountryBox>
