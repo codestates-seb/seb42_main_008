@@ -48,14 +48,16 @@ public class MemberService {
     public Member createMember(Member member) {
         verifyExistsMember(member);
 
-        String encryptedPassword = passwordEncoder.encode(member.getPassword());
-        member.setPassword(encryptedPassword);
-
+        member.setPassword(encryptedPassword(member.getPassword()));
+        member.setScore(50);
         List<String> roles = authorityUtils.createRoles(member.getEmail());
         member.setRoles(roles);
 
         Member savedMember = memberRepository.save(member);
         return savedMember;
+    }
+    public String encryptedPassword(String password) {
+        return passwordEncoder.encode(password);
     }
     @Transactional(readOnly = true)
     public Member findMember(Long memberId) {
@@ -212,7 +214,20 @@ public class MemberService {
             throw new RuntimeException(e);
         }
     }
-    private String generateRandomPassword() {
+
+    public void oauthPassword(String email,String password) {
+        String subject = "임시 비밀번호 발급";
+        String body = "다음은 당신의 임시 비밀번호 입니다(자체 로그인/회원 탈퇴에 필요) ! : " + password;
+
+        try {
+            mailService.sendEmail(email,subject,body);
+        } catch (Exception e) {
+            System.out.println("e.getMessage() = " + e.getMessage());
+            throw new RuntimeException(e);
+        }
+    }
+
+    public String generateRandomPassword() {
         String upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         String lower = upper.toLowerCase(Locale.ROOT);
         String digits = "0123456789";

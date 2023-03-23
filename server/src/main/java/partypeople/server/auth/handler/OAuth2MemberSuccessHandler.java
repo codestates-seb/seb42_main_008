@@ -29,11 +29,14 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
     private final JwtTokenizer jwtTokenizer;
     private final CustomAuthorityUtils authorityUtils;
     private final MemberService memberService;
+    private Boolean googleJoin;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         var oAuth2User = (OAuth2User) authentication.getPrincipal();
         String email = String.valueOf(oAuth2User.getAttributes().get("email"));
+
+        googleJoin = false;
 
         Member member;
         try {
@@ -58,8 +61,10 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
 
     private URI createURI(String accessToken, String refreshToken) {
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
+
         queryParams.add("access_token", accessToken);
         queryParams.add("refresh_token", refreshToken);
+        queryParams.add("google_join", googleJoin.toString());
 
         return UriComponentsBuilder
             .newInstance()
@@ -76,17 +81,23 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
         String email = String.valueOf(oAuth2User.getAttributes().get("email"));
         String profile = String.valueOf(oAuth2User.getAttributes().get("picture"));
         String name = String.valueOf(oAuth2User.getAttributes().get("name"));
-
+        String password = memberService.generateRandomPassword();
         List<String> authorities = authorityUtils.createRoles(email);
 
         Member member = new Member();
         member.setGender("NONE");
         member.setEmail(email);
         member.setRoles(authorities);
-        member.setPassword("google"+UUID.randomUUID());
+        member.setPassword(password);
         member.setNickname(memberService.oauthNickCheck(name));
         member.setProfile(profile);
-        return memberService.createMember(member);
+
+        googleJoin = true;
+
+        Member saveMember = memberService.createMember(member);
+        memberService.oauthPassword(email, password);
+
+        return saveMember;
     }
 
 }
