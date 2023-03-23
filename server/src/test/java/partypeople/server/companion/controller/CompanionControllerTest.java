@@ -151,6 +151,7 @@ public class CompanionControllerTest {
                 1L,
                 2L,
                 "member2",
+                "profile",
                 100,
                 "일본 유니버셜 같이 가요",
                 "일본 유니버셜 가고싶은데 혼자라 부끄러워요ㅠ 같이 가실 분 구함~",
@@ -187,6 +188,7 @@ public class CompanionControllerTest {
                 .andExpect(jsonPath("$.data.companionId").value(response.getCompanionId()))
                 .andExpect(jsonPath("$.data.memberId").value(response.getMemberId()))
                 .andExpect(jsonPath("$.data.nickname").value(response.getNickname()))
+                .andExpect(jsonPath("$.data.profile").value(response.getProfile()))
                 .andExpect(jsonPath("$.data.score").value(response.getScore()))
                 .andExpect(jsonPath("$.data.title").value(response.getTitle()))
                 .andExpect(jsonPath("$.data.content").value(response.getContent()))
@@ -224,6 +226,7 @@ public class CompanionControllerTest {
                                 fieldWithPath("data.companionId").type(JsonFieldType.NUMBER).description("동행글 식별자"),
                                 fieldWithPath("data.memberId").type(JsonFieldType.NUMBER).description("작성자 식별자"),
                                 fieldWithPath("data.nickname").type(JsonFieldType.STRING).description("작성자 닉네임"),
+                                fieldWithPath("data.profile").type(JsonFieldType.STRING).description("작성자 프로필"),
                                 fieldWithPath("data.score").type(JsonFieldType.NUMBER).description("작성자 점수"),
                                 fieldWithPath("data.title").type(JsonFieldType.STRING).description("동행글 제목"),
                                 fieldWithPath("data.content").type(JsonFieldType.STRING).description("동행글 내용"),
@@ -275,6 +278,7 @@ public class CompanionControllerTest {
                 1L,
                 2L,
                 "member2",
+                "profile",
                 100,
                 "일본 유니버셜 같이 가요",
                 "일본 유니버셜 가고싶은데 혼자라 부끄러워요ㅠ 같이 가실 분 구함~",
@@ -306,6 +310,7 @@ public class CompanionControllerTest {
                 .andExpect(jsonPath("$.data.companionId").value(response.getCompanionId()))
                 .andExpect(jsonPath("$.data.memberId").value(response.getMemberId()))
                 .andExpect(jsonPath("$.data.nickname").value(response.getNickname()))
+                .andExpect(jsonPath("$.data.profile").value(response.getProfile()))
                 .andExpect(jsonPath("$.data.score").value(response.getScore()))
                 .andExpect(jsonPath("$.data.title").value(response.getTitle()))
                 .andExpect(jsonPath("$.data.content").value(response.getContent()))
@@ -330,6 +335,7 @@ public class CompanionControllerTest {
                                 fieldWithPath("data.companionId").type(JsonFieldType.NUMBER).description("동행글 식별자"),
                                 fieldWithPath("data.memberId").type(JsonFieldType.NUMBER).description("작성자 식별자"),
                                 fieldWithPath("data.nickname").type(JsonFieldType.STRING).description("작성자 닉네임"),
+                                fieldWithPath("data.profile").type(JsonFieldType.STRING).description("작성자 프로필"),
                                 fieldWithPath("data.score").type(JsonFieldType.NUMBER).description("작성자 점수"),
                                 fieldWithPath("data.title").type(JsonFieldType.STRING).description("동행글 제목"),
                                 fieldWithPath("data.content").type(JsonFieldType.STRING).description("동행글 내용"),
@@ -361,6 +367,7 @@ public class CompanionControllerTest {
                 1L,
                 2L,
                 "member2",
+                "profile",
                 100,
                 "일본 유니버셜 같이 가요",
                 "일본 유니버셜 가고싶은데 혼자라 부끄러워요ㅠ 같이 가실 분 구함~",
@@ -401,6 +408,7 @@ public class CompanionControllerTest {
                 .andExpect(jsonPath("$.data[0].companionId").value(responses.get(0).getCompanionId()))
                 .andExpect(jsonPath("$.data[0].memberId").value(responses.get(0).getMemberId()))
                 .andExpect(jsonPath("$.data[0].nickname").value(responses.get(0).getNickname()))
+                .andExpect(jsonPath("$.data[0].profile").value(responses.get(0).getProfile()))
                 .andExpect(jsonPath("$.data[0].score").value(responses.get(0).getScore()))
                 .andExpect(jsonPath("$.data[0].title").value(responses.get(0).getTitle()))
                 .andExpect(jsonPath("$.data[0].content").value(responses.get(0).getContent()))
@@ -429,6 +437,7 @@ public class CompanionControllerTest {
                                 fieldWithPath("data[].companionId").type(JsonFieldType.NUMBER).description("동행글 식별자"),
                                 fieldWithPath("data[].memberId").type(JsonFieldType.NUMBER).description("작성자 식별자"),
                                 fieldWithPath("data[].nickname").type(JsonFieldType.STRING).description("작성자 닉네임"),
+                                fieldWithPath("data[].profile").type(JsonFieldType.STRING).description("작성자 프로필"),
                                 fieldWithPath("data[].score").type(JsonFieldType.NUMBER).description("작성자 점수"),
                                 fieldWithPath("data[].title").type(JsonFieldType.STRING).description("동행글 제목"),
                                 fieldWithPath("data[].content").type(JsonFieldType.STRING).description("동행글 내용"),
@@ -551,6 +560,7 @@ public class CompanionControllerTest {
                 1L,
                 2L,
                 "member2",
+                "profile",
                 100,
                 "일본 유니버셜 같이 가요",
                 "일본 유니버셜 가고싶은데 혼자라 부끄러워요ㅠ 같이 가실 분 구함~",
@@ -595,6 +605,7 @@ public class CompanionControllerTest {
                 .andExpect(jsonPath("$.data[0].companionId").value(responses.get(0).getCompanionId()))
                 .andExpect(jsonPath("$.data[0].memberId").value(responses.get(0).getMemberId()))
                 .andExpect(jsonPath("$.data[0].nickname").value(responses.get(0).getNickname()))
+                .andExpect(jsonPath("$.data[0].profile").value(responses.get(0).getProfile()))
                 .andExpect(jsonPath("$.data[0].score").value(responses.get(0).getScore()))
                 .andExpect(jsonPath("$.data[0].title").value(responses.get(0).getTitle()))
                 .andExpect(jsonPath("$.data[0].content").value(responses.get(0).getContent()))
@@ -619,13 +630,14 @@ public class CompanionControllerTest {
                                 parameterWithName("condition").description("검색 조건"),
                                 parameterWithName("keyword").description("검색어"),
                                 parameterWithName("nationCode").description("국가 코드"),
-                                parameterWithName("date").description("날짜")
+                                parameterWithName("date").description("날짜").optional()
                         ),
                         responseFields(
                                 fieldWithPath("data").type(JsonFieldType.ARRAY).description("결과 데이터"),
                                 fieldWithPath("data[].companionId").type(JsonFieldType.NUMBER).description("동행글 식별자"),
                                 fieldWithPath("data[].memberId").type(JsonFieldType.NUMBER).description("작성자 식별자"),
                                 fieldWithPath("data[].nickname").type(JsonFieldType.STRING).description("작성자 닉네임"),
+                                fieldWithPath("data[].profile").type(JsonFieldType.STRING).description("작성자 프로필"),
                                 fieldWithPath("data[].score").type(JsonFieldType.NUMBER).description("작성자 점수"),
                                 fieldWithPath("data[].title").type(JsonFieldType.STRING).description("동행글 제목"),
                                 fieldWithPath("data[].content").type(JsonFieldType.STRING).description("동행글 내용"),
