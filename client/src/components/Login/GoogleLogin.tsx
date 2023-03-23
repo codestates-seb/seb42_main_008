@@ -42,7 +42,6 @@ const GoogleLogin = () => {
     const userData = JSON.parse(jsonPayload);
     setIsLogin(true);
     setUser(userData);
-    navigate('/');
   };
 
   useEffect(() => {
@@ -56,8 +55,9 @@ const GoogleLogin = () => {
         path: '/',
       });
       googleLoginAction(accessToken);
+      navigate('/');
     }
-  }, [accessToken, refreshToken]);
+  }, [accessToken, refreshToken, googleJoin]);
 
   return (
     <div className="btn-wrapper">

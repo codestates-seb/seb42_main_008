@@ -31,7 +31,7 @@ export const userInfo = atom({
 // * 구글 회원가입 정보
 export const googleSignup = atom({
   key: 'googleSignup',
-  default: false,
+  default: true,
   effects_UNSTABLE: [persistAtom],
 });
 
