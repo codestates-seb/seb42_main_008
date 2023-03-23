@@ -86,11 +86,6 @@ const ContentList = () => {
   useEffect(() => {
     if (searchDatas !== undefined) {
       // ! 검색 데이터가 있다면
-      // if (searchPage === 1) {
-      //   // ! 첫 페이지일 경우 isLast 초기화
-      //   console.log('isLast contentList');
-      //   setIsLast(false);
-      // }
       preventRef.current = true;
       setDatas([...searchDatas]);
       setPage(1);
