@@ -153,9 +153,11 @@ const Flag = styled.div<{ isDone: boolean }>`
   z-index: 2;
 `;
 
-const ItemFlagText = styled(FlagText)`
-  top: 15px;
-  left: 5px;
+const ItemFlagText = styled(FlagText)<{ isDone: boolean }>`
+  /* top: 15px; */
+  /* left: 5px; */
+  top: ${props => (props.isDone ? '14px' : '15px')};
+  left: ${props => (props.isDone ? '13px' : '5px')};
   font-size: 0.8rem;
 `;
 

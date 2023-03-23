@@ -209,8 +209,8 @@ const Flag = styled.div<{ isDone: boolean }>`
 export const FlagText = styled.p<{ isDone: boolean }>`
   position: absolute;
   /* top: 20px; */
-  top: ${props => (props.isDone ? '24px' : '24px')};
-  left: ${props => (props.isDone ? '22px' : '16px')};
+  top: ${props => (props.isDone ? '18px' : '19px')};
+  left: ${props => (props.isDone ? '16px' : '11px')};
   /* left: 10px; */
   color: #fff;
   font-weight: 800;
