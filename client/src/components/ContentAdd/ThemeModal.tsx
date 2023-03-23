@@ -124,7 +124,8 @@ const ThemeModal = ({
       } catch (error) {
         console.log(error);
         console.log(continentSelect);
-        console.log(typeof contentInput);
+        console.log(countryCode);
+        console.log(contentInput);
         console.log(startDate);
         console.log(formattedDate);
         console.log(allTags);

@@ -61,9 +61,10 @@ const ContentAdd = () => {
     country => country.code === locationCode
   )?.name;
   const koreanRegex = /[가-힣]+/g;
-  const routeKorCountryName =
-    countryName && countryName.match(koreanRegex)?.join('');
-  console.log(routeKorCountryName);
+  const routeKorCountryName = countryName
+    ? countryName.match(koreanRegex)?.join('')
+    : '국가선택';
+
   // 대륙 선택 옵션
   const [continentSelect, setContinentSelect] = useState(continent);
   // 나라 선택
