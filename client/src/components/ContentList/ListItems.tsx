@@ -59,8 +59,8 @@ const ListItems = ({ listData, isLoading }: ListItemProps) => {
                 ))}
               </TagsList>
               <Flag isDone={item.companionStatus}></Flag>
-              <FlagText>
-                {item.companionStatus ? '모집완료' : '모집중'}
+              <FlagText isDone={item.companionStatus}>
+                {item.companionStatus ? '완료' : '모집중'}
               </FlagText>
               {item.companionStatus && <DoneItem></DoneItem>}
             </ListItem>
@@ -206,10 +206,12 @@ const Flag = styled.div<{ isDone: boolean }>`
   z-index: 2;
 `;
 
-export const FlagText = styled.p`
+export const FlagText = styled.p<{ isDone: boolean }>`
   position: absolute;
-  top: 20px;
-  left: 10px;
+  /* top: 20px; */
+  top: ${props => (props.isDone ? '18px' : '19px')};
+  left: ${props => (props.isDone ? '16px' : '11px')};
+  /* left: 10px; */
   color: #fff;
   font-weight: 800;
   -webkit-transform: rotate(-45deg);

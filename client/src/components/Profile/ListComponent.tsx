@@ -66,8 +66,8 @@ const ListComponent = ({ datas, titleHead, titleBody }: ListComponentProps) => {
                 <p className="item-address">{item.address}</p>
               </ItemAddress>
               <Flag isDone={item.companionStatus}></Flag>
-              <ItemFlagText>
-                {item.companionStatus ? '모집완료' : '모집중'}
+              <ItemFlagText isDone={item.companionStatus}>
+                {item.companionStatus ? '완료' : '모집중'}
               </ItemFlagText>
             </MemberListItem>
           ))}
@@ -153,9 +153,11 @@ const Flag = styled.div<{ isDone: boolean }>`
   z-index: 2;
 `;
 
-const ItemFlagText = styled(FlagText)`
-  top: 15px;
-  left: 5px;
+const ItemFlagText = styled(FlagText)<{ isDone: boolean }>`
+  /* top: 15px; */
+  /* left: 5px; */
+  top: ${props => (props.isDone ? '14px' : '15px')};
+  left: ${props => (props.isDone ? '13px' : '5px')};
   font-size: 0.8rem;
 `;
 
