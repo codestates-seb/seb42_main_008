@@ -28,7 +28,6 @@ const ThemeModal = ({
   setIsThemeModal,
   titleInput,
   contentInput,
-  startDate,
   formattedDate,
   savedAddress,
   markerLocation,
@@ -102,27 +101,39 @@ const ThemeModal = ({
   const handleAllSubmit = async (event: any) => {
     if (selectedThemes.length >= 1) {
       event.preventDefault();
-      try {
-        const response = await customAxios.patch(`/companions/${contentId}`, {
-          title: titleInput,
-          content: contentInput,
-          date: formattedDate,
-          address: savedAddress,
-          lat: markerLocation.lat,
-          lng: markerLocation.lng,
-          nationName: countrySelect,
-          nationCode: countryCode,
-          continent: continentNumber,
-          tags: allTags,
+      Swal.fire({
+        title: '수정 완료하시겠습니까?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: '네, 수정하겠습니다!',
+        cancelButtonText: '아니요',
+      })
+        .then(async result => {
+          if (result.isConfirmed) {
+            await customAxios
+              .patch(`/companions/${contentId}`, {
+                title: titleInput,
+                content: contentInput,
+                date: formattedDate,
+                address: savedAddress,
+                lat: markerLocation.lat,
+                lng: markerLocation.lng,
+                nationName: countrySelect,
+                nationCode: countryCode,
+                continent: continentNumber,
+                tags: allTags,
+              })
+              .then(() => {
+                setIsThemeModal(false);
+                navigate(`/${continentSelect}/${countryCode}`);
+              });
+          }
+        })
+        .catch(error => {
+          console.log(error);
         });
-        setIsThemeModal(false);
-        console.log(response.headers);
-        navigate(`/${continentSelect}/${countryCode}`);
-      } catch (error) {
-        console.log(error);
-        console.log(savedAddress);
-        console.log(startDate);
-      }
     } else {
       Swal.fire({
         icon: 'error',
@@ -160,7 +171,7 @@ const ThemeModal = ({
         </div>
         <div className="theme-bottom">
           <button onClick={handleTendencyOpen}>이전</button>
-          <button onClick={handleAllSubmit}>다음</button>
+          <button onClick={handleAllSubmit}>수정 완료</button>
         </div>
       </div>
     </ThemeBox>
