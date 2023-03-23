@@ -20,7 +20,7 @@ type Props = {
   savedAddress: string | null;
   markerLocation: LatLng;
   continentSelect: string;
-  countrySelect: string;
+  countrySelect: string | undefined;
   countryCode: string;
   selectedTendencies: any;
   formattedDate: string;

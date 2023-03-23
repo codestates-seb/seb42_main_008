@@ -249,7 +249,11 @@ const CountrySelect = () => {
         icon: 'error',
         text: '로그인이 필요한 서비스입니다',
       });
-      navigate('/login');
+      navigate('/login', {
+        state: {
+          continent,
+        },
+      });
     }
   };
   return (
