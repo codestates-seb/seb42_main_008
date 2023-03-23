@@ -45,8 +45,8 @@ const SignUp = () => {
     (event: React.ChangeEvent<HTMLInputElement>) => void
   >(event => {
     setNickname(event.target.value);
-    if (event.target.value.length < 2 || event.target.value.length > 8) {
-      setNicknameMessage('2글자 이상 8글자 미만으로 입력해주세요.');
+    if (event.target.value.length < 2 || event.target.value.length > 10) {
+      setNicknameMessage('2글자 이상 10글자 미만으로 입력해주세요.');
       setIsNickname(false);
     } else {
       setNicknameMessage('');
