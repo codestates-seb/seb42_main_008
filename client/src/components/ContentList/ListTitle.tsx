@@ -5,10 +5,14 @@ import countries from 'assets/countries.json';
 import { CountryData, CountryNames } from 'interfaces/ContentList.interface';
 import { StyledButton } from 'styles/StyledButton';
 import { MdArrowBackIosNew } from 'react-icons/md';
+import { useRecoilValue } from 'recoil';
+import { loginState } from 'states/userState';
+import Swal from 'sweetalert2';
 
 const ListTitle = () => {
   const navigate = useNavigate();
   const { continent, countryCode } = useParams();
+  const isLogin = useRecoilValue(loginState);
   const countriesData: CountryData[] = countries[continent as keyof object];
   const countryName = countriesData.filter(item => item.code === countryCode)[0]
     .name;
@@ -21,12 +25,32 @@ const ListTitle = () => {
   };
 
   const handleButtonClick = () => {
-    navigate('/add', {
-      state: {
-        continent,
-        countryCode,
-      },
-    });
+    if (isLogin) {
+      navigate('/add', {
+        state: {
+          continent,
+          countryCode,
+        },
+      });
+    } else {
+      Swal.fire({
+        icon: 'question',
+        title: '아직 로그인하지 않으셨나요?',
+        text: '동행글을 작성하고 싶으시다면 로그인 해주세요🥲',
+        showDenyButton: true,
+        showCloseButton: true,
+        confirmButtonText: '로그인 하러가기',
+        denyButtonText: `회원가입 하러가기`,
+        denyButtonColor: '#FEB35C',
+        confirmButtonColor: '#5D62A0',
+      }).then(result => {
+        if (result.isConfirmed) {
+          navigate('/login');
+        } else if (result.isDenied) {
+          navigate('/signup');
+        }
+      });
+    }
   };
 
   const handleBackClick = () => {
