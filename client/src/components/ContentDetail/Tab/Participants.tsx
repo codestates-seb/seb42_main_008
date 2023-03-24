@@ -72,7 +72,7 @@ const Participants = ({ detail, setSub, part, setPart }: companionProps) => {
 
   return (
     <Container>
-      <Content>
+      <StyledCompanionList>
         {part && part.length !== 0 ? (
           part.map((el: any, index: number) => (
             <li key={index}>
@@ -98,7 +98,7 @@ const Participants = ({ detail, setSub, part, setPart }: companionProps) => {
         ) : (
           <li>동행 참여자가 없습니다.</li>
         )}
-      </Content>
+      </StyledCompanionList>
     </Container>
   );
 };
@@ -124,21 +124,6 @@ const Container = styled.section`
   }
   @media screen and (max-width: 576px) {
     height: 100%;
-  }
-`;
-
-const Content = styled(StyledCompanionList)`
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  flex-direction: column;
-  text-align: left;
-  list-style: none;
-  width: 100%;
-  height: 100%;
-  overflow: scroll;
-  ::-webkit-scrollbar {
-    display: none;
   }
 `;
 

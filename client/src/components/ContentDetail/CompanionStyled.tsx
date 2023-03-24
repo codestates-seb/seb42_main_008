@@ -1,6 +1,10 @@
 import styled from 'styled-components';
 
 export const StyledCompanionList = styled.ul`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: column;
   text-align: left;
   list-style: none;
   width: 100%;
@@ -100,6 +104,10 @@ export const StyledTabBox = styled.ul`
   list-style: none;
   width: 100%;
   cursor: pointer;
+  > li {
+    width: 50%;
+    text-align: center;
+  }
   .menu {
     padding: 15px;
   }

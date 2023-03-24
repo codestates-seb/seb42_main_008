@@ -21,8 +21,6 @@ const SecondReviewModal = ({
 }: secondModal) => {
   const [thirdModal, setThirdModal] = useState(false);
   const { memberId } = useRecoilValue(userInfo);
-  // const params = useParams();
-  // const { contentId } = params;
 
   const handleThirdModal = () => {
     setThirdModal(!thirdModal);

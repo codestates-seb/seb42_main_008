@@ -33,7 +33,7 @@ const ContentDetail = () => {
     companionStatus: false,
   });
 
-  // 글 세부조회
+  // * 글 세부조회
   useEffect(() => {
     customAxios
       .get(`/companions/${contentId}`)
@@ -367,7 +367,6 @@ const RightBox = styled.section`
   }
   @media screen and (max-width: 576px) {
     width: 100%;
-    /* height: 100vh; */
     display: flex;
     flex-direction: column;
   }
