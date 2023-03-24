@@ -99,6 +99,7 @@ const CountryBox = styled.div`
   flex-direction: column;
   font-size: 2rem;
   overflow-y: hidden;
+  z-index: 1000;
   @media screen and (max-width: 768px) {
     width: 400px;
     height: 400px;
