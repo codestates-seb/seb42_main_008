@@ -6,6 +6,7 @@ import customAxios from 'api/customAxios';
 import { useNavigate } from 'react-router-dom';
 import ModalScrollDisable from 'utils/ModalScrollDisable';
 import { CloseButton, ModalBG, ModalContent } from './ModalStyles';
+import Loader from 'components/Loader';
 
 const FollowModal = ({
   setIsShowModal,
@@ -13,8 +14,8 @@ const FollowModal = ({
   member,
 }: FollowModalProps) => {
   const navigate = useNavigate();
-  const [followerList, setFollowerList] = useState<Follow[] | []>([]);
-  const [followingList, setFollowingList] = useState<Follow[] | []>([]);
+  const [followList, setFollowList] = useState<Follow[] | []>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const handleModalClose = () => {
     setIsShowModal(false);
@@ -26,19 +27,13 @@ const FollowModal = ({
   };
 
   const getFollowData = async () => {
-    if (isFollower) {
-      await customAxios
-        .get(`/members/${member.memberId}/follower`)
-        .then(resp => {
-          setFollowerList(resp.data.data);
-        });
-    } else {
-      await customAxios
-        .get(`/members/${member.memberId}/following`)
-        .then(resp => {
-          setFollowingList(resp.data.data);
-        });
-    }
+    const listType = isFollower ? 'follower' : 'following';
+    await customAxios
+      .get(`/members/${member.memberId}/${listType}`)
+      .then(resp => {
+        setFollowList(resp.data.data);
+        setIsLoading(false);
+      });
   };
 
   useEffect(() => {
@@ -56,51 +51,44 @@ const FollowModal = ({
             <IoMdClose />
           </CloseButton>
         </div>
-        {isFollower ? (
-          followerList.length !== 0 ? (
-            <FollowList>
-              {followerList.map((follower, idx) => (
-                <FollowUser
-                  key={idx}
-                  role="presentation"
-                  onClick={() => handleUserClick(follower.memberId)}
-                >
-                  <img
-                    className="user-profile"
-                    src={follower.profile}
-                    alt={follower.nickname + 'profile'}
-                  />
-                  <span className="user-nickname">{follower.nickname}</span>
-                </FollowUser>
-              ))}
-            </FollowList>
-          ) : (
-            <EmptyFollowList>팔로워 리스트가 비어있습니다.</EmptyFollowList>
-          )
-        ) : followingList.length !== 0 ? (
+        {isLoading ? (
+          <LoaderContainer>
+            <Loader />
+          </LoaderContainer>
+        ) : followList.length !== 0 ? (
           <FollowList>
-            {followingList.map((following, idx) => (
+            {followList.map((follow, idx) => (
               <FollowUser
                 key={idx}
                 role="presentation"
-                onClick={() => handleUserClick(following.memberId)}
+                onClick={() => handleUserClick(follow.memberId)}
               >
                 <img
                   className="user-profile"
-                  src={following.profile}
-                  alt={following.nickname + 'profile'}
+                  src={follow.profile}
+                  alt={follow.nickname + 'profile'}
                 />
-                <span className="user-nickname">{following.nickname}</span>
+                <span className="user-nickname">{follow.nickname}</span>
               </FollowUser>
             ))}
           </FollowList>
         ) : (
-          <EmptyFollowList>팔로잉 리스트가 비어있습니다.</EmptyFollowList>
+          <EmptyFollowList>
+            {isFollower ? '팔로워 ' : '팔로잉 '}리스트가 비어있습니다.
+          </EmptyFollowList>
         )}
       </ModalContent>
     </>
   );
 };
+
+const LoaderContainer = styled.div`
+  width: 100%;
+  height: calc(100% - 100px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
 
 const FollowList = styled.ul`
   width: 100%;
