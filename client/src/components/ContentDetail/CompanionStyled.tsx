@@ -118,7 +118,7 @@ export const StyledTabBox = styled.ul`
 `;
 export const StyledModal = styled.div`
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
   align-items: center;
   flex-direction: column;
   background-color: white;
@@ -126,8 +126,7 @@ export const StyledModal = styled.div`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 50%;
-  height: 40%;
+  width: 600px;
   text-align: center;
   border-radius: 30px;
   padding: 30px 40px;
