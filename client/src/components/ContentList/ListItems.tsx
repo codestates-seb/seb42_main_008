@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { FaLongArrowAltRight, FaMapMarkerAlt } from 'react-icons/fa';
 import Swal from 'sweetalert2';
 import { ListItemProps } from 'interfaces/ContentList.interface';
@@ -8,10 +8,11 @@ import { useRecoilValue } from 'recoil';
 import { loginState } from 'states/userState';
 
 const ListItems = ({ listData, isLoading }: ListItemProps) => {
+  const { continent, countryCode } = useParams();
   const navigate = useNavigate();
   const isLogin = useRecoilValue(loginState);
 
-  const handleClickItem = (id: number) => {
+  const handleItemClick = (id: number) => {
     if (!isLogin) {
       Swal.fire({
         icon: 'question',
@@ -35,13 +36,22 @@ const ListItems = ({ listData, isLoading }: ListItemProps) => {
     navigate(`/companions/${id}`);
   };
 
+  const handleAddTextClick = () => {
+    navigate('/add', {
+      state: {
+        continent,
+        countryCode,
+      },
+    });
+  };
+
   return (
     <ItemListsContainer>
       {listData.length !== 0
         ? listData.map((item, idx) => (
             <ListItem
               key={idx}
-              onClick={() => handleClickItem(item.companionId)}
+              onClick={() => handleItemClick(item.companionId)}
             >
               <h1 className="item-date">
                 {getDateString(item.date).shortDateStr}
@@ -68,12 +78,12 @@ const ListItems = ({ listData, isLoading }: ListItemProps) => {
         : !isLoading && (
             <EmptyList>
               아직 아무도 동행을 찾고있지 않아요 😢
-              <Link to="/add">
+              <div className="content-add-text" onClick={handleAddTextClick}>
                 직접 작성해 보세요!
-                <span>
+                <span className="icon">
                   <FaLongArrowAltRight />
                 </span>
-              </Link>
+              </div>
             </EmptyList>
           )}
     </ItemListsContainer>
@@ -244,11 +254,12 @@ const EmptyList = styled.div`
     align-items: center;
     justify-content: center;
   }
-  > a {
+  .content-add-text {
     color: #5d62a0;
     gap: 3px;
+    cursor: pointer;
     :hover {
-      span {
+      .icon {
         position: relative;
         left: 5px;
       }

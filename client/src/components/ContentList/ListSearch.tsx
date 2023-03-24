@@ -86,13 +86,14 @@ const ListSearch = ({
       date: dateStr,
       nationCode: countryCode,
     };
-    console.log(params);
 
     await customAxios.get('/companions/search', { params }).then(resp => {
       setSearchDatas(cur => {
         if (resp.data.pageInfo.totalPages <= resp.data.pageInfo.page) {
           // ! 마지막 페이지일 경우
           setIsLast(true);
+        } else {
+          setIsLast(false);
         }
         setIsLoading(false);
         if (cur !== undefined) {

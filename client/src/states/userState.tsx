@@ -28,6 +28,13 @@ export const userInfo = atom({
   effects_UNSTABLE: [persistAtom],
 });
 
+// * 구글 회원가입 정보
+export const googleSignup = atom({
+  key: 'googleSignup',
+  default: true,
+  effects_UNSTABLE: [persistAtom],
+});
+
 // 로그인 토큰 정보
 export const userToken = atom({
   key: 'userToken',

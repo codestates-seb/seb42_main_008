@@ -55,7 +55,7 @@ const ListTitle = () => {
         <h1 className="title-en">{names.en.toUpperCase()}</h1>
         <div className="country-spell">{names.en[0]}</div>
         <AddContentbutton onClick={handleButtonClick}>
-          {names.ko}에서의 동행 찾기
+          {names.ko}에서 동행 찾는 글 작성하기
         </AddContentbutton>
       </TitleText>
       <Filter></Filter>
@@ -84,6 +84,7 @@ const TitleText = styled.div`
   color: #fff;
   text-align: center;
   text-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+  gap: 10px;
   .title-en {
     font-size: 4rem;
     font-family: 'Archivo Black', sans-serif;
@@ -96,7 +97,6 @@ const TitleText = styled.div`
     z-index: 3;
     opacity: 0.3;
     font-family: 'Alfa Slab One', cursive;
-    /* left: 40%; */
   }
 
   @media screen and (max-width: 992px) {
