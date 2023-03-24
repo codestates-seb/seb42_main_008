@@ -6,8 +6,14 @@ import { getDateString } from 'utils/getDateString';
 import ImageFilter from 'styles/ImageFilter';
 import { ListComponentProps } from 'interfaces/Profile.interface';
 import { useNavigate } from 'react-router-dom';
+import Loader from 'components/Loader';
 
-const ListComponent = ({ datas, titleHead, titleBody }: ListComponentProps) => {
+const ListComponent = ({
+  datas,
+  titleHead,
+  titleBody,
+  isLoading,
+}: ListComponentProps) => {
   const navigate = useNavigate();
   const settings = {
     dots: false,
@@ -48,7 +54,11 @@ const ListComponent = ({ datas, titleHead, titleBody }: ListComponentProps) => {
   return (
     <ListWrapper>
       <h1 className="list-title">{titleHead + titleBody}동행</h1>
-      {datas.length !== 0 ? (
+      {isLoading ? (
+        <LoaderContainer>
+          <Loader />
+        </LoaderContainer>
+      ) : datas.length !== 0 ? (
         <Slider {...settings}>
           {datas.map((item, idx) => (
             <MemberListItem
@@ -107,6 +117,14 @@ const ListWrapper = styled.section`
   .slick-track {
     margin-left: 0;
   }
+`;
+
+const LoaderContainer = styled.div`
+  width: 100%;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 const MemberListItem = styled(ListItem)`

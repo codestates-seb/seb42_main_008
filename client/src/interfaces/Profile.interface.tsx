@@ -82,6 +82,7 @@ interface ListComponentProps {
   datas: MyCompanion[] | [];
   titleHead: string;
   titleBody: string;
+  isLoading: boolean;
 }
 
 // * 팔로워/팔로잉 모달 컴포넌트 props
@@ -114,6 +115,13 @@ interface AccountDeleteModalProps {
   setIsShowDeleteModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
+// * MemberCompanions isLoading State interface
+interface CompanionLoading {
+  subs: boolean;
+  part: boolean;
+  writ: boolean;
+}
+
 export type {
   MemberProfile,
   MyCompanion,
@@ -131,4 +139,5 @@ export type {
   Validations,
   LoginUser,
   AccountDeleteModalProps,
+  CompanionLoading,
 };
