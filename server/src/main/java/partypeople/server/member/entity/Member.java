@@ -41,7 +41,7 @@ public class Member extends Auditable {
 
     private String gender="NONE";
 
-    private Integer score = 50;
+    private Integer score;
 
     private Integer followerCount;
 
