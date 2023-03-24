@@ -62,7 +62,7 @@ const ContentWriter = ({
             Swal.fire('Applied!', '동행이 신청되었습니다!', 'success');
             setSub(sub);
             getSubList();
-            const content = `작성하신 동행글에 ${nickname} 님이 동행을 신청하였습니다.`;
+            const content = `작성하신 동행글 [${detail.title}] 에 [${nickname}] 님이 동행을 신청하였습니다.`;
             customAxios.post(`/messages`, {
               content,
               senderId: 1,
@@ -275,15 +275,26 @@ const ButtonBox = styled.section`
   }
 `;
 const Button = styled.button`
-  background-color: #d9d9d9;
+  background-color: #b6b0b0;
   color: white;
   border: none;
   padding: 5px 10px;
   border-radius: 30px;
   font-size: 1.2rem;
   cursor: pointer;
+  transition: all 0.2s ease 0s;
   :disabled {
     cursor: default;
+    :hover {
+      box-shadow: none;
+      background-color: #b6b0b0;
+      color: white;
+    }
+  }
+  &:hover {
+    color: black;
+    background-color: white;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.05);
   }
   @media screen and (max-width: 768px) {
     background-color: #d9d9d9;
