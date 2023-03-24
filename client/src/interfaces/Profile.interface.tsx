@@ -58,7 +58,6 @@ interface FollowRequest {
 interface MemberInfoProps {
   member: MemberProfile;
   setMember: React.Dispatch<React.SetStateAction<MemberProfile | null>>;
-  followerStatus: boolean;
 }
 
 // * MemberSettings 컴포넌트 props

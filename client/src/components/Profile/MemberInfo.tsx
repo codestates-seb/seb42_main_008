@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { TbGenderFemale, TbGenderMale, TbMail } from 'react-icons/tb';
 import { SlUserFollow, SlUserFollowing } from 'react-icons/sl';
 import { FollowRequest, MemberInfoProps } from 'interfaces/Profile.interface';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { getScoreIcon } from 'utils/getScoreIcon';
 import { toast } from 'react-toastify';
 import FollowModal from './FollowModal';
@@ -16,8 +16,8 @@ import { ModalBG } from './ModalStyles';
 import Swal from 'sweetalert2';
 import { MdReport } from 'react-icons/md';
 
-const MemberInfo = ({ member, setMember, followerStatus }: MemberInfoProps) => {
-  const [isFollow, setIsFollow] = useState<boolean>(followerStatus);
+const MemberInfo = ({ member, setMember }: MemberInfoProps) => {
+  const [isFollow, setIsFollow] = useState<boolean>(member.followerStatus);
   const [isShowModal, setIsShowModal] = useState<boolean>(false);
   const [isFollower, setIsFollower] = useState<boolean>(true);
   const [isShowNoteModal, setIsShowNoteModal] = useState<boolean>(false);
@@ -58,6 +58,10 @@ const MemberInfo = ({ member, setMember, followerStatus }: MemberInfoProps) => {
       }
     });
   };
+
+  useEffect(() => {
+    setIsFollow(member.followerStatus);
+  }, [member]);
 
   const handleFollowListClick = (type: boolean) => {
     setIsShowModal(true);
