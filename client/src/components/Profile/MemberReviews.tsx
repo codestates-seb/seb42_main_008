@@ -8,6 +8,7 @@ import customAxios from 'api/customAxios';
 import { useParams } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { userInfo } from 'states/userState';
+import Loader from 'components/Loader';
 
 interface EmojiProps {
   score: number;
@@ -25,6 +26,7 @@ const Emoji = ({ score }: EmojiProps) => {
 const MemberReviews = () => {
   const { memberId } = useParams();
   const [reviews, setReviews] = useState<Review[] | []>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const loginUser = useRecoilValue(userInfo);
 
   const handleSirenClick = () => {
@@ -40,6 +42,7 @@ const MemberReviews = () => {
       .get(`/members/${memberId}/reviews`)
       .then(resp => {
         setReviews(resp.data.data);
+        setIsLoading(false);
       })
       .catch(error => {
         console.log(error);
@@ -52,27 +55,27 @@ const MemberReviews = () => {
 
   return (
     <>
-      {reviews && (
-        <ReviewWrapper>
-          {reviews.length !== 0 ? (
-            reviews.map((item, idx) => (
-              <ReviewItem key={idx}>
-                <p>{item.content}</p>
-                <div className="icons">
-                  <Emoji score={item.score} />
-                  {loginUser.memberId.toString() === memberId?.toString() && (
-                    <span className="siren" onClick={handleSirenClick}>
-                      <GiSiren size={27} color="red" />
-                    </span>
-                  )}
-                </div>
-              </ReviewItem>
-            ))
-          ) : (
-            <p>아직 작성된 리뷰가 없습니다!</p>
-          )}
-        </ReviewWrapper>
-      )}
+      <ReviewWrapper>
+        {isLoading ? (
+          <Loader />
+        ) : reviews.length !== 0 ? (
+          reviews.map((item, idx) => (
+            <ReviewItem key={idx}>
+              <p>{item.content}</p>
+              <div className="icons">
+                <Emoji score={item.score} />
+                {loginUser.memberId.toString() === memberId?.toString() && (
+                  <span className="siren" onClick={handleSirenClick}>
+                    <GiSiren size={27} color="red" />
+                  </span>
+                )}
+              </div>
+            </ReviewItem>
+          ))
+        ) : (
+          <p>아직 작성된 리뷰가 없습니다!</p>
+        )}
+      </ReviewWrapper>
     </>
   );
 };
