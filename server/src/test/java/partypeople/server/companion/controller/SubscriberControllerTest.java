@@ -93,7 +93,7 @@ class SubscriberControllerTest {
                     parameterWithName("companion-id").description("동행글 식별자")
                 ),
                 requestFields(
-                    fieldWithPath("memberId").type(JsonFieldType.NUMBER).description("회원 식별자")
+                    fieldWithPath("memberId").type(JsonFieldType.NUMBER).description("로그인한 회원 식별자")
                 )));
     }
 
@@ -171,7 +171,7 @@ class SubscriberControllerTest {
                     parameterWithName("companion-id").description("동행글 식별자")
                 ),
                 requestFields(
-                    fieldWithPath("memberId").type(JsonFieldType.NUMBER).description("회원 식별자")
+                    fieldWithPath("memberId").type(JsonFieldType.NUMBER).description("로그인한 회원 식별자")
                 )));
     }
 
@@ -204,7 +204,7 @@ class SubscriberControllerTest {
                     parameterWithName("companion-id").description("동행글 식별자")
                 ),
                 requestFields(
-                    fieldWithPath("memberId").type(JsonFieldType.NUMBER).description("회원 식별자")
+                    fieldWithPath("memberId").type(JsonFieldType.NUMBER).description("로그인한 회원 식별자")
                 )));
     }
 }
