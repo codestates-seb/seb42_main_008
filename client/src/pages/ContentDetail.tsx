@@ -332,6 +332,17 @@ const BottomBox = styled.div`
     }
     #content {
       font-size: 1rem;
+      p {
+        width: 100%;
+        word-break: break-all;
+        img {
+          width: 330px;
+          max-height: 400px;
+          display: block;
+          object-fit: scale-down;
+          word-break: break-all;
+        }
+      }
     }
     #tag-box {
       li {
