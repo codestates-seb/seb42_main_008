@@ -96,7 +96,7 @@ const Participants = ({ detail, setSub, part, setPart }: companionProps) => {
             </li>
           ))
         ) : (
-          <li>동행 참여자가 없습니다. 🥲</li>
+          <li>동행 참여자가 없습니다.</li>
         )}
       </Content>
     </Container>

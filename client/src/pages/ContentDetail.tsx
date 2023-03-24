@@ -39,7 +39,7 @@ const ContentDetail = () => {
       .get(`/companions/${contentId}`)
       .then(res => {
         setDetail(res.data.data);
-        setIsLoading(true);
+        setIsLoading(false);
       })
       .catch(error => {
         console.log(error);
@@ -49,7 +49,7 @@ const ContentDetail = () => {
   return (
     <Container>
       <ContentDetailBox>
-        {!isLoading ? (
+        {isLoading ? (
           <Loader />
         ) : (
           <>

@@ -250,7 +250,8 @@ const ContentEdit = () => {
   return (
     <ContentAddContainer>
       <TitleBox style={{ backgroundImage: `url(${titleImg})` }}>
-        <h1>{title}</h1>
+        <ImageFilter></ImageFilter>
+        <h1>{title.toUpperCase()}</h1>
         <p>동행자를 모집하는 글을 작성해보세요!</p>
       </TitleBox>
       <ContentBox>
@@ -297,6 +298,7 @@ const ContentEdit = () => {
               startDate={startDate}
               placeholderText="Start Date"
               dateFormat="yyyy-MM-dd"
+              minDate={new Date()}
             />
           </div>
         </div>
@@ -390,6 +392,7 @@ const ContentAddContainer = styled.div`
 
 const TitleBox = styled.div`
   display: flex;
+  position: relative;
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -400,8 +403,11 @@ const TitleBox = styled.div`
   background-position: center;
   color: white;
   font-weight: bold;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
   > h1 {
     font-size: 4rem;
+    z-index: 20;
+    font-family: 'Archivo Black', sans-serif;
     @media screen and (max-width: 768px) {
       font-size: 3rem;
     }
@@ -411,6 +417,7 @@ const TitleBox = styled.div`
   }
   > p {
     font-size: 1rem;
+    z-index: 20;
     @media screen and (max-width: 768px) {
       font-size: 0.8rem;
     }
@@ -592,4 +599,13 @@ const ContentBox = styled.div`
       background-color: #cecece;
     }
   }
+`;
+const ImageFilter = styled.section`
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: #000650;
+  opacity: 0.25;
 `;

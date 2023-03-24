@@ -285,11 +285,16 @@ const Button = styled.button`
   transition: all 0.2s ease 0s;
   :disabled {
     cursor: default;
+    :hover {
+      box-shadow: none;
+      background-color: #b6b0b0;
+      color: white;
+    }
   }
   &:hover {
     color: black;
     background-color: white;
-    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.15);
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.05);
   }
   @media screen and (max-width: 768px) {
     background-color: #d9d9d9;

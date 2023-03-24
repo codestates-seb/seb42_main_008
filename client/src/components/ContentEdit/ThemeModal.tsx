@@ -75,19 +75,12 @@ const ThemeModal = ({
 
   // 테마 담기 // 최대개수
   const [selectedThemes, setSelectedThemes] = useState<string[]>([]);
-  const handleCheckboxClick = (event: React.MouseEvent<HTMLInputElement>) => {
-    const target = event.currentTarget;
-    const option = target.value;
-    if (target.checked) {
-      if (selectedThemes.length < 3) {
-        setSelectedThemes(item => [...item, option]);
-      } else {
-        target.checked = false;
-      }
+  const handleCheckboxClick = (option: string) => {
+    if (selectedThemes.includes(option)) {
+      setSelectedThemes(selectedThemes.filter(item => item !== option));
     } else {
-      const index = selectedThemes.indexOf(option);
-      if (index !== -1) {
-        setSelectedThemes(item => item.filter(thing => thing !== option));
+      if (selectedThemes.length < 3) {
+        setSelectedThemes([...selectedThemes, option]);
       }
     }
   };
@@ -153,24 +146,26 @@ const ThemeModal = ({
         </div>
         <label>테마</label>
         <ThemeContent>
-          {themes.map((theme: string) => (
-            <li key={theme}>
-              <label>
-                <input
-                  type="checkbox"
-                  value={theme}
-                  onClick={handleCheckboxClick}
-                ></input>
-                {theme}
-              </label>
-            </li>
-          ))}
+          {themes.map((theme: string) => {
+            const isSelected = selectedThemes.includes(theme);
+            return (
+              <li
+                key={theme}
+                className={isSelected ? 'selected' : 'not-selected'}
+              >
+                <label>
+                  <input
+                    type="checkbox"
+                    value={theme}
+                    checked={isSelected}
+                    onChange={() => handleCheckboxClick(theme)}
+                  ></input>
+                  {theme}
+                </label>
+              </li>
+            );
+          })}
         </ThemeContent>
-        <div className="selected-theme">
-          {selectedThemes.map((theme, index) => (
-            <div key={index}>{theme}</div>
-          ))}
-        </div>
         <div className="theme-bottom">
           <button onClick={handleTendencyOpen}>이전</button>
           <button onClick={handleAllSubmit}>수정 완료</button>
@@ -331,15 +326,18 @@ const ThemeContent = styled.ul`
       width: 120px;
       height: 36px;
     }
+    &.selected {
+      background-color: #feb35c;
+      color: white;
+    }
     > label {
       display: flex;
       align-items: center;
       justify-content: center;
       width: 100%;
       height: 100%;
-      &:hover {
-        background-color: #feb35c;
-      }
+      cursor: pointer;
+
       > input {
         display: none;
       }

@@ -66,25 +66,26 @@ const TendencyModal = ({
         </div>
         <label>성향</label>
         <TendencyContent>
-          {tendencies.map((theme: string) => (
-            <li key={theme}>
-              <label>
-                <input
-                  type="checkbox"
-                  value={theme}
-                  checked={selectedOptions.includes(theme)}
-                  onChange={() => handleCheckboxClick(theme)}
-                ></input>
-                {theme}
-              </label>
-            </li>
-          ))}
+          {tendencies.map((theme: string) => {
+            const isSelected = selectedOptions.includes(theme);
+            return (
+              <li
+                key={theme}
+                className={isSelected ? 'selected' : 'not-selected'}
+              >
+                <label>
+                  <input
+                    type="checkbox"
+                    value={theme}
+                    checked={isSelected}
+                    onChange={() => handleCheckboxClick(theme)}
+                  ></input>
+                  {theme}
+                </label>
+              </li>
+            );
+          })}
         </TendencyContent>
-        <div className="selected-tendency">
-          {selectedOptions.map((tendency, index) => (
-            <div key={index}>{tendency}</div>
-          ))}
-        </div>
         <div className="tendency-bottom">
           <button onClick={handleModalClose}>이전</button>
           <button onClick={handleTendencySubmit}>다음</button>
@@ -254,15 +255,17 @@ const TendencyContent = styled.ul`
       width: 120px;
       height: 36px;
     }
+    &.selected {
+      background-color: #feb35c;
+      color: white;
+    }
     > label {
       display: flex;
       align-items: center;
       justify-content: center;
       width: 100%;
       height: 100%;
-      &:hover {
-        background-color: #feb35c;
-      }
+      cursor: pointer;
       > input {
         display: none;
       }
