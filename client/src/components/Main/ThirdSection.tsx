@@ -23,7 +23,7 @@ const ThirdSection = () => {
     {
       imgURL: 'https://i.esdrop.com/d/f/XWTMtUmtv1/GmefY1LBpl.png',
       title: '프로필 페이지',
-      desc: '동행자들의 정보를 확인하고 리뷰와 이전 여행들을 살펴볼 수 있어요 😉',
+      desc: '동행자들의 정보를 확인하고 리뷰와 이전 여행들을 살펴볼 수 있어요 :)',
     },
     {
       imgURL: 'https://i.esdrop.com/d/f/XWTMtUmtv1/tN5IkcQ32V.png',
@@ -33,7 +33,7 @@ const ThirdSection = () => {
     {
       imgURL: 'https://i.esdrop.com/d/f/XWTMtUmtv1/M8mOQmxTcC.png',
       title: '동행 평가 기능',
-      desc: '참여한 동행이 완료되었다면, 다른 유저들을 위해 동행자 리뷰를 작성할 수 있어요 🙂',
+      desc: '참여한 동행이 완료되었다면, 다른 유저들을 위해 동행자 리뷰를 작성할 수 있어요 :)',
     },
   ];
 
