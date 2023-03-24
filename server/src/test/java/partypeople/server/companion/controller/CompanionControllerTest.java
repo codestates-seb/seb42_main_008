@@ -105,7 +105,7 @@ public class CompanionControllerTest {
         actions
                 .andExpect(status().isCreated())
                 .andExpect(header().string("location", is(Matchers.startsWith("/companions"))))
-                .andDo(document("[companion] post-companion",
+                .andDo(document("companion-post-companion",
                         getRequestPreProcessor(),
                         getResponsePreProcessor(),
                         requestFields(
@@ -202,7 +202,7 @@ public class CompanionControllerTest {
                 .andExpect(jsonPath("$.data.continent").value(response.getContinent()))
                 .andExpect(jsonPath("$.data.tags").isArray())
                 .andExpect(jsonPath("$.data.companionStatus").value(response.isCompanionStatus()))
-                .andDo(document("[companion] patch-companion",
+                .andDo(document("companion-patch-companion",
                         getRequestPreProcessor(),
                         getResponsePreProcessor(),
                         pathParameters(
@@ -258,7 +258,7 @@ public class CompanionControllerTest {
         // then
         actions
                 .andExpect(status().isNoContent())
-                .andDo(document("[companion] delete-companion",
+                .andDo(document("companion-delete-companion",
                         getRequestPreProcessor(),
                         getResponsePreProcessor(),
                         pathParameters(
@@ -324,7 +324,7 @@ public class CompanionControllerTest {
                 .andExpect(jsonPath("$.data.continent").value(response.getContinent()))
                 .andExpect(jsonPath("$.data.tags").isArray())
                 .andExpect(jsonPath("$.data.companionStatus").value(response.isCompanionStatus()))
-                .andDo(document("[companion] get-companion",
+                .andDo(document("companion-get-companion",
                         getRequestPreProcessor(),
                         getResponsePreProcessor(),
                         pathParameters(
@@ -422,7 +422,7 @@ public class CompanionControllerTest {
                 .andExpect(jsonPath("$.data[0].continent").value(responses.get(0).getContinent()))
                 .andExpect(jsonPath("$.data[0].tags").isArray())
                 .andExpect(jsonPath("$.data[0].companionStatus").value(responses.get(0).isCompanionStatus()))
-                .andDo(document("[companion] get-companions by nation",
+                .andDo(document("companion-get-companions-by-nation",
                         getRequestPreProcessor(),
                         getResponsePreProcessor(),
                         requestParameters(
@@ -487,7 +487,7 @@ public class CompanionControllerTest {
                 .andExpect(jsonPath("$.data").isArray())
                 .andExpect(jsonPath("$.data[0].nationCode").value(responses.get(0).getNationCode()))
                 .andExpect(jsonPath("$.data[0].companionsCount").value(responses.get(0).getCompanionsCount()))
-                .andDo(document("[companion] get-counts of companions by continent",
+                .andDo(document("companion-get-counts-of-companions-by-continent",
                         getRequestPreProcessor(),
                         getResponsePreProcessor(),
                         requestParameters(
@@ -526,7 +526,7 @@ public class CompanionControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data").isArray())
                 .andExpect(jsonPath("$.data[0].memberId").value(responses.get(0).getMemberId()))
-                .andDo(document("[companion] get-reviewed members",
+                .andDo(document("companion-get-reviewed-members",
                         getRequestPreProcessor(),
                         getResponsePreProcessor(),
                         requestParameters(
@@ -619,7 +619,7 @@ public class CompanionControllerTest {
                 .andExpect(jsonPath("$.data[0].continent").value(responses.get(0).getContinent()))
                 .andExpect(jsonPath("$.data[0].tags").isArray())
                 .andExpect(jsonPath("$.data[0].companionStatus").value(responses.get(0).isCompanionStatus()))
-                .andDo(document("[companion] get-companions by keyword",
+                .andDo(document("companion-get-companions-by-keyword",
                         getRequestPreProcessor(),
                         getResponsePreProcessor(),
                         requestParameters(
