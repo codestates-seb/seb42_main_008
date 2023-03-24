@@ -108,10 +108,16 @@ const TitleText = styled.div`
     .title-en {
       font-size: 3rem;
     }
+    .country-spell {
+      font-size: 18rem;
+    }
   }
   @media screen and (max-width: 576px) {
     .title-en {
       font-size: 2.3rem;
+    }
+    .country-spell {
+      font-size: 17rem;
     }
   }
 `;
