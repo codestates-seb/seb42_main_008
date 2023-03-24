@@ -84,7 +84,7 @@ class ParticipantControllerTest {
         MvcResult result = actions
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.data").isArray())
-            .andDo(document("[participant] get-participants",
+            .andDo(document("participant-get-participants",
                 getRequestPreProcessor(),
                 getResponsePreProcessor(),
                 pathParameters(
@@ -124,7 +124,7 @@ class ParticipantControllerTest {
         //then
         actions
             .andExpect(status().isNoContent())
-            .andDo(document("[participant] delete-participant",
+            .andDo(document("participant-delete-participant",
                 getRequestPreProcessor(),
                 getResponsePreProcessor(),
                 pathParameters(
