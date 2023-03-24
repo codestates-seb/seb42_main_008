@@ -382,6 +382,7 @@ const ContentAddContainer = styled.div`
   align-items: center;
   .overlay {
     position: fixed;
+    z-index: 1000;
     top: 0;
     left: 0;
     right: 0;
