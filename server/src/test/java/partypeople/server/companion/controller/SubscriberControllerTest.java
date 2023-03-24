@@ -86,7 +86,7 @@ class SubscriberControllerTest {
         //then
         actions
             .andExpect(status().isOk())
-            .andDo(document("[subscriber] post-subscriber",
+            .andDo(document("subscriber-post-subscriber",
                 getRequestPreProcessor(),
                 getResponsePreProcessor(),
                 pathParameters(
@@ -123,7 +123,7 @@ class SubscriberControllerTest {
         MvcResult result = actions
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.data").isArray())
-            .andDo(document("[subscriber] get-subscribers",
+            .andDo(document("subscriber-get-subscribers",
                 getRequestPreProcessor(),
                 getResponsePreProcessor(),
                 pathParameters(
@@ -164,7 +164,7 @@ class SubscriberControllerTest {
         //then
         actions
             .andExpect(status().isOk())
-            .andDo(document("[subscriber] patch-subscriber",
+            .andDo(document("subscriber-patch-subscriber",
                 getRequestPreProcessor(),
                 getResponsePreProcessor(),
                 pathParameters(
@@ -197,7 +197,7 @@ class SubscriberControllerTest {
         //then
         actions
             .andExpect(status().isNoContent())
-            .andDo(document("[subscriber] delete-subscriber",
+            .andDo(document("subscriber-delete-subscriber",
                 getRequestPreProcessor(),
                 getResponsePreProcessor(),
                 pathParameters(
