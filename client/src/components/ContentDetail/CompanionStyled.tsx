@@ -22,13 +22,12 @@ export const StyledCompanionList = styled.ul`
     &:hover {
       color: black;
       background-color: white;
-      box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.15);
+      box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.05);
     }
     .companion-info {
       display: flex;
       justify-content: flex-start;
       align-items: center;
-      /* width: 80%; */
       .img {
         margin-right: 5px;
         width: 30px;
@@ -61,7 +60,7 @@ export const StyledCompanionList = styled.ul`
         &:hover {
           color: black;
           background-color: white;
-          box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.15);
+          box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.05);
         }
       }
     }
