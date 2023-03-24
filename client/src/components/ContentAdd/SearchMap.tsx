@@ -150,6 +150,7 @@ const SearchForm = styled.form`
     width: 20%;
     background-color: #feb35c;
     border-radius: 30px;
+    cursor: pointer;
   }
 `;
 const AddressRender = styled.div`

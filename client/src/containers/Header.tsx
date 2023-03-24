@@ -47,8 +47,10 @@ const Header = () => {
   };
   //쪽지 모달
   const [noteModal, setNoteModal] = useState(false);
+  const [animationMode, setAnimationMode] = useState(false);
   const NoteHandler = () => {
     setNoteModal(!noteModal);
+    setAnimationMode(true);
   };
 
   // 햄버거 메뉴 반응형
@@ -125,7 +127,11 @@ const Header = () => {
 
       {noteModal ? (
         <div className="overlay">
-          <NoteModal noteModal={noteModal} setNoteModal={setNoteModal} />
+          <NoteModal
+            setNoteModal={setNoteModal}
+            animationMode={animationMode}
+            setAnimationMode={setAnimationMode}
+          />
         </div>
       ) : null}
       <nav className="mobile-menu">
@@ -175,7 +181,7 @@ const HeaderBox = styled.header`
   z-index: 999;
   .overlay {
     position: fixed;
-    top: 0;
+    top: 60px;
     left: 0;
     right: 0;
     bottom: 0;

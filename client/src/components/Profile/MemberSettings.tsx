@@ -138,7 +138,12 @@ const MemberSettings = ({ member, setCurrentTab }: MemberSettingsProps) => {
             <label className="file-input-label" htmlFor="file-input">
               사진 선택
             </label>
-            <input type="file" id="file-input" onChange={onFileChange} />
+            <input
+              type="file"
+              id="file-input"
+              onChange={onFileChange}
+              accept="image/jpg, image/jpeg, image/png"
+            />
           </UploadButton>
         </ImageUpload>
         <TextEdit

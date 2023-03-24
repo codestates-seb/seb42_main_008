@@ -3,7 +3,7 @@ import { ModalBG, ModalContent } from 'components/Profile/ModalStyles';
 import { SearchOption } from 'interfaces/ContentList.interface';
 import React, { useState } from 'react';
 import { useRecoilState } from 'recoil';
-import { userInfo } from 'states/userState';
+import { googleSignup, userInfo } from 'states/userState';
 import styled from 'styled-components';
 import { StyledButton } from 'styles/StyledButton';
 import Swal from 'sweetalert2';
@@ -19,6 +19,7 @@ const GenderSelect = ({ setIsShowModal }: Props) => {
     field: '',
   });
   const [loginUser, setLoginUser] = useRecoilState(userInfo);
+  const [isGoogleSignup, setIsGoogleSignup] = useRecoilState(googleSignup);
 
   const handleChangeGender = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
@@ -59,6 +60,16 @@ const GenderSelect = ({ setIsShowModal }: Props) => {
               ...loginUser,
               gender: gender.value,
             });
+            if (isGoogleSignup === true) {
+              Swal.fire({
+                title: '구글 회원가입 안내',
+                html: '회원님이 가입하신 이메일로<br/>계정 비밀번호가 전송되었습니다!<br/> 해당 비밀번호로 일반 로그인이 가능하며,<br/>프로필의 계정 관리에서 수정이 가능합니다.',
+                icon: 'info',
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: '확인',
+              });
+              setIsGoogleSignup(false);
+            }
           });
       }
     });

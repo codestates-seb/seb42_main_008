@@ -1,7 +1,8 @@
 import { useEffect } from 'react';
 import { FcGoogle } from 'react-icons/fc';
-import { useNavigate } from 'react-router-dom';
 import { useSetRecoilState } from 'recoil';
+import { googleSignup } from 'states/userState';
+import { useNavigate } from 'react-router-dom';
 import { loginState, userInfo } from 'states/userState';
 import styled from 'styled-components';
 import { setCookie } from 'utils/userCookies';
@@ -10,6 +11,7 @@ const GoogleLogin = () => {
   const navigate = useNavigate();
   const setIsLogin = useSetRecoilState(loginState);
   const setUser = useSetRecoilState(userInfo);
+  const setIsGoogleSignup = useSetRecoilState(googleSignup);
   const BASE_URL = process.env.REACT_APP_SERVER;
   const accessToken: string | null = new URL(
     window.location.href
@@ -17,6 +19,9 @@ const GoogleLogin = () => {
   const refreshToken: string | null = new URL(
     window.location.href
   ).searchParams.get('refresh_token');
+  const googleJoin: string | null = new URL(
+    window.location.href
+  ).searchParams.get('google_join');
 
   const googleLoginHandler = () => {
     window.location.assign(`${BASE_URL}/members/login/google`);
@@ -35,12 +40,14 @@ const GoogleLogin = () => {
         .join('')
     );
     const userData = JSON.parse(jsonPayload);
-    setUser(userData);
     setIsLogin(true);
+    setUser(userData);
   };
 
   useEffect(() => {
-    if (accessToken && refreshToken) {
+    if (accessToken && refreshToken && googleJoin) {
+      const parsedGoogleJoin = JSON.parse(googleJoin);
+      setIsGoogleSignup(parsedGoogleJoin);
       setCookie('accessToken', 'Bearer ' + accessToken, {
         path: '/',
       });
@@ -50,7 +57,7 @@ const GoogleLogin = () => {
       googleLoginAction(accessToken);
       navigate('/');
     }
-  }, [accessToken, refreshToken]);
+  }, [accessToken, refreshToken, googleJoin]);
 
   return (
     <div className="btn-wrapper">

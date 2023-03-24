@@ -60,7 +60,7 @@ const MemberReviews = () => {
                 <p>{item.content}</p>
                 <div className="icons">
                   <Emoji score={item.score} />
-                  {loginUser.memberId === memberId && (
+                  {loginUser.memberId.toString() === memberId?.toString() && (
                     <span className="siren" onClick={handleSirenClick}>
                       <GiSiren size={27} color="red" />
                     </span>

@@ -265,7 +265,7 @@ const CountrySelect = () => {
         style={{ backgroundImage: `url(${titleImg})` }}
       >
         <ImageFilter></ImageFilter>
-        <h1>{title}</h1>
+        <h1>{title.toUpperCase()}</h1>
         <p>동행자를 구하고 싶은 나라를 선택해보세요!</p>
       </div>
       <div className="list-top">
@@ -358,9 +358,12 @@ const CountryListContainer = styled.div`
     background-position: center;
     color: white;
     font-weight: bold;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+
     > h1 {
       font-size: 4rem;
       z-index: 20;
+      font-family: 'Archivo Black', sans-serif;
       @media screen and (max-width: 768px) {
         font-size: 3rem;
       }
@@ -391,6 +394,7 @@ const CountryListContainer = styled.div`
     width: 80%;
     padding: 0px 30px 0px 30px;
     font-size: 1rem;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
     @media screen and (max-width: 768px) {
       font-size: 0.8rem;
     }
@@ -407,6 +411,7 @@ const CountryListContainer = styled.div`
       font-weight: bold;
       border-radius: 10px;
       cursor: pointer;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
     }
   }
 `;
