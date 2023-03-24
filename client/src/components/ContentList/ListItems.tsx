@@ -37,12 +37,32 @@ const ListItems = ({ listData, isLoading }: ListItemProps) => {
   };
 
   const handleAddTextClick = () => {
-    navigate('/add', {
-      state: {
-        continent,
-        countryCode,
-      },
-    });
+    if (isLogin) {
+      navigate('/add', {
+        state: {
+          continent,
+          countryCode,
+        },
+      });
+    } else {
+      Swal.fire({
+        icon: 'question',
+        title: '아직 로그인하지 않으셨나요?',
+        text: '동행글을 작성하고 싶으시다면 로그인 해주세요🥲',
+        showDenyButton: true,
+        showCloseButton: true,
+        confirmButtonText: '로그인 하러가기',
+        denyButtonText: `회원가입 하러가기`,
+        denyButtonColor: '#FEB35C',
+        confirmButtonColor: '#5D62A0',
+      }).then(result => {
+        if (result.isConfirmed) {
+          navigate('/login');
+        } else if (result.isDenied) {
+          navigate('/signup');
+        }
+      });
+    }
   };
 
   return (
