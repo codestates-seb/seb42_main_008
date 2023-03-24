@@ -183,7 +183,7 @@ class MessageControllerRestDocsTest {
                 getRequestPreProcessor(),
                 getResponsePreProcessor(),
                 requestParameters(
-                    parameterWithName("memberId").description("로그인 한 회원 식별자")
+                    parameterWithName("memberId").description("로그인한 회원 식별자")
                 ),
                 responseFields(
                     List.of(
