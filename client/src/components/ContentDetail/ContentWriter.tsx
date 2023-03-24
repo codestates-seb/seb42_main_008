@@ -291,6 +291,7 @@ const Button = styled.button`
     }
   }
   &:hover {
+    transition: all 0.2s ease 0s;
     color: black;
     background-color: white;
     box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);

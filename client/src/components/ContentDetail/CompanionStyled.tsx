@@ -20,6 +20,7 @@ export const StyledCompanionList = styled.ul`
     cursor: pointer;
     transition: all 0.2s ease 0s;
     &:hover {
+      transition: all 0.2s ease 0s;
       color: black;
       background-color: white;
       box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
@@ -58,6 +59,7 @@ export const StyledCompanionList = styled.ul`
         border-radius: 15px;
         transition: all 0.2s ease 0s;
         &:hover {
+          transition: all 0.2s ease 0s;
           color: black;
           background-color: white;
           box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
