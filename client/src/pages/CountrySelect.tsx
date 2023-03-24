@@ -414,6 +414,13 @@ const CountryListContainer = styled.div`
       cursor: pointer;
       box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
       color: black;
+      transition: 0.3s;
+      &:hover {
+        background-color: #feb35c;
+        color: white;
+        box-shadow: 0px 0px 10px #fff;
+        transition: 0.3s;
+      }
     }
   }
 `;
