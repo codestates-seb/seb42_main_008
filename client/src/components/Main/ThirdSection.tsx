@@ -16,22 +16,22 @@ const ThirdSection = () => {
   const scrollY = useScroll();
   const descriptions: ServiceDesc[] = [
     {
-      imgURL: 'https://i.esdrop.com/d/f/XWTMtUmtv1/gpGzHnf0Y7.png',
+      imgURL: 'https://i.esdrop.com/d/f/XWTMtUmtv1/VpWeJYWg11.png',
       title: '동행자 모집 기능',
       desc: 'Lorem Ipsum is simply dummy text ',
     },
     {
-      imgURL: 'https://i.esdrop.com/d/f/XWTMtUmtv1/gpGzHnf0Y7.png',
+      imgURL: 'https://i.esdrop.com/d/f/XWTMtUmtv1/GmefY1LBpl.png',
       title: '프로필 페이지',
       desc: 'Lorem Ipsum is simply dummy text of the',
     },
     {
-      imgURL: 'https://i.esdrop.com/d/f/XWTMtUmtv1/gpGzHnf0Y7.png',
+      imgURL: 'https://i.esdrop.com/d/f/XWTMtUmtv1/tN5IkcQ32V.png',
       title: '메신저 기능',
       desc: 'Lorem Ipsum is simply dummy text of the print',
     },
     {
-      imgURL: 'https://i.esdrop.com/d/f/XWTMtUmtv1/gpGzHnf0Y7.png',
+      imgURL: 'https://i.esdrop.com/d/f/XWTMtUmtv1/M8mOQmxTcC.png',
       title: '동행 평가 기능',
       desc: 'Lorem Ipsum is simply dummy text of the print',
     },
@@ -44,7 +44,7 @@ const ThirdSection = () => {
           <DescArticle
             key={idx}
             len={idx + 1}
-            className={scrollY >= 920 ? 'show' : 'notShow'}
+            className={scrollY >= 930 ? 'show' : 'notShow'}
           >
             <img src={item.imgURL} alt={item.title} />
             <DescText>
@@ -121,6 +121,8 @@ const DescArticle = styled.li<Article>`
   > img {
     width: 100%;
     margin-bottom: 10px;
+    border-radius: 30px;
+    box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.4);
   }
 
   @media screen and (max-width: 768px) {
