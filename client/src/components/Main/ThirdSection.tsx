@@ -18,22 +18,22 @@ const ThirdSection = () => {
     {
       imgURL: 'https://i.esdrop.com/d/f/XWTMtUmtv1/VpWeJYWg11.png',
       title: '동행자 모집 기능',
-      desc: 'Lorem Ipsum is simply dummy text ',
+      desc: '여행지에서 함께 동행할 파티를 직접 모집해보세요!',
     },
     {
       imgURL: 'https://i.esdrop.com/d/f/XWTMtUmtv1/GmefY1LBpl.png',
       title: '프로필 페이지',
-      desc: 'Lorem Ipsum is simply dummy text of the',
+      desc: '동행자들의 정보를 확인하고 리뷰와 이전 여행들을 살펴볼 수 있어요 😉',
     },
     {
       imgURL: 'https://i.esdrop.com/d/f/XWTMtUmtv1/tN5IkcQ32V.png',
       title: '메신저 기능',
-      desc: 'Lorem Ipsum is simply dummy text of the print',
+      desc: '함께 동행하고 싶은 유저에게 쪽지를 보내보세요!',
     },
     {
       imgURL: 'https://i.esdrop.com/d/f/XWTMtUmtv1/M8mOQmxTcC.png',
       title: '동행 평가 기능',
-      desc: 'Lorem Ipsum is simply dummy text of the print',
+      desc: '참여한 동행이 완료되었다면, 다른 유저들을 위해 동행자 리뷰를 작성할 수 있어요 🙂',
     },
   ];
 
@@ -121,8 +121,7 @@ const DescArticle = styled.li<Article>`
   > img {
     width: 100%;
     margin-bottom: 10px;
-    border-radius: 30px;
-    box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.4);
+    filter: drop-shadow(0px 5px 7px rgba(0, 0, 0, 0.4));
   }
 
   @media screen and (max-width: 768px) {
@@ -132,7 +131,7 @@ const DescArticle = styled.li<Article>`
 
 const DescText = styled.div`
   width: 100%;
-  padding: 0 20px;
+  padding: 10px 7px;
 
   .third-title {
     font-size: 1.3rem;
