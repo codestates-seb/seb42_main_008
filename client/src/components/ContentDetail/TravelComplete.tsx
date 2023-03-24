@@ -161,6 +161,7 @@ const TabBox = styled(StyledTabBox)`
   li {
     width: 100%;
     text-align: center;
+    cursor: default;
   }
 `;
 
@@ -188,6 +189,13 @@ const Content = styled.ul`
     padding: 5px;
     flex-direction: column;
     cursor: pointer;
+    transition: all 0.2s ease 0s;
+    &:hover {
+      transform: scale(1.05);
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+      border-radius: 20px;
+      width: 93%;
+    }
   }
   @media screen and (max-width: 768px) {
     li {
@@ -252,10 +260,21 @@ const ButtonBox = styled.div`
       background-color: transparent;
       opacity: 0;
     }
+    transition: all 0.2s ease 0s;
+    &:hover {
+      color: black;
+      background-color: white;
+      box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+    }
   }
   .complete {
     cursor: default;
     background-color: #d9d9d9;
+    &:hover {
+      color: white;
+      box-shadow: none;
+      background-color: #d9d9d9;
+    }
   }
   @media screen and (max-width: 768px) {
     button {
