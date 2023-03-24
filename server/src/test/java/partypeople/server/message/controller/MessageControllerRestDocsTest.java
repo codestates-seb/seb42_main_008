@@ -204,6 +204,40 @@ class MessageControllerRestDocsTest {
         assertThat(list.size(), is(2));
     }
 
+    @DisplayName("Patch Message Test")
+    @Test
+    void patchMessageTest() throws Exception {
+        //given
+        long messageId = 1L;
+        MessageDto.Patch patch = new MessageDto.Patch();
+        patch.setRead(true);
+        String content = gson.toJson(patch);
+
+        willDoNothing().given(messageService).changeMessageStatus(Mockito.anyLong(), Mockito.anyBoolean());
+
+        //when
+        ResultActions actions = mockMvc.perform(
+            patch("/messages/{message-id}", messageId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(content)
+        );
+
+        //then
+        actions
+            .andExpect(status().isOk())
+            .andDo(document("message-patch-message",
+                getRequestPreProcessor(),
+                getResponsePreProcessor(),
+                pathParameters(
+                    parameterWithName("message-id").description("쪽지 식별자")
+                ),
+                requestFields(
+                    List.of(
+                        fieldWithPath("read").type(JsonFieldType.BOOLEAN).description("쪽지 읽은 상태")
+                    )
+                )));
+    }
+
     @DisplayName("Delete Message Test")
     @Test
     void deleteMessageTest() throws Exception{
