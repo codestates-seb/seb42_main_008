@@ -14,7 +14,6 @@ const SearchMap = ({ detail }: any) => {
 
   return isLoaded ? (
     <MapContent>
-      {/* <LoadScript googleMapsApiKey={googleMapKey}> */}
       <GoogleMap mapContainerStyle={containerStyle} center={center} zoom={13}>
         <MarkerF position={center} />
       </GoogleMap>
@@ -22,7 +21,6 @@ const SearchMap = ({ detail }: any) => {
         <LocationPin />
         {detail.address}
       </MapPlace>
-      {/* </LoadScript> */}
     </MapContent>
   ) : (
     <></>

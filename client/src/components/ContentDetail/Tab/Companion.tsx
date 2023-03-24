@@ -173,7 +173,7 @@ const Companion = ({ detail, sub, setSub, setPart }: companionProps) => {
             </li>
           ))
         ) : (
-          <li>동행 신청자가 없습니다. 🥲</li>
+          <li>동행 신청자가 없습니다.</li>
         )}
       </Content>
     </Container>
