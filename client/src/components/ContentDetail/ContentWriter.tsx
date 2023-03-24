@@ -24,6 +24,30 @@ const ContentWriter = ({
     navigate(`/${contentId}/edit`);
   };
 
+  const handleProfile = () => {
+    navigate(`/${detail.memberId}/profile`);
+  };
+
+  const getSubList = () => {
+    customAxios.get(`/companions/${contentId}/subscribers`).then(res => {
+      setSub(res.data.data);
+    });
+  };
+
+  useEffect(() => {
+    getSubList();
+  }, []);
+
+  const getPartList = () => {
+    customAxios.get(`/companions/${contentId}/participants`).then(res => {
+      setPart(res.data.data);
+    });
+  };
+
+  useEffect(() => {
+    getPartList();
+  }, []);
+
   const handleDelete = () => {
     Swal.fire({
       title: '삭제하시겠습니까?',
@@ -75,30 +99,6 @@ const ContentWriter = ({
           });
       }
     });
-  };
-
-  const getSubList = () => {
-    customAxios.get(`/companions/${contentId}/subscribers`).then(res => {
-      setSub(res.data.data);
-    });
-  };
-
-  useEffect(() => {
-    getSubList();
-  }, []);
-
-  const getPartList = () => {
-    customAxios.get(`/companions/${contentId}/participants`).then(res => {
-      setPart(res.data.data);
-    });
-  };
-
-  useEffect(() => {
-    getPartList();
-  }, []);
-
-  const handleProfile = () => {
-    navigate(`/${detail.memberId}/profile`);
   };
 
   return (
