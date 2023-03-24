@@ -66,7 +66,7 @@ const Message = ({ note, setNoteModal }: Props) => {
         await customAxios
           .delete(`/messages/${note.messageId}`)
           .then(() => {
-            Swal.fire('Deleted!', 'Your file has been deleted.', 'success');
+            Swal.fire('Deleted!', '쪽지가 삭제되었습니다!', 'success');
             setIsNoteOpen(false);
             setNoteModal(false);
           })

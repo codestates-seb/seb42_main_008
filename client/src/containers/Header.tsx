@@ -11,6 +11,7 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import { loginState, userInfo, userToken } from 'states/userState';
 import customAxios from 'api/customAxios';
 import Swal from 'sweetalert2';
+
 const Header = () => {
   const [isLogin, setIsLogin] = useRecoilState(loginState);
   const token = useRecoilValue(userToken);
@@ -63,38 +64,35 @@ const Header = () => {
   };
 
   // 쪽지 목록 불러오기
-  // const [notes, setNotes] = useState();
-  // useEffect(() => {
-  //   axios
-  //     .get(`${process.env.REACT_APP_SERVER}/messages?memberId=${memberId}`)
-  //     .then(response => {
-  //       setNotes(response.data.data);
-  //     })
-  //     .catch(error => console.log(error));
-  // }, []);
+  const [notes, setNotes] = useState();
+  useEffect(() => {
+    customAxios
+      .get(`/messages?memberId=${memberId}`)
+      .then(response => {
+        setNotes(response.data.data);
+      })
+      .catch(error => console.log(error));
+  }, [memberId]);
 
   // 안읽은 쪽지 개수확인
   const [notRead, setNotRead] = useState(0);
+
   useEffect(() => {
+    const eventSource = new EventSource(
+      `${process.env.REACT_APP_SERVER}/messages/not-read/${memberId}`
+    );
     if (isLogin === true) {
-      const eventSource = new EventSource(
-        `${process.env.REACT_APP_SERVER}/messages/not-read/${memberId}`
-      );
       eventSource.addEventListener('notReadCount', event => {
         const data = JSON.parse(event.data);
         setNotRead(data.data.notReadCount);
       });
-      eventSource.onerror = error => {
-        console.log(error);
-        if (eventSource.readyState !== EventSource.CLOSED) {
+      eventSource.onerror = () => {
+        if (eventSource.readyState === EventSource.CLOSED) {
           eventSource.close();
         }
       };
-      return () => {
-        eventSource.close();
-      };
     }
-  }, [isLogin]);
+  }, [notes, isLogin]);
 
   return (
     <HeaderBox>
