@@ -442,6 +442,7 @@ const ContentBox = styled.div`
           width: 120px;
           outline: none;
           cursor: pointer;
+          border: 1px solid #cecece;
         }
       }
     }
@@ -567,7 +568,7 @@ const ContentBox = styled.div`
   }
   .title-input {
     border-radius: 20px;
-    border: 1px solid #555555;
+    border: 1px solid #cecece;
     outline: none;
     width: 100%;
     height: 30px;
@@ -575,7 +576,7 @@ const ContentBox = styled.div`
   }
   .day-input {
     border-radius: 20px;
-    border: 1px solid #555555;
+    border: 1px solid #cecece;
     outline: none;
     width: 50%;
     height: 30px;
