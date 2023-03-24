@@ -192,7 +192,7 @@ const ThemeBox = styled.div`
   transform: translate(50%, -50%);
   flex-direction: column;
   font-size: 2rem;
-  z-index: 50;
+  z-index: 1000;
   overflow-y: hidden;
   @media screen and (max-width: 768px) {
     width: 450px;

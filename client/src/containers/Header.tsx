@@ -179,6 +179,7 @@ const HeaderBox = styled.header`
   padding: 10px;
   position: fixed;
   z-index: 999;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
   .overlay {
     position: fixed;
     top: 60px;

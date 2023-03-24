@@ -394,6 +394,7 @@ const CountryListContainer = styled.div`
     width: 80%;
     padding: 0px 30px 0px 30px;
     font-size: 1rem;
+    color: white;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
     @media screen and (max-width: 768px) {
       font-size: 0.8rem;
@@ -412,6 +413,7 @@ const CountryListContainer = styled.div`
       border-radius: 10px;
       cursor: pointer;
       box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+      color: black;
     }
   }
 `;
