@@ -95,7 +95,6 @@ const ContentWriter = ({
 
   useEffect(() => {
     getPartList();
-    console.log(part);
   }, []);
 
   const handleProfile = () => {
@@ -294,7 +293,7 @@ const Button = styled.button`
   &:hover {
     color: black;
     background-color: white;
-    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.05);
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
   }
   @media screen and (max-width: 768px) {
     background-color: #d9d9d9;
