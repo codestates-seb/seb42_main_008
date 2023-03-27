@@ -148,6 +148,7 @@ const ContentDetailBox = styled.section`
     height: 100%;
   }
 `;
+
 const LeftBox = styled.section`
   display: flex;
   justify-content: flex-start;
