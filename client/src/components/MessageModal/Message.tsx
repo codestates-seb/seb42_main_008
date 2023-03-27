@@ -18,7 +18,7 @@ interface NoteMessage {
 }
 interface Props {
   note: NoteMessage;
-  setNoteModal: any;
+  setNoteModal(value: boolean): void;
 }
 
 interface IMessageBoxProps {

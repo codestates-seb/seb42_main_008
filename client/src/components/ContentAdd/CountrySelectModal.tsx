@@ -4,13 +4,13 @@ import { GrClose } from 'react-icons/gr';
 import countries from '../../assets/countries.json';
 import Swal from 'sweetalert2';
 import ModalScrollDisable from 'utils/ModalScrollDisable';
-const countriesPick: Countries = countries;
 type Countries = {
   [key: string]: {
     name: string;
     code: string;
   }[];
 };
+const countriesPick: Countries = countries;
 
 interface Props {
   setCountryModal: Dispatch<SetStateAction<boolean>>;

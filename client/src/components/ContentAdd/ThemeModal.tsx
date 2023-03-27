@@ -23,7 +23,7 @@ type Props = {
   continentSelect: string;
   countrySelect: string | undefined;
   countryCode: string;
-  selectedTendencies: any;
+  selectedTendencies: string[];
   formattedDate: string;
 };
 const ThemeModal = ({
