@@ -240,11 +240,11 @@ public class MemberService {
         return new String(password);
     }
 
-    public String oauthNickCheck(String name) {
+    public String oauthNickCheck(String name, String client) {
         List<String> nicknames = memberRepository.findAllNicknames();
 
         if (name.length() > NICKNAME_MAX_SIZE) {
-            name = name.substring(0,10);
+            name = name.substring(0, 10);
         }
 
         if (!(nicknames.contains(name))) {
@@ -252,16 +252,20 @@ public class MemberService {
         }
 
         String randomNickname;
-        do{
-            randomNickname = generateRandomString();
+        do {
+            randomNickname = generateRandomString(client);
         } while (nicknames.contains(randomNickname));
 
         return randomNickname;
     }
 
-    private String generateRandomString() {
+    private String generateRandomString(String client) {
         StringBuilder sb = new StringBuilder();
-        sb.append("G_");
+        if (client.equals("google")) {
+            sb.append("G_");
+        } else {
+            sb.append("K_");
+        }
         sb.append(generateRandomPassword());
 
         return sb.toString();

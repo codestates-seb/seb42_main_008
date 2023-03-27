@@ -43,6 +43,15 @@ spring:
             scope:
               - email
               - profile
+        provider:
+          kakao:
+            authorization_uri: https://kauth.kakao.com/oauth/authorize
+            token_uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+            user_name_attribute: id
+oauth2:
+  kakao:
+    clientId: 12724799959adf08b6b792ce11d9b465
 jwt:
   key: ${JWT_SECRET_KEY}
   access-token-expiration-minutes: 10
