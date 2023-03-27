@@ -14,7 +14,6 @@ const libraries: LoadScriptProps['libraries'] = ['places'];
 const SearchMap = ({
   savedAddress,
   setSavedAddress,
-  markerLocation,
   setMarkerLocation,
 }: any) => {
   // 구글 api
@@ -83,7 +82,6 @@ const SearchMap = ({
           setSavedAddress(formmatedAddress);
           setCenter(location);
           setMarkerLocation(location);
-          console.log(markerLocation);
         }
       }
     );

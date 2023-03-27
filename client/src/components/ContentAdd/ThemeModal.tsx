@@ -1,5 +1,6 @@
 import customAxios from 'api/customAxios';
 import React, { useState } from 'react';
+import { GrClose } from 'react-icons/gr';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { userInfo } from 'states/userState';
@@ -43,6 +44,10 @@ const ThemeModal = ({
     setIsTendencyModal(true);
     setIsThemeModal(false);
   };
+  const handleCloseModal = () => {
+    setIsThemeModal(false);
+  };
+
   const navigate = useNavigate();
 
   // 테마 태그 종류
@@ -143,6 +148,9 @@ const ThemeModal = ({
     <ThemeBox>
       <ModalScrollDisable />
       <div className="theme-box">
+        <div className="close">
+          <GrClose onClick={handleCloseModal} style={{ cursor: 'pointer' }} />
+        </div>
         <div className="theme-top">
           <h3>원하는 테마를 선택하세요</h3>
           <p>1~3개의 키워드를 선택해주세요</p>
@@ -218,6 +226,11 @@ const ThemeBox = styled.div`
     > label {
       margin-left: 20px;
       font-size: 1.7rem;
+    }
+    .close {
+      width: 100%;
+      display: flex;
+      justify-content: flex-end;
     }
   }
   .theme-top {

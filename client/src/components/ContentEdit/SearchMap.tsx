@@ -96,7 +96,6 @@ const SearchMap: React.FC<Props> = ({
           setSavedAddress(formmatedAddress);
           setCenter(location);
           setMarkerLocation(location);
-          console.log(markerLocation);
         }
       }
     );
