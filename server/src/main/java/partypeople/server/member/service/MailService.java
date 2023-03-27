@@ -14,7 +14,7 @@ public class MailService {
     private final JavaMailSender javaMailSender;
     @Async
     public void sendEmail(String email, String subject, String body) {
-        System.out.println("Execute method asynchronously. " + Thread.currentThread().getName());
+//        System.out.println("Execute method asynchronously. " + Thread.currentThread().getName());
 
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(email);
