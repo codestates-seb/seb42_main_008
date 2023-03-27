@@ -117,7 +117,7 @@ const TravelComplete = ({ detail, part, setPart }: partProps) => {
             </li>
           ))
         ) : (
-          <li>참여자가 없습니다. 🥲</li>
+          <li>참여자가 없습니다.</li>
         )}
       </Content>
       {firstModal ? (
