@@ -28,6 +28,7 @@ import partypeople.server.utils.CustomBeanUtils;
 import java.security.SecureRandom;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -240,11 +241,34 @@ public class MemberService {
         return new String(password);
     }
 
+//    public String oauthNickCheck(String name, String client) {
+//        List<String> nicknames = memberRepository.findAllNicknames();
+//        List<String> lowerNicknames = nicknames.stream()
+//                .map(String::toLowerCase)
+//                .collect(Collectors.toList());
+//        String lowerName = name.toLowerCase();
+//
+//        if (name.length() > NICKNAME_MAX_SIZE) {
+//            name = name.substring(0, 10);
+//        }
+//
+//        if (!(lowerNicknames.contains(lowerName))) {
+//            return name;
+//        }
+//
+//        String randomNickname;
+//        do {
+//            randomNickname = generateRandomString(client);
+//        } while (lowerNicknames.contains(randomNickname.toLowerCase()));
+//
+//        return randomNickname;
+//    }
+
     public String oauthNickCheck(String name, String client) {
         List<String> nicknames = memberRepository.findAllNicknames();
 
         if (name.length() > NICKNAME_MAX_SIZE) {
-            name = name.substring(0, 10);
+            name = name.substring(0,10);
         }
 
         if (!(nicknames.contains(name))) {
@@ -252,7 +276,7 @@ public class MemberService {
         }
 
         String randomNickname;
-        do {
+        do{
             randomNickname = generateRandomString(client);
         } while (nicknames.contains(randomNickname));
 
