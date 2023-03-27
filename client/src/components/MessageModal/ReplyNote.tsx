@@ -22,8 +22,8 @@ interface NoteMessage {
 interface Props {
   note: NoteMessage;
   handleOverlayClick: React.MouseEventHandler<HTMLDivElement>;
-  handleReplyModal: any;
-  setIsReplyOpen: any;
+  handleReplyModal: React.MouseEventHandler<HTMLDivElement | HTMLButtonElement>;
+  setIsReplyOpen(value: boolean): void;
 }
 
 const ReplyNote = ({

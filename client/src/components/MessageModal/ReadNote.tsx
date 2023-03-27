@@ -22,8 +22,8 @@ interface Props {
   handleReplyModal: React.MouseEventHandler<HTMLButtonElement>;
   handelDeleteNote: React.MouseEventHandler<HTMLButtonElement>;
   handleOverlayClick: React.MouseEventHandler<HTMLDivElement>;
-  setIsNoteOpen: any;
-  setNoteModal: any;
+  setIsNoteOpen(value: boolean): void;
+  setNoteModal(value: boolean): void;
 }
 
 const ReadNote = ({

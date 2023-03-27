@@ -21,7 +21,7 @@ type Countries = {
 let countries: Countries[] = [];
 
 interface Props {
-  filteredCountry: any;
+  filteredCountry: string[];
 }
 
 const CountrySelect = () => {
