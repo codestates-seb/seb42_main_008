@@ -6,8 +6,14 @@ import { getDateString } from 'utils/getDateString';
 import ImageFilter from 'styles/ImageFilter';
 import { ListComponentProps } from 'interfaces/Profile.interface';
 import { useNavigate } from 'react-router-dom';
+import Loader from 'components/Loader';
 
-const ListComponent = ({ datas, titleHead, titleBody }: ListComponentProps) => {
+const ListComponent = ({
+  datas,
+  titleHead,
+  titleBody,
+  isLoading,
+}: ListComponentProps) => {
   const navigate = useNavigate();
   const settings = {
     dots: false,
@@ -48,7 +54,11 @@ const ListComponent = ({ datas, titleHead, titleBody }: ListComponentProps) => {
   return (
     <ListWrapper>
       <h1 className="list-title">{titleHead + titleBody}동행</h1>
-      {datas.length !== 0 ? (
+      {isLoading ? (
+        <LoaderContainer>
+          <Loader />
+        </LoaderContainer>
+      ) : datas.length !== 0 ? (
         <Slider {...settings}>
           {datas.map((item, idx) => (
             <MemberListItem
@@ -66,8 +76,8 @@ const ListComponent = ({ datas, titleHead, titleBody }: ListComponentProps) => {
                 <p className="item-address">{item.address}</p>
               </ItemAddress>
               <Flag isDone={item.companionStatus}></Flag>
-              <ItemFlagText>
-                {item.companionStatus ? '모집완료' : '모집중'}
+              <ItemFlagText isDone={item.companionStatus}>
+                {item.companionStatus ? '완료' : '모집중'}
               </ItemFlagText>
             </MemberListItem>
           ))}
@@ -107,6 +117,14 @@ const ListWrapper = styled.section`
   .slick-track {
     margin-left: 0;
   }
+`;
+
+const LoaderContainer = styled.div`
+  width: 100%;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 const MemberListItem = styled(ListItem)`
@@ -153,9 +171,11 @@ const Flag = styled.div<{ isDone: boolean }>`
   z-index: 2;
 `;
 
-const ItemFlagText = styled(FlagText)`
-  top: 15px;
-  left: 5px;
+const ItemFlagText = styled(FlagText)<{ isDone: boolean }>`
+  /* top: 15px; */
+  /* left: 5px; */
+  top: ${props => (props.isDone ? '14px' : '15px')};
+  left: ${props => (props.isDone ? '13px' : '5px')};
   font-size: 0.8rem;
 `;
 

@@ -20,6 +20,7 @@ const ContentDetail = () => {
     companionId: 0,
     memberId: 0,
     nickname: '',
+    profile: '',
     score: 0,
     title: '',
     content: '',
@@ -32,13 +33,13 @@ const ContentDetail = () => {
     companionStatus: false,
   });
 
-  // 글 세부조회
+  // * 글 세부조회
   useEffect(() => {
     customAxios
       .get(`/companions/${contentId}`)
       .then(res => {
         setDetail(res.data.data);
-        setIsLoading(true);
+        setIsLoading(false);
       })
       .catch(error => {
         console.log(error);
@@ -48,16 +49,16 @@ const ContentDetail = () => {
   return (
     <Container>
       <ContentDetailBox>
-        {!isLoading ? (
+        {isLoading ? (
           <Loader />
         ) : (
           <>
             <LeftBox>
-              <div className="top-box">
+              <TopBox>
                 <h1>{getDateString(detail.date).shortDateStr}</h1>
                 <h3>{detail.address}</h3>
-              </div>
-              <div className="bottom-box">
+              </TopBox>
+              <BottomBox>
                 <h2>{detail.title}</h2>
                 <h4>작성날짜: {detail.createdAt}</h4>
                 <SearchMap detail={detail} />
@@ -71,10 +72,16 @@ const ContentDetail = () => {
                       <li key={index}>{el}</li>
                     ))}
                 </div>
-              </div>
+              </BottomBox>
             </LeftBox>
             <RightBox>
-              <ContentWriter detail={detail} sub={sub} setSub={setSub} />
+              <ContentWriter
+                detail={detail}
+                sub={sub}
+                setSub={setSub}
+                part={part}
+                setPart={setPart}
+              />
               {detail.companionStatus ? (
                 <TravelComplete detail={detail} part={part} setPart={setPart} />
               ) : (
@@ -105,7 +112,7 @@ const ContentDetailBox = styled.section`
   align-items: center;
   background-color: white;
   width: 1280px;
-  height: 860px;
+  height: 900px;
   padding: 30px;
   box-shadow: 5px 5px 10px 5px rgba(0, 0, 0, 0.25);
   border-radius: 10px;
@@ -114,7 +121,7 @@ const ContentDetailBox = styled.section`
     display: flex;
     flex-direction: column;
     overflow: scroll;
-    height: 100vh;
+    height: 100%;
     ::-webkit-scrollbar {
       display: none;
     }
@@ -127,7 +134,7 @@ const ContentDetailBox = styled.section`
     display: flex;
     flex-direction: column;
     overflow: scroll;
-    height: 100vh;
+    height: 100%;
     ::-webkit-scrollbar {
       display: none;
     }
@@ -138,10 +145,9 @@ const ContentDetailBox = styled.section`
   }
   @media screen and (max-width: 576px) {
     width: 100%;
-    height: 100vh;
+    height: 100%;
   }
 `;
-
 const LeftBox = styled.section`
   display: flex;
   justify-content: flex-start;
@@ -154,59 +160,6 @@ const LeftBox = styled.section`
   overflow: scroll;
   ::-webkit-scrollbar {
     display: none;
-  }
-  .top-box {
-    display: flex;
-    justify-content: flex-start;
-    align-items: flex-end;
-    width: 100%;
-    border-bottom: 30px solid #feb35c;
-    h1 {
-      font-size: 2.8rem;
-      padding-right: 30px;
-    }
-    h3 {
-      font-size: 1.5rem;
-    }
-  }
-  .bottom-box {
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    flex-direction: column;
-    width: 100%;
-    padding-top: 20px;
-    padding-bottom: 20px;
-    h2 {
-      font-size: 2.5rem;
-    }
-    h4 {
-      color: #666666;
-      font-weight: bold;
-    }
-    #content {
-      width: 100%;
-      height: 100%;
-      font-size: 1.3rem;
-      padding-bottom: 10px;
-    }
-    #tag-box {
-      display: flex;
-      justify-content: flex-start;
-      align-items: center;
-      list-style: none;
-      width: 100%;
-      li {
-        width: calc(100% / 5);
-        text-align: center;
-        font-size: 1.2rem;
-        background-color: #5d62a0;
-        border-radius: 50px;
-        padding: 5px;
-        color: white;
-        margin-right: 10px;
-      }
-    }
   }
   @media screen and (max-width: 992px) {
     width: 100%;
@@ -221,13 +174,39 @@ const LeftBox = styled.section`
     display: flex;
     flex-direction: column;
     width: 100%;
-    /* height: 100vh; */
     border: none;
     overflow: scroll;
     ::-webkit-scrollbar {
       display: none;
     }
-    .top-box {
+    @media screen and (max-width: 576px) {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+  }
+`;
+const TopBox = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-end;
+  width: 100%;
+  border-bottom: 30px solid #feb35c;
+  h1 {
+    font-size: 2.8rem;
+    padding-right: 30px;
+  }
+  @media screen and (max-width: 768px) {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-end;
+    width: 100%;
+    border-bottom: 30px solid #feb35c;
+    h1 {
+      font-size: 2rem;
+      padding-right: 30px;
+    }
+    @media (orientation: landscape) {
       display: flex;
       justify-content: flex-start;
       align-items: flex-end;
@@ -237,47 +216,87 @@ const LeftBox = styled.section`
         font-size: 2rem;
         padding-right: 30px;
       }
-      h3 {
-        font-size: 1rem;
+    }
+  }
+  @media screen and (max-width: 576px) {
+    border-bottom: 10px solid #feb35c;
+    h1 {
+      font-size: 2rem;
+      padding-right: 30px;
+    }
+  }
+`;
+const BottomBox = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-direction: column;
+  width: 100%;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  h2 {
+    font-size: 2.5rem;
+  }
+  h4 {
+    color: #666666;
+    font-weight: bold;
+  }
+  #content {
+    width: 100%;
+    height: 100%;
+    font-size: 1.3rem;
+    padding-bottom: 10px;
+    p {
+      width: 100%;
+      word-break: break-all;
+      img {
+        width: 500px;
+        max-height: 500px;
+        display: block;
+        object-fit: scale-down;
+        word-break: break-all;
       }
     }
-    .bottom-box {
-      h2 {
-        font-size: 1.5rem;
-      }
-      h4 {
-        color: #666666;
-        font-weight: bold;
-        font-size: 0.8rem;
-      }
-      #content {
-        font-size: 1rem;
-      }
-      #tag-box {
-        li {
-          width: calc(100% / 5);
-          text-align: center;
-          font-size: 0.5rem;
-          padding: 5px;
-          color: white;
-        }
+  }
+  #tag-box {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    list-style: none;
+    width: 100%;
+    li {
+      width: calc(100% / 5);
+      text-align: center;
+      font-size: 1.2rem;
+      background-color: #5d62a0;
+      border-radius: 50px;
+      padding: 5px;
+      color: white;
+      margin-right: 10px;
+    }
+  }
+  @media screen and (max-width: 768px) {
+    h2 {
+      font-size: 1.5rem;
+    }
+    h4 {
+      color: #666666;
+      font-weight: bold;
+      font-size: 0.8rem;
+    }
+    #content {
+      font-size: 1rem;
+    }
+    #tag-box {
+      li {
+        width: calc(100% / 5);
+        text-align: center;
+        font-size: 0.7rem;
+        padding: 5px;
+        color: white;
       }
     }
     @media (orientation: landscape) {
-      .top-box {
-        display: flex;
-        justify-content: flex-start;
-        align-items: flex-end;
-        width: 100%;
-        border-bottom: 30px solid #feb35c;
-        h1 {
-          font-size: 2rem;
-          padding-right: 30px;
-        }
-        h3 {
-          font-size: 1rem;
-        }
-      }
       .bottom-box {
         h2 {
           font-size: 1.5rem;
@@ -294,52 +313,47 @@ const LeftBox = styled.section`
           li {
             width: calc(100% / 5);
             text-align: center;
-            font-size: 0.5rem;
+            font-size: 0.7rem;
             padding: 5px;
             color: white;
           }
         }
       }
     }
-    @media screen and (max-width: 576px) {
-      width: 100%;
-      height: 100vh;
-      border: none;
-      .top-box {
-        border-bottom: 10px solid #feb35c;
-        h1 {
-          font-size: 2rem;
-          padding-right: 30px;
-        }
-        h3 {
-          font-size: 1rem;
+  }
+  @media screen and (max-width: 576px) {
+    h2 {
+      font-size: 1.5rem;
+    }
+    h4 {
+      color: #666666;
+      font-weight: bold;
+      font-size: 0.8rem;
+    }
+    #content {
+      font-size: 1rem;
+      p {
+        width: 100%;
+        word-break: break-all;
+        img {
+          width: 330px;
+          max-height: 400px;
+          display: block;
+          object-fit: scale-down;
+          word-break: break-all;
         }
       }
-      .bottom-box {
-        h2 {
-          font-size: 1.5rem;
-        }
-        h4 {
-          color: #666666;
-          font-weight: bold;
-          font-size: 0.8rem;
-        }
-        #content {
-          font-size: 1rem;
-        }
-        #tag-box {
-          li {
-            width: calc(100% / 5);
-            text-align: center;
-            padding: 3px;
-            color: white;
-          }
-        }
+    }
+    #tag-box {
+      li {
+        width: calc(100% / 5);
+        text-align: center;
+        padding: 3px;
+        color: white;
       }
     }
   }
 `;
-
 const RightBox = styled.section`
   width: 34%;
   height: 100%;
@@ -364,7 +378,6 @@ const RightBox = styled.section`
   }
   @media screen and (max-width: 576px) {
     width: 100%;
-    height: 100vh;
     display: flex;
     flex-direction: column;
   }
@@ -373,7 +386,7 @@ const RightBox = styled.section`
 /* TODO:
 1. 기본 구조 * 
 2. 지도 API * 
-3. 태그 리스트 불러오기
+3. 태그 리스트 불러오기 *
 4. 반응형 *
 5. 스크롤 * 
 */

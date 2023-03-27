@@ -17,11 +17,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import partypeople.server.companion.dto.SubscriberParticipantDto;
-import partypeople.server.companion.entity.Participant;
-import partypeople.server.companion.entity.Subscriber;
-import partypeople.server.companion.mapper.SubscriberMapper;
+import partypeople.server.companion.mapper.ParticipantMapper;
 import partypeople.server.companion.service.ParticipantService;
-import partypeople.server.companion.service.SubscriberService;
 import partypeople.server.config.SecurityConfigurationTest;
 
 import java.util.ArrayList;
@@ -33,18 +30,21 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static partypeople.server.util.ApiDocumentUtils.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static partypeople.server.util.ApiDocumentUtils.getRequestPreProcessor;
+import static partypeople.server.util.ApiDocumentUtils.getResponsePreProcessor;
 
-@WebMvcTest(SubscriberController.class)
+@WebMvcTest(ParticipantController.class)
 @MockBean(JpaMetamodelMappingContext.class)
 @Import(SecurityConfigurationTest.class)
 @AutoConfigureRestDocs
-class SubscriberControllerTest {
+class ParticipantControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -53,53 +53,14 @@ class SubscriberControllerTest {
     private Gson gson;
 
     @MockBean
-    private SubscriberService subscriberService;
-
-    @MockBean
     private ParticipantService participantService;
 
     @MockBean
-    private SubscriberMapper mapper;
+    private ParticipantMapper mapper;
 
-    @DisplayName("Post Subscriber Test")
+    @DisplayName("Get Participants Test")
     @Test
-    void postSubscriberTest() throws Exception {
-        //given
-        SubscriberParticipantDto.Request request = new SubscriberParticipantDto.Request();
-        request.setMemberId(1L);
-
-        Subscriber subscriber = new Subscriber();
-        subscriber.setSubscriberId(1L);
-        long companionId = 1L;
-
-        String content = gson.toJson(request);
-
-        given(subscriberService.createSubscriber(Mockito.anyLong(), Mockito.anyLong())).willReturn(new Subscriber());
-
-        //when
-        ResultActions actions = mockMvc.perform(
-            post("/companions/{companion-id}/subscribers", companionId)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(content)
-        );
-
-        //then
-        actions
-            .andExpect(status().isOk())
-            .andDo(document("subscriber-post-subscriber",
-                getRequestPreProcessor(),
-                getResponsePreProcessor(),
-                pathParameters(
-                    parameterWithName("companion-id").description("동행글 식별자")
-                ),
-                requestFields(
-                    fieldWithPath("memberId").type(JsonFieldType.NUMBER).description("로그인한 회원 식별자")
-                )));
-    }
-
-    @DisplayName("Get Subscribers Test")
-    @Test
-    void getSubscribersTest() throws Exception {
+    void getParticipants() throws Exception {
         //given
         long companionId = 1L;
         SubscriberParticipantDto.Response response1 = new SubscriberParticipantDto.Response(
@@ -110,12 +71,12 @@ class SubscriberControllerTest {
         );
         List<SubscriberParticipantDto.Response> responses = List.of(response1, response2);
 
-        given(subscriberService.findSubscribersByCompanion(Mockito.anyLong())).willReturn(new ArrayList<Subscriber>());
-        given(mapper.subscribersToSubscriberResponses(Mockito.anyList())).willReturn(responses);
+        given(participantService.findParticipantsByCompanion(Mockito.anyLong())).willReturn(new ArrayList<>());
+        given(mapper.participantsToParticipantResponses(Mockito.anyList())).willReturn(responses);
 
         //when
         ResultActions actions = mockMvc.perform(
-            get("/companions/{companion-id}/subscribers", companionId)
+            get("/companions/{companion-id}/participants", companionId)
                 .accept(MediaType.APPLICATION_JSON)
         );
 
@@ -123,7 +84,7 @@ class SubscriberControllerTest {
         MvcResult result = actions
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.data").isArray())
-            .andDo(document("subscriber-get-subscribers",
+            .andDo(document("participant-get-participants",
                 getRequestPreProcessor(),
                 getResponsePreProcessor(),
                 pathParameters(
@@ -139,57 +100,23 @@ class SubscriberControllerTest {
                 ))).andReturn();
         List list = JsonPath.parse(result.getResponse().getContentAsString()).read("$.data");
         assertThat(list.size(), is(2));
+
     }
 
-    @DisplayName("Patch Subscriber Test")
+    @DisplayName("Delete Participant Test")
     @Test
-    void patchSubscriberTest() throws Exception {
+    void deleteParticipation() throws Exception {
         //given
         long companionId = 1L;
         SubscriberParticipantDto.Request request = new SubscriberParticipantDto.Request();
         request.setMemberId(1L);
         String content = gson.toJson(request);
 
-        willDoNothing().given(subscriberService).deleteSubscriber(Mockito.anyLong(), Mockito.anyLong());
-        given(participantService.createParticipant(Mockito.anyLong(), Mockito.anyLong())).willReturn(new Participant());
+        willDoNothing().given(participantService).deleteParticipant(Mockito.anyLong(), Mockito.anyLong());
 
         //when
         ResultActions actions = mockMvc.perform(
-            patch("/companions/{companion-id}/subscribers", companionId)
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(content)
-        );
-
-        //then
-        actions
-            .andExpect(status().isOk())
-            .andDo(document("subscriber-patch-subscriber",
-                getRequestPreProcessor(),
-                getResponsePreProcessor(),
-                pathParameters(
-                    parameterWithName("companion-id").description("동행글 식별자")
-                ),
-                requestFields(
-                    fieldWithPath("memberId").type(JsonFieldType.NUMBER).description("로그인한 회원 식별자")
-                )));
-    }
-
-    @DisplayName("Delete Subscriber Test")
-    @Test
-    void deleteSubscriberTest() throws Exception {
-        //given
-        long companionId = 1L;
-        SubscriberParticipantDto.Request request = new SubscriberParticipantDto.Request();
-        request.setMemberId(1L);
-        String content = gson.toJson(request);
-
-        willDoNothing().given(subscriberService).deleteSubscriber(Mockito.anyLong(), Mockito.anyLong());
-
-        //when
-        ResultActions actions = mockMvc.perform(
-            delete("/companions/{companion-id}/subscribers", companionId)
-                .accept(MediaType.APPLICATION_JSON)
+            delete("/companions/{companion-id}/participants", companionId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(content)
         );
@@ -197,7 +124,7 @@ class SubscriberControllerTest {
         //then
         actions
             .andExpect(status().isNoContent())
-            .andDo(document("subscriber-delete-subscriber",
+            .andDo(document("participant-delete-participant",
                 getRequestPreProcessor(),
                 getResponsePreProcessor(),
                 pathParameters(

@@ -51,6 +51,7 @@ const SearchMap = ({
           setMarkerPosition(latLng);
           setCenter(latLng);
           setSavedAddress(latLng.address);
+          setMarkerLocation(latLng);
         }
       });
     }
@@ -137,7 +138,7 @@ const SearchForm = styled.form`
   justify-content: space-between;
   > input {
     border-radius: 20px;
-    border: 1px solid #555555;
+    border: 1px solid #cecece;
     outline: none;
     width: 80%;
     height: 30px;
@@ -149,6 +150,7 @@ const SearchForm = styled.form`
     width: 20%;
     background-color: #feb35c;
     border-radius: 30px;
+    cursor: pointer;
   }
 `;
 const AddressRender = styled.div`

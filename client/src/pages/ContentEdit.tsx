@@ -49,6 +49,11 @@ const ContentEdit = () => {
     },
   };
 
+  //취소 라우터
+  const handleCancel = () => {
+    window.history.back();
+  };
+
   // 대륙 선택 옵션
   const [continentSelect, setContinentSelect] = useState('');
 
@@ -69,8 +74,6 @@ const ContentEdit = () => {
 
   // 여행 시작일
   const [startDate, setStartDate] = useState<Date | null>(null);
-  // 여행 종료일
-  const [endDate, setEndDate] = useState<Date | null>(null);
   // 세부 주소 정보
   const [savedAddress, setSavedAddress] = useState<string | null>(null);
   // lat, lng 위치 정보
@@ -119,10 +122,15 @@ const ContentEdit = () => {
   }, [continentNumber]);
 
   // 대륙 초기화시 나라,코드리셋
-  useEffect(() => {
+  // useEffect(() => {
+  //   setCountrySelect('국가선택');
+  //   setCountryCode('');
+  // }, []);
+  const handleContinentChange = (event: any) => {
+    setContinentSelect(event.target.value);
     setCountrySelect('국가선택');
     setCountryCode('');
-  }, [continentSelect]);
+  };
 
   let title = '대륙을 선택하세요!';
   let titleImg =
@@ -186,7 +194,7 @@ const ContentEdit = () => {
       });
       return;
     }
-    if (!startDate || !endDate) {
+    if (!startDate) {
       Swal.fire({
         icon: 'error',
         text: '날짜를 입력해주세요',
@@ -217,7 +225,6 @@ const ContentEdit = () => {
       titleInput &&
       contentInput &&
       startDate &&
-      endDate &&
       savedAddress &&
       continentSelect &&
       countrySelect !== '국가선택'
@@ -243,7 +250,8 @@ const ContentEdit = () => {
   return (
     <ContentAddContainer>
       <TitleBox style={{ backgroundImage: `url(${titleImg})` }}>
-        <h1>{title}</h1>
+        <ImageFilter></ImageFilter>
+        <h1>{title.toUpperCase()}</h1>
         <p>동행자를 모집하는 글을 작성해보세요!</p>
       </TitleBox>
       <ContentBox>
@@ -251,10 +259,7 @@ const ContentEdit = () => {
           <div>
             <label>
               대륙
-              <select
-                value={continentSelect}
-                onChange={event => setContinentSelect(event.target.value)}
-              >
+              <select value={continentSelect} onChange={handleContinentChange}>
                 <option value="대륙선택">대륙선택</option>
 
                 {Object.keys(countries).map((country, index) => {
@@ -291,20 +296,9 @@ const ContentEdit = () => {
               onChange={(date: Date) => setStartDate(date)}
               selectsStart
               startDate={startDate}
-              endDate={endDate}
               placeholderText="Start Date"
               dateFormat="yyyy-MM-dd"
-            />
-            ~
-            <DatePicker
-              selected={endDate}
-              onChange={(date: Date) => setEndDate(date)}
-              selectsEnd
-              startDate={startDate}
-              endDate={endDate}
-              minDate={startDate}
-              placeholderText="End Date"
-              dateFormat="yyyy-MM-dd"
+              minDate={new Date()}
             />
           </div>
         </div>
@@ -328,9 +322,14 @@ const ContentEdit = () => {
             }}
           />
         </div>
-        <button className="add-form" onClick={handleContentSubmit}>
-          다음
-        </button>
+        <div className="bottom-button">
+          <button className="add-form" onClick={handleCancel}>
+            작성 취소
+          </button>
+          <button className="add-form" onClick={handleContentSubmit}>
+            다음
+          </button>
+        </div>
       </ContentBox>
       {countryModal ? (
         <div className="overlay">
@@ -383,6 +382,7 @@ const ContentAddContainer = styled.div`
   align-items: center;
   .overlay {
     position: fixed;
+    z-index: 1000;
     top: 0;
     left: 0;
     right: 0;
@@ -393,6 +393,7 @@ const ContentAddContainer = styled.div`
 
 const TitleBox = styled.div`
   display: flex;
+  position: relative;
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -403,8 +404,11 @@ const TitleBox = styled.div`
   background-position: center;
   color: white;
   font-weight: bold;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
   > h1 {
     font-size: 4rem;
+    z-index: 20;
+    font-family: 'Archivo Black', sans-serif;
     @media screen and (max-width: 768px) {
       font-size: 3rem;
     }
@@ -414,6 +418,7 @@ const TitleBox = styled.div`
   }
   > p {
     font-size: 1rem;
+    z-index: 20;
     @media screen and (max-width: 768px) {
       font-size: 0.8rem;
     }
@@ -437,6 +442,7 @@ const ContentBox = styled.div`
           width: 120px;
           outline: none;
           cursor: pointer;
+          border: 1px solid #cecece;
         }
       }
     }
@@ -562,7 +568,7 @@ const ContentBox = styled.div`
   }
   .title-input {
     border-radius: 20px;
-    border: 1px solid #555555;
+    border: 1px solid #cecece;
     outline: none;
     width: 100%;
     height: 30px;
@@ -570,7 +576,7 @@ const ContentBox = styled.div`
   }
   .day-input {
     border-radius: 20px;
-    border: 1px solid #555555;
+    border: 1px solid #cecece;
     outline: none;
     width: 50%;
     height: 30px;
@@ -583,8 +589,25 @@ const ContentBox = styled.div`
     color: white;
     width: 96px;
     height: 36px;
-    font-size: 1.5rem;
+    font-size: 1rem;
     border-radius: 30px;
     cursor: pointer;
   }
+  .bottom-button {
+    display: flex;
+    width: 100%;
+    justify-content: space-around;
+    > :first-child {
+      background-color: #cecece;
+    }
+  }
+`;
+const ImageFilter = styled.section`
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: #000650;
+  opacity: 0.25;
 `;

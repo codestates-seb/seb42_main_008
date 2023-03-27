@@ -12,9 +12,15 @@ export const getDateString = (date: Date | string): DateStringObj => {
   const shortDateStr = `${month}/${day}`;
   let fullDateStr;
   if (month < 10) {
-    fullDateStr = `${year}-0${month}-${day}`;
+    fullDateStr = `${year}-0${month}-`;
   } else {
-    fullDateStr = `${year}-${month}-${day}`;
+    fullDateStr = `${year}-${month}-`;
+  }
+
+  if (day < 10) {
+    fullDateStr = fullDateStr + `0${day}`;
+  } else {
+    fullDateStr = fullDateStr + `${day}`;
   }
 
   return {

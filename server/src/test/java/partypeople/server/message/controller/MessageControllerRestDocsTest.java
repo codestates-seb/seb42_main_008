@@ -87,7 +87,7 @@ class MessageControllerRestDocsTest {
         actions
             .andExpect(status().isCreated())
             .andExpect(header().string("location", is(startsWith("/messages/"))))
-            .andDo(document("post-message",
+            .andDo(document("message-post-message",
                 getRequestPreProcessor(),
                 getResponsePreProcessor(),
                 requestFields(
@@ -128,7 +128,7 @@ class MessageControllerRestDocsTest {
             .andExpect(jsonPath("$.data.companionId").value(response.getCompanionId()))
             .andExpect(jsonPath("$.data.sender.id").value(2L))
             .andExpect(jsonPath("$.data.read").value(true))
-            .andDo(document("get-message",
+            .andDo(document("message-get-message",
                 getRequestPreProcessor(),
                 getResponsePreProcessor(),
                 pathParameters(
@@ -179,11 +179,11 @@ class MessageControllerRestDocsTest {
         MvcResult result = actions
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.data").isArray())
-            .andDo(document("get-message",
+            .andDo(document("message-get-messages",
                 getRequestPreProcessor(),
                 getResponsePreProcessor(),
                 requestParameters(
-                    parameterWithName("memberId").description("로그인 한 회원 식별자")
+                    parameterWithName("memberId").description("로그인한 회원 식별자")
                 ),
                 responseFields(
                     List.of(
@@ -204,6 +204,40 @@ class MessageControllerRestDocsTest {
         assertThat(list.size(), is(2));
     }
 
+    @DisplayName("Patch Message Test")
+    @Test
+    void patchMessageTest() throws Exception {
+        //given
+        long messageId = 1L;
+        MessageDto.Patch patch = new MessageDto.Patch();
+        patch.setRead(true);
+        String content = gson.toJson(patch);
+
+        willDoNothing().given(messageService).changeMessageStatus(Mockito.anyLong(), Mockito.anyBoolean());
+
+        //when
+        ResultActions actions = mockMvc.perform(
+            patch("/messages/{message-id}", messageId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(content)
+        );
+
+        //then
+        actions
+            .andExpect(status().isOk())
+            .andDo(document("message-patch-message",
+                getRequestPreProcessor(),
+                getResponsePreProcessor(),
+                pathParameters(
+                    parameterWithName("message-id").description("쪽지 식별자")
+                ),
+                requestFields(
+                    List.of(
+                        fieldWithPath("read").type(JsonFieldType.BOOLEAN).description("쪽지 읽은 상태")
+                    )
+                )));
+    }
+
     @DisplayName("Delete Message Test")
     @Test
     void deleteMessageTest() throws Exception{
@@ -220,7 +254,7 @@ class MessageControllerRestDocsTest {
         //then
         actions
             .andExpect(status().isNoContent())
-            .andDo(document("delete-message",
+            .andDo(document("message-delete-message",
                 getRequestPreProcessor(),
                 getResponsePreProcessor(),
                 pathParameters(

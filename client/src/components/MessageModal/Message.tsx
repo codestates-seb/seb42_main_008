@@ -18,13 +18,14 @@ interface NoteMessage {
 }
 interface Props {
   note: NoteMessage;
+  setNoteModal: any;
 }
 
 interface IMessageBoxProps {
   isRead: boolean;
 }
 
-const Message = ({ note }: Props) => {
+const Message = ({ note, setNoteModal }: Props) => {
   const [isNoteOpen, setIsNoteOpen] = useState(false);
   const [isReplyOpen, setIsReplyOpen] = useState(false);
   //읽은 쪽지 안읽은 쪽지 상태 구분
@@ -65,7 +66,9 @@ const Message = ({ note }: Props) => {
         await customAxios
           .delete(`/messages/${note.messageId}`)
           .then(() => {
-            Swal.fire('Deleted!', 'Your file has been deleted.', 'success');
+            Swal.fire('Deleted!', '쪽지가 삭제되었습니다!', 'success');
+            setIsNoteOpen(false);
+            setNoteModal(false);
           })
           .catch(error => {
             console.log(error);
@@ -86,7 +89,6 @@ const Message = ({ note }: Props) => {
       </div>
       <div className="message-content" onClick={handleOpenNote}>
         {note.content}
-        {String(isRead)}
       </div>
       {isNoteOpen ? (
         <div className="overlay">
@@ -96,6 +98,8 @@ const Message = ({ note }: Props) => {
             handleReplyModal={handleReplyModal}
             handelDeleteNote={handelDeleteNote}
             handleOverlayClick={handleOverlayClick}
+            setIsNoteOpen={setIsNoteOpen}
+            setNoteModal={setNoteModal}
           />
         </div>
       ) : null}

@@ -23,6 +23,7 @@ const SignUp = () => {
 
   const navigate = useNavigate();
 
+  // * 이메일 유효성 검사
   const handleChangeEmail = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const emailRegex =
@@ -41,6 +42,7 @@ const SignUp = () => {
     []
   );
 
+  // * 닉네임 유효성 검사
   const handleChangeNickame = useCallback<
     (event: React.ChangeEvent<HTMLInputElement>) => void
   >(event => {
@@ -54,7 +56,7 @@ const SignUp = () => {
     }
   }, []);
 
-  // 닉네임 중복확인 버튼
+  // * 닉네임 중복확인 버튼
   const handleCheckNickname = async () => {
     await customAxios
       .post(`/members/nickname`, {
@@ -63,7 +65,6 @@ const SignUp = () => {
       .then(res => {
         if (res.status === 200) {
           Swal.fire('', '사용가능한 닉네임 입니다.');
-          console.log(res.status);
         }
       })
       .catch(error => {
@@ -73,6 +74,7 @@ const SignUp = () => {
       });
   };
 
+  // * 비밀번호 유효성 검사
   const handleChangePassword = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const passwordRegex = /^(?=.*[a-zA-Z])(?=.*[0-9]).{8,25}$/;
@@ -92,6 +94,7 @@ const SignUp = () => {
     []
   );
 
+  // * 비밀번호 확인 유효성 검사
   const handleChangePwCheck = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const passwordConfirmCurrent = event.target.value;
@@ -130,6 +133,9 @@ const SignUp = () => {
         })
         .catch(error => {
           console.log(error);
+          Swal.fire('', '중복된 이메일 입니다.');
+          setIsEmail(false);
+          setEmailMessage('중복된 이메일 입니다.');
         });
     }
   };
@@ -142,7 +148,6 @@ const SignUp = () => {
           <div className="group">
             <div className="wrapper">
               <label htmlFor="nickname">이메일</label>
-              {/* <div className="btn-check">중복확인</div> */}
             </div>
             <input type="text" id="email" onChange={handleChangeEmail}></input>
             {email.length > 0 && (

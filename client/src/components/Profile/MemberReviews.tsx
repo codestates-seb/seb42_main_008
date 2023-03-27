@@ -6,6 +6,9 @@ import Swal from 'sweetalert2';
 import { useEffect, useState } from 'react';
 import customAxios from 'api/customAxios';
 import { useParams } from 'react-router-dom';
+import { useRecoilValue } from 'recoil';
+import { userInfo } from 'states/userState';
+import Loader from 'components/Loader';
 
 interface EmojiProps {
   score: number;
@@ -23,11 +26,14 @@ const Emoji = ({ score }: EmojiProps) => {
 const MemberReviews = () => {
   const { memberId } = useParams();
   const [reviews, setReviews] = useState<Review[] | []>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const loginUser = useRecoilValue(userInfo);
 
   const handleSirenClick = () => {
     Swal.fire({
       icon: 'info',
-      text: '신고 기능은 추후에 추가될 예정입니다!',
+      title: '이 리뷰에 문제가 있나요?',
+      text: '리뷰 신고 기능은 추후에 추가될 예정입니다! 🥲',
     });
   };
 
@@ -36,6 +42,7 @@ const MemberReviews = () => {
       .get(`/members/${memberId}/reviews`)
       .then(resp => {
         setReviews(resp.data.data);
+        setIsLoading(false);
       })
       .catch(error => {
         console.log(error);
@@ -44,29 +51,31 @@ const MemberReviews = () => {
 
   useEffect(() => {
     getReviewData();
-  }, []);
+  }, [memberId]);
 
   return (
     <>
-      {reviews && (
-        <ReviewWrapper>
-          {reviews.length !== 0 ? (
-            reviews.map((item, idx) => (
-              <ReviewItem key={idx}>
-                <p>{item.content}</p>
-                <div className="icons">
-                  <Emoji score={item.score} />
+      <ReviewWrapper>
+        {isLoading ? (
+          <Loader />
+        ) : reviews.length !== 0 ? (
+          reviews.map((item, idx) => (
+            <ReviewItem key={idx}>
+              <p>{item.content}</p>
+              <div className="icons">
+                <Emoji score={item.score} />
+                {loginUser.memberId.toString() === memberId?.toString() && (
                   <span className="siren" onClick={handleSirenClick}>
                     <GiSiren size={27} color="red" />
                   </span>
-                </div>
-              </ReviewItem>
-            ))
-          ) : (
-            <p>아직 작성된 리뷰가 없습니다!</p>
-          )}
-        </ReviewWrapper>
-      )}
+                )}
+              </div>
+            </ReviewItem>
+          ))
+        ) : (
+          <p>아직 작성된 리뷰가 없습니다!</p>
+        )}
+      </ReviewWrapper>
     </>
   );
 };

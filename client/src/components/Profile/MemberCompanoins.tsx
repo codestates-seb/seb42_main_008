@@ -1,4 +1,5 @@
 import {
+  CompanionLoading,
   MemberCompanionsProps,
   MyCompanion,
 } from 'interfaces/Profile.interface';
@@ -16,16 +17,33 @@ const MemberCompanoins = ({ member }: MemberCompanionsProps) => {
   const [participants, setParticipants] = useState<MyCompanion[] | []>([]);
   const [writers, setWriters] = useState<MyCompanion[] | []>([]);
   const [titleHead, setTitleHead] = useState<string>('');
+  const [isLoading, setIsLoading] = useState<CompanionLoading>({
+    subs: true,
+    part: true,
+    writ: true,
+  });
   const loginUser = useRecoilValue(userInfo);
 
   const getData = async (dataType: string) => {
     await customAxios.get(`members/${memberId}/${dataType}`).then(resp => {
       if (dataType === 'subscribers') {
         setSubscribers(resp.data.data);
+        setIsLoading(cur => ({
+          ...cur,
+          subs: false,
+        }));
       } else if (dataType === 'participants') {
         setParticipants(resp.data.data);
+        setIsLoading(cur => ({
+          ...cur,
+          part: false,
+        }));
       } else {
         setWriters(resp.data.data);
+        setIsLoading(cur => ({
+          ...cur,
+          writ: false,
+        }));
       }
     });
   };
@@ -50,16 +68,19 @@ const MemberCompanoins = ({ member }: MemberCompanionsProps) => {
         datas={writers}
         titleHead={titleHead}
         titleBody="작성한 "
+        isLoading={isLoading.writ}
       />
       <ListComponent
         datas={participants}
         titleHead={titleHead}
         titleBody="참여한 "
+        isLoading={isLoading.part}
       />
       <ListComponent
         datas={subscribers}
         titleHead={titleHead}
         titleBody="신청한 "
+        isLoading={isLoading.subs}
       />
     </CompanoinsWrapper>
   );

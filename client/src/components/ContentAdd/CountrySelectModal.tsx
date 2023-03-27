@@ -1,8 +1,9 @@
-import React, { Dispatch, SetStateAction } from 'react';
+import React, { Dispatch, SetStateAction, useState } from 'react';
 import styled from 'styled-components';
 import { GrClose } from 'react-icons/gr';
 import countries from '../../assets/countries.json';
 import Swal from 'sweetalert2';
+import ModalScrollDisable from 'utils/ModalScrollDisable';
 const countriesPick: Countries = countries;
 type Countries = {
   [key: string]: {
@@ -14,7 +15,7 @@ type Countries = {
 interface Props {
   setCountryModal: Dispatch<SetStateAction<boolean>>;
   continentSelect: string;
-  setCountrySelect: Dispatch<SetStateAction<string>>;
+  setCountrySelect: Dispatch<SetStateAction<string | undefined>>;
   setCountryCode: Dispatch<SetStateAction<string>>;
 }
 const CountrySelectModal = ({
@@ -46,8 +47,12 @@ const CountrySelectModal = ({
   // 국가이름 한글만 골라내기
   const koreanRegex = /[가-힣]+/g;
 
+  //나라 검색 필터 추가
+  const [searchCountry, setSearchCountry] = useState('');
+
   return (
     <CountryBox>
+      <ModalScrollDisable />
       <div className="country-box">
         <div className="country-top">
           <div className="country-title">나라</div>
@@ -58,18 +63,21 @@ const CountrySelectModal = ({
         <input
           className="country-input"
           placeholder="나라를 입력해주세요.."
+          onChange={event => setSearchCountry(event.target.value)}
         ></input>
         <ul className="country-content">
-          {countriesPick[continentSelect].map((country, index: number) => {
-            return (
-              <li
-                key={index}
-                onClick={() => handleCountry(country.name, country.code)}
-              >
-                {country.name.match(koreanRegex)?.join('')}
-              </li>
-            );
-          })}
+          {countriesPick[continentSelect]
+            .filter(country => country.name.includes(searchCountry))
+            .map((country, index: number) => {
+              return (
+                <li
+                  key={index}
+                  onClick={() => handleCountry(country.name, country.code)}
+                >
+                  {country.name.match(koreanRegex)?.join('')}
+                </li>
+              );
+            })}
         </ul>
       </div>
     </CountryBox>
@@ -90,6 +98,8 @@ const CountryBox = styled.div`
   transform: translate(50%, -50%);
   flex-direction: column;
   font-size: 2rem;
+  overflow-y: hidden;
+  z-index: 1000;
   @media screen and (max-width: 768px) {
     width: 400px;
     height: 400px;

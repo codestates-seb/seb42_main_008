@@ -31,7 +31,7 @@ const CompanionTab = ({
 
   return (
     <Container>
-      <TabBox>
+      <StyledTabBox>
         {companionTabs.map((el: contentsTab, index: number) => (
           <li
             key={index}
@@ -41,7 +41,7 @@ const CompanionTab = ({
             {el.tabName}
           </li>
         ))}
-      </TabBox>
+      </StyledTabBox>
       {currentTab === 0 ? (
         <Companion
           detail={detail}
@@ -85,12 +85,5 @@ const Container = styled.section`
   }
   @media screen and (max-width: 576px) {
     height: 100%;
-  }
-`;
-
-const TabBox = styled(StyledTabBox)`
-  > li {
-    width: 50%;
-    text-align: center;
   }
 `;

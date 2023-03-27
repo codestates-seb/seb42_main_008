@@ -1,6 +1,10 @@
 import styled from 'styled-components';
 
 export const StyledCompanionList = styled.ul`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: column;
   text-align: left;
   list-style: none;
   width: 100%;
@@ -17,11 +21,18 @@ export const StyledCompanionList = styled.ul`
     align-items: center;
     font-size: 1.2rem;
     padding: 5px;
+    cursor: pointer;
+    transition: all 0.2s ease 0s;
+    &:hover {
+      transition: all 0.2s ease 0s;
+      color: black;
+      background-color: white;
+      box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+    }
     .companion-info {
       display: flex;
       justify-content: flex-start;
       align-items: center;
-      width: 50%;
       .img {
         margin-right: 5px;
         width: 30px;
@@ -30,10 +41,11 @@ export const StyledCompanionList = styled.ul`
         background-repeat: no-repeat;
         background-size: cover;
         background-position: center;
+        object-fit: scale-down;
       }
     }
     .btn-wrapper {
-      width: 50%;
+      width: 30%;
       display: flex;
       justify-content: space-around;
       > :nth-child(1) {
@@ -44,11 +56,18 @@ export const StyledCompanionList = styled.ul`
       }
       .btn {
         cursor: pointer;
-        padding: 0px 10px;
+        padding: 0px 6px;
         font-size: 1rem;
         color: white;
         border: none;
         border-radius: 15px;
+        transition: all 0.2s ease 0s;
+        &:hover {
+          transition: all 0.2s ease 0s;
+          color: black;
+          background-color: white;
+          box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+        }
       }
     }
   }
@@ -85,6 +104,10 @@ export const StyledTabBox = styled.ul`
   list-style: none;
   width: 100%;
   cursor: pointer;
+  > li {
+    width: 50%;
+    text-align: center;
+  }
   .menu {
     padding: 15px;
   }
@@ -113,10 +136,8 @@ export const StyledModal = styled.div`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 50%;
-  height: 40%;
+  width: 600px;
   text-align: center;
   border-radius: 30px;
-  padding: 30px;
-  box-shadow: 5px 5px 10px 5px rgba(0, 0, 0, 0.25);
+  padding: 30px 40px;
 `;

@@ -25,12 +25,17 @@ const SecondSection = () => {
         <Desc>
           {scrollY > 200 && (
             <>
-              <h1 className="second-title">Party People</h1>
+              <h1 className="second-title">
+                온라인에서 오프라인까지
+                <br />
+                즐거운 동행을 시작해보세요!
+              </h1>
               <p className="second-desc">
-                Lorem Ipsum is simply dummy text of the printing and typesetting
-                industry. Lorem Ipsum has been the industry&apos;s standard
-                dummy text ever since the 1500s, when an unknown printer took a
-                galley of type and scrambled it to make a type specimen book.
+                Party People은 홀로 여행하는 여행자들을 위해 함께 동행할 수 있는
+                동행자를 찾는 서비스입니다.
+                <br />
+                새로운 여행, 함께 할 동행자를 찾고 있나요? 함께하는 즐거움을
+                더해줄 파트너를 만나보세요!
               </p>
             </>
           )}
@@ -188,6 +193,8 @@ const Desc = styled.div`
   .second-title {
     width: 100%;
     margin-bottom: 10px;
+    font-size: 1.8rem;
+    font-family: 'Do Hyeon', sans-serif;
   }
 
   .second-desc {
@@ -200,12 +207,18 @@ const Desc = styled.div`
     }
   }
   @media screen and (max-width: 992px) {
+    .second-title {
+      font-size: 1.5rem;
+    }
     .second-desc {
       line-height: 1.4rem;
       font-size: 0.9rem;
     }
   }
   @media screen and (max-width: 768px) {
+    .second-title {
+      font-size: 1.8rem;
+    }
     .second-desc {
       line-height: 1.7rem;
       font-size: 1rem;
@@ -213,7 +226,7 @@ const Desc = styled.div`
   }
   @media screen and (max-width: 576px) {
     .second-title {
-      font-size: 1.2rem;
+      font-size: 1.5rem;
     }
     .second-desc {
       line-height: 1.4rem;

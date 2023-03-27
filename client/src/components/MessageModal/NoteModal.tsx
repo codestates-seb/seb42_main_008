@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import { FaChevronRight } from 'react-icons/fa';
 import Message from './Message';
 import { useRecoilValue } from 'recoil';
 import { userInfo } from 'states/userState';
 import customAxios from 'api/customAxios';
+import ModalScrollDisable from 'utils/ModalScrollDisable';
+import { css } from 'styled-components';
 
 type Props = {
-  noteModal: boolean;
   setNoteModal: (newValue: boolean) => void;
+  animationMode: boolean;
+  setAnimationMode: (newValue: boolean) => void;
 };
 
 interface NoteMessage {
@@ -23,10 +26,21 @@ interface NoteMessage {
   };
 }
 
-const NoteModal = ({ setNoteModal }: Props) => {
+const NoteModal = ({
+  animationMode,
+  setAnimationMode,
+  setNoteModal,
+}: Props) => {
   const HandleModal = () => {
-    setNoteModal(false);
+    setAnimationMode(false);
+    setTimeout(() => setNoteModal(false), 290);
   };
+
+  // * 노트모달 애니메이션 적용용 코드
+  const [noteRender, setNoteRender] = useState(animationMode);
+  useEffect(() => {
+    if (animationMode) setNoteRender(true);
+  }, [animationMode]);
 
   const [allNotes, setAllNotes] = useState<NoteMessage[]>([]);
   // 멤버아이디
@@ -42,33 +56,44 @@ const NoteModal = ({ setNoteModal }: Props) => {
   }, []);
 
   return (
-    <SideBar>
-      <div className="modal-contents">
-        <div className="note-menu">
-          <FaChevronRight
-            onClick={HandleModal}
-            className="outmodal"
-            size="2rem"
-            cursor="pointer"
-            color="#555555"
-          />
-          <div>내쪽지함</div>
-        </div>
-        <ul className="notes">
-          {allNotes
-            .sort((a, b) => b.messageId - a.messageId)
-            .map(note => {
-              return <Message key={note.messageId} note={note} />;
-            })}
-        </ul>
-      </div>
-    </SideBar>
+    <>
+      {noteRender && (
+        <SideBar animationMode={animationMode}>
+          <ModalScrollDisable />
+          <div className="modal-contents">
+            <div className="note-menu">
+              <FaChevronRight
+                onClick={HandleModal}
+                className="outmodal"
+                size="2rem"
+                cursor="pointer"
+                color="#555555"
+              />
+              <div>내쪽지함</div>
+            </div>
+            <ul className="notes">
+              {allNotes
+                .sort((a, b) => b.messageId - a.messageId)
+                .map(note => {
+                  return (
+                    <Message
+                      key={note.messageId}
+                      note={note}
+                      setNoteModal={setNoteModal}
+                    />
+                  );
+                })}
+            </ul>
+          </div>
+        </SideBar>
+      )}
+    </>
   );
 };
 
 export default NoteModal;
 
-const SideBar = styled.nav`
+const SideBar = styled.nav<{ animationMode: boolean }>`
   display: flex;
   flex-direction: column;
   position: fixed;
@@ -81,6 +106,7 @@ const SideBar = styled.nav`
   border-left: 1px solid black;
   color: black;
   overflow: auto;
+  transition: 0.3s;
 
   .modal-contents {
     position: relative;
@@ -103,4 +129,37 @@ const SideBar = styled.nav`
     margin-top: 10px;
     margin-bottom: 100px;
   }
+
+  animation: ${props =>
+    props.animationMode
+      ? css`
+          ${slideIn} ease-in-out 0.3s
+        `
+      : css`
+          ${slideOut} ease-in-out 0.4s
+        `};
+
+  @media screen and (max-width: 768px) {
+    width: 60%;
+  }
+  @media screen and (max-width: 576px) {
+    width: 70%;
+  }
+`;
+
+const slideIn = keyframes`
+from {
+  transform: translateX(500px)
+}
+to {
+  transform: translateX(0)
+}
+`;
+const slideOut = keyframes`
+from {
+  transform: translateX(0)
+}
+to {
+  transform: translateX(500px)
+}
 `;

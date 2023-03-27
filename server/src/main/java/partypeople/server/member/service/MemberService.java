@@ -34,6 +34,7 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 @Slf4j
 public class MemberService {
+    private final static int NICKNAME_MAX_SIZE = 10;
     private final CompanionRepository companionRepository;
     private final MemberRepository memberRepository;
     private final CustomBeanUtils<Member> beanUtils;
@@ -47,14 +48,16 @@ public class MemberService {
     public Member createMember(Member member) {
         verifyExistsMember(member);
 
-        String encryptedPassword = passwordEncoder.encode(member.getPassword());
-        member.setPassword(encryptedPassword);
-
+        member.setPassword(encryptedPassword(member.getPassword()));
+        member.setScore(50);
         List<String> roles = authorityUtils.createRoles(member.getEmail());
         member.setRoles(roles);
 
         Member savedMember = memberRepository.save(member);
         return savedMember;
+    }
+    public String encryptedPassword(String password) {
+        return passwordEncoder.encode(password);
     }
     @Transactional(readOnly = true)
     public Member findMember(Long memberId) {
@@ -86,7 +89,8 @@ public class MemberService {
         Member member = findVerifiedMemberById(memberId);
 
         if (passwordEncoder.matches(password, member.getPassword())) {
-            member.setMemberStatus(Member.MemberStatus.MEMBER_QUIT);
+//            member.setMemberStatus(Member.MemberStatus.MEMBER_QUIT);
+            memberRepository.delete(member);
         } else {
             throw new BusinessLogicException(ExceptionCode.PASSWORD_NOT_MATCH);
         }
@@ -98,9 +102,9 @@ public class MemberService {
         Member findMember = optionalMember
             .orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
 
-        if(findMember.getMemberStatus().equals(Member.MemberStatus.MEMBER_QUIT)) {
-            throw new BusinessLogicException(ExceptionCode.WITHDRAWAL_MEMBER);
-        }
+//        if(findMember.getMemberStatus().equals(Member.MemberStatus.MEMBER_QUIT)) {
+//            throw new BusinessLogicException(ExceptionCode.WITHDRAWAL_MEMBER);
+//        }
 
         return findMember;
     }
@@ -110,9 +114,9 @@ public class MemberService {
         Member findMember = optionalMember
             .orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
 
-        if(findMember.getMemberStatus().equals(Member.MemberStatus.MEMBER_QUIT)) {
-            throw new BusinessLogicException(ExceptionCode.WITHDRAWAL_MEMBER);
-        }
+//        if(findMember.getMemberStatus().equals(Member.MemberStatus.MEMBER_QUIT)) {
+//            throw new BusinessLogicException(ExceptionCode.WITHDRAWAL_MEMBER);
+//        }
         return findMember;
     }
 
@@ -146,7 +150,7 @@ public class MemberService {
         } catch (SignatureException se) {
             throw new BusinessLogicException(ExceptionCode.SIGNATURE_ERROR);
         } catch (ExpiredJwtException ee) {
-            throw new BusinessLogicException(ExceptionCode.EXPIRED_ERROR);
+            throw new BusinessLogicException(ExceptionCode.AT_EXPIRED_ERROR);
         } catch (Exception e) {
             throw new BusinessLogicException(ExceptionCode.ACCESS_TOKEN_ERROR);
         }
@@ -210,7 +214,20 @@ public class MemberService {
             throw new RuntimeException(e);
         }
     }
-    private String generateRandomPassword() {
+
+    public void oauthPassword(String email,String password) {
+        String subject = "임시 비밀번호 발급";
+        String body = "다음은 당신의 임시 비밀번호 입니다(자체 로그인/회원 탈퇴에 필요) ! : " + password;
+
+        try {
+            mailService.sendEmail(email,subject,body);
+        } catch (Exception e) {
+            System.out.println("e.getMessage() = " + e.getMessage());
+            throw new RuntimeException(e);
+        }
+    }
+
+    public String generateRandomPassword() {
         String upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         String lower = upper.toLowerCase(Locale.ROOT);
         String digits = "0123456789";
@@ -221,5 +238,32 @@ public class MemberService {
             password[i] = alphanum.charAt(random.nextInt(alphanum.length()));
         }
         return new String(password);
+    }
+
+    public String oauthNickCheck(String name) {
+        List<String> nicknames = memberRepository.findAllNicknames();
+
+        if (name.length() > NICKNAME_MAX_SIZE) {
+            name = name.substring(0,10);
+        }
+
+        if (!(nicknames.contains(name))) {
+            return name;
+        }
+
+        String randomNickname;
+        do{
+            randomNickname = generateRandomString();
+        } while (nicknames.contains(randomNickname));
+
+        return randomNickname;
+    }
+
+    private String generateRandomString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("G_");
+        sb.append(generateRandomPassword());
+
+        return sb.toString();
     }
 }

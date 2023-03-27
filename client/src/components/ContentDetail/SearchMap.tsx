@@ -1,4 +1,5 @@
 import { GoogleMap, MarkerF, useLoadScript } from '@react-google-maps/api';
+import Loader from 'components/Loader';
 import { MdLocationOn } from 'react-icons/md';
 import styled from 'styled-components';
 
@@ -14,7 +15,6 @@ const SearchMap = ({ detail }: any) => {
 
   return isLoaded ? (
     <MapContent>
-      {/* <LoadScript googleMapsApiKey={googleMapKey}> */}
       <GoogleMap mapContainerStyle={containerStyle} center={center} zoom={13}>
         <MarkerF position={center} />
       </GoogleMap>
@@ -22,10 +22,11 @@ const SearchMap = ({ detail }: any) => {
         <LocationPin />
         {detail.address}
       </MapPlace>
-      {/* </LoadScript> */}
     </MapContent>
   ) : (
-    <></>
+    <LoaderContainer>
+      <Loader />
+    </LoaderContainer>
   );
 };
 
@@ -39,6 +40,11 @@ const containerStyle = {
 const MapContent = styled.section`
   padding: 10px;
   width: 100%;
+`;
+const LoaderContainer = styled(MapContent)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 const MapPlace = styled.div`
   background-color: white;

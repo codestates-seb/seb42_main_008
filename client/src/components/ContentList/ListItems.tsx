@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { FaLongArrowAltRight, FaMapMarkerAlt } from 'react-icons/fa';
 import Swal from 'sweetalert2';
 import { ListItemProps } from 'interfaces/ContentList.interface';
@@ -8,10 +8,11 @@ import { useRecoilValue } from 'recoil';
 import { loginState } from 'states/userState';
 
 const ListItems = ({ listData, isLoading }: ListItemProps) => {
+  const { continent, countryCode } = useParams();
   const navigate = useNavigate();
   const isLogin = useRecoilValue(loginState);
 
-  const handleClickItem = (id: number) => {
+  const handleItemClick = (id: number) => {
     if (!isLogin) {
       Swal.fire({
         icon: 'question',
@@ -35,13 +36,42 @@ const ListItems = ({ listData, isLoading }: ListItemProps) => {
     navigate(`/companions/${id}`);
   };
 
+  const handleAddTextClick = () => {
+    if (isLogin) {
+      navigate('/add', {
+        state: {
+          continent,
+          countryCode,
+        },
+      });
+    } else {
+      Swal.fire({
+        icon: 'question',
+        title: '아직 로그인하지 않으셨나요?',
+        text: '동행글을 작성하고 싶으시다면 로그인 해주세요🥲',
+        showDenyButton: true,
+        showCloseButton: true,
+        confirmButtonText: '로그인 하러가기',
+        denyButtonText: `회원가입 하러가기`,
+        denyButtonColor: '#FEB35C',
+        confirmButtonColor: '#5D62A0',
+      }).then(result => {
+        if (result.isConfirmed) {
+          navigate('/login');
+        } else if (result.isDenied) {
+          navigate('/signup');
+        }
+      });
+    }
+  };
+
   return (
     <ItemListsContainer>
       {listData.length !== 0
         ? listData.map((item, idx) => (
             <ListItem
               key={idx}
-              onClick={() => handleClickItem(item.companionId)}
+              onClick={() => handleItemClick(item.companionId)}
             >
               <h1 className="item-date">
                 {getDateString(item.date).shortDateStr}
@@ -59,8 +89,8 @@ const ListItems = ({ listData, isLoading }: ListItemProps) => {
                 ))}
               </TagsList>
               <Flag isDone={item.companionStatus}></Flag>
-              <FlagText>
-                {item.companionStatus ? '모집완료' : '모집중'}
+              <FlagText isDone={item.companionStatus}>
+                {item.companionStatus ? '완료' : '모집중'}
               </FlagText>
               {item.companionStatus && <DoneItem></DoneItem>}
             </ListItem>
@@ -68,12 +98,12 @@ const ListItems = ({ listData, isLoading }: ListItemProps) => {
         : !isLoading && (
             <EmptyList>
               아직 아무도 동행을 찾고있지 않아요 😢
-              <Link to="/add">
+              <div className="content-add-text" onClick={handleAddTextClick}>
                 직접 작성해 보세요!
-                <span>
+                <span className="icon">
                   <FaLongArrowAltRight />
                 </span>
-              </Link>
+              </div>
             </EmptyList>
           )}
     </ItemListsContainer>
@@ -206,10 +236,12 @@ const Flag = styled.div<{ isDone: boolean }>`
   z-index: 2;
 `;
 
-export const FlagText = styled.p`
+export const FlagText = styled.p<{ isDone: boolean }>`
   position: absolute;
-  top: 20px;
-  left: 10px;
+  /* top: 20px; */
+  top: ${props => (props.isDone ? '18px' : '19px')};
+  left: ${props => (props.isDone ? '16px' : '11px')};
+  /* left: 10px; */
   color: #fff;
   font-weight: 800;
   -webkit-transform: rotate(-45deg);
@@ -242,11 +274,12 @@ const EmptyList = styled.div`
     align-items: center;
     justify-content: center;
   }
-  > a {
+  .content-add-text {
     color: #5d62a0;
     gap: 3px;
+    cursor: pointer;
     :hover {
-      span {
+      .icon {
         position: relative;
         left: 5px;
       }

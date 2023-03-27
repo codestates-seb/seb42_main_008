@@ -73,7 +73,8 @@ public class SecurityConfiguration {
                 .antMatchers(HttpMethod.GET,
                     "/companions/continents",
                     "/companions/nations",
-                    "/companions/search").permitAll()
+                    "/companions/search",
+                    "/messages/not-read/*").permitAll()
                 .antMatchers(
                     "/companions/**",
                     "/messages/**",
@@ -104,7 +105,6 @@ public class SecurityConfiguration {
             .getBuilder("google")
             .clientId(clientId)
             .clientSecret(clientSecret)
-//            .redirectUri()
             .build();
     }
 

@@ -11,6 +11,7 @@ export const StyledButton = styled.button`
   font-size: 1.2rem;
   transition: 0.3s;
   border: none;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
   cursor: pointer;
 
   :hover,

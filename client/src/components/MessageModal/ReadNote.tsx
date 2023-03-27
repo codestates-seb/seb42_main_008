@@ -1,7 +1,9 @@
 import React from 'react';
 import { FaRegEnvelope } from 'react-icons/fa';
 import { GrClose } from 'react-icons/gr';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import ModalScrollDisable from 'utils/ModalScrollDisable';
 
 interface NoteMessage {
   messageId: number;
@@ -20,6 +22,8 @@ interface Props {
   handleReplyModal: React.MouseEventHandler<HTMLButtonElement>;
   handelDeleteNote: React.MouseEventHandler<HTMLButtonElement>;
   handleOverlayClick: React.MouseEventHandler<HTMLDivElement>;
+  setIsNoteOpen: any;
+  setNoteModal: any;
 }
 
 const ReadNote = ({
@@ -28,9 +32,20 @@ const ReadNote = ({
   handleReplyModal,
   handelDeleteNote,
   handleOverlayClick,
+  setIsNoteOpen,
+  setNoteModal,
 }: Props) => {
+  //해당 동행글로 이동
+  const navigate = useNavigate();
+  const handleNavCompanion = () => {
+    navigate(`/companions/${note.companionId}`);
+    setIsNoteOpen(false);
+    setNoteModal(false);
+  };
+
   return (
     <ReadBox onClick={handleOverlayClick}>
+      <ModalScrollDisable />
       <div className="note-box">
         <div className="note-top">
           <div className="note-title">
@@ -48,7 +63,11 @@ const ReadNote = ({
           <button className="reply" onClick={handleReplyModal}>
             답장하기
           </button>
-        ) : null}
+        ) : (
+          <button className="reply" onClick={handleNavCompanion}>
+            동행글 보러가기
+          </button>
+        )}
         <button className="delete" onClick={handelDeleteNote}>
           쪽지 삭제
         </button>
@@ -109,10 +128,11 @@ const ReadBox = styled.div`
   .modal-out {
     display: flex;
     align-items: center;
+    cursor: pointer;
   }
   .note-content {
     display: flex;
-    background-color: #d9d9d9;
+    background-color: #e6e4e4;
     margin-top: 15px;
     height: 80%;
     width: 100%;

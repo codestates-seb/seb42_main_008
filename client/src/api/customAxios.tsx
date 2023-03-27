@@ -2,14 +2,13 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 import { getCookie, setCookie } from 'utils/userCookies';
 
-axios.defaults.withCredentials = true;
-
 const customAxios = axios.create({
   baseURL: process.env.REACT_APP_SERVER,
   headers: {
     'Content-Type': 'application/json',
     'Access-Control-Allow-Origin': '*',
   },
+  withCredentials: true,
 });
 
 customAxios.interceptors.request.use(config => {
@@ -49,8 +48,6 @@ customAxios.interceptors.response.use(
           .then(resp => {
             setCookie('accessToken', resp.headers.authorization, {
               path: '/',
-              sameSite: 'none',
-              secure: true,
             });
           });
         const newAccessToken = getCookie('accessToken');
@@ -58,13 +55,16 @@ customAxios.interceptors.response.use(
         return axios(originalRequest);
       }
       // & Refresh Token 만료시 로그아웃
-      else if (error.response.data.message === 'Token Expired Error') {
+      else if (
+        error.response.data.message === 'Token Expired Error' ||
+        error.response.data.message === '유효한 토큰이 아닙니다.'
+      ) {
         Swal.fire({
           title: '로그인 시간이 만료되었습니다',
           text: '다시 로그인 해주세요! 🥲',
           icon: 'warning',
           confirmButtonColor: '#3085d6',
-          confirmButtonText: 'Yes, delete it!',
+          confirmButtonText: '확인',
         }).then(() => {
           localStorage.clear();
           const originLocation = location.origin;

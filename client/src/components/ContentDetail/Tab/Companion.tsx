@@ -2,7 +2,7 @@ import customAxios from 'api/customAxios';
 import { StyledCompanionList } from 'components/ContentDetail/CompanionStyled';
 import { companionProps } from 'interfaces/ContentDetail.interface';
 import { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { userInfo } from 'states/userState';
 import styled from 'styled-components';
@@ -13,35 +13,10 @@ const Companion = ({ detail, sub, setSub, setPart }: companionProps) => {
   const { contentId } = params;
   const { memberId, nickname } = useRecoilValue(userInfo);
 
-  const handleCancel = async () => {
-    Swal.fire({
-      title: '동행신청을 취소하시겠습니까?',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: '네, 취소합니다',
-    }).then(async result => {
-      if (result.isConfirmed) {
-        await customAxios
-          .delete(`/companions/${contentId}/subscribers`, {
-            data: { memberId },
-          })
-          .then(() => {
-            Swal.fire('Deleted!', '취소되었습니다', 'success');
-            setSub(sub);
-            getSubList();
-            const content = `작성하신 동행글에 ${nickname} 님이 동행신청을 취소하였습니다.`;
-            customAxios.post(`/messages`, {
-              content,
-              senderId: 1,
-              receiverId: detail.memberId,
-              companionId: contentId,
-            });
-          })
-          .catch(error => console.log(error));
-      }
-    });
+  const navigate = useNavigate();
+
+  const handleMoveProfile = (subMemberId: number) => {
+    navigate(`/${subMemberId}/profile`);
   };
 
   const getSubList = () => {
@@ -80,7 +55,7 @@ const Companion = ({ detail, sub, setSub, setPart }: companionProps) => {
             Swal.fire('Accepted!', '확인되었습니다', 'success');
             setSub(sub);
             getSubList();
-            const content = `신청하신 동행글에 ${detail.nickname} 님이 동행을 수락하였습니다.`;
+            const content = `신청하신 동행글 [${detail.title}] 에 [${detail.nickname}] 님이 동행을 수락하였습니다.`;
             customAxios.post(`/messages`, {
               content,
               senderId: 1,
@@ -113,7 +88,7 @@ const Companion = ({ detail, sub, setSub, setPart }: companionProps) => {
             Swal.fire('Deleted!', '거절되었습니다', 'success');
             setSub(sub);
             getSubList();
-            const content = `신청하신 동행글에 ${detail.nickname} 님이 동행을 거절하였습니다.`;
+            const content = `신청하신 동행글 [${detail.title}] 에 [${detail.nickname}] 님이 동행을 거절하였습니다.`;
             customAxios.post(`/messages`, {
               content,
               senderId: 1,
@@ -126,13 +101,47 @@ const Companion = ({ detail, sub, setSub, setPart }: companionProps) => {
     });
   };
 
+  const handleCancel = async () => {
+    Swal.fire({
+      title: '동행신청을 취소하시겠습니까?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: '네, 취소합니다',
+    }).then(async result => {
+      if (result.isConfirmed) {
+        await customAxios
+          .delete(`/companions/${contentId}/subscribers`, {
+            data: { memberId },
+          })
+          .then(() => {
+            Swal.fire('Deleted!', '취소되었습니다', 'success');
+            setSub(sub);
+            getSubList();
+            const content = `작성하신 동행글 [${detail.title}] 에 [${nickname}] 님이 동행신청을 취소하였습니다.`;
+            customAxios.post(`/messages`, {
+              content,
+              senderId: 1,
+              receiverId: detail.memberId,
+              companionId: contentId,
+            });
+          })
+          .catch(error => console.log(error));
+      }
+    });
+  };
+
   return (
     <Container>
-      <Content>
+      <StyledCompanionList>
         {sub && sub.length !== 0 ? (
           sub.map((el: any, index: number) => (
             <li key={index}>
-              <div className="companion-info">
+              <div
+                className="companion-info"
+                onClick={() => handleMoveProfile(el.memberId)}
+              >
                 <div
                   className="img"
                   style={{ backgroundImage: `url(${el.profile})` }}
@@ -141,7 +150,6 @@ const Companion = ({ detail, sub, setSub, setPart }: companionProps) => {
               </div>
               {detail.memberId === memberId ? (
                 <div className="btn-wrapper">
-                  {/* 수락 또는 거절되었을 경우 쪽지 보내기..?! */}
                   <button
                     className="btn"
                     onClick={() => handleAccept(el.memberId)}
@@ -165,9 +173,9 @@ const Companion = ({ detail, sub, setSub, setPart }: companionProps) => {
             </li>
           ))
         ) : (
-          <li>동행 신청자가 없습니다. 🥲</li>
+          <li>동행 신청자가 없습니다.</li>
         )}
-      </Content>
+      </StyledCompanionList>
     </Container>
   );
 };
@@ -196,13 +204,6 @@ const Container = styled.section`
   }
 `;
 
-const Content = styled(StyledCompanionList)`
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  flex-direction: column;
-`;
-
 /* TODO:
 1. 탭 만들기 *
 2. 신청자 또는 참여자 탭별로 데이터 불러오기 * 
@@ -210,5 +211,5 @@ const Content = styled(StyledCompanionList)`
 3-1. 작성자라면 수정, 삭제, 수락, 거절 버튼 * 
 3-2. 작성자가 아니라면 신청, 프로필보기, 신청자&참여자 목록에는 버튼 없음 *
 3-3. 신청자라면 신청자 리스트에 본인 계정에 취소버튼 보이도록 추가 *
-4. 신청 수락/거절 시 쪽지 보내기
+4. 신청 수락/거절 시 쪽지 보내기 *
 */

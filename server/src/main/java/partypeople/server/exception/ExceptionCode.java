@@ -11,6 +11,8 @@ public enum ExceptionCode {
     REFRESH_TOKEN_ERROR(401, "유효한 토큰이 아닙니다."),
     SIGNATURE_ERROR(401, "Token Signature Error"),
     EXPIRED_ERROR(401, "Token Expired Error"),
+
+    AT_EXPIRED_ERROR(401, "Access Token Expired Error"),
     ACCESS_TOKEN_ERROR(401, "AccessToken Error"),
     FOLLOW_ERROR(400,"Follower - Following SAME ERROR"),
     COMPANION_NOT_FOUND(404, "Companion Not Found"),

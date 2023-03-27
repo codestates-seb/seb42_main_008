@@ -20,6 +20,10 @@ type Countries = {
 };
 let countries: Countries[] = [];
 
+interface Props {
+  filteredCountry: any;
+}
+
 const CountrySelect = () => {
   const { continent } = useParams<{ continent: string }>();
   const navigate = useNavigate();
@@ -64,7 +68,7 @@ const CountrySelect = () => {
       'https://cdn.pixabay.com/photo/2020/07/12/16/40/paris-5397889_1280.jpg';
     countries = [
       {
-        name: 'England',
+        name: 'United Kingdom',
         code: 'gbr',
       },
       {
@@ -237,9 +241,15 @@ const CountrySelect = () => {
 
   // 로그인 사용자만 글작성 이동 클릭 라우터
   const login = useRecoilValue(loginState);
+  const countryCode = '';
   const handleMoveAddPage = () => {
     if (login === true) {
-      navigate('/add');
+      navigate('/add', {
+        state: {
+          continent,
+          countryCode,
+        },
+      });
     } else {
       Swal.fire({
         icon: 'error',
@@ -248,14 +258,14 @@ const CountrySelect = () => {
       navigate('/login');
     }
   };
-
   return (
     <CountryListContainer>
       <div
         className="country-name-box"
         style={{ backgroundImage: `url(${titleImg})` }}
       >
-        <h1>{title}</h1>
+        <ImageFilter></ImageFilter>
+        <h1>{title.toUpperCase()}</h1>
         <p>동행자를 구하고 싶은 나라를 선택해보세요!</p>
       </div>
       <div className="list-top">
@@ -264,7 +274,7 @@ const CountrySelect = () => {
           글 작성하기
         </div>
       </div>
-      <CountryListBox>
+      <CountryListBox filteredCountry={filteredCountry}>
         <div className="countrybox">
           <ul className="hot-country">
             {countries.map((country, index) => (
@@ -284,6 +294,8 @@ const CountrySelect = () => {
                   cursor: 'pointer',
                 }}
               >
+                <ImageFilter></ImageFilter>
+
                 <div>
                   {country.name} <FaChevronRight />
                 </div>
@@ -308,6 +320,7 @@ const CountrySelect = () => {
                     backgroundPosition: 'center',
                   }}
                 >
+                  <ImageFilter></ImageFilter>
                   <div>
                     <div>{country.name.match(/[a-zA-Z\s]+/g)}</div>
                     <FaChevronRight />
@@ -339,13 +352,18 @@ const CountryListContainer = styled.div`
     justify-content: center;
     height: 300px;
     width: 100%;
+    position: relative;
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
     color: white;
     font-weight: bold;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+
     > h1 {
       font-size: 4rem;
+      z-index: 20;
+      font-family: 'Archivo Black', sans-serif;
       @media screen and (max-width: 768px) {
         font-size: 3rem;
       }
@@ -355,6 +373,7 @@ const CountryListContainer = styled.div`
     }
     > p {
       font-size: 1rem;
+      z-index: 20;
       @media screen and (max-width: 768px) {
         font-size: 0.8rem;
       }
@@ -375,6 +394,8 @@ const CountryListContainer = styled.div`
     width: 80%;
     padding: 0px 30px 0px 30px;
     font-size: 1rem;
+    color: white;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
     @media screen and (max-width: 768px) {
       font-size: 0.8rem;
     }
@@ -391,11 +412,20 @@ const CountryListContainer = styled.div`
       font-weight: bold;
       border-radius: 10px;
       cursor: pointer;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+      color: black;
+      transition: 0.3s;
+      &:hover {
+        background-color: #feb35c;
+        color: white;
+        box-shadow: 0px 0px 10px #fff;
+        transition: 0.3s;
+      }
     }
   }
 `;
 
-const CountryListBox = styled.section`
+const CountryListBox = styled.section<Props>`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -411,7 +441,8 @@ const CountryListBox = styled.section`
     min-height: 600px;
     margin-top: 20px;
     height: 100%;
-    grid-template-columns: 7fr 3fr;
+    grid-template-columns: ${(props: any) =>
+      props.filteredCountry.length !== 0 ? `7fr 3fr` : `10fr 0fr`};
 
     @media screen and (max-width: 768px) {
       display: flex;
@@ -426,7 +457,7 @@ const CountryListBox = styled.section`
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: repeat(2, 1fr);
-
+    position: relative;
     @media screen and (max-width: 768px) {
       display: grid;
       width: 80%;
@@ -442,6 +473,8 @@ const CountryListBox = styled.section`
       width: 100%;
       height: 100%;
       align-items: flex-end;
+      position: relative;
+
       @media screen and (max-width: 768px) {
         display: flex;
         justify-content: flex-end;
@@ -458,6 +491,7 @@ const CountryListBox = styled.section`
         font-size: 1.5rem;
         color: white;
         background-color: rgba(0, 0, 0, 0.3);
+        z-index: 20;
         @media screen and (max-width: 768px) {
           display: flex;
           align-items: center;
@@ -477,6 +511,7 @@ const CountryListBox = styled.section`
   .random-country {
     display: grid;
     grid-template-rows: repeat(1fr);
+    position: relative;
 
     @media screen and (max-width: 768px) {
       display: grid;
@@ -492,6 +527,7 @@ const CountryListBox = styled.section`
       height: 100%;
       align-items: flex-end;
       justify-content: flex-end;
+      position: relative;
       > div {
         word-wrap: break-word;
         display: flex;
@@ -504,6 +540,7 @@ const CountryListBox = styled.section`
         padding: 10px;
         color: white;
         background-color: rgba(0, 0, 0, 0.3);
+        z-index: 20;
         @media screen and (max-width: 768px) {
           font-size: 1.2rem;
           flex-direction: row;
@@ -523,6 +560,16 @@ const CountryListBox = styled.section`
       }
     }
   }
+`;
+
+const ImageFilter = styled.section`
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: #000650;
+  opacity: 0.25;
 `;
 // .random-country //repeat 첫인자에 랜덤으로 들어갈 개수 넣기
 

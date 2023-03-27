@@ -2,7 +2,7 @@ import customAxios from 'api/customAxios';
 import { StyledCompanionList } from 'components/ContentDetail/CompanionStyled';
 import { companionProps } from 'interfaces/ContentDetail.interface';
 import { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { userInfo } from 'states/userState';
 import styled from 'styled-components';
@@ -12,6 +12,12 @@ const Participants = ({ detail, setSub, part, setPart }: companionProps) => {
   const params = useParams();
   const { contentId } = params;
   const { memberId, nickname } = useRecoilValue(userInfo);
+
+  const navigate = useNavigate();
+
+  const handleMoveProfile = (partMemberId: number) => {
+    navigate(`/${partMemberId}/profile`);
+  };
 
   const handleCancel = async () => {
     Swal.fire({
@@ -31,7 +37,7 @@ const Participants = ({ detail, setSub, part, setPart }: companionProps) => {
             Swal.fire('Deleted!', '취소되었습니다', 'success');
             setPart(part);
             getPartList();
-            const content = `작성하신 동행글에 ${nickname} 님이 동행참여를 취소하였습니다.`;
+            const content = `작성하신 동행글 [${detail.title}] 에 [${nickname}] 님이 동행참여를 취소하였습니다.`;
             customAxios.post(`/messages`, {
               content,
               senderId: 1,
@@ -66,11 +72,14 @@ const Participants = ({ detail, setSub, part, setPart }: companionProps) => {
 
   return (
     <Container>
-      <Content>
+      <StyledCompanionList>
         {part && part.length !== 0 ? (
           part.map((el: any, index: number) => (
             <li key={index}>
-              <div className="companion-info">
+              <div
+                className="companion-info"
+                onClick={() => handleMoveProfile(el.memberId)}
+              >
                 <div
                   className="img"
                   style={{ backgroundImage: `url(${el.profile})` }}
@@ -87,9 +96,9 @@ const Participants = ({ detail, setSub, part, setPart }: companionProps) => {
             </li>
           ))
         ) : (
-          <li>동행 참여자가 없습니다. 🥲</li>
+          <li>동행 참여자가 없습니다.</li>
         )}
-      </Content>
+      </StyledCompanionList>
     </Container>
   );
 };
@@ -115,21 +124,6 @@ const Container = styled.section`
   }
   @media screen and (max-width: 576px) {
     height: 100%;
-  }
-`;
-
-const Content = styled(StyledCompanionList)`
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  flex-direction: column;
-  text-align: left;
-  list-style: none;
-  width: 100%;
-  height: 100%;
-  overflow: scroll;
-  ::-webkit-scrollbar {
-    display: none;
   }
 `;
 

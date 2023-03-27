@@ -1,5 +1,5 @@
 import customAxios from 'api/customAxios';
-import { subProps } from 'interfaces/ContentDetail.interface';
+import { companionProps } from 'interfaces/ContentDetail.interface';
 import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
@@ -8,8 +8,14 @@ import styled from 'styled-components';
 import Swal from 'sweetalert2';
 import { getScoreIcon } from 'utils/getScoreIcon';
 
-const ContentWriter = ({ detail, sub, setSub }: subProps) => {
-  const { profile, memberId, nickname } = useRecoilValue(userInfo);
+const ContentWriter = ({
+  detail,
+  sub,
+  setSub,
+  part,
+  setPart,
+}: companionProps) => {
+  const { memberId, nickname } = useRecoilValue(userInfo);
   const params = useParams();
   const { contentId } = params;
 
@@ -17,6 +23,30 @@ const ContentWriter = ({ detail, sub, setSub }: subProps) => {
   const handleUpdate = () => {
     navigate(`/${contentId}/edit`);
   };
+
+  const handleProfile = () => {
+    navigate(`/${detail.memberId}/profile`);
+  };
+
+  const getSubList = () => {
+    customAxios.get(`/companions/${contentId}/subscribers`).then(res => {
+      setSub(res.data.data);
+    });
+  };
+
+  useEffect(() => {
+    getSubList();
+  }, []);
+
+  const getPartList = () => {
+    customAxios.get(`/companions/${contentId}/participants`).then(res => {
+      setPart(res.data.data);
+    });
+  };
+
+  useEffect(() => {
+    getPartList();
+  }, []);
 
   const handleDelete = () => {
     Swal.fire({
@@ -56,7 +86,7 @@ const ContentWriter = ({ detail, sub, setSub }: subProps) => {
             Swal.fire('Applied!', '동행이 신청되었습니다!', 'success');
             setSub(sub);
             getSubList();
-            const content = `작성하신 동행글에 ${nickname} 님이 동행을 신청하였습니다.`;
+            const content = `작성하신 동행글 [${detail.title}] 에 [${nickname}] 님이 동행을 신청하였습니다.`;
             customAxios.post(`/messages`, {
               content,
               senderId: 1,
@@ -71,59 +101,42 @@ const ContentWriter = ({ detail, sub, setSub }: subProps) => {
     });
   };
 
-  const getSubList = () => {
-    customAxios.get(`/companions/${contentId}/subscribers`).then(res => {
-      setSub(res.data.data);
-    });
-  };
-
-  useEffect(() => {
-    getSubList();
-  }, []);
-
-  const handleProfile = () => {
-    navigate(`/${detail.memberId}/profile`);
-  };
-
   return (
     <Container>
       <WriterInfo>
         <div
           className="img"
-          style={{ backgroundImage: `url(${profile})` }}
+          style={{ backgroundImage: `url(${detail.profile})` }}
         ></div>
-        <div className="info-wrapper">
+        <InfoWrapper>
           <div id="nickname">{detail.nickname}</div>
           <div id="battery">
             <img src={getScoreIcon(detail.score)} alt="score" />
             <div>{detail.score}%</div>
           </div>
-        </div>
+        </InfoWrapper>
       </WriterInfo>
       <ButtonBox>
         {detail.memberId === memberId ? (
           <>
-            <button className="btn" onClick={handleUpdate}>
-              동행글 수정
-            </button>
-            <button className="btn" onClick={handleDelete}>
-              동행글 삭제
-            </button>
+            <Button onClick={handleUpdate}>동행글 수정</Button>
+            <Button onClick={handleDelete}>동행글 삭제</Button>
           </>
         ) : detail.companionStatus ? (
           <>
-            <button className="btn" onClick={handleProfile}>
-              프로필 보기
-            </button>
+            <Button onClick={handleProfile}>프로필 보기</Button>
+          </>
+        ) : part &&
+          part.length !== 0 &&
+          part.some((part: any) => part.memberId === memberId) ? (
+          <>
+            <Button disabled>참가 신청 완료</Button>
+            <Button onClick={handleProfile}>프로필 보기</Button>
           </>
         ) : (
           <>
-            <button className="btn" onClick={handleApply}>
-              동행 신청
-            </button>
-            <button className="btn" onClick={handleProfile}>
-              프로필 보기
-            </button>
+            <Button onClick={handleApply}>동행 신청</Button>
+            <Button onClick={handleProfile}>프로필 보기</Button>
           </>
         )}
       </ButtonBox>
@@ -180,14 +193,44 @@ const WriterInfo = styled.section`
     background-size: cover;
     background-position: center;
   }
-  .info-wrapper {
+  @media screen and (max-width: 768px) {
+    .img {
+      width: 150px;
+      height: 150px;
+    }
+  }
+  @media screen and (max-width: 576px) {
+    font-size: 0.5rem;
+  }
+`;
+const InfoWrapper = styled.div`
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
+  padding: 10px 20px;
+  #nickname {
+    font-size: 1.3rem;
+  }
+  #battery {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    > img {
+      width: 60px;
+      height: 50px;
+      padding-right: 10px;
+    }
+  }
+  @media screen and (max-width: 768px) {
     display: flex;
     justify-content: space-around;
     align-items: center;
     width: 100%;
     padding: 10px 20px;
     #nickname {
-      font-size: 1.3rem;
+      font-size: 1rem;
     }
     #battery {
       display: flex;
@@ -195,100 +238,72 @@ const WriterInfo = styled.section`
       align-items: center;
       flex-direction: row;
       > img {
-        width: 60px;
-        height: 50px;
-        padding-right: 10px;
-      }
-    }
-  }
-  @media screen and (max-width: 768px) {
-    .img {
-      width: 150px;
-      height: 150px;
-    }
-    .info-wrapper {
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      width: 100%;
-      padding: 10px 20px;
-      #nickname {
-        font-size: 1rem;
-      }
-      #battery {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: row;
-        > img {
-          width: 50px;
-          height: 40px;
-          padding-right: 5px;
-        }
+        width: 50px;
+        height: 40px;
+        padding-right: 5px;
       }
     }
   }
   @media screen and (max-width: 576px) {
-    font-size: 0.5rem;
-    height: 100vh;
-    .info-wrapper {
-      #nickname {
-        font-size: 1rem;
-      }
-      #battery {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: row;
-        > img {
-          width: 50px;
-          height: 40px;
-          padding-right: 5px;
-        }
+    #nickname {
+      font-size: 1rem;
+    }
+    #battery {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: row;
+      > img {
+        width: 50px;
+        height: 40px;
+        padding-right: 5px;
       }
     }
   }
 `;
-
 const ButtonBox = styled.section`
   display: flex;
   justify-content: space-around;
   align-items: center;
   width: 100%;
   padding: 10px 30px;
-  .btn {
-    background-color: #d9d9d9;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 30px;
-    font-size: 1.2rem;
-    cursor: pointer;
-  }
-  .yellow {
-    background: #feb35c;
-  }
-  @media screen and (max-width: 768px) {
-    .btn {
-      background-color: #d9d9d9;
-      color: white;
-      border: none;
-      padding: 5px;
-      border-radius: 30px;
-      font-size: 0.7rem;
-      cursor: pointer;
-    }
-    .yellow {
-      background: #feb35c;
-    }
-  }
   @media screen and (max-width: 576px) {
     > * {
       font-size: 0.5rem;
     }
-    .yellow {
-      background: #feb35c;
+  }
+`;
+const Button = styled.button`
+  background-color: #b6b0b0;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 30px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: all 0.2s ease 0s;
+  :disabled {
+    cursor: default;
+    :hover {
+      box-shadow: none;
+      background-color: #b6b0b0;
+      color: white;
     }
+  }
+  &:hover {
+    transition: all 0.2s ease 0s;
+    color: black;
+    background-color: white;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+  }
+  @media screen and (max-width: 768px) {
+    background-color: #d9d9d9;
+    color: white;
+    border: none;
+    padding: 5px;
+    border-radius: 30px;
+    font-size: 0.8rem;
+    cursor: pointer;
   }
 `;
 

@@ -29,11 +29,14 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
     private final JwtTokenizer jwtTokenizer;
     private final CustomAuthorityUtils authorityUtils;
     private final MemberService memberService;
+    private Boolean googleJoin;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         var oAuth2User = (OAuth2User) authentication.getPrincipal();
         String email = String.valueOf(oAuth2User.getAttributes().get("email"));
+
+        googleJoin = false;
 
         Member member;
         try {
@@ -58,8 +61,10 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
 
     private URI createURI(String accessToken, String refreshToken) {
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
+
         queryParams.add("access_token", accessToken);
         queryParams.add("refresh_token", refreshToken);
+        queryParams.add("google_join", googleJoin.toString());
 
         return UriComponentsBuilder
             .newInstance()
@@ -75,45 +80,24 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
     private Member saveMember(OAuth2User oAuth2User) {
         String email = String.valueOf(oAuth2User.getAttributes().get("email"));
         String profile = String.valueOf(oAuth2User.getAttributes().get("picture"));
-
+        String name = String.valueOf(oAuth2User.getAttributes().get("name"));
+        String password = memberService.generateRandomPassword();
         List<String> authorities = authorityUtils.createRoles(email);
 
         Member member = new Member();
         member.setGender("NONE");
         member.setEmail(email);
         member.setRoles(authorities);
-        member.setPassword("google"+UUID.randomUUID());
-        member.setNickname(email);
+        member.setPassword(password);
+        member.setNickname(memberService.oauthNickCheck(name));
         member.setProfile(profile);
-        return memberService.createMember(member);
+
+        googleJoin = true;
+
+        Member saveMember = memberService.createMember(member);
+        memberService.oauthPassword(email, password);
+
+        return saveMember;
     }
 
-//    private String delegateAccessToken(Member member) {
-//        Map<String, Object> claims = new HashMap<>();
-//        claims.put("memberId", member.getMemberId());
-//        claims.put("nickname", member.getNickname());
-//        claims.put("email", member.getEmail());
-//        claims.put("profile", member.getProfile());
-//        claims.put("gender", member.getGender());
-//        claims.put("roles", member.getRoles());
-//        claims.put("memberStatus", member.getMemberStatus());
-//
-//        String subject = member.getEmail();
-//        Date expiration = jwtTokenizer.getTokenExpiration(jwtTokenizer.getAccessTokenExpirationMinutes());
-//
-//        String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(jwtTokenizer.getSecretKey());
-//        String accessToken = jwtTokenizer.generateAccessToken(claims, subject, expiration, base64EncodedSecretKey);
-//
-//        return accessToken;
-//    }
-
-//    private String delegateRefreshToken(Member member) {
-//        String subject = member.getEmail();
-//        Date expiration = jwtTokenizer.getTokenExpiration(jwtTokenizer.getRefreshTokenExpirationMinutes());
-//
-//        String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(jwtTokenizer.getSecretKey());
-//        String refreshToken = jwtTokenizer.generateRefreshToken(subject, expiration, base64EncodedSecretKey);
-//
-//        return refreshToken;
-//    }
 }

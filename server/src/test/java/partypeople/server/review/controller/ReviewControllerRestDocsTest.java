@@ -78,12 +78,12 @@ class ReviewControllerRestDocsTest {
         actions
             .andExpect(status().isCreated())
             .andExpect(header().string(HttpHeaders.LOCATION, is(startsWith("/reviews/"))))
-            .andDo(document("post-review",
+            .andDo(document("review-post-review",
                 getRequestPreProcessor(),
                 getResponsePreProcessor(),
                 requestFields(
                     List.of(
-                        fieldWithPath("memberId").type(JsonFieldType.NUMBER).description("회원 식별자"),
+                        fieldWithPath("memberId").type(JsonFieldType.NUMBER).description("로그인한 회원 식별자"),
                         fieldWithPath("reviewedMemberId").type(JsonFieldType.NUMBER).description("리뷰 받는 회원 식별자"),
                         fieldWithPath("companionId").type(JsonFieldType.NUMBER).description("동행글 식별자"),
                         fieldWithPath("score").type(JsonFieldType.NUMBER).description("평가 점수"),

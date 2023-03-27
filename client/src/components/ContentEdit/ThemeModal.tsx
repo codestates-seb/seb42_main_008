@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
+import ModalScrollDisable from 'utils/ModalScrollDisable';
 
 type LatLng = {
   lat: number;
@@ -28,7 +29,6 @@ const ThemeModal = ({
   setIsThemeModal,
   titleInput,
   contentInput,
-  startDate,
   formattedDate,
   savedAddress,
   markerLocation,
@@ -75,19 +75,12 @@ const ThemeModal = ({
 
   // 테마 담기 // 최대개수
   const [selectedThemes, setSelectedThemes] = useState<string[]>([]);
-  const handleCheckboxClick = (event: React.MouseEvent<HTMLInputElement>) => {
-    const target = event.currentTarget;
-    const option = target.value;
-    if (target.checked) {
-      if (selectedThemes.length < 3) {
-        setSelectedThemes(item => [...item, option]);
-      } else {
-        target.checked = false;
-      }
+  const handleCheckboxClick = (option: string) => {
+    if (selectedThemes.includes(option)) {
+      setSelectedThemes(selectedThemes.filter(item => item !== option));
     } else {
-      const index = selectedThemes.indexOf(option);
-      if (index !== -1) {
-        setSelectedThemes(item => item.filter(thing => thing !== option));
+      if (selectedThemes.length < 3) {
+        setSelectedThemes([...selectedThemes, option]);
       }
     }
   };
@@ -102,27 +95,39 @@ const ThemeModal = ({
   const handleAllSubmit = async (event: any) => {
     if (selectedThemes.length >= 1) {
       event.preventDefault();
-      try {
-        const response = await customAxios.patch(`/companions/${contentId}`, {
-          title: titleInput,
-          content: contentInput,
-          date: formattedDate,
-          address: savedAddress,
-          lat: markerLocation.lat,
-          lng: markerLocation.lng,
-          nationName: countrySelect,
-          nationCode: countryCode,
-          continent: continentNumber,
-          tags: allTags,
+      Swal.fire({
+        title: '수정 완료하시겠습니까?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: '네, 수정하겠습니다!',
+        cancelButtonText: '아니요',
+      })
+        .then(async result => {
+          if (result.isConfirmed) {
+            await customAxios
+              .patch(`/companions/${contentId}`, {
+                title: titleInput,
+                content: contentInput,
+                date: formattedDate,
+                address: savedAddress,
+                lat: markerLocation.lat,
+                lng: markerLocation.lng,
+                nationName: countrySelect,
+                nationCode: countryCode,
+                continent: continentNumber,
+                tags: allTags,
+              })
+              .then(() => {
+                setIsThemeModal(false);
+                navigate(`/${continentSelect}/${countryCode}`);
+              });
+          }
+        })
+        .catch(error => {
+          console.log(error);
         });
-        setIsThemeModal(false);
-        console.log(response.headers);
-        navigate(`/${continentSelect}/${countryCode}`);
-      } catch (error) {
-        console.log(error);
-        console.log(savedAddress);
-        console.log(startDate);
-      }
     } else {
       Swal.fire({
         icon: 'error',
@@ -133,6 +138,7 @@ const ThemeModal = ({
 
   return (
     <ThemeBox>
+      <ModalScrollDisable />
       <div className="theme-box">
         <div className="theme-top">
           <h3>원하는 테마를 선택하세요</h3>
@@ -140,27 +146,29 @@ const ThemeModal = ({
         </div>
         <label>테마</label>
         <ThemeContent>
-          {themes.map((theme: string) => (
-            <li key={theme}>
-              <label>
-                <input
-                  type="checkbox"
-                  value={theme}
-                  onClick={handleCheckboxClick}
-                ></input>
-                {theme}
-              </label>
-            </li>
-          ))}
+          {themes.map((theme: string) => {
+            const isSelected = selectedThemes.includes(theme);
+            return (
+              <li
+                key={theme}
+                className={isSelected ? 'selected' : 'not-selected'}
+              >
+                <label>
+                  <input
+                    type="checkbox"
+                    value={theme}
+                    checked={isSelected}
+                    onChange={() => handleCheckboxClick(theme)}
+                  ></input>
+                  {theme}
+                </label>
+              </li>
+            );
+          })}
         </ThemeContent>
-        <div className="selected-theme">
-          {selectedThemes.map((theme, index) => (
-            <div key={index}>{theme}</div>
-          ))}
-        </div>
         <div className="theme-bottom">
           <button onClick={handleTendencyOpen}>이전</button>
-          <button onClick={handleAllSubmit}>다음</button>
+          <button onClick={handleAllSubmit}>수정 완료</button>
         </div>
       </div>
     </ThemeBox>
@@ -181,8 +189,8 @@ const ThemeBox = styled.div`
   transform: translate(50%, -50%);
   flex-direction: column;
   font-size: 2rem;
-  z-index: 50;
-  overflow-y: auto;
+  z-index: 1000;
+  overflow-y: hidden;
   @media screen and (max-width: 768px) {
     width: 450px;
     height: auto;
@@ -193,7 +201,7 @@ const ThemeBox = styled.div`
     height: auto;
     font-size: 1.2rem;
   }
-  @media screen and (max-height: 1000px) {
+  @media screen and (max-height: 900px) {
     height: 500px;
   }
   @media screen and (max-height: 650px) {
@@ -203,6 +211,7 @@ const ThemeBox = styled.div`
     padding: 40px;
     width: 100%;
     height: 100%;
+    overflow-y: auto;
     > label {
       margin-left: 20px;
       font-size: 1.7rem;
@@ -317,15 +326,18 @@ const ThemeContent = styled.ul`
       width: 120px;
       height: 36px;
     }
+    &.selected {
+      background-color: #feb35c;
+      color: white;
+    }
     > label {
       display: flex;
       align-items: center;
       justify-content: center;
       width: 100%;
       height: 100%;
-      &:hover {
-        background-color: #feb35c;
-      }
+      cursor: pointer;
+
       > input {
         display: none;
       }
