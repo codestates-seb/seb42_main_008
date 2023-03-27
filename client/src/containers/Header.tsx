@@ -66,22 +66,24 @@ const Header = () => {
   // 쪽지 목록 불러오기
   const [notes, setNotes] = useState();
   useEffect(() => {
-    customAxios
-      .get(`/messages?memberId=${memberId}`)
-      .then(response => {
-        setNotes(response.data.data);
-      })
-      .catch(error => console.log(error));
+    if (isLogin === true) {
+      customAxios
+        .get(`/messages?memberId=${memberId}`)
+        .then(response => {
+          setNotes(response.data.data);
+        })
+        .catch(error => console.log(error));
+    }
   }, [memberId]);
 
   // 안읽은 쪽지 개수확인
   const [notRead, setNotRead] = useState(0);
 
   useEffect(() => {
-    const eventSource = new EventSource(
-      `${process.env.REACT_APP_SERVER}/messages/not-read/${memberId}`
-    );
     if (isLogin === true) {
+      const eventSource = new EventSource(
+        `${process.env.REACT_APP_SERVER}/messages/not-read/${memberId}`
+      );
       eventSource.addEventListener('notReadCount', event => {
         const data = JSON.parse(event.data);
         setNotRead(data.data.notReadCount);
