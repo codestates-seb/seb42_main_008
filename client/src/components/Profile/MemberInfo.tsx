@@ -211,6 +211,7 @@ const ImageWrapper = styled.section`
   align-items: center;
   gap: 15px;
   padding-right: 10px;
+  transition: 0.3s;
 
   .img {
     border-radius: 50%;
@@ -220,6 +221,7 @@ const ImageWrapper = styled.section`
     background-position: center;
     background-repeat: no-repeat;
     background-color: #aaa;
+    transition: 0.3s;
   }
   .score {
     display: flex;
