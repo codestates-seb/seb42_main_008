@@ -68,9 +68,6 @@ const ContinentSelect = () => {
           {CONTINENTS.map((continent, idx) => (
             <ContinentContent
               key={idx}
-              // style={{
-              //   backgroundImage: `url(${continent.image})`,
-              // }}
               role="presentation"
               onClick={() => handleMarkerClick(continent.code)}
             >
