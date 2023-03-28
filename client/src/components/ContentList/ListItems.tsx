@@ -97,9 +97,9 @@ const ListItems = ({ listData, isLoading }: ListItemProps) => {
           ))
         : !isLoading && (
             <EmptyList>
-              아직 아무도 동행을 찾고있지 않아요 😢
+              아직 아무도 동행을 찾고있지 않아요!
               <div className="content-add-text" onClick={handleAddTextClick}>
-                직접 작성해 보세요!
+                직접 작성해 보세요
                 <span className="icon">
                   <FaLongArrowAltRight />
                 </span>
@@ -278,10 +278,13 @@ const EmptyList = styled.div`
     color: #5d62a0;
     gap: 3px;
     cursor: pointer;
+    .icon {
+      transition: 0.3s;
+    }
     :hover {
       .icon {
-        position: relative;
-        left: 5px;
+        transform: translateX(5px);
+        transition: 0.3s;
       }
     }
   }
