@@ -1,9 +1,6 @@
 package partypeople.server.member.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -13,6 +10,21 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class MemberDto {
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    public static class OAuth {
+        private String email;
+
+        private String nickname;
+
+        private String profile;
+
+        private String gender;
+
+        private String client;
+    }
+
     @Getter
     @Builder
     public static class Post {

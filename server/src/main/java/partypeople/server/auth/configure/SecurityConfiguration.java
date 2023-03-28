@@ -2,6 +2,7 @@ package partypeople.server.auth.configure;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.security.oauth2.client.OAuth2ClientProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -27,9 +28,12 @@ import partypeople.server.auth.handler.MemberAuthenticationSuccessHandler;
 import partypeople.server.auth.handler.OAuth2MemberSuccessHandler;
 import partypeople.server.auth.jwt.JwtTokenizer;
 import partypeople.server.auth.utils.CustomAuthorityUtils;
+import partypeople.server.kakao.CustomOauth2Provider;
 import partypeople.server.member.service.MemberService;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -48,7 +52,8 @@ public class SecurityConfiguration {
     @Value("${spring.security.oauth2.client.registration.google.clientSecret}")
     private String clientSecret;
 
-
+    @Value("${oauth2.kakao.clientId}")
+    private String kakaoClientId;
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -93,10 +98,19 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public ClientRegistrationRepository clientRegistrationRepository() {
-        var clientRegistration = clientRegistration();
+    public ClientRegistrationRepository clientRegistrationRepository(OAuth2ClientProperties oAuth2ClientProperties) {
+        List<ClientRegistration> registrations = new ArrayList<>();
+        registrations.add(clientRegistration());
+        registrations.add(getProvider(oAuth2ClientProperties, kakaoClientId));
 
-        return new InMemoryClientRegistrationRepository(clientRegistration);
+        return new InMemoryClientRegistrationRepository(registrations);
+    }
+
+    private ClientRegistration getProvider(OAuth2ClientProperties oAuth2ClientProperties, String clientId) {
+        OAuth2ClientProperties.Provider provider =oAuth2ClientProperties.getProvider().get("kakao");
+        return CustomOauth2Provider.KAKAO.getBuilder("kakao", provider)
+                .clientId(clientId)
+                .build();
     }
 
     private ClientRegistration clientRegistration() {

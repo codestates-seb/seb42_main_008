@@ -12,14 +12,13 @@ import ThemeModal from 'components/ContentAdd/ThemeModal';
 import SearchMap from 'components/ContentAdd/SearchMap';
 import Swal from 'sweetalert2';
 import { useLocation } from 'react-router-dom';
-const countriesPick: Countries = countries;
 type Countries = {
   [key: string]: {
     name: string;
     code: string;
   }[];
 };
-
+const countriesPick: Countries = countries;
 registerLocale('ko', ko);
 
 const ContentAdd = () => {

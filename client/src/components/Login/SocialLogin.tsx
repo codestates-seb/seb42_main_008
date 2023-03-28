@@ -6,8 +6,9 @@ import { useNavigate } from 'react-router-dom';
 import { loginState, userInfo } from 'states/userState';
 import styled from 'styled-components';
 import { setCookie } from 'utils/userCookies';
+import { RiKakaoTalkFill } from 'react-icons/ri';
 
-const GoogleLogin = () => {
+const SocialLogin = () => {
   const navigate = useNavigate();
   const setIsLogin = useSetRecoilState(loginState);
   const setUser = useSetRecoilState(userInfo);
@@ -27,7 +28,11 @@ const GoogleLogin = () => {
     window.location.assign(`${BASE_URL}/members/login/google`);
   };
 
-  const googleLoginAction = (accessToken: string) => {
+  const kakaoLoginHandler = () => {
+    window.location.assign(`${BASE_URL}/members/login/kakao`);
+  };
+
+  const socialLoginAction = (accessToken: string) => {
     const base64Url = accessToken.split('.')[1];
     const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
     const jsonPayload = decodeURIComponent(
@@ -54,7 +59,7 @@ const GoogleLogin = () => {
       setCookie('refreshToken', refreshToken, {
         path: '/',
       });
-      googleLoginAction(accessToken);
+      socialLoginAction(accessToken);
       navigate('/');
     }
   }, [accessToken, refreshToken, googleJoin]);
@@ -63,6 +68,9 @@ const GoogleLogin = () => {
     <div className="btn-wrapper">
       <button id="btn-google" onClick={googleLoginHandler}>
         <GoogleLogo />
+      </button>
+      <button id="btn-google" onClick={kakaoLoginHandler}>
+        <KaKaoLogo />
       </button>
     </div>
   );
@@ -73,4 +81,9 @@ const GoogleLogo = styled(FcGoogle)`
   height: 100%;
 `;
 
-export default GoogleLogin;
+const KaKaoLogo = styled(RiKakaoTalkFill)`
+  width: 100%;
+  height: 100%;
+`;
+
+export default SocialLogin;

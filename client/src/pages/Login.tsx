@@ -1,5 +1,4 @@
 import customAxios from 'api/customAxios';
-import GoogleLogin from 'components/Login/GoogleLogin';
 import { MemberBox } from 'components/Login/MemberStyled';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -8,6 +7,7 @@ import { loginState, userInfo } from 'states/userState';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
 import { setCookie } from 'utils/userCookies';
+import SocialLogin from 'components/Login/SocialLogin';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -78,7 +78,7 @@ const Login = () => {
             <span>OR</span>
             <hr />
           </div>
-          <GoogleLogin />
+          <SocialLogin />
         </OauthLoginBox>
       </LoginBox>
     </Container>
@@ -175,6 +175,7 @@ const OauthLoginBox = styled.section`
     display: flex;
     justify-content: center;
     align-items: center;
+    gap: 20px;
   }
   #btn-google {
     cursor: pointer;

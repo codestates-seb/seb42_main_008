@@ -148,6 +148,7 @@ const ContentDetailBox = styled.section`
     height: 100%;
   }
 `;
+
 const LeftBox = styled.section`
   display: flex;
   justify-content: flex-start;
@@ -336,7 +337,7 @@ const BottomBox = styled.div`
         width: 100%;
         word-break: break-all;
         img {
-          width: 330px;
+          width: 300px;
           max-height: 400px;
           display: block;
           object-fit: scale-down;
