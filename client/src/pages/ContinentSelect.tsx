@@ -68,17 +68,26 @@ const ContinentSelect = () => {
           {CONTINENTS.map((continent, idx) => (
             <ContinentContent
               key={idx}
-              style={{
-                backgroundImage: `url(${continent.image})`,
-              }}
+              // style={{
+              //   backgroundImage: `url(${continent.image})`,
+              // }}
               role="presentation"
               onClick={() => handleMarkerClick(continent.code)}
             >
               <ImageFilter></ImageFilter>
-              <p className="continent-name">
-                {continent.name}&nbsp;&nbsp;
-                <MdArrowForwardIos />
-              </p>
+              <div className="continent-name">
+                <p className="continent-name-text">
+                  {continent.name}&nbsp;&nbsp;
+                  <span className="continent-name-icon">
+                    <MdArrowForwardIos />
+                  </span>
+                </p>
+              </div>
+              <img
+                className="continent-image"
+                src={continent.image}
+                alt={continent.name}
+              />
             </ContinentContent>
           ))}
         </ul>
@@ -180,10 +189,8 @@ const ContinentList = styled.section`
 const ContinentContent = styled.li`
   border: 1px solid #444;
   position: relative;
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center;
   cursor: pointer;
+  overflow: hidden;
   .continent-name {
     width: 100%;
     height: 80px;
@@ -196,7 +203,38 @@ const ContinentContent = styled.li`
     align-items: center;
     justify-content: flex-end;
     padding: 20px;
-    z-index: 2;
+    z-index: 20;
+  }
+  .continent-name-text {
+    display: flex;
+    align-items: center;
+    transition: 0.3s;
+  }
+  .continent-name-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.3s;
+  }
+  .continent-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    transition: 0.3s;
+  }
+  :hover {
+    .continent-image {
+      scale: 1.1;
+      transition: 0.3s;
+    }
+    .continent-name-icon {
+      transform: translateX(5px);
+      transition: 0.3s;
+    }
   }
 `;
 
@@ -208,6 +246,7 @@ const ImageFilter = styled.div`
   left: 0;
   background-color: #000650;
   opacity: 0.25;
+  z-index: 10;
 `;
 
 export default ContinentSelect;
