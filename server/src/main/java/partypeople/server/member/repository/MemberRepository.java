@@ -9,10 +9,11 @@ import java.util.Optional;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
 
-    @Query("SELECT m FROM Member m WHERE m.email = binary(:email)")
+
+//    @Query("SELECT m FROM Member m WHERE m.email = binary(:email)")
     Optional<Member> findByEmail(String email);
 
-    @Query("SELECT m FROM Member m WHERE m.nickname = binary(:nickname)")
+//    @Query("SELECT m FROM Member m WHERE m.nickname = binary(:nickname)")
     Optional<Member> findByNickname(String nickname);
     @Query("SELECT m.nickname FROM Member m")
     List<String> findAllNicknames();

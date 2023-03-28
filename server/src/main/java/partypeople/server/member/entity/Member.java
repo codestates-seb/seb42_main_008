@@ -12,6 +12,7 @@ import partypeople.server.message.entity.Message;
 import partypeople.server.review.entity.Review;
 
 import javax.persistence.*;
+import java.sql.Blob;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,10 +25,10 @@ public class Member extends Auditable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long memberId;
 
-    @Column(length = 100, nullable = false, unique = true)
+    @Column(nullable = false, unique = true, columnDefinition = "varbinary(100)")
     private String nickname;
 
-    @Column(nullable = false, updatable = false, unique = true)
+    @Column(nullable = false, updatable = false, unique = true, columnDefinition = "varbinary(255)")
     private String email;
 
     @Column(length = 100, nullable = false)
