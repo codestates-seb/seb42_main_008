@@ -49,7 +49,6 @@ const CountrySelect = () => {
   //현재 대륙에서 나라 글작성된 국가리스트 받아오기
   const [countryList, setCountryList] = useState([]);
   useEffect(() => {
-    console.log(randomCountries);
     customAxios
       .get(`/companions/continents?continent=${continentNumber}`)
       .then(response => {
