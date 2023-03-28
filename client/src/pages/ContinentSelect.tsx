@@ -138,8 +138,12 @@ const MapContainer = styled.section`
   }
   .rsm-marker {
     cursor: pointer;
+    path {
+      transition: 0.2s;
+    }
     :hover {
       path {
+        transition: 0.2s;
         fill: #feb35c;
       }
     }
