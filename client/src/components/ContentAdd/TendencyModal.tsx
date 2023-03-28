@@ -1,4 +1,5 @@
 import { Dispatch, SetStateAction, useState } from 'react';
+import { GrClose } from 'react-icons/gr';
 
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
@@ -60,6 +61,9 @@ const TendencyModal = ({
     <TendencyBox>
       <ModalScrollDisable />
       <div className="tendency-box">
+        <div className="close">
+          <GrClose onClick={handleModalClose} style={{ cursor: 'pointer' }} />
+        </div>
         <div className="tendency-top">
           <h3>원하는 성향을 선택하세요</h3>
           <p>1~2개의 키워드를 선택해주세요</p>
@@ -143,6 +147,11 @@ const TendencyBox = styled.div`
     > label {
       margin-left: 20px;
       font-size: 1.7rem;
+    }
+    .close {
+      width: 100%;
+      display: flex;
+      justify-content: flex-end;
     }
   }
   .tendency-top {
