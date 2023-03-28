@@ -16,6 +16,9 @@ const ListTitle = () => {
   const countriesData: CountryData[] = countries[continent as keyof object];
   const countryName = countriesData.filter(item => item.code === countryCode)[0]
     .name;
+  const countryImage = countriesData.filter(
+    item => item.code === countryCode
+  )[0].image;
   const continentName: string | undefined = continent
     ? continent[0].toUpperCase() + continent.slice(1)
     : undefined;
@@ -60,10 +63,7 @@ const ListTitle = () => {
   return (
     <ListTitleWrapper
       style={{
-        backgroundImage: `url(https://source.unsplash.com/featured/?${names.en.replace(
-          /\s+/g,
-          ''
-        )},city)`,
+        backgroundImage: `url(${countryImage})`,
       }}
     >
       <BackToContinent>

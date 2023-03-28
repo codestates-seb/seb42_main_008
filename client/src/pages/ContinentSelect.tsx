@@ -6,18 +6,49 @@ import { MdArrowForwardIos } from 'react-icons/md';
 interface Continent {
   name: string;
   code: string;
+  image: string;
 }
 
 const ContinentSelect = () => {
   const navigate = useNavigate();
 
   const CONTINENTS: Continent[] = [
-    { name: 'Africa', code: 'africa' },
-    { name: 'Asia', code: 'asia' },
-    { name: 'Europe', code: 'europe' },
-    { name: 'North America', code: 'northAmerica' },
-    { name: 'Oceania', code: 'oceania' },
-    { name: 'South America', code: 'southAmerica' },
+    {
+      name: 'Africa',
+      code: 'africa',
+      image:
+        'https://images.unsplash.com/photo-1614531341773-3bff8b7cb3fc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2064&q=80',
+    },
+    {
+      name: 'Asia',
+      code: 'asia',
+      image:
+        'https://images.unsplash.com/photo-1522547902298-51566e4fb383?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80',
+    },
+    {
+      name: 'Europe',
+      code: 'europe',
+      image:
+        'https://images.unsplash.com/photo-1499856871958-5b9627545d1a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2920&q=80',
+    },
+    {
+      name: 'North America',
+      code: 'northAmerica',
+      image:
+        'https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2940&q=80',
+    },
+    {
+      name: 'Oceania',
+      code: 'oceania',
+      image:
+        'https://images.unsplash.com/photo-1589330273594-fade1ee91647?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80',
+    },
+    {
+      name: 'South America',
+      code: 'southAmerica',
+      image:
+        'https://images.unsplash.com/photo-1504814532849-cff240bbc503?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2500&q=80',
+    },
   ];
 
   const handleMarkerClick = (code: string): void => {
@@ -38,7 +69,7 @@ const ContinentSelect = () => {
             <ContinentContent
               key={idx}
               style={{
-                backgroundImage: `url(https://source.unsplash.com/featured/?${continent.code},city)`,
+                backgroundImage: `url(${continent.image})`,
               }}
               role="presentation"
               onClick={() => handleMarkerClick(continent.code)}

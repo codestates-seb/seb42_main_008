@@ -33,6 +33,7 @@ interface SearchQueryString extends ListQueryString {
 interface CountryData {
   name: string;
   code: string;
+  image: string;
 }
 
 // * 국가 이름
