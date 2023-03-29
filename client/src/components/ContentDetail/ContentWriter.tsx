@@ -1,5 +1,5 @@
 import customAxios from 'api/customAxios';
-import { companionProps } from 'interfaces/ContentDetail.interface';
+import { companionProps, partApply } from 'interfaces/ContentDetail.interface';
 import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
@@ -127,7 +127,7 @@ const ContentWriter = ({
           </>
         ) : part &&
           part.length !== 0 &&
-          part.some((part: any) => part.memberId === memberId) ? (
+          part.some((part: partApply) => part.memberId === memberId) ? (
           <>
             <Button disabled>참가 신청 완료</Button>
             <Button onClick={handleProfile}>프로필 보기</Button>
