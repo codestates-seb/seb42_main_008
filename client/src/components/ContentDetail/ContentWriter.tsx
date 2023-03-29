@@ -61,7 +61,7 @@ const ContentWriter = ({
         await customAxios
           .delete(`/companions/${detail.companionId}`)
           .then(() => {
-            Swal.fire('Deleted!', 'Your file has been deleted.', 'success');
+            Swal.fire('Deleted!', '동행글이 삭제되었습니다.', 'success');
             console.log('delete!');
           })
           .catch(error => console.log(error));
