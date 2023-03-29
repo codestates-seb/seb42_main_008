@@ -36,7 +36,10 @@ customAxios.interceptors.response.use(
     } = error;
     if (status === 401) {
       // & AccessToken 만료시 재발급
-      if (error.response.data.message.slice(0, 11) === 'JWT expired') {
+      if (
+        error.response.data.message.slice(0, 11) === 'JWT expired' ||
+        error.response.data.message === 'Access Token Expired Error'
+      ) {
         const originalRequest = config;
         const refreshToken = await getCookie('refreshToken');
         await customAxios
