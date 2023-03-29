@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import partypeople.server.exception.BusinessLogicException;
+import partypeople.server.exception.ExceptionCode;
 import partypeople.server.member.dto.FollowDto;
 import partypeople.server.member.entity.Follow;
 import partypeople.server.member.entity.Member;
@@ -18,6 +20,7 @@ import java.util.Optional;
 @Slf4j
 public class FollowService {
     private final FollowRepository followRepository;
+
 
     public Boolean followerStatusUpdate(Member member, Long loginMemberId) {
         Optional<Follow> follow = followRepository.findByFollowerMemberIdAndFollowingMemberId(member.getMemberId(),loginMemberId);
@@ -44,7 +47,7 @@ public class FollowService {
         return followRepository.findAllByFollowerMemberId(memberId);
     }
 
-    @Transactional(readOnly = true)
+    //@Transactional(readOnly = true)
     public List<Follow> findFollowings(Long memberId) {
         return followRepository.findAllByFollowingMemberId(memberId);
     }
@@ -53,14 +56,26 @@ public class FollowService {
         //중복 확인 ** 등록 되어 있으면 취소 삭제?
         Optional<Follow> optionalFollow = followRepository.findByFollowerMemberIdAndFollowingMemberId(follow.getFollower().getMemberId(),follow.getFollowing().getMemberId());
         FollowDto.FollowerStatus followerStatus = new FollowDto.FollowerStatus(false);
+//        follow.setTest(memberService.generateRandomPassword());
 
-        optionalFollow.ifPresentOrElse(
-                followRepository::delete,
-                ()->{
-                    followerStatus.setFollowerStatus(true);
-                    followRepository.save(follow);
-                }
-        );
+
+//        try {
+//            optionalFollow.ifPresent(followRepository::save);
+//            optionalFollow.orElse(followRepository.save(follow));
+//        } catch (Exception e) {
+//            throw new BusinessLogicException(ExceptionCode.FOLLOW_ERROR);
+//        }
+        try {
+            optionalFollow.ifPresentOrElse(
+                    followRepository::delete,
+                    ()->{
+                        followerStatus.setFollowerStatus(true);
+                        followRepository.save(follow);
+                    }
+            );
+        } catch (Exception e) {
+            throw new BusinessLogicException(ExceptionCode.FOLLOW_ERROR);
+        }
 
         return followerStatus;
     }

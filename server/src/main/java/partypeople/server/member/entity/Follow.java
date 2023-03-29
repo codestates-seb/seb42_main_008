@@ -10,6 +10,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @NoArgsConstructor
+@Table(uniqueConstraints=@UniqueConstraint(columnNames={"follower_id", "following_id"}))
 public class Follow {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,7 +23,6 @@ public class Follow {
     @ManyToOne //대상자
     @JoinColumn(name = "following_id")
     private Member following;
-
     public void addFollower(Member follower) {
         this.follower = follower;
         if (!this.follower.getFollowers().contains(this)) {
