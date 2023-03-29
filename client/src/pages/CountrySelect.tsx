@@ -12,11 +12,13 @@ type RandomCountries = {
   [key: string]: {
     name: string;
     code: string;
+    image?: string;
   }[];
 };
 type Countries = {
   name: string;
   code: string;
+  image: string;
 };
 let countries: Countries[] = [];
 
@@ -70,18 +72,26 @@ const CountrySelect = () => {
       {
         name: 'United Kingdom',
         code: 'gbr',
+        image:
+          'https://images.unsplash.com/photo-1514729797186-944d57303199?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80',
       },
       {
         name: 'France',
         code: 'fra',
+        image:
+          'https://images.unsplash.com/photo-1605701877331-645ad05dcb97?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2064&q=80',
       },
       {
         name: 'Spain',
         code: 'esp',
+        image:
+          'https://images.unsplash.com/photo-1583422409516-2895a77efded?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2940&q=80',
       },
       {
         name: 'Germany',
         code: 'deu',
+        image:
+          'https://images.unsplash.com/photo-1467269204594-9661b134dd2b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2940&q=80',
       },
     ];
   } else if (continent === 'africa') {
@@ -92,18 +102,26 @@ const CountrySelect = () => {
       {
         name: 'Egypt',
         code: 'egy',
+        image:
+          'https://cdn.pixabay.com/photo/2018/10/17/11/45/pyramids-3753769_1280.jpg',
       },
       {
         name: 'Morocco',
         code: 'mar',
+        image:
+          'https://cdn.pixabay.com/photo/2019/09/24/09/58/marrakech-4500910_1280.jpg',
       },
       {
         name: 'South Africa',
         code: 'zaf',
+        image:
+          'https://cdn.pixabay.com/photo/2017/01/15/18/55/south-africa-1982418_1280.jpg',
       },
       {
         name: 'Kenya',
         code: 'ken',
+        image:
+          'https://cdn.pixabay.com/photo/2017/03/27/13/02/elephants-2178578_1280.jpg',
       },
     ];
   } else if (continent === 'asia') {
@@ -114,40 +132,56 @@ const CountrySelect = () => {
       {
         name: 'Korea',
         code: 'kor',
+        image:
+          'https://as2.ftcdn.net/v2/jpg/01/75/43/47/1000_F_175434765_8BcLDKzt4asGu2TUe0EXkQZVGPBIQYOO.jpg',
       },
       {
         name: 'Japan',
         code: 'jpn',
+        image:
+          'https://images.unsplash.com/photo-1526481280693-3bfa7568e0f3?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1771&q=80',
       },
       {
         name: 'China',
         code: 'chn',
+        image:
+          'https://images.unsplash.com/photo-1600160366979-6ba227486e30?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80',
       },
       {
         name: 'Vietnam',
         code: 'vnm',
+        image:
+          'https://images.unsplash.com/photo-1526139334526-f591a54b477c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80',
       },
     ];
   } else if (continent === 'northAmerica') {
     title = 'North America';
     titleImg =
-      'https://cdn.pixabay.com/photo/2020/06/08/20/58/nyc-5276112__480.jpg';
+      'https://cdn.pixabay.com/photo/2020/06/08/20/58/nyc-5276112_1280.jpg';
     countries = [
       {
         name: 'USA',
         code: 'usa',
+        image:
+          'https://images.unsplash.com/photo-1485871981521-5b1fd3805eee?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80',
       },
       {
         name: 'Canada',
         code: 'can',
+        image:
+          'https://images.unsplash.com/photo-1533417457911-4ec911485388?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2874&q=80',
       },
       {
         name: 'Mexico',
         code: 'mex',
+        image:
+          'https://images.unsplash.com/photo-1547995886-6dc09384c6e6?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2826&q=80',
       },
       {
         name: 'Cuba',
         code: 'cub',
+        image:
+          'https://images.unsplash.com/photo-1570299437488-d430e1e677c7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1450&q=80',
       },
     ];
   } else if (continent === 'southAmerica') {
@@ -158,18 +192,26 @@ const CountrySelect = () => {
       {
         name: 'Brazil',
         code: 'bra',
+        image:
+          'https://images.unsplash.com/photo-1619546952812-520e98064a52?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1771&q=80',
       },
       {
         name: 'Peru',
         code: 'per',
+        image:
+          'https://images.unsplash.com/photo-1526392060635-9d6019884377?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2940&q=80',
       },
       {
         name: 'Argentina',
         code: 'arg',
+        image:
+          'https://images.unsplash.com/photo-1600627094717-809e6a3f29f0?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2865&q=80',
       },
       {
         name: 'Chile',
         code: 'bol',
+        image:
+          'https://images.unsplash.com/photo-1490782300182-697b80ad4293?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3027&q=80',
       },
     ];
   } else if (continent === 'oceania') {
@@ -180,18 +222,26 @@ const CountrySelect = () => {
       {
         name: 'Australia',
         code: 'aus',
+        image:
+          'https://images.unsplash.com/photo-1624138784614-87fd1b6528f8?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2833&q=80',
       },
       {
         name: 'New Zealand',
         code: 'nzl',
+        image:
+          'https://images.unsplash.com/photo-1507699622108-4be3abd695ad?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2942&q=80',
       },
       {
         name: 'Fiji',
         code: 'fji',
+        image:
+          'https://images.unsplash.com/photo-1541292426587-b6ca8230532b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2787&q=80',
       },
       {
         name: 'Papua New Guinea',
         code: 'png',
+        image:
+          'https://images.unsplash.com/photo-1613183919710-2ff7b3bec845?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1548&q=80',
       },
     ];
   }
@@ -282,12 +332,7 @@ const CountrySelect = () => {
                 onClick={() => handleCountryClick(country.code)}
                 key={index}
                 style={{
-                  backgroundImage: `url(
-                    https://source.unsplash.com/featured/?${country.name.replace(
-                      /\s+/g,
-                      ','
-                    )},travel
-                  )`,
+                  backgroundImage: `url(${country.image})`,
                   backgroundSize: `cover`,
                   backgroundPosition: 'center',
                   backgroundRepeat: `no-repeat`,
@@ -309,11 +354,7 @@ const CountrySelect = () => {
                   key={index}
                   onClick={() => handleCountryClick(country.code)}
                   style={{
-                    backgroundImage: `url(
-              https://source.unsplash.com/featured/?${country.name.match(
-                /[a-zA-Z]/g
-              )},travel
-            )`,
+                    backgroundImage: `url(${country.image})`,
                     backgroundRepeat: `no-repeat`,
                     cursor: 'pointer',
                     backgroundSize: `cover`,

@@ -6,18 +6,49 @@ import { MdArrowForwardIos } from 'react-icons/md';
 interface Continent {
   name: string;
   code: string;
+  image: string;
 }
 
 const ContinentSelect = () => {
   const navigate = useNavigate();
 
   const CONTINENTS: Continent[] = [
-    { name: 'Africa', code: 'africa' },
-    { name: 'Asia', code: 'asia' },
-    { name: 'Europe', code: 'europe' },
-    { name: 'North America', code: 'northAmerica' },
-    { name: 'Oceania', code: 'oceania' },
-    { name: 'South America', code: 'southAmerica' },
+    {
+      name: 'Africa',
+      code: 'africa',
+      image:
+        'https://images.unsplash.com/photo-1614531341773-3bff8b7cb3fc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2064&q=80',
+    },
+    {
+      name: 'Asia',
+      code: 'asia',
+      image:
+        'https://images.unsplash.com/photo-1522547902298-51566e4fb383?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80',
+    },
+    {
+      name: 'Europe',
+      code: 'europe',
+      image:
+        'https://images.unsplash.com/photo-1499856871958-5b9627545d1a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2920&q=80',
+    },
+    {
+      name: 'North America',
+      code: 'northAmerica',
+      image:
+        'https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2940&q=80',
+    },
+    {
+      name: 'Oceania',
+      code: 'oceania',
+      image:
+        'https://images.unsplash.com/photo-1589330273594-fade1ee91647?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80',
+    },
+    {
+      name: 'South America',
+      code: 'southAmerica',
+      image:
+        'https://images.unsplash.com/photo-1504814532849-cff240bbc503?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2500&q=80',
+    },
   ];
 
   const handleMarkerClick = (code: string): void => {
@@ -37,17 +68,23 @@ const ContinentSelect = () => {
           {CONTINENTS.map((continent, idx) => (
             <ContinentContent
               key={idx}
-              style={{
-                backgroundImage: `url(https://source.unsplash.com/featured/?${continent.code},city)`,
-              }}
               role="presentation"
               onClick={() => handleMarkerClick(continent.code)}
             >
               <ImageFilter></ImageFilter>
-              <p className="continent-name">
-                {continent.name}&nbsp;&nbsp;
-                <MdArrowForwardIos />
-              </p>
+              <div className="continent-name">
+                <p className="continent-name-text">
+                  {continent.name}&nbsp;&nbsp;
+                  <span className="continent-name-icon">
+                    <MdArrowForwardIos />
+                  </span>
+                </p>
+              </div>
+              <img
+                className="continent-image"
+                src={continent.image}
+                alt={continent.name}
+              />
             </ContinentContent>
           ))}
         </ul>
@@ -101,8 +138,12 @@ const MapContainer = styled.section`
   }
   .rsm-marker {
     cursor: pointer;
+    path {
+      transition: 0.2s;
+    }
     :hover {
       path {
+        transition: 0.2s;
         fill: #feb35c;
       }
     }
@@ -149,10 +190,8 @@ const ContinentList = styled.section`
 const ContinentContent = styled.li`
   border: 1px solid #444;
   position: relative;
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center;
   cursor: pointer;
+  overflow: hidden;
   .continent-name {
     width: 100%;
     height: 80px;
@@ -165,7 +204,38 @@ const ContinentContent = styled.li`
     align-items: center;
     justify-content: flex-end;
     padding: 20px;
-    z-index: 2;
+    z-index: 20;
+  }
+  .continent-name-text {
+    display: flex;
+    align-items: center;
+    transition: 0.3s;
+  }
+  .continent-name-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.3s;
+  }
+  .continent-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    transition: 0.3s;
+  }
+  :hover {
+    .continent-image {
+      scale: 1.1;
+      transition: 0.3s;
+    }
+    .continent-name-icon {
+      transform: translateX(5px);
+      transition: 0.3s;
+    }
   }
 `;
 
@@ -177,6 +247,7 @@ const ImageFilter = styled.div`
   left: 0;
   background-color: #000650;
   opacity: 0.25;
+  z-index: 10;
 `;
 
 export default ContinentSelect;
