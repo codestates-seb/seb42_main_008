@@ -138,7 +138,7 @@ const CountrySelect = () => {
         name: 'Korea',
         code: 'kor',
         image:
-          'https://as2.ftcdn.net/v2/jpg/01/75/43/47/1000_F_175434765_8BcLDKzt4asGu2TUe0EXkQZVGPBIQYOO.jpg',
+          'https://images.unsplash.com/photo-1562568175-c52d8a2ee3be?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80',
       },
       {
         name: 'Japan',
@@ -214,7 +214,7 @@ const CountrySelect = () => {
       },
       {
         name: 'Chile',
-        code: 'bol',
+        code: 'chl',
         image:
           'https://images.unsplash.com/photo-1490782300182-697b80ad4293?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3027&q=80',
       },

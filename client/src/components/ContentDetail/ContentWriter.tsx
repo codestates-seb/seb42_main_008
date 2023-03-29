@@ -118,7 +118,11 @@ const ContentWriter = ({
       <ButtonBox>
         {detail.memberId === memberId ? (
           <>
-            <Button onClick={handleUpdate}>동행글 수정</Button>
+            {!detail.companionStatus ? (
+              <Button onClick={handleUpdate}>동행글 수정</Button>
+            ) : (
+              <></>
+            )}
             <Button onClick={handleDelete}>동행글 삭제</Button>
           </>
         ) : detail.companionStatus ? (
