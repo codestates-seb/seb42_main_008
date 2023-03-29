@@ -99,7 +99,9 @@ const ThemeModal = ({
 
   // 모든 양식 제출 post 요청
   // 멤버아이디는 토큰받아 입력 // 대륙은 정수?
-  const handleAllSubmit = async (event: any) => {
+  const handleAllSubmit = async (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
     if (selectedThemes.length >= 1) {
       event.preventDefault();
       Swal.fire({
