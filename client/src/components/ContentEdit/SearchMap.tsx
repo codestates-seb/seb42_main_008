@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { Dispatch, SetStateAction, useState } from 'react';
 import {
   GoogleMap,
   LoadScriptProps,
@@ -8,14 +8,19 @@ import {
 import styled from 'styled-components';
 import { FaMapMarkerAlt } from 'react-icons/fa';
 interface LatLngWithAddress extends google.maps.LatLngLiteral {
-  address: string;
+  address: string | null;
 }
 
 interface Props {
   markerLocation: { lat: number; lng: number };
-  savedAddress: any;
-  setSavedAddress: any;
-  setMarkerLocation: any;
+  savedAddress: string | null;
+  setSavedAddress: Dispatch<SetStateAction<string | null>>;
+  setMarkerLocation: React.Dispatch<
+    React.SetStateAction<{
+      lat: number;
+      lng: number;
+    }>
+  >;
 }
 
 const libraries: LoadScriptProps['libraries'] = ['places'];
@@ -26,9 +31,9 @@ const SearchMap: React.FC<Props> = ({
   setMarkerLocation,
 }) => {
   // 구글 api
-  const googleKey: any = process.env.REACT_APP_API_KEY;
+  const googleKey: string | undefined = process.env.REACT_APP_API_KEY;
   const { isLoaded } = useLoadScript({
-    googleMapsApiKey: googleKey,
+    googleMapsApiKey: googleKey || '키가 없어요',
     libraries,
   });
   const initialCenter = {
@@ -76,7 +81,7 @@ const SearchMap: React.FC<Props> = ({
   };
 
   // 장소 검색, 마커 이동, 센터 이동
-  const handleSearchClick = (event: any) => {
+  const handleSearchClick = (event: React.MouseEvent<HTMLFormElement>) => {
     event.preventDefault();
     const geocoder = new google.maps.Geocoder();
     geocoder.geocode(
