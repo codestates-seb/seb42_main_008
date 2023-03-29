@@ -18,13 +18,18 @@ type RandomCountries = {
 type Countries = {
   name: string;
   code: string;
-  image: string;
+  image?: string;
 };
 let countries: Countries[] = [];
 
 interface Props {
-  filteredCountry: string[];
+  filteredCountry: Countries[];
 }
+
+type CountryList = {
+  nationCode: string;
+  companionsCount: number;
+};
 
 const CountrySelect = () => {
   const { continent } = useParams<{ continent: string }>();
@@ -248,24 +253,28 @@ const CountrySelect = () => {
   // 변경 : 해당대륙으로만 필터된 배열
   // 이 배열에서 글이 작성된 국가만 가져와야함
   //countryList 배열 = [{nationCode:'jpn',companionsCount:3}]
-  let filteredrandomCountriesPick: any = [];
+  let filteredrandomCountriesPick: Countries[] = [];
   if (continent !== undefined) {
     filteredrandomCountriesPick = randomCountriesPick[continent];
   }
 
-  const codes = countries.map((country: any) => country.code);
+  const codes = countries.map((country: Countries) => country.code);
 
   const nationCodeChange = countryList
-    .filter((country: any) => {
+    .filter((country: CountryList) => {
       return !codes.includes(country.nationCode);
     })
-    .sort((a: any, b: any) => b.companionsCount - a.companionsCount);
-  const nationCode = nationCodeChange.map((country: any) => country.nationCode);
+    .sort(
+      (a: CountryList, b: CountryList) => b.companionsCount - a.companionsCount
+    );
+  const nationCode = nationCodeChange.map(
+    (country: CountryList) => country.nationCode
+  );
 
   //정렬 미치겠다!!!!!!!!!!
   const filteredCountry = filteredrandomCountriesPick
-    .filter((country: any) => nationCode.includes(country.code))
-    .sort((a: any, b: any) => {
+    .filter((country: Countries) => nationCode.includes(country.code))
+    .sort((a: Countries, b: Countries) => {
       const indexA = nationCode.indexOf(a.code);
       const indexB = nationCode.indexOf(b.code);
       return indexA - indexB;
@@ -482,7 +491,7 @@ const CountryListBox = styled.section<Props>`
     min-height: 600px;
     margin-top: 20px;
     height: 100%;
-    grid-template-columns: ${(props: any) =>
+    grid-template-columns: ${(props: Props) =>
       props.filteredCountry.length !== 0 ? `7fr 3fr` : `10fr 0fr`};
 
     @media screen and (max-width: 768px) {
