@@ -63,8 +63,9 @@
 
 ## 📎 바로가기
 
-* [▶️ 배포 링크 바로가기](http://partypeople.s3-website.ap-northeast-2.amazonaws.com/)
-* [▶️ 팀 노션 페이지 바로가기](https://phrygian-neem-c42.notion.site/Main-Project-6b6a883620bd4a6ebeeca2c5338a38fa)
+* [▶️ **배포 링크 바로가기**](http://partypeople.s3-website.ap-northeast-2.amazonaws.com/)
+* [🎆 팀 노션 페이지 바로가기](https://phrygian-neem-c42.notion.site/Main-Project-6b6a883620bd4a6ebeeca2c5338a38fa)
+* [🖥 구현 완료 화면 캡쳐본 보러가기](https://phrygian-neem-c42.notion.site/e59be6b540364dfb90dc40edaa98aa61)
 
 <br/>
 
