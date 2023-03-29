@@ -1,12 +1,13 @@
 import { GoogleMap, MarkerF, useLoadScript } from '@react-google-maps/api';
 import Loader from 'components/Loader';
+import { detailInfo } from 'interfaces/ContentDetail.interface';
 import { MdLocationOn } from 'react-icons/md';
 import styled from 'styled-components';
 
-const SearchMap = ({ detail }: any) => {
-  const googleMapKey: any = process.env.REACT_APP_API_KEY;
+const SearchMap = ({ detail }: { detail: detailInfo }) => {
+  const googleMapKey: string | undefined = process.env.REACT_APP_API_KEY;
   const { isLoaded } = useLoadScript({
-    googleMapsApiKey: googleMapKey,
+    googleMapsApiKey: googleMapKey || '키가 없어요',
   });
   const center = {
     lat: detail.lat,

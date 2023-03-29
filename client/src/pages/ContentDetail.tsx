@@ -4,7 +4,11 @@ import ContentWriter from 'components/ContentDetail/ContentWriter';
 import SearchMap from 'components/ContentDetail/SearchMap';
 import TravelComplete from 'components/ContentDetail/TravelComplete';
 import Loader from 'components/Loader';
-import { detailInfo } from 'interfaces/ContentDetail.interface';
+import {
+  detailInfo,
+  subApply,
+  partApply,
+} from 'interfaces/ContentDetail.interface';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
@@ -12,8 +16,8 @@ import { getDateString } from 'utils/getDateString';
 
 const ContentDetail = () => {
   const { contentId } = useParams<{ contentId: string }>();
-  const [sub, setSub] = useState<any>();
-  const [part, setPart] = useState<any>();
+  const [sub, setSub] = useState<subApply[]>([]);
+  const [part, setPart] = useState<partApply[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const [detail, setDetail] = useState<detailInfo>({

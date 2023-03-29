@@ -66,7 +66,7 @@ const ContentList = () => {
       });
   };
 
-  const obsHandler = (entries: any) => {
+  const obsHandler = (entries: IntersectionObserverEntry[]) => {
     const target = entries[0];
 
     if (!isLast && target.isIntersecting && preventRef.current) {
