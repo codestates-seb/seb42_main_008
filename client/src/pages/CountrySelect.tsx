@@ -348,7 +348,7 @@ const CountrySelect = () => {
             ))}
           </ul>
           <ul className="random-country">
-            {filteredCountry.map((country: any, index: number) => {
+            {filteredCountry.map((country: Countries, index: number) => {
               return (
                 <li
                   key={index}

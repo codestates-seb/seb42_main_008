@@ -8,12 +8,12 @@ import {
 import styled from 'styled-components';
 import { FaMapMarkerAlt } from 'react-icons/fa';
 interface LatLngWithAddress extends google.maps.LatLngLiteral {
-  address: string;
+  address: string | null;
 }
 
 interface Props {
   markerLocation: { lat: number; lng: number };
-  savedAddress: string;
+  savedAddress: string | null;
   setSavedAddress: Dispatch<SetStateAction<string | null>>;
   setMarkerLocation: React.Dispatch<
     React.SetStateAction<{
