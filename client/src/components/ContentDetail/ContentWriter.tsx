@@ -62,7 +62,6 @@ const ContentWriter = ({
           .delete(`/companions/${detail.companionId}`)
           .then(() => {
             Swal.fire('Deleted!', '동행글이 삭제되었습니다.', 'success');
-            console.log('delete!');
           })
           .catch(error => console.log(error));
         navigate(-1);
