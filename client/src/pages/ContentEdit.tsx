@@ -126,7 +126,9 @@ const ContentEdit = () => {
   //   setCountrySelect('국가선택');
   //   setCountryCode('');
   // }, []);
-  const handleContinentChange = (event: any) => {
+  const handleContinentChange = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
     setContinentSelect(event.target.value);
     setCountrySelect('국가선택');
     setCountryCode('');

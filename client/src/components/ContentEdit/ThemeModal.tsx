@@ -22,7 +22,7 @@ type Props = {
   continentSelect: string;
   countrySelect: string;
   countryCode: string;
-  selectedTendencies: any;
+  selectedTendencies: string[];
   formattedDate: string;
 };
 const ThemeModal = ({
@@ -97,7 +97,9 @@ const ThemeModal = ({
   const { contentId } = useParams();
 
   // 모든 양식 제출 patch 요청
-  const handleAllSubmit = async (event: any) => {
+  const handleAllSubmit = async (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
     if (selectedThemes.length >= 1) {
       event.preventDefault();
       Swal.fire({
