@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { ChangeEvent, useState } from 'react';
 import styled from 'styled-components';
 import { FaRegEnvelope } from 'react-icons/fa';
 import { GrClose } from 'react-icons/gr';
@@ -37,7 +37,9 @@ const ReplyNote = ({
   // 멤버 아이디
   const user = useRecoilValue(userInfo);
   // 답장보내기
-  const handleSubmitReply = async (event: any) => {
+  const handleSubmitReply = async (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
     event.preventDefault();
     Swal.fire({
       title: '쪽지를 보내시겠습니까?',
@@ -80,7 +82,9 @@ const ReplyNote = ({
         </div>
         <textarea
           className="note-content"
-          onChange={(event: any) => setReplyInput(event.target.value)}
+          onChange={(event: ChangeEvent<HTMLTextAreaElement>) =>
+            setReplyInput(event.target.value)
+          }
         />
       </div>
       <div className="note-button">
