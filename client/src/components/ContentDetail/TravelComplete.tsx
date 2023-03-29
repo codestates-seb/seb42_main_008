@@ -1,7 +1,11 @@
 import customAxios from 'api/customAxios';
 import { StyledTabBox } from 'components/ContentDetail/CompanionStyled';
 import FirstReviewModal from 'components/ContentDetail/FirstReviewModal';
-import { partProps } from 'interfaces/ContentDetail.interface';
+import {
+  partApply,
+  partProps,
+  reviewApply,
+} from 'interfaces/ContentDetail.interface';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
@@ -16,7 +20,7 @@ const TravelComplete = ({ detail, part, setPart }: partProps) => {
   const [firstModal, setFirstModal] = useState<boolean>(false);
   const [reviewId, setReviewId] = useState(0);
   // * 리뷰 작성한 사람 모음
-  const [reviewed, setReviewed] = useState<any>();
+  const [reviewed, setReviewed] = useState<reviewApply[]>([]);
 
   const navigate = useNavigate();
 
@@ -60,7 +64,7 @@ const TravelComplete = ({ detail, part, setPart }: partProps) => {
       </TabBox>
       <Content>
         {part && part.length !== 0 ? (
-          part.map((el: any, index: number) => (
+          part.map((el: partApply, index: number) => (
             <li key={index}>
               <CompanionInfo>
                 <div
@@ -81,11 +85,13 @@ const TravelComplete = ({ detail, part, setPart }: partProps) => {
                 </ButtonBox>
               ) : (reviewed &&
                   reviewed.length !== 0 &&
-                  reviewed.some((rv: any) => rv.memberId === el.memberId)) ||
+                  reviewed.some(
+                    (rv: reviewApply) => rv.memberId === el.memberId
+                  )) ||
                 (reviewed &&
                   reviewed.length !== 0 &&
                   reviewed.some(
-                    (rv: any) => rv.memberId === detail.memberId
+                    (rv: reviewApply) => rv.memberId === detail.memberId
                   )) ? (
                 <ButtonBox>
                   <button className="complete">리뷰 완료</button>
@@ -100,13 +106,13 @@ const TravelComplete = ({ detail, part, setPart }: partProps) => {
                   reviewed &&
                   reviewed.length !== 0 &&
                   reviewed.some(
-                    (rv: any) => rv.memberId === detail.memberId
+                    (rv: reviewApply) => rv.memberId === detail.memberId
                   )) ||
                 (memberId === el.memberId &&
                   reviewed &&
                   reviewed.length !== 0 &&
                   reviewed.some(
-                    (rv: any) => rv.memberId === el.memberId
+                    (rv: reviewApply) => rv.memberId === el.memberId
                   )) ? null : (
                 <ButtonBox>
                   <button onClick={() => handleFirstModal(el.memberId)}>
