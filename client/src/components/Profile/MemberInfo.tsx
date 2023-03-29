@@ -41,18 +41,18 @@ const MemberInfo = ({ member, setMember }: MemberInfoProps) => {
     };
 
     await customAxios.post('/members/follows', data).then(resp => {
-      setIsFollow(resp.data.data.followerStatus);
-
       if (!resp.data.data.followerStatus) {
         toast.success('팔로우가 취소되었습니다');
         setMember({
           ...member,
+          followerStatus: resp.data.data.followerStatus,
           followerCount: member.followerCount - 1,
         });
       } else {
         toast.success('팔로우가 완료되었습니다');
         setMember({
           ...member,
+          followerStatus: resp.data.data.followerStatus,
           followerCount: member.followerCount + 1,
         });
       }
