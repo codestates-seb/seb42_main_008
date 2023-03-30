@@ -73,7 +73,25 @@ customAxios.interceptors.response.use(
           const originLocation = location.origin;
           location.assign(`${originLocation}/login`);
         });
-        return Promise.reject(error);
+        return;
+      }
+    } else if (status === 400) {
+      if (
+        error.response.data.message ===
+        "Required request header 'Authorization' for method parameter type String is not present"
+      ) {
+        Swal.fire({
+          title: '로그인 시간이 만료되었습니다',
+          text: '다시 로그인 해주세요! 🥲',
+          icon: 'warning',
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: '확인',
+        }).then(() => {
+          localStorage.clear();
+          const originLocation = location.origin;
+          location.assign(`${originLocation}/login`);
+        });
+        return;
       }
     }
     return Promise.reject(error);
