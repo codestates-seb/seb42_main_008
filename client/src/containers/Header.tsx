@@ -95,10 +95,6 @@ const Header = () => {
     }
   }, [notes, isLogin]);
 
-  window.onbeforeunload = function () {
-    localStorage.clear();
-  };
-
   return (
     <HeaderBox>
       <div className="header-left">
