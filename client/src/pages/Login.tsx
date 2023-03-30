@@ -40,7 +40,18 @@ const Login = () => {
         const decodeToken = res.headers.authorization
           .split(' ')[1]
           .split('.')[1];
-        return JSON.parse(decodeURIComponent(escape(window.atob(decodeToken))));
+        const base64 = decodeToken.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(
+          window
+            .atob(base64)
+            .split('')
+            .map(function (c) {
+              return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            })
+            .join('')
+        );
+        const data = JSON.parse(jsonPayload);
+        return data;
       })
       .then(res => {
         setUser(res);
