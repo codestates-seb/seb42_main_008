@@ -1,15 +1,15 @@
-import NoteModal from 'components/MessageModal/NoteModal';
-import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
-import { FaEnvelope } from 'react-icons/fa';
-import { RiLogoutBoxRLine } from 'react-icons/ri';
-import { GiHamburgerMenu } from 'react-icons/gi';
-import Menu from 'components/Header/Menu';
+import customAxios from 'api/customAxios';
 import LogoutMenu from 'components/Header/LogoutMenu';
+import Menu from 'components/Header/Menu';
+import NoteModal from 'components/MessageModal/NoteModal';
+import { useEffect, useState } from 'react';
+import { FaEnvelope } from 'react-icons/fa';
+import { GiHamburgerMenu } from 'react-icons/gi';
+import { RiLogoutBoxRLine } from 'react-icons/ri';
+import { Link, useNavigate } from 'react-router-dom';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { loginState, userInfo } from 'states/userState';
-import customAxios from 'api/customAxios';
+import styled from 'styled-components';
 import Swal from 'sweetalert2';
 
 const Header = () => {
@@ -92,6 +92,10 @@ const Header = () => {
       };
     }
   }, [notes, isLogin]);
+
+  window.onbeforeunload = function () {
+    localStorage.clear();
+  };
 
   return (
     <HeaderBox>
