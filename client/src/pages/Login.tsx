@@ -1,19 +1,19 @@
 import customAxios from 'api/customAxios';
 import { MemberBox } from 'components/Login/MemberStyled';
+import SocialLogin from 'components/Login/SocialLogin';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useSetRecoilState } from 'recoil';
 import { loginState, userInfo } from 'states/userState';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
 import { setCookie } from 'utils/userCookies';
-import SocialLogin from 'components/Login/SocialLogin';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const [isLogin, setIsLogin] = useRecoilState(loginState);
+  const setIsLogin = useSetRecoilState(loginState);
   const setUser = useSetRecoilState(userInfo);
 
   const navigate = useNavigate();
@@ -55,8 +55,8 @@ const Login = () => {
       })
       .then(res => {
         setUser(res);
-        setIsLogin(!isLogin);
-        navigate('/');
+        setIsLogin(true);
+        navigate('/', { replace: true });
       })
       .catch(error => {
         Swal.fire({
