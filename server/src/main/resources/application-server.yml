@@ -12,7 +12,7 @@ spring:
             required: true
   data:
     redis:
-      host: 127.0.0.1
+      host: 52.79.183.219
       port: 6379
       repositories:
         enabled: false

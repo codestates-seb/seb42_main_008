@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import { FaEnvelope } from 'react-icons/fa';
 import { GiHamburgerMenu } from 'react-icons/gi';
 import { RiLogoutBoxRLine } from 'react-icons/ri';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { loginState, userInfo } from 'states/userState';
 import styled from 'styled-components';
@@ -14,7 +14,7 @@ import Swal from 'sweetalert2';
 
 const Header = () => {
   const [isLogin, setIsLogin] = useRecoilState(loginState);
-  const navigate = useNavigate();
+
   //멤버아이디
   const UserInfo = useRecoilValue(userInfo);
   const memberId = UserInfo.memberId;
@@ -32,11 +32,13 @@ const Header = () => {
         customAxios
           .post(`/members/logout`)
           .then(() => {
-            Swal.fire('Logout!', '로그아웃 되었어요!', 'success');
+            Swal.fire('Logout!', '로그아웃 되었어요!', 'success').then(() => {
+              window.location.replace('/');
+            });
             localStorage.clear();
-            navigate('/');
             setIsLogin(false);
           })
+
           .catch(error => {
             console.log(error);
           });
@@ -92,10 +94,6 @@ const Header = () => {
       };
     }
   }, [notes, isLogin]);
-
-  window.onbeforeunload = function () {
-    localStorage.clear();
-  };
 
   return (
     <HeaderBox>
