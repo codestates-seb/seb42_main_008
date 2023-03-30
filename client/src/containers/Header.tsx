@@ -1,20 +1,19 @@
-import NoteModal from 'components/MessageModal/NoteModal';
-import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
-import { FaEnvelope } from 'react-icons/fa';
-import { RiLogoutBoxRLine } from 'react-icons/ri';
-import { GiHamburgerMenu } from 'react-icons/gi';
-import Menu from 'components/Header/Menu';
-import LogoutMenu from 'components/Header/LogoutMenu';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import { loginState, userInfo, userToken } from 'states/userState';
 import customAxios from 'api/customAxios';
+import LogoutMenu from 'components/Header/LogoutMenu';
+import Menu from 'components/Header/Menu';
+import NoteModal from 'components/MessageModal/NoteModal';
+import { useEffect, useState } from 'react';
+import { FaEnvelope } from 'react-icons/fa';
+import { GiHamburgerMenu } from 'react-icons/gi';
+import { RiLogoutBoxRLine } from 'react-icons/ri';
+import { Link, useNavigate } from 'react-router-dom';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { loginState, userInfo } from 'states/userState';
+import styled from 'styled-components';
 import Swal from 'sweetalert2';
 
 const Header = () => {
   const [isLogin, setIsLogin] = useRecoilState(loginState);
-  const token = useRecoilValue(userToken);
   const navigate = useNavigate();
   //멤버아이디
   const UserInfo = useRecoilValue(userInfo);
@@ -31,12 +30,10 @@ const Header = () => {
     }).then(async result => {
       if (result.isConfirmed) {
         customAxios
-          .post(`/members/logout`, null, {
-            headers: { Authorization: token },
-          })
+          .post(`/members/logout`)
           .then(() => {
             Swal.fire('Logout!', '로그아웃 되었어요!', 'success');
-            localStorage.clear();
+            sessionStorage.clear();
             navigate('/');
             setIsLogin(false);
           })

@@ -31,7 +31,7 @@ const Message = ({ note, setNoteModal }: Props) => {
   //읽은 쪽지 안읽은 쪽지 상태 구분
   const [isRead, setIsRead] = useState<boolean>(note.read);
 
-  const handleOpenNote = async (event: any) => {
+  const handleOpenNote = async (event: React.MouseEvent<HTMLDivElement>) => {
     event.preventDefault();
     try {
       await customAxios.patch(`/messages/${note.messageId}`, { read: true });
@@ -52,7 +52,9 @@ const Message = ({ note, setNoteModal }: Props) => {
     setIsReplyOpen(!isReplyOpen);
   };
 
-  const handelDeleteNote = async (event: any) => {
+  const handelDeleteNote = async (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
     event.preventDefault();
     Swal.fire({
       title: '쪽지를 삭제하시겠습니까?',

@@ -94,8 +94,13 @@ interface partProps {
   setPart: (newValue: partApply[]) => void;
 }
 
+interface reviewApply {
+  memberId: number;
+}
+
 export type {
   contentsTab,
+  subApply,
   firstModal,
   secondModal,
   thirdModal,
@@ -104,4 +109,6 @@ export type {
   partProps,
   companionProps,
   reviewerInfo,
+  partApply,
+  reviewApply,
 };

@@ -1,6 +1,6 @@
 import customAxios from 'api/customAxios';
 import { StyledCompanionList } from 'components/ContentDetail/CompanionStyled';
-import { companionProps } from 'interfaces/ContentDetail.interface';
+import { companionProps, partApply } from 'interfaces/ContentDetail.interface';
 import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
@@ -74,7 +74,7 @@ const Participants = ({ detail, setSub, part, setPart }: companionProps) => {
     <Container>
       <StyledCompanionList>
         {part && part.length !== 0 ? (
-          part.map((el: any, index: number) => (
+          part.map((el: partApply, index: number) => (
             <li key={index}>
               <div
                 className="companion-info"

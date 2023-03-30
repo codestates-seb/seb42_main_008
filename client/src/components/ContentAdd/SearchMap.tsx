@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { Dispatch, SetStateAction, useState } from 'react';
 import {
   GoogleMap,
   LoadScriptProps,
@@ -11,16 +11,26 @@ interface LatLngWithAddress extends google.maps.LatLngLiteral {
   address: string;
 }
 const libraries: LoadScriptProps['libraries'] = ['places'];
+
+type Props = {
+  savedAddress: string | null;
+  setSavedAddress: Dispatch<SetStateAction<string | null>>;
+  setMarkerLocation: React.Dispatch<
+    React.SetStateAction<{
+      lat: number;
+      lng: number;
+    }>
+  >;
+};
 const SearchMap = ({
   savedAddress,
   setSavedAddress,
-  markerLocation,
   setMarkerLocation,
-}: any) => {
+}: Props) => {
   // 구글 api
-  const googleKey: any = process.env.REACT_APP_API_KEY;
+  const googleKey: string | undefined = process.env.REACT_APP_API_KEY;
   const { isLoaded } = useLoadScript({
-    googleMapsApiKey: googleKey,
+    googleMapsApiKey: googleKey || '키가 없어요',
     libraries,
   });
   // 초기마커위치
@@ -63,7 +73,7 @@ const SearchMap = ({
   };
 
   // 장소 검색, 마커 이동, 센터 이동
-  const handleSearchClick = (event: any) => {
+  const handleSearchClick = (event: React.MouseEvent<HTMLFormElement>) => {
     event.preventDefault();
     const geocoder = new google.maps.Geocoder();
     geocoder.geocode(
@@ -83,7 +93,6 @@ const SearchMap = ({
           setSavedAddress(formmatedAddress);
           setCenter(location);
           setMarkerLocation(location);
-          console.log(markerLocation);
         }
       }
     );
