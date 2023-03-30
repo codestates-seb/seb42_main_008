@@ -33,7 +33,7 @@ const Header = () => {
           .post(`/members/logout`)
           .then(() => {
             Swal.fire('Logout!', '로그아웃 되었어요!', 'success');
-            sessionStorage.clear();
+            localStorage.clear();
             navigate('/');
             setIsLogin(false);
           })
@@ -92,6 +92,10 @@ const Header = () => {
       };
     }
   }, [notes, isLogin]);
+
+  window.onbeforeunload = function () {
+    localStorage.clear();
+  };
 
   return (
     <HeaderBox>
