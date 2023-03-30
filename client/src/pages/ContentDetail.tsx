@@ -6,11 +6,12 @@ import TravelComplete from 'components/ContentDetail/TravelComplete';
 import Loader from 'components/Loader';
 import {
   detailInfo,
-  subApply,
   partApply,
+  subApply,
 } from 'interfaces/ContentDetail.interface';
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { MdArrowBackIosNew } from 'react-icons/md';
+import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { getDateString } from 'utils/getDateString';
 
@@ -19,6 +20,12 @@ const ContentDetail = () => {
   const [sub, setSub] = useState<subApply[]>([]);
   const [part, setPart] = useState<partApply[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  const navigate = useNavigate();
+
+  const handleBack = () => {
+    navigate(-1);
+  };
 
   const [detail, setDetail] = useState<detailInfo>({
     companionId: 0,
@@ -48,10 +55,16 @@ const ContentDetail = () => {
       .catch(error => {
         console.log(error);
       });
-  }, []);
+  }, [contentId]);
 
   return (
     <Container>
+      <BackSpace>
+        <button onClick={handleBack}>
+          <MdArrowBackIosNew />
+          <div>목록으로</div>
+        </button>
+      </BackSpace>
       <ContentDetailBox>
         {isLoading ? (
           <Loader />
@@ -109,6 +122,33 @@ export default ContentDetail;
 
 const Container = styled.main`
   background-color: #5d62a0;
+`;
+const BackSpace = styled.div`
+  width: 100%;
+  position: absolute;
+  top: 75px;
+  left: 0px;
+  display: flex;
+  padding: 0px 20px;
+  justify-content: flex-start;
+  align-items: center;
+  button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 0;
+    background-color: transparent;
+    cursor: pointer;
+    color: white;
+    font-size: 1.3rem;
+    transition: all 0.3s ease 0s;
+    opacity: 1;
+    :hover {
+      transition: all 0.3s ease 0s;
+      transform: translateX(-5px);
+      color: #d4d4d4;
+    }
+  }
 `;
 const ContentDetailBox = styled.section`
   display: flex;
