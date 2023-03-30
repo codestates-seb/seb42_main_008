@@ -1,7 +1,12 @@
 import { atom } from 'recoil';
 import { recoilPersist } from 'recoil-persist';
 
-const { persistAtom } = recoilPersist();
+//const { persistAtom } = recoilPersist();
+
+const { persistAtom } = recoilPersist({
+  key: 'userState',
+  storage: sessionStorage,
+});
 
 // * 로그인 상태
 export const loginState = atom({
