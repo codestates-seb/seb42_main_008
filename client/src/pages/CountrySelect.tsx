@@ -7,6 +7,7 @@ import { loginState } from 'states/userState';
 import { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
 import customAxios from 'api/customAxios';
+import { MdArrowBackIosNew } from 'react-icons/md';
 const randomCountriesPick: RandomCountries = randomCountries;
 type RandomCountries = {
   [key: string]: {
@@ -317,8 +318,22 @@ const CountrySelect = () => {
       navigate('/login');
     }
   };
+
+  const handleBackClick = () => {
+    navigate('/continents');
+  };
+
   return (
     <CountryListContainer>
+      <BackToMap>
+        <div className="continent-button" onClick={handleBackClick}>
+          <span className="back-icon">
+            <MdArrowBackIosNew />
+          </span>
+          대륙 선택하기
+        </div>
+        <div className="background"></div>
+      </BackToMap>
       <div
         className="country-name-box"
         style={{ backgroundImage: `url(${titleImg})` }}
@@ -621,6 +636,50 @@ const ImageFilter = styled.section`
   background-color: #000650;
   opacity: 0.25;
 `;
+
+const BackToMap = styled.div`
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  padding: 0 20px;
+  .background {
+    width: 100%;
+    height: 50px;
+    background-color: black;
+    opacity: 0.4;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+  }
+  .continent-button {
+    color: #fff;
+    opacity: 1;
+    z-index: 3;
+    position: absolute;
+    top: 10px;
+    font-size: 1.3rem;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    opacity: 0.8;
+    cursor: pointer;
+    transition: 0.3s;
+    :hover {
+      transform: translateX(-5px);
+      transition: 0.3s;
+      opacity: 1;
+    }
+  }
+  .back-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+`;
+
 // .random-country //repeat 첫인자에 랜덤으로 들어갈 개수 넣기
 
 // FIXME: map사용해서 나라리스트 받아올때 href 라우팅걸기

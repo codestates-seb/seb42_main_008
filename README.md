@@ -150,7 +150,7 @@
 | :----: | :-------: | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
 | 조은선 | Front-end  | 회원가입 페이지 스타일링, 기능 및 유효성 검사<br/>로그인 페이지 스타일링, 기능 및 토큰 쿠키 저장<br/>동행글 상세 페이지 스타일링, 조회 및 삭제<br/>지도 렌더링<br/>동행 수락/거절 기능<br/>동행 신청/취소 기능<br/>참여 신청/취소 기능<br/>리뷰 및 평가 기능<br/>Footer<br/> |
 | 김상교 | Front-end  | 대륙별 국가 선택 페이지 스타일링 & 기능 구현<br/>글 작성-수정 페이지 스타일링 & 기능 구현<br/>지도 검색 및 마커 렌더링 기능 추가<br/>헤더 및 로그인 상태 로그아웃 상태 구현<br/>쪽지 및 실시간 미열람 쪽지 개수<br/> |
-| 장장미 | Front-end | 메인 페이지 스타일링 & 기능 구현<br/>대륙 선택 페이지 스타일링 & 기능 구현<br/>국가별 동행글 리스트 페이지 스타일링 & 기능 구현<br/>프로필 페이지 스타일링 & 기능 구현<br/>구글&카카오 로그인/회원가입 구현<br/>액세스 토큰 재발급<br/> |
+| 장장미 | Front-end | 메인 페이지 스타일링 & 기능 구현<br/>대륙 선택 페이지 스타일링 & 기능 구현<br/>국가별 동행글 리스트 페이지 스타일링 & 기능 구현<br/>프로필 페이지 스타일링 & 기능 구현<br/>구글&카카오 로그인/회원가입 구현<br/>토큰 만료 및 재발급 관리 (customAxios, interceptor)<br/> |
 | 이승철 | Back-end | 쪽지 발신, 단건/전체 조회, 삭제<br/>평가 등록, 조회<br/>동행글 검색<br/>동행 신청, 취소, 동행 참가 승인, 동행 참가 취소<br/>읽지 않은 쪽지 수 실시간 알림<br/> |
 | 조국선 | Back-end | 회원가입/수정/탈퇴<br/>자체 로그인, 구글/카카오 로그인, 로그아웃<br/>JWT관리<br/>팔로우 등록/취소/조회<br/>신청/참여/작성/리뷰 글 조회<br/> |
 | 홍수경 | Back-end  | 동행글 작성/수정/삭제/단건 조회<br/>대륙-국가별 동행글 개수 조회<br/>로그인한 유저가 리뷰한 참여자 조회<br/>동행글 완료 여부 갱신<br/>쪽지 발신<br/> |
@@ -169,7 +169,7 @@
 
 |  **Front-End**   |   **Back-End**  | 
 | :----------: | :-----------: |
-| `React`, `TypeScript`, `Recoil`, `styled-components`, `react-google-maps/api`, `axios`, `prittier`, `eslint`, `html`, `React Router`, `react-datepicker`, `react-quill`, `toastr`, `SweetAlert2`, `react-icons`, `react-cookies`, `react-slick` | `Java`, `gradle`, `Spring`, `Spring Boot`, `Spring Data JPA`, `Spring Security`, `Mysql`, `Spring Rest Docs`, `OAuth2`, `Redis`, `JWT`, `MailSender`, `SSE`, `Mapstruct`, `JUnit5`, `hibernate` |
+| `React`, `TypeScript`, `Recoil`, `styled-components`, `react-google-maps/api`, `use-places-autocomplete`, `react-simple-maps`, `axios`, `prittier`, `eslint`, `html`, `React Router`, `react-datepicker`, `react-quill`, `toastr`, `SweetAlert2`, `react-icons`, `react-cookies`, `react-slick` | `Java`, `gradle`, `Spring`, `Spring Boot`, `Spring Data JPA`, `Spring Security`, `Mysql`, `Spring Rest Docs`, `OAuth2`, `Redis`, `JWT`, `MailSender`, `SSE`, `Mapstruct`, `JUnit5`, `hibernate` |
 
 <br />
 

@@ -162,14 +162,14 @@ public class MemberService {
             Long expiration = jwtTokenizer.getExpiration(refreshToken);
             //유효기간 안
             //DB안의 발행토큰인지 확인
-            String value = redisTemplate.opsForValue().get(jwtTokenizer.extractEmail(refreshToken));
-            if (ObjectUtils.isEmpty(value)) {
-                throw new BusinessLogicException(ExceptionCode.REFRESH_TOKEN_ERROR);
-            } else {
+//            String value = redisTemplate.opsForValue().get(jwtTokenizer.extractEmail(refreshToken));
+//            if (ObjectUtils.isEmpty(value)) {
+//                throw new BusinessLogicException(ExceptionCode.REFRESH_TOKEN_ERROR);
+//            } else {
                 Member member = findMember(jwtTokenizer.extractEmail(refreshToken));
 
                 return jwtTokenizer.delegateAccessToken(member);
-            }
+//            }
         } catch (SignatureException se) {
             throw new BusinessLogicException(ExceptionCode.SIGNATURE_ERROR);
         } catch (ExpiredJwtException ee) {

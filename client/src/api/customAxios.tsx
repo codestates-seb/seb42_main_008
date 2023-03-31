@@ -42,9 +42,9 @@ customAxios.interceptors.response.use(
       ) {
         const originalRequest = config;
         const refreshToken = await getCookie('refreshToken');
-        await customAxios
+        await axios
           .post(
-            `/members/reissue`,
+            `${process.env.REACT_APP_SERVER}/members/reissue`,
             {},
             { headers: { refresh: `${refreshToken}` } }
           )
