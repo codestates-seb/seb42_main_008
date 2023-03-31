@@ -12,6 +12,7 @@ type Props = {
   setNoteModal: (newValue: boolean) => void;
   animationMode: boolean;
   setAnimationMode: (newValue: boolean) => void;
+  notRead: number;
 };
 
 interface NoteMessage {
@@ -30,6 +31,7 @@ const NoteModal = ({
   animationMode,
   setAnimationMode,
   setNoteModal,
+  notRead,
 }: Props) => {
   const HandleModal = () => {
     setAnimationMode(false);
@@ -53,7 +55,7 @@ const NoteModal = ({
         setAllNotes(response.data.data);
       })
       .catch(error => console.log(error));
-  }, []);
+  }, [notRead]);
 
   return (
     <>
