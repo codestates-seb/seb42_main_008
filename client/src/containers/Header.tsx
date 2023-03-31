@@ -59,8 +59,9 @@ const Header = () => {
     }
   };
   // 쪽지모달 닫기
-  const handleModalClose = (event: any) => {
-    if (event.target.classList.contains('overlay-for-noteModal')) {
+  const handleModalClose = (event: React.MouseEvent<HTMLDivElement>) => {
+    const target = event.target as HTMLElement;
+    if (target.classList.contains('overlay-for-noteModal')) {
       setAnimationMode(false);
       setTimeout(() => setNoteModal(false), 290);
     }
