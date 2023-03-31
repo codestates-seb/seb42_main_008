@@ -61,7 +61,9 @@ customAxios.interceptors.response.use(
       else if (
         error.response.data.message === 'Token Expired Error' ||
         error.response.data.message === '유효한 토큰이 아닙니다.' ||
-        error.response.data.message === 'Unauthorized'
+        error.response.data.message === 'Unauthorized' ||
+        error.response.data.message ===
+          'Full authentication is required to access this resource'
       ) {
         Swal.fire({
           title: '로그인 시간이 만료되었습니다',
