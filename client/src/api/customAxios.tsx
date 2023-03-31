@@ -60,25 +60,10 @@ customAxios.interceptors.response.use(
       // & Refresh Token 만료시 로그아웃
       else if (
         error.response.data.message === 'Token Expired Error' ||
-        error.response.data.message === '유효한 토큰이 아닙니다.'
-      ) {
-        Swal.fire({
-          title: '로그인 시간이 만료되었습니다',
-          text: '다시 로그인 해주세요! 🥲',
-          icon: 'warning',
-          confirmButtonColor: '#3085d6',
-          confirmButtonText: '확인',
-        }).then(() => {
-          localStorage.clear();
-          const originLocation = location.origin;
-          location.assign(`${originLocation}/login`);
-        });
-        return;
-      }
-    } else if (status === 400) {
-      if (
+        error.response.data.message === '유효한 토큰이 아닙니다.' ||
+        error.response.data.message === 'Unauthorized' ||
         error.response.data.message ===
-        "Required request header 'Authorization' for method parameter type String is not present"
+          'Full authentication is required to access this resource'
       ) {
         Swal.fire({
           title: '로그인 시간이 만료되었습니다',

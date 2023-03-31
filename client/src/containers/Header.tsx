@@ -65,7 +65,7 @@ const Header = () => {
   // 쪽지 목록 불러오기
   const [notes, setNotes] = useState();
   useEffect(() => {
-    if (isLogin === true) {
+    if (isLogin === true && noteModal) {
       customAxios
         .get(`/messages?memberId=${memberId}`)
         .then(response => {
@@ -130,6 +130,7 @@ const Header = () => {
             setNoteModal={setNoteModal}
             animationMode={animationMode}
             setAnimationMode={setAnimationMode}
+            notRead={notRead}
           />
         </div>
       ) : null}

@@ -49,7 +49,6 @@ const AccountDeleteModal = ({
     }).then(result => {
       if (result.isConfirmed) {
         requestDeleteAccount();
-        setIsLogin(false);
       } else if (result.dismiss === Swal.DismissReason.cancel) {
         Swal.fire('Cancelled', '취소되었습니다 :)', 'info');
       }
@@ -64,6 +63,7 @@ const AccountDeleteModal = ({
         },
       })
       .then(() => {
+        setIsLogin(false);
         navigate('/');
       })
       .catch(error => {
