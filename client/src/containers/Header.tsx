@@ -48,9 +48,22 @@ const Header = () => {
   //쪽지 모달
   const [noteModal, setNoteModal] = useState(false);
   const [animationMode, setAnimationMode] = useState(false);
+  //쪽지 모달 오픈
   const NoteHandler = () => {
-    setNoteModal(!noteModal);
-    setAnimationMode(true);
+    if (noteModal === false) {
+      setAnimationMode(true);
+      setNoteModal(true);
+    } else {
+      setAnimationMode(false);
+      setTimeout(() => setNoteModal(false), 290);
+    }
+  };
+  // 쪽지모달 닫기
+  const handleModalClose = (event: any) => {
+    if (event.target.classList.contains('overlay-for-noteModal')) {
+      setAnimationMode(false);
+      setTimeout(() => setNoteModal(false), 290);
+    }
   };
 
   // 햄버거 메뉴 반응형
@@ -125,7 +138,7 @@ const Header = () => {
       )}
 
       {noteModal ? (
-        <div className="overlay">
+        <div className="overlay-for-noteModal" onClick={handleModalClose}>
           <NoteModal
             setNoteModal={setNoteModal}
             animationMode={animationMode}
@@ -181,6 +194,14 @@ const HeaderBox = styled.header`
   z-index: 999;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
   .overlay {
+    position: fixed;
+    top: 60px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+  .overlay-for-noteModal {
     position: fixed;
     top: 60px;
     left: 0;
