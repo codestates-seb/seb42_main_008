@@ -267,7 +267,7 @@ const ContentEdit = () => {
                 {Object.keys(countries).map((country, index) => {
                   return (
                     <option key={index} value={country}>
-                      {country}
+                      {country.charAt(0).toUpperCase() + country.slice(1)}
                     </option>
                   );
                 })}
