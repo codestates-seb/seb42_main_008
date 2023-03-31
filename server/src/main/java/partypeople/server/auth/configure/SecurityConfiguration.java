@@ -71,7 +71,6 @@ public class SecurityConfiguration {
             .apply(new CustomFilterConfigurer())
             .and()
         .authorizeHttpRequests(authorize -> authorize
-                .antMatchers(HttpMethod.POST, "/members/reissue").permitAll()
                 .antMatchers(HttpMethod.POST, "/members/follows").hasRole("USER")
                 .antMatchers(HttpMethod.DELETE, "/members/*").hasRole("USER")
                 .antMatchers(HttpMethod.PATCH, "/members/*").hasRole("USER")
