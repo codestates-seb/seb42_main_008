@@ -1,5 +1,7 @@
-import { Footer, Header } from 'containers';
 import GlobalStyle from 'GlobalStyle';
+import ChatButton from 'components/Chat/ChatButton';
+import ChatModal from 'components/Chat/ChatModal';
+import { Footer, Header } from 'containers';
 import {
   ContentAdd,
   ContentDetail,
@@ -12,6 +14,7 @@ import {
   Profile,
   SignUp,
 } from 'pages';
+import { useState } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
@@ -19,12 +22,24 @@ import { RecoilRoot } from 'recoil';
 import ScrollToTop from 'utils/ScrollToTop';
 
 const App = () => {
+  const [isShowChatModal, setIsShowChatModal] = useState(false);
+
+  const handleChatModal = () => {
+    setIsShowChatModal(!isShowChatModal);
+    console.log(isShowChatModal);
+  };
+
   return (
     <BrowserRouter>
       <GlobalStyle />
       <ScrollToTop />
       <RecoilRoot>
         <Header />
+        <ChatButton
+          handleChatModal={handleChatModal}
+          isShowChatModal={isShowChatModal}
+        />
+        {isShowChatModal && <ChatModal handleChatModal={handleChatModal} />}
         <main>
           <Routes>
             <Route path="/" element={<Main />} />
