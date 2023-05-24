@@ -4,10 +4,16 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
 import partypeople.server.companion.dto.CompanionDto;
 import partypeople.server.companion.entity.Companion;
 import partypeople.server.companion.entity.Participant;
@@ -26,11 +32,10 @@ import partypeople.server.nation.service.NationService;
 import partypeople.server.review.entity.Review;
 import partypeople.server.review.service.ReviewService;
 import partypeople.server.utils.CustomBeanUtils;
+import reactor.core.publisher.Mono;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -52,7 +57,23 @@ public class CompanionService {
         Nation nation = nationService.findNation(companion.getNation());
         companion.setNation(nation);
 
-        return companionRepository.save(companion);
+        Companion savedCompanion = companionRepository.save(companion);
+        Map<String, String> body = new HashMap<>();
+        body.put("companionId", String.valueOf(companion.getCompanionId()));
+        body.put("companionTitle", companion.getTitle());
+
+        String url = "http://localhost:8081/chat/room";
+        WebClient webClient = WebClient.create();
+        webClient.post()
+            .uri(url)
+            .contentType(MediaType.APPLICATION_JSON)
+            .bodyValue(body)
+            .retrieve()
+            .bodyToMono(String.class)
+            .subscribe();
+
+        return savedCompanion;
+//        return companionRepository.save(companion);
     }
 
     public Companion updateCompanion(Companion companion) {
