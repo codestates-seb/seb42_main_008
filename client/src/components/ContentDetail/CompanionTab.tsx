@@ -1,6 +1,6 @@
 import { StyledTabBox } from 'components/ContentDetail/CompanionStyled';
-import Participants from 'components/ContentDetail/Tab//Participants';
 import Companion from 'components/ContentDetail/Tab/Companion';
+import Participants from 'components/ContentDetail/Tab/Participants';
 import {
   companionProps,
   contentsTab,
