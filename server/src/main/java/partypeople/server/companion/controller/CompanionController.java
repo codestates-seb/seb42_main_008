@@ -1,7 +1,11 @@
 package partypeople.server.companion.controller;
 
+import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +22,9 @@ import partypeople.server.utils.UriCreator;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import java.net.URI;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/companions")
@@ -29,7 +35,6 @@ public class CompanionController {
     private final CompanionService companionService;
     private final CompanionMapper mapper;
     private final TagService tagService;
-
     @PostMapping
     public ResponseEntity postCompanion(@Valid @RequestBody CompanionDto.Post requestBody) {
         List<Tag> tags = tagService.findTagsByNames(requestBody.getTags());

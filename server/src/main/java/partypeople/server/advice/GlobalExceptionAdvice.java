@@ -106,7 +106,7 @@ public class GlobalExceptionAdvice {
     public ErrorResponse handleException(Exception e) {
         // 위 exception들을 제외한 모든 exception handler
         final ErrorResponse response = ErrorResponse.of(HttpStatus.INTERNAL_SERVER_ERROR);
-
+        e.printStackTrace();
         return response;
     }
 
