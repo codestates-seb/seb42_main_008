@@ -51,6 +51,7 @@ public class CompanionService {
     private final MessageService messageService;
     private final MessageMapper messageMapper;
     private final CustomBeanUtils<Companion> beanUtils;
+    private final ChatRoomService chatRoomService;
 
     public Companion createCompanion(Companion companion) {
         memberService.findMember(companion.getMember().getMemberId());
@@ -58,22 +59,10 @@ public class CompanionService {
         companion.setNation(nation);
 
         Companion savedCompanion = companionRepository.save(companion);
-        Map<String, String> body = new HashMap<>();
-        body.put("companionId", String.valueOf(companion.getCompanionId()));
-        body.put("companionTitle", companion.getTitle());
 
-        String url = "http://localhost:8081/chat/room";
-        WebClient webClient = WebClient.create();
-        webClient.post()
-            .uri(url)
-            .contentType(MediaType.APPLICATION_JSON)
-            .bodyValue(body)
-            .retrieve()
-            .bodyToMono(String.class)
-            .subscribe();
+        chatRoomService.createChatRoom(savedCompanion);
 
         return savedCompanion;
-//        return companionRepository.save(companion);
     }
 
     public Companion updateCompanion(Companion companion) {
@@ -162,10 +151,9 @@ public class CompanionService {
 
     private Companion findVerifiedCompanionById(Long companionId) {
         Optional<Companion> optionalCompanion = companionRepository.findById(companionId);
-        Companion findCompanion = optionalCompanion.orElseThrow(() ->
-                new BusinessLogicException(ExceptionCode.COMPANION_NOT_FOUND));
 
-        return findCompanion;
+        return optionalCompanion.orElseThrow(() ->
+                new BusinessLogicException(ExceptionCode.COMPANION_NOT_FOUND));
     }
 
     private Page<Companion> getCompanionPage(String condition, String keyword, String nationCode, PageRequest pageRequest, LocalDate parseDate) {
