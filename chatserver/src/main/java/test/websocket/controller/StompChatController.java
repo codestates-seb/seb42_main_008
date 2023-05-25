@@ -13,16 +13,15 @@ public class StompChatController {
 
     private final SimpMessagingTemplate template; //특정 Broker로 메세지를 전달
 
-    @MessageMapping(value = "/chat/enter")  //pub/chat/enter (/app)
+    @MessageMapping(value = "/chat/enter")
     public void enter(ChatMessageDTO message){
-
-        message.setMessage(message.getWriter() + "님이 입장하셨습니다.");
-        template.convertAndSend("/sub/chat/room/" + message.getRoomId(), message); // (/topic/chat/room)
+        message.setCurTime(LocalDateTime.now());
+        template.convertAndSend("/sub/chat/room/" + message.getRoomId(), message);
     }
 
     @MessageMapping(value = "/chat/message")
     public void message(ChatMessageDTO message){
+        message.setCurTime(LocalDateTime.now());
         template.convertAndSend("/sub/chat/room/" + message.getRoomId(), message);
     }
-
 }
