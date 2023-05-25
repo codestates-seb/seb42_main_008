@@ -6,6 +6,7 @@ import test.websocket.dto.CompanionChatDTO;
 
 import javax.annotation.PostConstruct;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Repository
 public class ChatRoomRepository {
@@ -14,7 +15,7 @@ public class ChatRoomRepository {
 
     @PostConstruct
     private void init(){
-        chatRoomDTOMap = new LinkedHashMap<>();
+        chatRoomDTOMap = new ConcurrentHashMap<>();
     }
 
     public List<ChatRoomDTO> findAllRooms(){

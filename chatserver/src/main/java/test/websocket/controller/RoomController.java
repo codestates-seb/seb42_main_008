@@ -33,9 +33,10 @@ public class RoomController {
     }
 
     @PostMapping(value = "/room")
-    public ChatRoomDTO create(@RequestBody CompanionChatDTO requestbody){
+    public ChatRoomDTO create(@RequestBody CompanionChatDTO requestbody) {
         log.info("# create Chat Rooms {} {} ",requestbody.getCompanionId(),requestbody.getCompanionTitle());
         ChatRoomDTO chatRoomDTO = repository.createChatRoomDTO(requestbody);
+        log.info("# finish create Chat Room {}", chatRoomDTO.getRoomId());
         return chatRoomDTO;
     }
 
