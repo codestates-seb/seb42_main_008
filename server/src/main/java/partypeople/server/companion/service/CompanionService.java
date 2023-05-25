@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
+import partypeople.server.companion.dto.CompanionChatDTO;
 import partypeople.server.companion.dto.CompanionDto;
 import partypeople.server.companion.entity.Companion;
 import partypeople.server.companion.entity.Participant;
@@ -136,6 +137,15 @@ public class CompanionService {
             }
             companion.setCompanionStatus(true);
         }
+    }
+
+    public List<CompanionChatDTO> getIncompleteCompanions() {
+        List<Companion> incompleteCompanions = companionRepository.findByCompanionStatusFalse();
+        List<CompanionChatDTO> companions = incompleteCompanions.stream()
+                .map(i -> new CompanionChatDTO(String.valueOf(i.getCompanionId()), i.getTitle()))
+                .collect(Collectors.toList());
+
+        return companions;
     }
 
     @Transactional(readOnly = true)
