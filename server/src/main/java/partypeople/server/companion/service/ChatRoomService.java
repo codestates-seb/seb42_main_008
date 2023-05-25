@@ -27,7 +27,7 @@ public class ChatRoomService {
     }
 
     public void removeChatRoom(Long companionId) {
-        String url = "http://localhost:8081/chat/room/"+companionId;
+        String url = "https://620a-59-10-231-15.ngrok-free.app/chat/room/"+companionId;
         WebClient webClient = WebClient.create();
         webClient.delete()
                 .uri(url)
