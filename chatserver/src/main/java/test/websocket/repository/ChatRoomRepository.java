@@ -2,6 +2,7 @@ package test.websocket.repository;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+import reactor.core.publisher.Mono;
 import test.websocket.dto.ChatRoomDTO;
 import test.websocket.dto.CompanionChatDTO;
 import test.websocket.service.WebServerService;
@@ -20,10 +21,11 @@ public class ChatRoomRepository {
     private void init(){
         chatRoomDTOMap = new ConcurrentHashMap<>();
         //동행글번호 가져오기 (미완료된 동행글번호만) 웹서버에다가 >
-        List<CompanionChatDTO> companionChatDTOS = webServerService.getInCompleteNumbers();
-        for (CompanionChatDTO companion : companionChatDTOS) {
-            createChatRoomDTO(companion);
-        }
+        Mono<List<CompanionChatDTO>> companionChatDTOS = webServerService.getInCompleteNumbers();
+        companionChatDTOS
+                .subscribe(companionChatDTO->
+            companionChatDTO.stream().forEach(this::createChatRoomDTO)
+        );
     }
 
     public List<ChatRoomDTO> findAllRooms(){
