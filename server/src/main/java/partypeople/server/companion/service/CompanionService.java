@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
+import partypeople.server.companion.dto.CompanionChatDTO;
 import partypeople.server.companion.dto.CompanionDto;
 import partypeople.server.companion.entity.Companion;
 import partypeople.server.companion.entity.Participant;
@@ -51,6 +52,7 @@ public class CompanionService {
     private final MessageService messageService;
     private final MessageMapper messageMapper;
     private final CustomBeanUtils<Companion> beanUtils;
+    private final ChatRoomService chatRoomService;
 
     public Companion createCompanion(Companion companion) {
         memberService.findMember(companion.getMember().getMemberId());
@@ -58,22 +60,10 @@ public class CompanionService {
         companion.setNation(nation);
 
         Companion savedCompanion = companionRepository.save(companion);
-        Map<String, String> body = new HashMap<>();
-        body.put("companionId", String.valueOf(companion.getCompanionId()));
-        body.put("companionTitle", companion.getTitle());
 
-        String url = "http://localhost:8081/chat/room";
-        WebClient webClient = WebClient.create();
-        webClient.post()
-            .uri(url)
-            .contentType(MediaType.APPLICATION_JSON)
-            .bodyValue(body)
-            .retrieve()
-            .bodyToMono(String.class)
-            .subscribe();
+        chatRoomService.createChatRoom(savedCompanion);
 
         return savedCompanion;
-//        return companionRepository.save(companion);
     }
 
     public Companion updateCompanion(Companion companion) {
@@ -149,6 +139,15 @@ public class CompanionService {
         }
     }
 
+    public List<CompanionChatDTO> getIncompleteCompanions() {
+        List<Companion> incompleteCompanions = companionRepository.findByCompanionStatusFalse();
+        List<CompanionChatDTO> companions = incompleteCompanions.stream()
+                .map(i -> new CompanionChatDTO(String.valueOf(i.getCompanionId()), i.getTitle()))
+                .collect(Collectors.toList());
+
+        return companions;
+    }
+
     @Transactional(readOnly = true)
     public Page<Companion> findCompanionByKeyword(int page, int size, String sortDir, String sortBy, String condition,
                                                   String keyword, String nationCode, String date) {
@@ -162,10 +161,9 @@ public class CompanionService {
 
     private Companion findVerifiedCompanionById(Long companionId) {
         Optional<Companion> optionalCompanion = companionRepository.findById(companionId);
-        Companion findCompanion = optionalCompanion.orElseThrow(() ->
-                new BusinessLogicException(ExceptionCode.COMPANION_NOT_FOUND));
 
-        return findCompanion;
+        return optionalCompanion.orElseThrow(() ->
+                new BusinessLogicException(ExceptionCode.COMPANION_NOT_FOUND));
     }
 
     private Page<Companion> getCompanionPage(String condition, String keyword, String nationCode, PageRequest pageRequest, LocalDate parseDate) {

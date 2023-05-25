@@ -21,6 +21,8 @@ public interface CompanionRepository extends JpaRepository<Companion, Long> {
     @EntityGraph(attributePaths = {"participants", "member"})
     List<Companion> findByDateBeforeAndCompanionStatusFalse(LocalDate today);
 
+    List<Companion> findByCompanionStatusFalse();
+
     List<Companion> findAllByMemberMemberId(Long memberId); //작성자
 
     List<Companion> findByParticipantsMemberMemberId(Long memberId); //참여자
