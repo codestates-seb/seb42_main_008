@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import partypeople.server.companion.dto.CompanionDto;
 import partypeople.server.companion.entity.Companion;
 import partypeople.server.companion.mapper.CompanionMapper;
+import partypeople.server.companion.service.ChatRoomService;
 import partypeople.server.companion.service.CompanionService;
 import partypeople.server.dto.MultiResponseDto;
 import partypeople.server.dto.SingleResponseDto;
@@ -35,6 +36,7 @@ public class CompanionController {
     private final CompanionService companionService;
     private final CompanionMapper mapper;
     private final TagService tagService;
+
     @PostMapping
     public ResponseEntity postCompanion(@Valid @RequestBody CompanionDto.Post requestBody) {
         List<Tag> tags = tagService.findTagsByNames(requestBody.getTags());
@@ -113,5 +115,10 @@ public class CompanionController {
         return ResponseEntity.ok(
             new MultiResponseDto<>(mapper.companionsToCompanionResponseDtos(companions), companionPage)
         );
+    }
+
+    @GetMapping("/incomplete-numbers")
+    public ResponseEntity getIncomplete() {
+        return ResponseEntity.ok(companionService.getIncompleteCompanions());
     }
 }
