@@ -10,12 +10,13 @@ import java.util.Map;
 
 @Service
 public class ChatRoomService {
+    private final String chatUrl = "https://620a-59-10-231-15.ngrok-free.app/chat/room";
     public void createChatRoom(Companion companion) {
         Map<String, String> body = new HashMap<>();
         body.put("companionId", String.valueOf(companion.getCompanionId()));
         body.put("companionTitle", companion.getTitle());
 
-        String url = "http://localhost:8081/chat/room";
+        String url = chatUrl;
         WebClient webClient = WebClient.create();
         webClient.post()
                 .uri(url)
@@ -27,7 +28,7 @@ public class ChatRoomService {
     }
 
     public void removeChatRoom(Long companionId) {
-        String url = "https://620a-59-10-231-15.ngrok-free.app/chat/room/"+companionId;
+        String url = chatUrl+companionId;
         WebClient webClient = WebClient.create();
         webClient.delete()
                 .uri(url)

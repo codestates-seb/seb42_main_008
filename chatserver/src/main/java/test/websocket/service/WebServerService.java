@@ -12,7 +12,7 @@ import java.util.List;
 @Service
 public class WebServerService {
     public Mono<List<CompanionChatDTO>> getInCompleteNumbers() {
-        String url = "http://localhost:8082/companions/incomplete-numbers";
+        String url = "https://fb8e-1-237-37-135.ngrok-free.app/companions/incomplete-numbers";
         WebClient webClient = WebClient.create();
 
         return webClient.get()
