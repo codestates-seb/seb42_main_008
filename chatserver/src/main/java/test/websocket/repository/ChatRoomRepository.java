@@ -37,8 +37,8 @@ public class ChatRoomRepository {
         return chatRoomDTOMap.get(id);
     }
 
-    public ChatRoomDTO createChatRoomDTO(CompanionChatDTO requestbody){
-        ChatRoomDTO room = ChatRoomDTO.create(requestbody);
+    public ChatRoomDTO createChatRoomDTO(CompanionChatDTO requestBody){
+        ChatRoomDTO room = ChatRoomDTO.create(requestBody);
         chatRoomDTOMap.put(room.getRoomId(), room);
 
         return room;
