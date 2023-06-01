@@ -1,8 +1,7 @@
 package test.websocket.controller;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
-import org.springframework.http.HttpStatus;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
@@ -15,7 +14,7 @@ import test.websocket.service.RoomService;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(value = "/chat")
-@Log4j2
+@Slf4j
 public class RoomController {
 
     private final ChatRoomRepository repository;
