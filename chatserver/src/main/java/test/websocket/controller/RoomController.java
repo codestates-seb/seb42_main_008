@@ -17,7 +17,7 @@ import test.websocket.service.RoomService;
 @Slf4j
 public class RoomController {
 
-    private final ChatRoomRepository repository;
+    private final RoomService roomService;
 
     //채팅방 목록 조회
     @GetMapping(value = "/rooms")
