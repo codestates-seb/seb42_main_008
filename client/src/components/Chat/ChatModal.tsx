@@ -1,9 +1,9 @@
-import { CloseButton, ModalBG } from 'components/Profile/ModalStyles';
-import { IoMdClose } from 'react-icons/io';
-import styled from 'styled-components';
 import { Stomp } from '@stomp/stompjs';
-import SockJS from 'sockjs-client';
+import { CloseButton, ModalBG } from 'components/Profile/ModalStyles';
 import { useEffect, useState } from 'react';
+import { IoMdClose } from 'react-icons/io';
+import SockJS from 'sockjs-client';
+import styled from 'styled-components';
 
 interface ChatMessage {
   roomId: string;
