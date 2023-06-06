@@ -8,8 +8,10 @@ import reactor.core.publisher.Mono;
 import test.websocket.dto.ChatData;
 import test.websocket.dto.ChatRoom;
 import test.websocket.dto.CompanionChatDTO;
-import test.websocket.dto.User;
+import test.websocket.dto.ChatUser;
 import test.websocket.repository.MongoDBRepository;
+
+import java.util.List;
 
 
 @RequiredArgsConstructor
@@ -32,10 +34,9 @@ public class RoomService {
                 .doOnError(e -> log.info("message error: {}", e.getMessage()));
     }
 
-    public Mono<Void> saveUser(User user, String roomId) {
+    public Mono<Void> saveUser(ChatUser user, String roomId) {
         return mongoDBRepository.findByRoomId(roomId)
-                .then(mongoDBRepository.pushUser(roomId, user))
-                .doOnError(e -> log.info("message error: {}", e.getMessage()));
+                .then(mongoDBRepository.pushUser(roomId, user).doOnError(e -> log.info("message error: {}", e.getMessage())));
     }
 
     public Flux<ChatRoom> findRooms() {
