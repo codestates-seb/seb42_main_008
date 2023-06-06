@@ -1,4 +1,5 @@
 import { Stomp } from '@stomp/stompjs';
+import axios from 'axios';
 import { CloseButton, ModalBG } from 'components/Profile/ModalStyles';
 import { useEffect, useState } from 'react';
 import { IoMdClose } from 'react-icons/io';
@@ -17,6 +18,17 @@ const ChatModal = ({ handleChatModal }: { handleChatModal: () => void }) => {
   const [chatDatas, setChatDatas] = useState<ChatMessage[]>([]);
   const [message, setMessage] = useState<string>('');
   const [sockClient, setSockClient] = useState<any>();
+
+  const getChatData = () => {
+    axios
+      .get(`${process.env.REACT_APP_CHAT_SERVER}/chat/room/1`)
+      .then(resp => {
+        return JSON.stringify(resp.data.messages);
+      })
+      .then(resp => {
+        setChatDatas(JSON.parse(resp));
+      });
+  };
 
   useEffect(() => {
     const client = Stomp.over(() => {
@@ -39,6 +51,7 @@ const ChatModal = ({ handleChatModal }: { handleChatModal: () => void }) => {
       );
     });
     setSockClient(client);
+    getChatData();
   }, []);
 
   const handleSendMessage = () => {
