@@ -9,16 +9,17 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ChatData {
-    private String email;
-    private String message;
     private String nickname;
-    private LocalDateTime createdAt;
+    private String email;
+    private String profile;
+    private String message;
+    private LocalDateTime curTime;
 
-    public ChatData(
-            ChatDTO chatDTO) {
+    public ChatData(ChatDTO chatDTO) {
         this.email = chatDTO.getEmail();
         this.message = chatDTO.getMessage();
         this.nickname = chatDTO.getNickname();
-        this.createdAt = chatDTO.getCurTime();
+        this.curTime = chatDTO.getCurTime();
+        this.profile = chatDTO.getProfile();
     }
 }
