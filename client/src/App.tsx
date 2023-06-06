@@ -39,7 +39,9 @@ const App = () => {
           handleChatModal={handleChatModal}
           isShowChatModal={isShowChatModal}
         />
-        {isShowChatModal && <ChatModal handleChatModal={handleChatModal} />}
+        {isShowChatModal && (
+          <ChatModal handleChatModal={handleChatModal} roomId={-1} />
+        )}
         <main>
           <Routes>
             <Route path="/" element={<Main />} />
