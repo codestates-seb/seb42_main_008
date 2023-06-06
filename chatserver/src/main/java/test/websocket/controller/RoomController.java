@@ -26,8 +26,10 @@ public class RoomController {
 
     //채팅방 목록 조회
     @GetMapping(value = "/rooms")
-    public Flux<ResponseEntity> rooms(){
-        return roomService.findRooms().map(rooms -> ResponseEntity.ok(rooms));
+    public Mono<ResponseEntity> rooms(@RequestParam("email") String email) {
+        return roomService.findRooms(email).map(rooms -> ResponseEntity.ok(rooms.stream()
+                .map(JoinChatRoom::new)
+                .collect(Collectors.toList())));
     }
 
     @PostMapping(value = "/room")
