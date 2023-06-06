@@ -1,4 +1,5 @@
 import customAxios from 'api/customAxios';
+import ChatModal from 'components/Chat/ChatModal';
 import CompanionTab from 'components/ContentDetail/CompanionTab';
 import ContentWriter from 'components/ContentDetail/ContentWriter';
 import SearchMap from 'components/ContentDetail/SearchMap';
@@ -20,6 +21,7 @@ const ContentDetail = () => {
   const [sub, setSub] = useState<subApply[]>([]);
   const [part, setPart] = useState<partApply[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isShowChatModal, setIsShowChatModal] = useState<boolean>(false);
 
   const navigate = useNavigate();
 
@@ -57,64 +59,81 @@ const ContentDetail = () => {
       });
   }, [contentId]);
 
+  const handleChatModal = () => {
+    setIsShowChatModal(!isShowChatModal);
+  };
+
   return (
-    <Container>
-      <BackSpace>
-        <button onClick={handleBack}>
-          <MdArrowBackIosNew />
-          <div>목록으로</div>
-        </button>
-      </BackSpace>
-      <ContentDetailBox>
-        {isLoading ? (
-          <Loader />
-        ) : (
-          <>
-            <LeftBox>
-              <TopBox>
-                <h1>{getDateString(detail.date).shortDateStr}</h1>
-                <h3>{detail.address}</h3>
-              </TopBox>
-              <BottomBox>
-                <h2>{detail.title}</h2>
-                <h4>작성날짜: {detail.createdAt}</h4>
-                <SearchMap detail={detail} />
-                <div
-                  id="content"
-                  dangerouslySetInnerHTML={{ __html: detail.content }}
-                ></div>
-                <div id="tag-box">
-                  {detail &&
-                    detail.tags.map((el, index: number) => (
-                      <li key={index}>{el}</li>
-                    ))}
-                </div>
-              </BottomBox>
-            </LeftBox>
-            <RightBox>
-              <ContentWriter
-                detail={detail}
-                sub={sub}
-                setSub={setSub}
-                part={part}
-                setPart={setPart}
-              />
-              {detail.companionStatus ? (
-                <TravelComplete detail={detail} part={part} setPart={setPart} />
-              ) : (
-                <CompanionTab
+    <>
+      {isShowChatModal && (
+        <ChatModal
+          handleChatModal={handleChatModal}
+          roomId={Number(contentId)}
+        />
+      )}
+      <Container>
+        <BackSpace>
+          <button onClick={handleBack}>
+            <MdArrowBackIosNew />
+            <div>목록으로</div>
+          </button>
+        </BackSpace>
+        <ContentDetailBox>
+          {isLoading ? (
+            <Loader />
+          ) : (
+            <>
+              <LeftBox>
+                <TopBox>
+                  <h1>{getDateString(detail.date).shortDateStr}</h1>
+                  <h3>{detail.address}</h3>
+                </TopBox>
+                <BottomBox>
+                  <h2>{detail.title}</h2>
+                  <h4>작성날짜: {detail.createdAt}</h4>
+                  <SearchMap detail={detail} />
+                  <div
+                    id="content"
+                    dangerouslySetInnerHTML={{ __html: detail.content }}
+                  ></div>
+                  <div id="tag-box">
+                    {detail &&
+                      detail.tags.map((el, index: number) => (
+                        <li key={index}>{el}</li>
+                      ))}
+                  </div>
+                </BottomBox>
+              </LeftBox>
+              <RightBox>
+                <ContentWriter
                   detail={detail}
                   sub={sub}
                   setSub={setSub}
                   part={part}
                   setPart={setPart}
+                  handleChatModal={handleChatModal}
                 />
-              )}
-            </RightBox>
-          </>
-        )}
-      </ContentDetailBox>
-    </Container>
+                {detail.companionStatus ? (
+                  <TravelComplete
+                    detail={detail}
+                    part={part}
+                    setPart={setPart}
+                  />
+                ) : (
+                  <CompanionTab
+                    detail={detail}
+                    sub={sub}
+                    setSub={setSub}
+                    part={part}
+                    setPart={setPart}
+                  />
+                )}
+              </RightBox>
+            </>
+          )}
+        </ContentDetailBox>
+      </Container>
+    </>
   );
 };
 
