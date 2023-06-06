@@ -14,6 +14,7 @@ const ContentWriter = ({
   setSub,
   part,
   setPart,
+  handleChatModal,
 }: companionProps) => {
   const { memberId, nickname } = useRecoilValue(userInfo);
   const params = useParams();
@@ -146,7 +147,7 @@ const ContentWriter = ({
       {(part && detail.memberId === memberId) ||
       part.some((part: partApply) => part.memberId === memberId) ? (
         <ButtonBox>
-          <ChatButton>채팅 참여하기</ChatButton>
+          <ChatButton onClick={handleChatModal}>채팅 참여하기</ChatButton>
         </ButtonBox>
       ) : null}
     </Container>
