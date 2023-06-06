@@ -39,8 +39,9 @@ public class RoomService {
                 .then(mongoDBRepository.pushUser(roomId, user).doOnError(e -> log.info("message error: {}", e.getMessage())));
     }
 
-    public Flux<ChatRoom> findRooms() {
-        return mongoDBRepository.findAll();
+    public Mono<List<ChatRoom>> findRooms(String email) {
+        return mongoDBRepository.findByUsersEmailOrderByLastTimeDesc(email)
+                .collectList();
     }
 
     public Mono<ChatRoom> findRoomByRoomId(String roomId) {
