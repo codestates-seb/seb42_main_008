@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { IoMdClose } from 'react-icons/io';
 import SockJS from 'sockjs-client';
 import styled from 'styled-components';
+import ModalScrollDisable from 'utils/ModalScrollDisable';
 
 interface ChatMessage {
   roomId: string;
@@ -77,6 +78,7 @@ const ChatModal = ({ handleChatModal }: { handleChatModal: () => void }) => {
 
   return (
     <>
+      <ModalScrollDisable />
       <ModalBG onClick={handleChatModal} />
       <ChatModalContainer>
         <ChatHeader>
