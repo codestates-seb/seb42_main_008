@@ -22,7 +22,7 @@ public class ChatRoom {
     private String title;
     private LocalDateTime lastTime;
 
-    private List<User> users = new ArrayList<>();
+    private List<ChatUser> users = new ArrayList<>();
     private List<ChatData> messages = new ArrayList<>();
 
     public ChatRoom(String roomId, String title) {
@@ -30,4 +30,6 @@ public class ChatRoom {
         this.title = title;
         this.lastTime = LocalDateTime.now();
     }
+
 }
+

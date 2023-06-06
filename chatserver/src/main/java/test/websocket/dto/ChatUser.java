@@ -6,14 +6,13 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
-@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class User {
+public class ChatUser {
     private String email;
     private String profile;
     private String nickname;
 
-    public User(ChatDTO chatDTO) {
+    public ChatUser(ChatDTO chatDTO) {
         this.email = chatDTO.getEmail();
         this.nickname = chatDTO.getNickname();
         this.profile = chatDTO.getProfile();

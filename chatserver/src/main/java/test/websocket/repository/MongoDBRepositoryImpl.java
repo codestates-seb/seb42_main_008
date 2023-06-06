@@ -9,7 +9,7 @@ import org.springframework.data.mongodb.core.query.Update;
 import reactor.core.publisher.Mono;
 import test.websocket.dto.ChatData;
 import test.websocket.dto.ChatRoom;
-import test.websocket.dto.User;
+import test.websocket.dto.ChatUser;
 
 @RequiredArgsConstructor
 public class MongoDBRepositoryImpl implements MongoDBRepositoryCustom{
@@ -20,16 +20,15 @@ public class MongoDBRepositoryImpl implements MongoDBRepositoryCustom{
         return mongoTemplate.updateFirst(
                 Query.query(Criteria.where("roomId").is(roomId)),
                 new Update().push("messages", chatData)
-                        .set("lastTime",chatData.getCreatedAt()), ChatRoom.class)
+                        .set("lastTime",chatData.getCurTime()), ChatRoom.class)
                 .then();
     }
 
     @Override
-    public Mono<Void> pushUser(String roomId, User user) {
+    public Mono<Void> pushUser(String roomId, ChatUser user) {
         return mongoTemplate.updateFirst(
                 Query.query(Criteria.where("roomId").is(roomId)),
-                new Update().push("users", user), ChatRoom.class)
+                new Update().addToSet("users", user), ChatRoom.class)
                 .then();
     }
-
 }
