@@ -4,10 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 import test.websocket.dto.ChatData;
 import test.websocket.dto.ChatDTO;
-import test.websocket.dto.User;
+import test.websocket.dto.ChatUser;
 import test.websocket.service.RoomService;
 
 import java.time.LocalDateTime;
@@ -24,7 +25,7 @@ public class StompChatController {
         return Mono.just(chatDto).flatMap(m -> {
             m.setCurTime(LocalDateTime.now());
             template.convertAndSend("/sub/chat/room/" + m.getRoomId(), m);
-            return roomService.saveUser(new User(m), m.getRoomId());
+            return roomService.saveUser(new ChatUser(m), m.getRoomId());
         });
     }
 
