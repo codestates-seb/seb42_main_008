@@ -1,9 +1,13 @@
 package test.websocket.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 import test.websocket.dto.ChatData;
@@ -21,7 +25,7 @@ public class StompChatController {
     private final RoomService roomService;
 
     @MessageMapping(value = "/chat/enter")
-    public Mono<Void> enter(ChatDTO chatDto){
+    public Mono<Void> enter(ChatDTO chatDto) {
         return Mono.just(chatDto).flatMap(m -> {
             m.setCurTime(LocalDateTime.now());
             template.convertAndSend("/sub/chat/room/" + m.getRoomId(), m);
@@ -30,11 +34,23 @@ public class StompChatController {
     }
 
     @MessageMapping(value = "/chat/message")
-    public Mono<Void> message(ChatDTO message){
+    public Mono<Void> message(ChatDTO message) {
         return Mono.just(message).flatMap(m -> {
             m.setCurTime(LocalDateTime.now());
             template.convertAndSend("/sub/chat/room/" + m.getRoomId(), m);
             return roomService.insertMsg(new ChatData(m), m.getRoomId());
         });
+    }
+
+//    @MessageMapping(value = "/chat/check")
+//    public Mono<Void> checkMessage(@RequestBody ChatDTO.Check check) {
+//        return roomService.deleteCheckListByEmail(check.getRoomId(), check.getEmail(), check.getChatDataId())
+//                .then();
+//    }
+
+    @MessageMapping(value = "/chat/check")
+    public Mono<Void> checkMessage(@RequestBody ChatDTO.Check check) {
+        return roomService.deleteCheckListByEmail(check.getRoomId(), check.getEmail(), check.getChatDataId())
+                .then(Mono.defer(() -> roomService.updateLastTime(check.getRoomId(), check.getEmail())));
     }
 }
