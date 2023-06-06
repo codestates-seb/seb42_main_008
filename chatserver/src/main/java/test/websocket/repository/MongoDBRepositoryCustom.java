@@ -7,4 +7,7 @@ import test.websocket.dto.ChatUser;
 public interface MongoDBRepositoryCustom {
     Mono<Void> pushMessage(String roomId, ChatData chatData);
     Mono<Void> pushUser(String roomId, ChatUser user);
+    Mono<Void> deleteCheckList(String roomId, String email, String uuid);
+
+    Mono<Void> updateLastTime(String roomId,String email);
 }
