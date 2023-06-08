@@ -1,8 +1,13 @@
 package test.websocket.service;
 
+import com.mongodb.TransactionOptions;
+import com.mongodb.reactivestreams.client.ClientSession;
+import com.mongodb.reactivestreams.client.MongoClient;
+import com.mongodb.reactivestreams.client.MongoClients;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 import test.websocket.dto.ChatData;
@@ -22,12 +27,30 @@ import java.util.stream.Collectors;
 public class RoomService {
     private final MongoDBRepository mongoDBRepository;
 
-    public void createRoom(CompanionChatDTO requestBody) {
-        Mono.just(requestBody)
+//    @Transactional
+//    public Mono<Void> createRoom(Mono<CompanionChatDTO> requestBodyMono) {
+//        return requestBodyMono
+//                .flatMap(dto -> {
+//                    ChatRoom room = new ChatRoom(dto.getCompanionId(), dto.getCompanionTitle());
+//                    return mongoDBRepository.save(room).flatMap(savedRoom -> {
+//                        // 익셉션 발생 시키기 (예시로 RuntimeException 사용)
+//                        throw new RuntimeException("Rollback test");
+//                    });
+//                })
+//                .then();
+//    }
+    @Transactional
+    public Mono<Void> createRoom(Mono<CompanionChatDTO> requestBodyMono) {
+        return requestBodyMono
                 .flatMap(dto -> {
                     ChatRoom room = new ChatRoom(dto.getCompanionId(), dto.getCompanionTitle());
                     return mongoDBRepository.save(room);
-                }).subscribe();
+//                            .flatMap(savedRoom -> {
+//                                // 익셉션 발생 시키기 (예시로 RuntimeException 사용)
+//                                throw new RuntimeException("Rollback test");
+//                            });
+                })
+                .then();
     }
 
 //    public Mono<Void> insertMsg(ChatData chatData, String roomId) {
@@ -45,6 +68,7 @@ public class RoomService {
 //                .doOnError(e -> log.info("message error: {}", e.getMessage()))
 //                .then();
 //    }
+    @Transactional
     public Mono<Void> insertMsg(ChatData chatData, String roomId) {
         /* 메세지에 유저리스트 넣는 부분인데 여기도 디비에 유저정보 요청이 들어감 수정필요 */
         return mongoDBRepository.findByRoomId(roomId)
@@ -58,9 +82,9 @@ public class RoomService {
                             chatData.setCheckList(names);
                             return mongoDBRepository.pushMessage(roomId, chatData);
                         }))
-                .doOnError(e -> log.info("message error: {}", e.getMessage()))
-                .then();
+                .doOnError(e -> log.info("message error: {}", e.getMessage()));
     }
+
 
     public Mono<Void> saveUser(ChatUser user, String roomId) {
         return mongoDBRepository.findByRoomId(roomId)
