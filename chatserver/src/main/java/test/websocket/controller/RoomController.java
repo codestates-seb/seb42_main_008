@@ -55,11 +55,8 @@ public class RoomController {
 //    }
     @PostMapping(value = "/room")
     public Mono<ResponseEntity<Void>> create(@RequestBody CompanionChatDTO requestBody) {
-        return Mono.just(requestBody)
-                .flatMap(body -> {
-                    roomService.createRoom(body);
-                    return Mono.just(ResponseEntity.ok().build());
-                });
+        return roomService.createRoom(Mono.just(requestBody))
+                .then(Mono.just(ResponseEntity.ok().build()));
     }
 
 //    @GetMapping("/room/{room-id}")
