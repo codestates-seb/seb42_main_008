@@ -16,7 +16,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { getDateString } from 'utils/getDateString';
 
-const ContentDetail = () => {
+const ContentDetail = ({ sockClient }: { sockClient: any }) => {
   const { contentId } = useParams<{ contentId: string }>();
   const [sub, setSub] = useState<subApply[]>([]);
   const [part, setPart] = useState<partApply[]>([]);
@@ -69,6 +69,7 @@ const ContentDetail = () => {
         <ChatModal
           handleChatModal={handleChatModal}
           roomId={Number(contentId)}
+          sockClient={sockClient}
         />
       )}
       <Container>

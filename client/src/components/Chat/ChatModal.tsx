@@ -1,10 +1,10 @@
-import { Stomp } from '@stomp/stompjs';
 import axios from 'axios';
 import { CloseButton, ModalBG } from 'components/Profile/ModalStyles';
-import { useEffect, useState } from 'react';
-import { IoMdClose, IoIosSend } from 'react-icons/io';
+import { useEffect, useRef, useState } from 'react';
+import { BsPersonFill } from 'react-icons/bs';
+import { IoIosSend, IoMdClose } from 'react-icons/io';
 import { useRecoilValue } from 'recoil';
-import SockJS from 'sockjs-client';
+
 import { userInfo } from 'states/userState';
 import styled from 'styled-components';
 import ModalScrollDisable from 'utils/ModalScrollDisable';
@@ -18,52 +18,88 @@ interface ChatMessage {
   curTime?: string;
 }
 
+interface ChatRoomData {
+  lastTime: string;
+  number: number;
+  roomId: string;
+  title: string;
+}
+
 const ChatModal = ({
   handleChatModal,
   roomId,
+  sockClient,
 }: {
   handleChatModal: () => void;
   roomId: number;
+  sockClient: any;
 }) => {
   const [chatDatas, setChatDatas] = useState<ChatMessage[]>([]);
+  const [chatLists, setChatLists] = useState<ChatRoomData[]>([]);
   const [message, setMessage] = useState<string>('');
-  const [sockClient, setSockClient] = useState<any>();
+  const [currentRoomId, setCurrentRoomId] = useState<number>(roomId);
   const loginUser = useRecoilValue(userInfo);
+  const chatRoomRef = useRef<HTMLDivElement>(null);
 
   const getChatData = () => {
     axios
-      .get(`${process.env.REACT_APP_CHAT_SERVER}/chat/room/${roomId}`)
-      .then(resp => {
-        return JSON.stringify(resp.data.messages);
+      .get(`${process.env.REACT_APP_CHAT_SERVER}/chat/room/${currentRoomId}`)
+      .then(res => {
+        return JSON.stringify(res.data.messages);
       })
-      .then(resp => {
-        setChatDatas(JSON.parse(resp));
+      .then(res => {
+        setChatDatas(JSON.parse(res));
       });
   };
 
+  const getChatList = () => {
+    axios
+      .get(`${process.env.REACT_APP_CHAT_SERVER}/chat/rooms`, {
+        params: { email: loginUser.email },
+      })
+      .then(res => {
+        setChatLists(res.data);
+        console.log(res.data);
+      })
+      .catch(err => console.log(err));
+  };
+
   useEffect(() => {
-    const client = Stomp.over(() => {
-      return new SockJS(`${process.env.REACT_APP_CHAT_SERVER}/ws/chat`);
-    });
-    client.connect({}, () => {
-      client.subscribe(`/sub/chat/room/${roomId}`, (data: any) => {
+    if (currentRoomId !== -1) {
+      // const client = Stomp.over(() => {
+      //   return new SockJS(`${process.env.REACT_APP_CHAT_SERVER}/ws/chat`);
+      // });
+      // client.connect({}, () => {
+      sockClient.subscribe(`/sub/chat/room/${currentRoomId}`, (data: any) => {
         console.log('data: ' + data.body);
-        setChatDatas(cur => [...cur, JSON.parse(data.body)]);
+        const respData = JSON.parse(data.body);
+        setChatDatas(cur => [...cur, respData]);
+        if (
+          chatLists.length === 0 &&
+          respData.message === null &&
+          respData.email === loginUser.email
+        ) {
+          getChatList();
+        }
       });
-      client.send(
+      sockClient.send(
         '/pub/chat/enter',
         {},
         JSON.stringify({
-          roomId,
+          roomId: currentRoomId,
           nickname: loginUser.nickname,
           email: loginUser.email,
           profile: loginUser.profile,
         })
       );
-    });
-    setSockClient(client);
-    getChatData();
-  }, []);
+      // });
+
+      // setSockClient(client);
+      getChatData();
+    } else {
+      getChatList();
+    }
+  }, [currentRoomId]);
 
   const handleSendMessage = () => {
     if (message !== '') {
@@ -71,7 +107,7 @@ const ChatModal = ({
         '/pub/chat/message',
         {},
         JSON.stringify({
-          roomId,
+          roomId: currentRoomId,
           nickname: loginUser.nickname,
           email: loginUser.email,
           profile: loginUser.profile,
@@ -88,8 +124,19 @@ const ChatModal = ({
     }
   };
 
+  const autoScroll = () => {
+    if (chatRoomRef.current !== null) {
+      chatRoomRef.current.scrollTop = chatRoomRef.current.scrollHeight;
+    }
+  };
+
+  const handleChangeRoomId = (roomId: number) => {
+    setCurrentRoomId(roomId);
+  };
+
   useEffect(() => {
-    console.log(chatDatas);
+    console.log(chatDatas, chatLists);
+    autoScroll();
   }, [chatDatas]);
 
   return (
@@ -104,56 +151,90 @@ const ChatModal = ({
           </CloseButton>
         </ChatHeader>
         <ChatContent>
-          <ChatList></ChatList>
-          <ChatRoom>
-            <div className="chat-room-header">헤더</div>
-            <ChatRoomContent>
-              {chatDatas.map((chat, idx) =>
-                chat.message === null ? (
-                  <div className="chat-user-enter" key={idx}>
-                    {chat.nickname}님이 입장하셨습니다.
-                  </div>
-                ) : (
-                  <div
-                    className={
-                      chat.email === loginUser.email ? 'my-chat' : 'other-chat'
-                    }
-                    key={idx}
-                  >
-                    {chat.email !== loginUser.email && (
-                      <img
-                        className="chat-profile"
-                        src={chat.profile}
-                        alt={chat.nickname + 'profile'}
-                      />
-                    )}
-                    <div className="chat-nickname-message">
-                      {chat.email !== loginUser.email && (
-                        <div className="chat-nickname">{chat.nickname}</div>
-                      )}
-                      <div className="chat-message">{chat.message}</div>
-                    </div>
-                  </div>
-                )
+          <ChatList>
+            {chatLists.map(item => (
+              <div
+                key={item.roomId}
+                className={`room-wrapper ${
+                  Number(item.roomId) === currentRoomId
+                    ? 'room-selected'
+                    : undefined
+                } `}
+                onClick={() => handleChangeRoomId(Number(item.roomId))}
+              >
+                <div className="room-title">
+                  {item.title.length > 10
+                    ? item.title.substring(0, 10) + ' …'
+                    : item.title}
+                </div>
+                <div className="room-participants">
+                  <BsPersonFill />
+                  {item.number}
+                </div>
+              </div>
+            ))}
+          </ChatList>
+          {currentRoomId !== -1 && (
+            <ChatRoom>
+              {chatLists.length !== 0 && (
+                <div className="chat-room-header">
+                  {
+                    chatLists.filter(
+                      item => Number(item.roomId) === Number(currentRoomId)
+                    )[0].title
+                  }
+                </div>
               )}
-            </ChatRoomContent>
-            <ChatRoomInputWrapper>
-              <input
-                type="text"
-                className="chat-room-input"
-                value={message}
-                onChange={e => {
-                  setMessage(e.target.value);
-                }}
-                onKeyDown={event => {
-                  handleKeyDown(event);
-                }}
-              />
-              <button className="chat-room-send" onClick={handleSendMessage}>
-                <IoIosSend size={20} />
-              </button>
-            </ChatRoomInputWrapper>
-          </ChatRoom>
+              <ChatRoomContent ref={chatRoomRef}>
+                {chatDatas.map((chat, idx) =>
+                  chat.message === null ? (
+                    <div className="chat-user-enter" key={idx}>
+                      {chat.nickname}님이 입장하셨습니다.
+                    </div>
+                  ) : (
+                    <div
+                      className={
+                        chat.email === loginUser.email
+                          ? 'my-chat'
+                          : 'other-chat'
+                      }
+                      key={idx}
+                    >
+                      {chat.email !== loginUser.email && (
+                        <img
+                          className="chat-profile"
+                          src={chat.profile}
+                          alt={chat.nickname + 'profile'}
+                        />
+                      )}
+                      <div className="chat-nickname-message">
+                        {chat.email !== loginUser.email && (
+                          <div className="chat-nickname">{chat.nickname}</div>
+                        )}
+                        <div className="chat-message">{chat.message}</div>
+                      </div>
+                    </div>
+                  )
+                )}
+              </ChatRoomContent>
+              <ChatRoomInputWrapper>
+                <input
+                  type="text"
+                  className="chat-room-input"
+                  value={message}
+                  onChange={e => {
+                    setMessage(e.target.value);
+                  }}
+                  onKeyDown={event => {
+                    handleKeyDown(event);
+                  }}
+                />
+                <button className="chat-room-send" onClick={handleSendMessage}>
+                  <IoIosSend size={20} />
+                </button>
+              </ChatRoomInputWrapper>
+            </ChatRoom>
+          )}
         </ChatContent>
       </ChatModalContainer>
     </>
@@ -202,6 +283,33 @@ const ChatList = styled.section`
   height: 100%;
   border-right: 1px solid #ddd;
   overflow-y: auto;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+
+  .room-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem;
+    border-bottom: 1px solid #ddd;
+    cursor: pointer;
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.3);
+      color: #fff;
+    }
+  }
+
+  .room-selected {
+    background-color: rgba(0, 0, 0, 0.3);
+    color: #fff;
+  }
+
+  .room-participants {
+    display: flex;
+    align-items: center;
+    gap: 0.2rem;
+  }
 `;
 
 const ChatRoom = styled.section`
@@ -216,6 +324,7 @@ const ChatRoom = styled.section`
     display: flex;
     flex-direction: row;
     align-items: center;
+    padding: 1rem;
   }
 `;
 
@@ -316,3 +425,9 @@ const ChatRoomInputWrapper = styled.div`
 `;
 
 export default ChatModal;
+
+/* TODO:
+1. 최신 메시지로 가리키기 * 
+2. 참여중인 채팅목록 불러오기 *
+3. 참여중인 채팅목록에서 채팅방 눌렀을 때 채팅 보여주기
+*/
