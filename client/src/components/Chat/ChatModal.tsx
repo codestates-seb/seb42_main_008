@@ -1,11 +1,10 @@
-import { Stomp } from '@stomp/stompjs';
 import axios from 'axios';
 import { CloseButton, ModalBG } from 'components/Profile/ModalStyles';
 import { useEffect, useRef, useState } from 'react';
 import { BsPersonFill } from 'react-icons/bs';
 import { IoIosSend, IoMdClose } from 'react-icons/io';
 import { useRecoilValue } from 'recoil';
-import SockJS from 'sockjs-client';
+
 import { userInfo } from 'states/userState';
 import styled from 'styled-components';
 import ModalScrollDisable from 'utils/ModalScrollDisable';
@@ -29,14 +28,15 @@ interface ChatRoomData {
 const ChatModal = ({
   handleChatModal,
   roomId,
+  sockClient,
 }: {
   handleChatModal: () => void;
   roomId: number;
+  sockClient: any;
 }) => {
   const [chatDatas, setChatDatas] = useState<ChatMessage[]>([]);
   const [chatLists, setChatLists] = useState<ChatRoomData[]>([]);
   const [message, setMessage] = useState<string>('');
-  const [sockClient, setSockClient] = useState<any>();
   const [currentRoomId, setCurrentRoomId] = useState<number>(roomId);
   const loginUser = useRecoilValue(userInfo);
   const chatRoomRef = useRef<HTMLDivElement>(null);
@@ -64,20 +64,25 @@ const ChatModal = ({
       .catch(err => console.log(err));
   };
 
-  // useEffect(() => {
-  //   getChatList();
-  // }, []);
-
   useEffect(() => {
-    const client = Stomp.over(() => {
-      return new SockJS(`${process.env.REACT_APP_CHAT_SERVER}/ws/chat`);
-    });
-    client.connect({}, () => {
-      client.subscribe(`/sub/chat/room/${currentRoomId}`, (data: any) => {
+    if (currentRoomId !== -1) {
+      // const client = Stomp.over(() => {
+      //   return new SockJS(`${process.env.REACT_APP_CHAT_SERVER}/ws/chat`);
+      // });
+      // client.connect({}, () => {
+      sockClient.subscribe(`/sub/chat/room/${currentRoomId}`, (data: any) => {
         console.log('data: ' + data.body);
-        setChatDatas(cur => [...cur, JSON.parse(data.body)]);
+        const respData = JSON.parse(data.body);
+        setChatDatas(cur => [...cur, respData]);
+        if (
+          chatLists.length === 0 &&
+          respData.message === null &&
+          respData.email === loginUser.email
+        ) {
+          getChatList();
+        }
       });
-      client.send(
+      sockClient.send(
         '/pub/chat/enter',
         {},
         JSON.stringify({
@@ -87,12 +92,13 @@ const ChatModal = ({
           profile: loginUser.profile,
         })
       );
-    });
-    setSockClient(client);
-    getChatData();
-    // socketConnect();
-    // getChatList();
-    setTimeout(() => getChatList(), 1000);
+      // });
+
+      // setSockClient(client);
+      getChatData();
+    } else {
+      getChatList();
+    }
   }, [currentRoomId]);
 
   const handleSendMessage = () => {
