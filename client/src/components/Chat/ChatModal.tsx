@@ -64,9 +64,9 @@ const ChatModal = ({
       .catch(err => console.log(err));
   };
 
-  useEffect(() => {
-    getChatList();
-  }, []);
+  // useEffect(() => {
+  //   getChatList();
+  // }, []);
 
   useEffect(() => {
     const client = Stomp.over(() => {
@@ -90,6 +90,9 @@ const ChatModal = ({
     });
     setSockClient(client);
     getChatData();
+    // socketConnect();
+    // getChatList();
+    setTimeout(() => getChatList(), 1000);
   }, [currentRoomId]);
 
   const handleSendMessage = () => {
