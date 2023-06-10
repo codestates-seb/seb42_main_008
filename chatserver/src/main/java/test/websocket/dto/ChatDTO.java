@@ -29,12 +29,19 @@ public class ChatDTO {
         this.curTime = chatData.getCurTime();
     }
 
+    public ChatDTO(String roomId, String nickname, String email, String profile, String message) {
+        this.roomId = roomId;
+        this.nickname = nickname;
+        this.email = email;
+        this.profile = profile;
+        this.message = message;
+    }
+
     @Getter
     @Setter
     public static class Check {
         private String roomId;
         private String email;
-        private String chatDataId;
     }
 
 }
