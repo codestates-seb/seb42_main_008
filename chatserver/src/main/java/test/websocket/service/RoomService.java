@@ -1,15 +1,10 @@
 package test.websocket.service;
 
-import com.mongodb.TransactionOptions;
-import com.mongodb.reactivestreams.client.ClientSession;
-import com.mongodb.reactivestreams.client.MongoClient;
-import com.mongodb.reactivestreams.client.MongoClients;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Mono;
-import reactor.core.scheduler.Schedulers;
 import test.websocket.dto.ChatData;
 import test.websocket.dto.ChatRoom;
 import test.websocket.dto.CompanionChatDTO;
@@ -18,7 +13,6 @@ import test.websocket.repository.MongoDBRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 @RequiredArgsConstructor
@@ -68,23 +62,26 @@ public class RoomService {
 //                .doOnError(e -> log.info("message error: {}", e.getMessage()))
 //                .then();
 //    }
-    @Transactional
+//    @Transactional
+//    public Mono<Void> insertMsg(ChatData chatData, String roomId) {
+//        /* 메세지에 유저리스트 넣는 부분인데 여기도 디비에 유저정보 요청이 들어감 수정필요 */
+//        return mongoDBRepository.findByRoomId(roomId)
+//                .publishOn(Schedulers.boundedElastic())
+//                .flatMap(chatRoom -> mongoDBRepository.findUsersByRoomId(roomId)
+//                        .map(users -> users.getUsers().stream()
+//                                .map(ChatUser::getEmail)
+//                                .filter(email -> !email.equals(chatData.getEmail()))
+//                                .collect(Collectors.toList()))
+//                        .flatMap(names -> {
+//                            chatData.setCheckList(names);
+//                            return mongoDBRepository.pushMessage(roomId, chatData);
+//                        }))
+//                .doOnError(e -> log.info("message error: {}", e.getMessage()));
+//    }
     public Mono<Void> insertMsg(ChatData chatData, String roomId) {
-        /* 메세지에 유저리스트 넣는 부분인데 여기도 디비에 유저정보 요청이 들어감 수정필요 */
-        return mongoDBRepository.findByRoomId(roomId)
-                .publishOn(Schedulers.boundedElastic())
-                .flatMap(chatRoom -> mongoDBRepository.findUsersByRoomId(roomId)
-                        .map(users -> users.getUsers().stream()
-                                .map(ChatUser::getEmail)
-                                .filter(email -> !email.equals(chatData.getEmail()))
-                                .collect(Collectors.toList()))
-                        .flatMap(names -> {
-                            chatData.setCheckList(names);
-                            return mongoDBRepository.pushMessage(roomId, chatData);
-                        }))
+        return mongoDBRepository.pushMessage(roomId, chatData)
                 .doOnError(e -> log.info("message error: {}", e.getMessage()));
     }
-
 
     public Mono<Void> saveUser(ChatUser user, String roomId) {
         return mongoDBRepository.findByRoomId(roomId)
@@ -100,21 +97,65 @@ public class RoomService {
         return mongoDBRepository.findByRoomId(roomId);
     }
 
-    public Mono<Void> deleteCheckListByEmail(String roomId,String email,String chatDataId) {
-        return mongoDBRepository.deleteCheckList(roomId, email, chatDataId);
-    }
+//    public Mono<Void> deleteCheckListByEmail(String roomId,String email,String chatDataId) {
+//        return mongoDBRepository.deleteCheckList(roomId, email, chatDataId);
+//    }
 
 
+//    public Mono<Integer> findNotReadMessageCount(String roomId, String email) {
+//        /* lasttime을 어떻게 가져오지? */
+//        return mongoDBRepository.findMessagesByRoomId(roomId, LocalDateTime.now().minusHours(10))
+//                .map(chatRoom -> {
+//                    List<ChatData> messages = chatRoom.getMessages();
+//                    return (int) messages.stream()
+//                            .filter(message -> message.getCheckList().contains(email))
+//                            .count();
+//                });
+//    }
+
+//    public Mono<Integer> findNotReadMessageCount(String roomId, String email) {
+//        return mongoDBRepository.findMessagesByRoomId(roomId, mongoDBRepository.findUsersByRoomId(roomId)
+//                        .map(users -> users.getUsers().stream()
+//                        .filter(user -> user.getEmail().equals(email)))
+//                        .map((Stream<ChatUser> t) -> ChatUser.getLastCheckTime(t))
+//                        .next()
+//                )
+//                .map(chatRoom -> {
+//                    List<ChatData> messages = chatRoom.getMessages();
+//                    return messages.size();
+//                });
+//    }
     public Mono<Integer> findNotReadMessageCount(String roomId, String email) {
-        /* lasttime을 어떻게 가져오지? */
-        return mongoDBRepository.findMessagesByRoomId(roomId, LocalDateTime.now().minusHours(10))
-                .map(chatRoom -> {
+        long startTime = System.currentTimeMillis();
+        Mono<ChatRoom> chatRoomMono = mongoDBRepository.findUsersByRoomId(roomId)
+                .flatMap(chatRoom -> {
+                    List<ChatUser> users = chatRoom.getUsers();
+                    ChatUser user = users.stream()
+                            .filter(u -> u.getEmail().equals(email))
+                            .findFirst()
+                            .orElse(null);
+
+                    if (user == null) {
+                        return Mono.error(new IllegalArgumentException("User not found"));
+                    }
+
+                    LocalDateTime lastTime = user.getLastCheckTime();
+                    return mongoDBRepository.findMessagesByRoomId(roomId, lastTime);
+                });
+
+        return chatRoomMono
+                .flatMap(chatRoom -> {
                     List<ChatData> messages = chatRoom.getMessages();
-                    return (int) messages.stream()
-                            .filter(message -> message.getCheckList().contains(email))
-                            .count();
+                    int count = messages.size();
+
+                    long endTime = System.currentTimeMillis();
+                    long executionTime = endTime - startTime;
+                    System.out.println("Execution time: " + executionTime + "ms");
+
+                    return Mono.just(count);
                 });
     }
+
 
     public Mono<Void> updateLastTime(String roomId, String email) {
         return mongoDBRepository.updateLastTime(roomId,email);
