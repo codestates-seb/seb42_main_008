@@ -6,10 +6,13 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import reactor.core.publisher.Mono;
+import test.websocket.annotation.MeasureExecutionTime;
 import test.websocket.dto.ChatData;
 import test.websocket.dto.ChatRoom;
 import test.websocket.dto.ChatUser;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.time.LocalDateTime;
 
 @RequiredArgsConstructor
@@ -57,8 +60,13 @@ public class MongoDBRepositoryImpl implements MongoDBRepositoryCustom{
 
     @Override
     public Mono<Void> updateLastTime(String roomId, String email) {
+        Instant startTime = Instant.now();
         Query query = Query.query(Criteria.where("roomId").is(roomId).and("users.email").is(email));
         Update update = new Update().set("users.$.lastCheckTime", LocalDateTime.now());
-        return mongoTemplate.updateFirst(query, update, ChatRoom.class).then();
+        return mongoTemplate.updateFirst(query, update, ChatRoom.class).then()
+                .doOnSuccess(v -> {
+                    Duration duration = Duration.between(startTime, Instant.now());
+                    System.out.println("Processing time: " + duration.toMillis() + " milliseconds");
+                });
     }
 }
