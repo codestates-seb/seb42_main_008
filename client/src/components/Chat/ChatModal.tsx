@@ -59,19 +59,13 @@ const ChatModal = ({
       })
       .then(res => {
         setChatLists(res.data);
-        console.log(res.data);
       })
       .catch(err => console.log(err));
   };
 
   useEffect(() => {
     if (currentRoomId !== -1) {
-      // const client = Stomp.over(() => {
-      //   return new SockJS(`${process.env.REACT_APP_CHAT_SERVER}/ws/chat`);
-      // });
-      // client.connect({}, () => {
       sockClient.subscribe(`/sub/chat/room/${currentRoomId}`, (data: any) => {
-        console.log('data: ' + data.body);
         const respData = JSON.parse(data.body);
         setChatDatas(cur => [...cur, respData]);
         if (
@@ -92,9 +86,6 @@ const ChatModal = ({
           profile: loginUser.profile,
         })
       );
-      // });
-
-      // setSockClient(client);
       getChatData();
     } else {
       getChatList();
@@ -135,7 +126,6 @@ const ChatModal = ({
   };
 
   useEffect(() => {
-    console.log(chatDatas, chatLists);
     autoScroll();
   }, [chatDatas]);
 
