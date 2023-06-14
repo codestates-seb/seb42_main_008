@@ -22,26 +22,93 @@ import { useRecoilValue } from 'recoil';
 import ScrollToTop from 'utils/ScrollToTop';
 import { Stomp } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
-import { loginState } from 'states/userState';
+import { loginState, userInfo } from 'states/userState';
+import axios from 'axios';
 
+interface ChatRoomData {
+  lastTime: string;
+  number: number;
+  roomId: string;
+  title: string;
+}
 const App = () => {
   const [isShowChatModal, setIsShowChatModal] = useState(false);
   const [sockClient, setSockClient] = useState<any>();
+  const [chatLists, setChatLists] = useState<ChatRoomData[]>([]);
+  // const [chatRoomIdArr, setChatRoomIdArr] = useState<number[]>([]);
   const isLogin = useRecoilValue(loginState);
+  const loginUser = useRecoilValue(userInfo);
 
   const handleChatModal = () => {
     setIsShowChatModal(!isShowChatModal);
   };
+
+  // const getChatList = () => {
+  //   axios
+  //     .get(`${process.env.REACT_APP_CHAT_SERVER}/chat/rooms`, {
+  //       params: { email: loginUser.email },
+  //     })
+  //     .then(res => {
+  //       setChatLists(res.data);
+  //       // setChatRoomIdArr(res.data.map((item: ChatRoomData) => item.roomId));
+  //     })
+  //     .catch(err => console.log(err));
+  // };
 
   useEffect(() => {
     if (isLogin) {
       const client = Stomp.over(() => {
         return new SockJS(`${process.env.REACT_APP_CHAT_SERVER}/ws/chat`);
       });
+      // getChatList();
 
-      client.connect({}, () => {
-        setSockClient(client);
-      });
+      axios
+        .get(`${process.env.REACT_APP_CHAT_SERVER}/chat/rooms`, {
+          params: { email: loginUser.email },
+        })
+        .then(res => {
+          setChatLists(res.data);
+          return res.data;
+        })
+        .then(res => {
+          const chatListResp: ChatRoomData[] = res;
+
+          client.connect({}, () => {
+            setSockClient(client);
+
+            const chatRoomIdArr = chatListResp.map(item => item.roomId);
+            console.log(
+              res,
+              chatListResp.map(item => item.roomId)
+            );
+
+            chatRoomIdArr.map(roomId => {
+              client.subscribe(`/sub/chat/room/${roomId}`, (data: any) => {
+                const respData = JSON.parse(data.body);
+                console.log(JSON.parse(data.body));
+                if (respData.message !== null) {
+                  console.log('inner');
+                  const copiedArr = chatListResp.slice(0);
+                  console.log(copiedArr);
+
+                  // 룸 아이디가 같은 idx
+                  const dataIdx = copiedArr.findIndex(
+                    item => item.roomId === respData.roomId
+                  );
+
+                  // splice
+                  const newChat = copiedArr.splice(dataIdx, 1)[0];
+
+                  // count
+
+                  // unshift
+                  setChatLists([newChat, ...copiedArr]);
+                }
+              });
+            });
+          });
+        })
+        .catch(err => console.log(err));
     }
   }, [isLogin]);
 
@@ -61,6 +128,7 @@ const App = () => {
           handleChatModal={handleChatModal}
           roomId={-1}
           sockClient={sockClient}
+          chatLists={chatLists}
         />
       )}
       <main>
@@ -73,7 +141,9 @@ const App = () => {
           <Route path="/:continent/:countryCode" element={<ContentList />} />
           <Route
             path="/companions/:contentId"
-            element={<ContentDetail sockClient={sockClient} />}
+            element={
+              <ContentDetail sockClient={sockClient} chatLists={chatLists} />
+            }
           />
           <Route path="/add" element={<ContentAdd />} />
           <Route path="/:contentId/edit" element={<ContentEdit />} />

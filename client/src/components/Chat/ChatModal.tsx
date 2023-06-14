@@ -31,13 +31,15 @@ const ChatModal = ({
   handleChatModal,
   roomId,
   sockClient,
+  chatLists,
 }: {
   handleChatModal: () => void;
   roomId: number;
   sockClient: any;
+  chatLists: ChatRoomData[];
 }) => {
   const [chatDatas, setChatDatas] = useState<ChatMessage[]>([]);
-  const [chatLists, setChatLists] = useState<ChatRoomData[]>([]);
+  // const [chatLists, setChatLists] = useState<ChatRoomData[]>([]);
   const [message, setMessage] = useState<string>('');
   const [currentRoomId, setCurrentRoomId] = useState<number>(roomId);
   const loginUser = useRecoilValue(userInfo);
@@ -56,16 +58,16 @@ const ChatModal = ({
       });
   };
 
-  const getChatList = () => {
-    axios
-      .get(`${process.env.REACT_APP_CHAT_SERVER}/chat/rooms`, {
-        params: { email: loginUser.email },
-      })
-      .then(res => {
-        setChatLists(res.data);
-      })
-      .catch(err => console.log(err));
-  };
+  // const getChatList = () => {
+  //   axios
+  //     .get(`${process.env.REACT_APP_CHAT_SERVER}/chat/rooms`, {
+  //       params: { email: loginUser.email },
+  //     })
+  //     .then(res => {
+  //       setChatLists(res.data);
+  //     })
+  //     .catch(err => console.log(err));
+  // };
 
   useEffect(() => {
     if (currentRoomId !== -1) {
@@ -77,7 +79,7 @@ const ChatModal = ({
           respData.message === null &&
           respData.email === loginUser.email
         ) {
-          getChatList();
+          // getChatList();
         }
       });
       sockClient.send(
@@ -91,9 +93,10 @@ const ChatModal = ({
         })
       );
       getChatData();
-    } else {
-      getChatList();
     }
+    // } else {
+    //   getChatList();
+    // }
   }, [currentRoomId]);
 
   const handleSendMessage = () => {
