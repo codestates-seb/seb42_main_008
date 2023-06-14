@@ -23,8 +23,8 @@ public interface MongoDBRepository extends ReactiveMongoRepository<ChatRoom, Str
 //    @Query(value = "{ '_id': ?0 }", fields = "{ 'messages': 1, '_id': 0 }")
 //    Mono<ChatRoom> findMessagesByRoomId(String roomId);
 
-    @Query(value = "{ '_id': ?0, 'messages.curTime': { $gt: ?1 } }", fields = "{ 'messages': 1, '_id': 0 }")
-    Mono<ChatRoom> findMessagesByRoomId(String roomId, LocalDateTime afterTime);
+//    @Query(value = "{ '_id': ?0, 'messages.curTime': { $gt: ?1 } }", fields = "{ 'messages': 1, '_id': 0 }")
+//    Mono<ChatRoom> findMessagesByRoomId(String roomId, LocalDateTime afterTime);
 
 //    @Query(value = "{ '_id': ?0, 'messages.curTime': { $gt: ?1 } }", fields = "{ 'messages': 1, 'users':1,'_id': 0 }")
 //    Mono<ChatRoom> findMessagesByRoomId(String roomId, LocalDateTime afterTime);
