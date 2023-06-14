@@ -43,7 +43,7 @@ const App = () => {
         setSockClient(client);
       });
     }
-  }, []);
+  }, [isLogin]);
 
   return (
     <BrowserRouter>

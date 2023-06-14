@@ -3,11 +3,13 @@ import { CloseButton, ModalBG } from 'components/Profile/ModalStyles';
 import { useEffect, useRef, useState } from 'react';
 import { BsPersonFill } from 'react-icons/bs';
 import { IoIosSend, IoMdClose } from 'react-icons/io';
+import { TbMessageChatbot } from 'react-icons/tb';
+import { FaChevronLeft } from 'react-icons/fa';
 import { useRecoilValue } from 'recoil';
-
 import { userInfo } from 'states/userState';
 import styled from 'styled-components';
 import ModalScrollDisable from 'utils/ModalScrollDisable';
+import { useNavigate } from 'react-router-dom';
 
 interface ChatMessage {
   roomId: string;
@@ -40,6 +42,8 @@ const ChatModal = ({
   const [currentRoomId, setCurrentRoomId] = useState<number>(roomId);
   const loginUser = useRecoilValue(userInfo);
   const chatRoomRef = useRef<HTMLDivElement>(null);
+
+  const navigate = useNavigate();
 
   const getChatData = () => {
     axios
@@ -125,6 +129,15 @@ const ChatModal = ({
     setCurrentRoomId(roomId);
   };
 
+  const handleChatRoomOut = () => {
+    setCurrentRoomId(-1);
+  };
+
+  const handleLinkMyPage = () => {
+    navigate(`/${loginUser.memberId}/profile`);
+    handleChatModal();
+  };
+
   useEffect(() => {
     autoScroll();
   }, [chatDatas]);
@@ -141,89 +154,122 @@ const ChatModal = ({
           </CloseButton>
         </ChatHeader>
         <ChatContent>
-          <ChatList>
-            {chatLists.map(item => (
-              <div
-                key={item.roomId}
-                className={`room-wrapper ${
-                  Number(item.roomId) === currentRoomId
-                    ? 'room-selected'
-                    : undefined
-                } `}
-                onClick={() => handleChangeRoomId(Number(item.roomId))}
-              >
-                <div className="room-title">
-                  {item.title.length > 10
-                    ? item.title.substring(0, 10) + ' …'
-                    : item.title}
-                </div>
-                <div className="room-participants">
-                  <BsPersonFill />
-                  {item.number}
-                </div>
-              </div>
-            ))}
-          </ChatList>
-          {currentRoomId !== -1 && (
-            <ChatRoom>
-              {chatLists.length !== 0 && (
-                <div className="chat-room-header">
-                  {
-                    chatLists.filter(
-                      item => Number(item.roomId) === Number(currentRoomId)
-                    )[0].title
-                  }
+          {chatLists.length === 0 ? (
+            <div className="chat-list-empty">
+              <h2>참여중인 채팅이 없습니다</h2>
+              <p className="empty-desc">
+                내가 참여한 동행글에서
+                <br />
+                채팅을 시작해보세요 !
+              </p>
+              <button className="mypage-button" onClick={handleLinkMyPage}>
+                마이페이지로 이동
+              </button>
+            </div>
+          ) : (
+            <>
+              <ChatList isShowList={currentRoomId === -1}>
+                {chatLists.map(item => (
+                  <div
+                    key={item.roomId}
+                    className={`room-wrapper ${
+                      Number(item.roomId) === currentRoomId
+                        ? 'room-selected'
+                        : undefined
+                    } `}
+                    onClick={() => handleChangeRoomId(Number(item.roomId))}
+                  >
+                    <div className="room-title">
+                      {item.title.length > 10
+                        ? item.title.substring(0, 10) + ' …'
+                        : item.title}
+                    </div>
+                    <div className="room-participants">
+                      <BsPersonFill />
+                      {item.number}
+                    </div>
+                  </div>
+                ))}
+              </ChatList>
+              {currentRoomId !== -1 ? (
+                <ChatRoom isShowList={currentRoomId === -1}>
+                  {chatLists.length !== 0 && (
+                    <div className="chat-room-header">
+                      <FaChevronLeft
+                        size={25}
+                        onClick={handleChatRoomOut}
+                        className="chat-room-out"
+                      />
+                      <p className="chat-room-name">
+                        {
+                          chatLists.filter(
+                            item =>
+                              Number(item.roomId) === Number(currentRoomId)
+                          )[0].title
+                        }
+                      </p>
+                    </div>
+                  )}
+                  <ChatRoomContent ref={chatRoomRef}>
+                    {chatDatas.map((chat, idx) =>
+                      chat.message === null ? (
+                        <div className="chat-user-enter" key={idx}>
+                          {chat.nickname}님이 입장하셨습니다.
+                        </div>
+                      ) : (
+                        <div
+                          className={
+                            chat.email === loginUser.email
+                              ? 'my-chat'
+                              : 'other-chat'
+                          }
+                          key={idx}
+                        >
+                          {chat.email !== loginUser.email && (
+                            <img
+                              className="chat-profile"
+                              src={chat.profile}
+                              alt={chat.nickname + 'profile'}
+                            />
+                          )}
+                          <div className="chat-nickname-message">
+                            {chat.email !== loginUser.email && (
+                              <div className="chat-nickname">
+                                {chat.nickname}
+                              </div>
+                            )}
+                            <div className="chat-message">{chat.message}</div>
+                          </div>
+                        </div>
+                      )
+                    )}
+                  </ChatRoomContent>
+                  <ChatRoomInputWrapper>
+                    <input
+                      type="text"
+                      className="chat-room-input"
+                      value={message}
+                      onChange={e => {
+                        setMessage(e.target.value);
+                      }}
+                      onKeyDown={event => {
+                        handleKeyDown(event);
+                      }}
+                    />
+                    <button
+                      className="chat-room-send"
+                      onClick={handleSendMessage}
+                    >
+                      <IoIosSend size={20} />
+                    </button>
+                  </ChatRoomInputWrapper>
+                </ChatRoom>
+              ) : (
+                <div className="chat-room-empty">
+                  <TbMessageChatbot />
                 </div>
               )}
-              <ChatRoomContent ref={chatRoomRef}>
-                {chatDatas.map((chat, idx) =>
-                  chat.message === null ? (
-                    <div className="chat-user-enter" key={idx}>
-                      {chat.nickname}님이 입장하셨습니다.
-                    </div>
-                  ) : (
-                    <div
-                      className={
-                        chat.email === loginUser.email
-                          ? 'my-chat'
-                          : 'other-chat'
-                      }
-                      key={idx}
-                    >
-                      {chat.email !== loginUser.email && (
-                        <img
-                          className="chat-profile"
-                          src={chat.profile}
-                          alt={chat.nickname + 'profile'}
-                        />
-                      )}
-                      <div className="chat-nickname-message">
-                        {chat.email !== loginUser.email && (
-                          <div className="chat-nickname">{chat.nickname}</div>
-                        )}
-                        <div className="chat-message">{chat.message}</div>
-                      </div>
-                    </div>
-                  )
-                )}
-              </ChatRoomContent>
-              <ChatRoomInputWrapper>
-                <input
-                  type="text"
-                  className="chat-room-input"
-                  value={message}
-                  onChange={e => {
-                    setMessage(e.target.value);
-                  }}
-                  onKeyDown={event => {
-                    handleKeyDown(event);
-                  }}
-                />
-                <button className="chat-room-send" onClick={handleSendMessage}>
-                  <IoIosSend size={20} />
-                </button>
-              </ChatRoomInputWrapper>
-            </ChatRoom>
+            </>
           )}
         </ChatContent>
       </ChatModalContainer>
@@ -266,9 +312,49 @@ const ChatContent = styled.div`
   height: calc(100% - 4rem);
   display: flex;
   flex-direction: row;
+
+  .chat-room-empty {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: calc(100% - 15rem);
+    background-color: #ddd;
+    font-size: 20rem;
+    color: #5d62a0;
+  }
+
+  .chat-list-empty {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    text-align: center;
+
+    .empty-desc {
+      margin: 1rem 0 3rem 0;
+      color: #888;
+    }
+
+    .mypage-button {
+      background-color: #feb35c;
+      border: none;
+      color: white;
+      padding: 1rem;
+      cursor: pointer;
+      border-radius: 1rem;
+      font-size: 1rem;
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    .chat-room-empty {
+      display: none;
+    }
+  }
 `;
 
-const ChatList = styled.section`
+const ChatList = styled.section<{ isShowList: boolean }>`
   width: 15rem;
   height: 100%;
   border-right: 1px solid #ddd;
@@ -300,12 +386,18 @@ const ChatList = styled.section`
     align-items: center;
     gap: 0.2rem;
   }
+
+  @media screen and (max-width: 768px) {
+    display: ${props => (props.isShowList ? 'flex' : 'none')};
+    width: 100%;
+  }
 `;
 
-const ChatRoom = styled.section`
+const ChatRoom = styled.section<{ isShowList: boolean }>`
   width: calc(100% - 15rem);
   height: 100%;
   flex-direction: column;
+  display: flex;
 
   .chat-room-header {
     width: 100%;
@@ -315,6 +407,21 @@ const ChatRoom = styled.section`
     flex-direction: row;
     align-items: center;
     padding: 1rem;
+  }
+
+  .chat-room-out {
+    cursor: pointer;
+  }
+
+  .chat-room-name {
+    font-size: 1.2rem;
+    padding-left: 1rem;
+    font-weight: 900;
+  }
+
+  @media screen and (max-width: 768px) {
+    display: ${props => (props.isShowList ? 'none' : 'flex')};
+    width: 100%;
   }
 `;
 
