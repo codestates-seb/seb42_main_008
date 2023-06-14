@@ -11,6 +11,7 @@ import test.websocket.dto.CompanionChatDTO;
 import test.websocket.dto.ChatUser;
 import test.websocket.repository.MongoDBRepository;
 
+import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -21,7 +22,7 @@ import java.util.List;
 public class RoomService {
     private final MongoDBRepository mongoDBRepository;
 
-//    @Transactional
+    //    @Transactional
 //    public Mono<Void> createRoom(Mono<CompanionChatDTO> requestBodyMono) {
 //        return requestBodyMono
 //                .flatMap(dto -> {
@@ -33,6 +34,10 @@ public class RoomService {
 //                })
 //                .then();
 //    }
+    @PostConstruct
+    public void init() {
+        mongoDBRepository.findNotReadMessagesByRoomId("1", LocalDateTime.now()).subscribe();
+    }
     @Transactional
     public Mono<Void> createRoom(Mono<CompanionChatDTO> requestBodyMono) {
         return requestBodyMono
@@ -127,7 +132,7 @@ public class RoomService {
 //    }
     public Mono<Integer> findNotReadMessageCount(String roomId, String email) {
         long startTime = System.currentTimeMillis();
-        Mono<ChatRoom> chatRoomMono = mongoDBRepository.findUsersByRoomId(roomId)
+        return mongoDBRepository.findUsersByRoomId(roomId)
                 .flatMap(chatRoom -> {
                     List<ChatUser> users = chatRoom.getUsers();
                     ChatUser user = users.stream()
@@ -140,19 +145,13 @@ public class RoomService {
                     }
 
                     LocalDateTime lastTime = user.getLastCheckTime();
-                    return mongoDBRepository.findMessagesByRoomId(roomId, lastTime);
-                });
-
-        return chatRoomMono
-                .flatMap(chatRoom -> {
-                    List<ChatData> messages = chatRoom.getMessages();
-                    int count = messages.size();
-
+                    System.out.println("lastTime = " + lastTime);
+                    return mongoDBRepository.findNotReadMessagesByRoomId(roomId, lastTime);
+                })
+                .doOnSuccess(v -> {
                     long endTime = System.currentTimeMillis();
                     long executionTime = endTime - startTime;
                     System.out.println("Execution time: " + executionTime + "ms");
-
-                    return Mono.just(count);
                 });
     }
 
@@ -160,4 +159,5 @@ public class RoomService {
     public Mono<Void> updateLastTime(String roomId, String email) {
         return mongoDBRepository.updateLastTime(roomId,email);
     }
+
 }
