@@ -16,7 +16,19 @@ import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { getDateString } from 'utils/getDateString';
 
-const ContentDetail = ({ sockClient }: { sockClient: any }) => {
+interface ChatRoomData {
+  lastTime: string;
+  number: number;
+  roomId: string;
+  title: string;
+}
+const ContentDetail = ({
+  sockClient,
+  chatLists,
+}: {
+  sockClient: any;
+  chatLists: ChatRoomData[];
+}) => {
   const { contentId } = useParams<{ contentId: string }>();
   const [sub, setSub] = useState<subApply[]>([]);
   const [part, setPart] = useState<partApply[]>([]);
@@ -70,6 +82,7 @@ const ContentDetail = ({ sockClient }: { sockClient: any }) => {
           handleChatModal={handleChatModal}
           roomId={Number(contentId)}
           sockClient={sockClient}
+          chatLists={chatLists}
         />
       )}
       <Container>
