@@ -31,11 +31,11 @@ interface ChatRoomData {
   roomId: string;
   title: string;
 }
+
 const App = () => {
   const [isShowChatModal, setIsShowChatModal] = useState(false);
   const [sockClient, setSockClient] = useState<any>();
   const [chatLists, setChatLists] = useState<ChatRoomData[]>([]);
-  // const [chatRoomIdArr, setChatRoomIdArr] = useState<number[]>([]);
   const isLogin = useRecoilValue(loginState);
   const loginUser = useRecoilValue(userInfo);
 
@@ -43,25 +43,12 @@ const App = () => {
     setIsShowChatModal(!isShowChatModal);
   };
 
-  // const getChatList = () => {
-  //   axios
-  //     .get(`${process.env.REACT_APP_CHAT_SERVER}/chat/rooms`, {
-  //       params: { email: loginUser.email },
-  //     })
-  //     .then(res => {
-  //       setChatLists(res.data);
-  //       // setChatRoomIdArr(res.data.map((item: ChatRoomData) => item.roomId));
-  //     })
-  //     .catch(err => console.log(err));
-  // };
-
   useEffect(() => {
-    if (isLogin) {
-      const client = Stomp.over(() => {
-        return new SockJS(`${process.env.REACT_APP_CHAT_SERVER}/ws/chat`);
-      });
-      // getChatList();
+    const client = Stomp.over(() => {
+      return new SockJS(`${process.env.REACT_APP_CHAT_SERVER}/ws/chat`);
+    });
 
+    if (isLogin) {
       axios
         .get(`${process.env.REACT_APP_CHAT_SERVER}/chat/rooms`, {
           params: { email: loginUser.email },
@@ -77,32 +64,35 @@ const App = () => {
             setSockClient(client);
 
             const chatRoomIdArr = chatListResp.map(item => item.roomId);
-            console.log(
-              res,
-              chatListResp.map(item => item.roomId)
-            );
 
             chatRoomIdArr.map(roomId => {
               client.subscribe(`/sub/chat/room/${roomId}`, (data: any) => {
                 const respData = JSON.parse(data.body);
-                console.log(JSON.parse(data.body));
+
                 if (respData.message !== null) {
-                  console.log('inner');
-                  const copiedArr = chatListResp.slice(0);
-                  console.log(copiedArr);
+                  const copiedArr =
+                    chatLists.length === 0
+                      ? chatListResp.slice()
+                      : chatLists.slice();
 
                   // 룸 아이디가 같은 idx
                   const dataIdx = copiedArr.findIndex(
                     item => item.roomId === respData.roomId
                   );
 
-                  // splice
-                  const newChat = copiedArr.splice(dataIdx, 1)[0];
+                  copiedArr[dataIdx].lastTime = respData.curTime;
 
-                  // count
+                  // 배열 재정렬
+                  copiedArr
+                    .sort((a, b) => {
+                      return (
+                        new Date(a.lastTime).getTime() -
+                        new Date(b.lastTime).getTime()
+                      );
+                    })
+                    .reverse();
 
-                  // unshift
-                  setChatLists([newChat, ...copiedArr]);
+                  setChatLists(copiedArr);
                 }
               });
             });
