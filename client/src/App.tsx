@@ -30,16 +30,29 @@ interface ChatRoomData {
   number: number;
   roomId: string;
   title: string;
+  notRead: number;
 }
 
 const App = () => {
   const [isShowChatModal, setIsShowChatModal] = useState(false);
   const [sockClient, setSockClient] = useState<any>();
   const [chatLists, setChatLists] = useState<ChatRoomData[]>([]);
+  const [currentRoomId, setCurrentRoomId] = useState<number>(-1);
   const isLogin = useRecoilValue(loginState);
   const loginUser = useRecoilValue(userInfo);
 
   const handleChatModal = () => {
+    if (isShowChatModal && currentRoomId !== -1) {
+      sockClient.send(
+        '/pub/chat/check',
+        {},
+        JSON.stringify({
+          roomId: currentRoomId,
+          email: loginUser.email,
+        })
+      );
+    }
+
     setIsShowChatModal(!isShowChatModal);
   };
 
@@ -54,8 +67,15 @@ const App = () => {
           params: { email: loginUser.email },
         })
         .then(res => {
-          setChatLists(res.data);
-          return res.data;
+          const chatListData: ChatRoomData[] = res.data.map(
+            (item: ChatRoomData) => {
+              return { ...item, notRead: 0 };
+            }
+          );
+
+          setChatLists(chatListData);
+
+          return chatListData;
         })
         .then(res => {
           const chatListResp: ChatRoomData[] = res;
@@ -66,14 +86,25 @@ const App = () => {
             const chatRoomIdArr = chatListResp.map(item => item.roomId);
 
             chatRoomIdArr.map(roomId => {
+              axios
+                .get(`${process.env.REACT_APP_CHAT_SERVER}/chat/not-read`, {
+                  params: {
+                    email: loginUser.email,
+                    roomId,
+                  },
+                })
+                .then(res => {
+                  const notReadIdx = chatListResp.findIndex(
+                    item => item.roomId === roomId
+                  );
+                  chatListResp[notReadIdx].notRead = res.data;
+                });
+
               client.subscribe(`/sub/chat/room/${roomId}`, (data: any) => {
                 const respData = JSON.parse(data.body);
 
                 if (respData.message !== null) {
-                  const copiedArr =
-                    chatLists.length === 0
-                      ? chatListResp.slice()
-                      : chatLists.slice();
+                  const copiedArr = chatListResp.slice();
 
                   // 룸 아이디가 같은 idx
                   const dataIdx = copiedArr.findIndex(
@@ -81,6 +112,13 @@ const App = () => {
                   );
 
                   copiedArr[dataIdx].lastTime = respData.curTime;
+
+                  if (
+                    respData.email !== loginUser.email &&
+                    respData.roomId !== currentRoomId
+                  ) {
+                    copiedArr[dataIdx].notRead += 1;
+                  }
 
                   // 배열 재정렬
                   copiedArr
@@ -91,7 +129,6 @@ const App = () => {
                       );
                     })
                     .reverse();
-
                   setChatLists(copiedArr);
                 }
               });
@@ -101,6 +138,40 @@ const App = () => {
         .catch(err => console.log(err));
     }
   }, [isLogin]);
+  console.log(chatLists);
+
+  const handleChangeRoomId = (roomId: number) => {
+    const copiedArr = chatLists.slice();
+    if (currentRoomId !== -1) {
+      const roomIdx = copiedArr.findIndex(
+        item => Number(item.roomId) === currentRoomId
+      );
+      copiedArr[roomIdx].notRead = 0;
+    }
+
+    sockClient.send(
+      '/pub/chat/check',
+      {},
+      JSON.stringify({
+        roomId,
+        email: loginUser.email,
+      })
+    );
+
+    setCurrentRoomId(roomId);
+    setChatLists(copiedArr);
+  };
+
+  const handleChatRoomOut = () => {
+    const copiedArr = chatLists.slice();
+    const roomIdx = copiedArr.findIndex(
+      item => Number(item.roomId) === currentRoomId
+    );
+    copiedArr[roomIdx].notRead = 0;
+
+    setCurrentRoomId(-1);
+    setChatLists(copiedArr);
+  };
 
   return (
     <BrowserRouter>
@@ -116,9 +187,11 @@ const App = () => {
       {isShowChatModal && (
         <ChatModal
           handleChatModal={handleChatModal}
-          roomId={-1}
+          currentRoomId={currentRoomId}
+          handleChangeRoomId={handleChangeRoomId}
           sockClient={sockClient}
           chatLists={chatLists}
+          handleChatRoomOut={handleChatRoomOut}
         />
       )}
       <main>
@@ -132,7 +205,13 @@ const App = () => {
           <Route
             path="/companions/:contentId"
             element={
-              <ContentDetail sockClient={sockClient} chatLists={chatLists} />
+              <ContentDetail
+                sockClient={sockClient}
+                chatLists={chatLists}
+                currentRoomId={currentRoomId}
+                handleChangeRoomId={handleChangeRoomId}
+                handleChatRoomOut={handleChatRoomOut}
+              />
             }
           />
           <Route path="/add" element={<ContentAdd />} />
