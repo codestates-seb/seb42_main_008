@@ -21,13 +21,20 @@ interface ChatRoomData {
   number: number;
   roomId: string;
   title: string;
+  notRead: number;
 }
 const ContentDetail = ({
   sockClient,
   chatLists,
+  currentRoomId,
+  handleChangeRoomId,
+  handleChatRoomOut,
 }: {
   sockClient: any;
   chatLists: ChatRoomData[];
+  currentRoomId: number;
+  handleChangeRoomId: (roomId: number) => void;
+  handleChatRoomOut: () => void;
 }) => {
   const { contentId } = useParams<{ contentId: string }>();
   const [sub, setSub] = useState<subApply[]>([]);
@@ -80,7 +87,9 @@ const ContentDetail = ({
       {isShowChatModal && (
         <ChatModal
           handleChatModal={handleChatModal}
-          roomId={Number(contentId)}
+          currentRoomId={currentRoomId}
+          handleChangeRoomId={handleChangeRoomId}
+          handleChatRoomOut={handleChatRoomOut}
           sockClient={sockClient}
           chatLists={chatLists}
         />

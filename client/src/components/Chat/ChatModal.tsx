@@ -25,23 +25,28 @@ interface ChatRoomData {
   number: number;
   roomId: string;
   title: string;
+  notRead: number;
 }
 
 const ChatModal = ({
   handleChatModal,
-  roomId,
+  currentRoomId,
+  handleChangeRoomId,
+  handleChatRoomOut,
   sockClient,
   chatLists,
 }: {
   handleChatModal: () => void;
-  roomId: number;
+  currentRoomId: number;
+  handleChangeRoomId: (roomId: number) => void;
+  handleChatRoomOut: () => void;
   sockClient: any;
   chatLists: ChatRoomData[];
 }) => {
   const [chatDatas, setChatDatas] = useState<ChatMessage[]>([]);
   // const [chatLists, setChatLists] = useState<ChatRoomData[]>([]);
   const [message, setMessage] = useState<string>('');
-  const [currentRoomId, setCurrentRoomId] = useState<number>(roomId);
+  // const [currentRoomId, setCurrentRoomId] = useState<number>(roomId);
   const loginUser = useRecoilValue(userInfo);
   const chatRoomRef = useRef<HTMLDivElement>(null);
 
@@ -74,6 +79,7 @@ const ChatModal = ({
       sockClient.subscribe(`/sub/chat/room/${currentRoomId}`, (data: any) => {
         const respData = JSON.parse(data.body);
         setChatDatas(cur => [...cur, respData]);
+
         if (
           chatLists.length === 0 &&
           respData.message === null &&
@@ -128,14 +134,6 @@ const ChatModal = ({
     }
   };
 
-  const handleChangeRoomId = (roomId: number) => {
-    setCurrentRoomId(roomId);
-  };
-
-  const handleChatRoomOut = () => {
-    setCurrentRoomId(-1);
-  };
-
   const handleLinkMyPage = () => {
     navigate(`/${loginUser.memberId}/profile`);
     handleChatModal();
@@ -188,6 +186,10 @@ const ChatModal = ({
                         : item.title}
                     </div>
                     <div className="room-participants">
+                      {currentRoomId !== Number(item.roomId) &&
+                        item.notRead !== 0 && (
+                          <span className="chat-not-read">{item.notRead}</span>
+                        )}
                       <BsPersonFill />
                       {item.number}
                     </div>
@@ -376,6 +378,18 @@ const ChatList = styled.section<{ isShowList: boolean }>`
     &:hover {
       background-color: rgba(0, 0, 0, 0.3);
       color: #fff;
+    }
+    .chat-not-read {
+      background-color: #d9506a;
+      border-radius: 50%;
+      color: #fff;
+      width: 1.5rem;
+      height: 1.5rem;
+      margin-right: 0.5rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 0.9rem;
     }
   }
 
