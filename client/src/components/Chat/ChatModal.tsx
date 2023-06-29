@@ -44,9 +44,7 @@ const ChatModal = ({
   chatLists: ChatRoomData[];
 }) => {
   const [chatDatas, setChatDatas] = useState<ChatMessage[]>([]);
-  // const [chatLists, setChatLists] = useState<ChatRoomData[]>([]);
   const [message, setMessage] = useState<string>('');
-  // const [currentRoomId, setCurrentRoomId] = useState<number>(roomId);
   const loginUser = useRecoilValue(userInfo);
   const chatRoomRef = useRef<HTMLDivElement>(null);
 
@@ -63,30 +61,11 @@ const ChatModal = ({
       });
   };
 
-  // const getChatList = () => {
-  //   axios
-  //     .get(`${process.env.REACT_APP_CHAT_SERVER}/chat/rooms`, {
-  //       params: { email: loginUser.email },
-  //     })
-  //     .then(res => {
-  //       setChatLists(res.data);
-  //     })
-  //     .catch(err => console.log(err));
-  // };
-
   useEffect(() => {
     if (currentRoomId !== -1) {
       sockClient.subscribe(`/sub/chat/room/${currentRoomId}`, (data: any) => {
         const respData = JSON.parse(data.body);
         setChatDatas(cur => [...cur, respData]);
-
-        if (
-          chatLists.length === 0 &&
-          respData.message === null &&
-          respData.email === loginUser.email
-        ) {
-          // getChatList();
-        }
       });
       sockClient.send(
         '/pub/chat/enter',
@@ -100,9 +79,6 @@ const ChatModal = ({
       );
       getChatData();
     }
-    // } else {
-    //   getChatList();
-    // }
   }, [currentRoomId]);
 
   const handleSendMessage = () => {
