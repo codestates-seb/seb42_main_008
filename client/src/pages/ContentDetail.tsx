@@ -1,5 +1,4 @@
 import customAxios from 'api/customAxios';
-import ChatModal from 'components/Chat/ChatModal';
 import CompanionTab from 'components/ContentDetail/CompanionTab';
 import ContentWriter from 'components/ContentDetail/ContentWriter';
 import SearchMap from 'components/ContentDetail/SearchMap';
@@ -13,34 +12,25 @@ import {
 import { useEffect, useState } from 'react';
 import { MdArrowBackIosNew } from 'react-icons/md';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useRecoilValue } from 'recoil';
+import { userInfo } from 'states/userState';
 import styled from 'styled-components';
 import { getDateString } from 'utils/getDateString';
 
-interface ChatRoomData {
-  lastTime: string;
-  number: number;
-  roomId: string;
-  title: string;
-  notRead: number;
-}
 const ContentDetail = ({
   sockClient,
-  chatLists,
-  currentRoomId,
-  handleChangeRoomId,
-  handleChatRoomOut,
+  setIsShowChatModal,
+  setCurrentRoomId,
 }: {
   sockClient: any;
-  chatLists: ChatRoomData[];
-  currentRoomId: number;
-  handleChangeRoomId: (roomId: number) => void;
-  handleChatRoomOut: () => void;
+  setIsShowChatModal: React.Dispatch<React.SetStateAction<boolean>>;
+  setCurrentRoomId: React.Dispatch<React.SetStateAction<number>>;
 }) => {
   const { contentId } = useParams<{ contentId: string }>();
   const [sub, setSub] = useState<subApply[]>([]);
   const [part, setPart] = useState<partApply[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [isShowChatModal, setIsShowChatModal] = useState<boolean>(false);
+  const loginUser = useRecoilValue(userInfo);
 
   const navigate = useNavigate();
 
@@ -78,85 +68,83 @@ const ContentDetail = ({
       });
   }, [contentId]);
 
-  const handleChatModal = () => {
-    setIsShowChatModal(!isShowChatModal);
+  const handleChatModal = async () => {
+    await sockClient.subscribe(`/sub/chat/room/${contentId}`);
+    await sockClient.send(
+      '/pub/chat/enter',
+      {},
+      JSON.stringify({
+        roomId: contentId,
+        nickname: loginUser.nickname,
+        email: loginUser.email,
+        profile: loginUser.profile,
+      })
+    );
+    setTimeout(() => {
+      setIsShowChatModal(cur => !cur);
+      setCurrentRoomId(Number(contentId));
+    }, 1000);
   };
 
   return (
-    <>
-      {isShowChatModal && (
-        <ChatModal
-          handleChatModal={handleChatModal}
-          currentRoomId={currentRoomId}
-          handleChangeRoomId={handleChangeRoomId}
-          handleChatRoomOut={handleChatRoomOut}
-          sockClient={sockClient}
-          chatLists={chatLists}
-        />
-      )}
-      <Container>
-        <BackSpace>
-          <button onClick={handleBack}>
-            <MdArrowBackIosNew />
-            <div>목록으로</div>
-          </button>
-        </BackSpace>
-        <ContentDetailBox>
-          {isLoading ? (
-            <Loader />
-          ) : (
-            <>
-              <LeftBox>
-                <TopBox>
-                  <h1>{getDateString(detail.date).shortDateStr}</h1>
-                  <h3>{detail.address}</h3>
-                </TopBox>
-                <BottomBox>
-                  <h2>{detail.title}</h2>
-                  <h4>작성날짜: {detail.createdAt}</h4>
-                  <SearchMap detail={detail} />
-                  <div
-                    id="content"
-                    dangerouslySetInnerHTML={{ __html: detail.content }}
-                  ></div>
-                  <div id="tag-box">
-                    {detail &&
-                      detail.tags.map((el, index: number) => (
-                        <li key={index}>{el}</li>
-                      ))}
-                  </div>
-                </BottomBox>
-              </LeftBox>
-              <RightBox>
-                <ContentWriter
+    <Container>
+      <BackSpace>
+        <button onClick={handleBack}>
+          <MdArrowBackIosNew />
+          <div>목록으로</div>
+        </button>
+      </BackSpace>
+      <ContentDetailBox>
+        {isLoading ? (
+          <Loader />
+        ) : (
+          <>
+            <LeftBox>
+              <TopBox>
+                <h1>{getDateString(detail.date).shortDateStr}</h1>
+                <h3>{detail.address}</h3>
+              </TopBox>
+              <BottomBox>
+                <h2>{detail.title}</h2>
+                <h4>작성날짜: {detail.createdAt}</h4>
+                <SearchMap detail={detail} />
+                <div
+                  id="content"
+                  dangerouslySetInnerHTML={{ __html: detail.content }}
+                ></div>
+                <div id="tag-box">
+                  {detail &&
+                    detail.tags.map((el, index: number) => (
+                      <li key={index}>{el}</li>
+                    ))}
+                </div>
+              </BottomBox>
+            </LeftBox>
+            <RightBox>
+              <ContentWriter
+                detail={detail}
+                sub={sub}
+                setSub={setSub}
+                part={part}
+                setPart={setPart}
+                handleChatModal={handleChatModal}
+              />
+              {detail.companionStatus ? (
+                <TravelComplete detail={detail} part={part} setPart={setPart} />
+              ) : (
+                <CompanionTab
                   detail={detail}
                   sub={sub}
                   setSub={setSub}
                   part={part}
                   setPart={setPart}
-                  handleChatModal={handleChatModal}
                 />
-                {detail.companionStatus ? (
-                  <TravelComplete
-                    detail={detail}
-                    part={part}
-                    setPart={setPart}
-                  />
-                ) : (
-                  <CompanionTab
-                    detail={detail}
-                    sub={sub}
-                    setSub={setSub}
-                    part={part}
-                    setPart={setPart}
-                  />
-                )}
-              </RightBox>
-            </>
-          )}
-        </ContentDetailBox>
-      </Container>
-    </>
+              )}
+            </RightBox>
+          </>
+        )}
+      </ContentDetailBox>
+    </Container>
   );
 };
 

@@ -61,6 +61,10 @@ const App = () => {
       return new SockJS(`${process.env.REACT_APP_CHAT_SERVER}/ws/chat`);
     });
 
+    client.debug = () => {
+      // stomp 콘솔 출력 방지
+    };
+
     if (isLogin) {
       axios
         .get(`${process.env.REACT_APP_CHAT_SERVER}/chat/rooms`, {
@@ -72,7 +76,6 @@ const App = () => {
               return { ...item, notRead: 0 };
             }
           );
-
           setChatLists(chatListData);
 
           return chatListData;
@@ -137,8 +140,7 @@ const App = () => {
         })
         .catch(err => console.log(err));
     }
-  }, [isLogin]);
-  console.log(chatLists);
+  }, [isLogin, currentRoomId]);
 
   const handleChangeRoomId = (roomId: number) => {
     const copiedArr = chatLists.slice();
@@ -167,6 +169,7 @@ const App = () => {
     const roomIdx = copiedArr.findIndex(
       item => Number(item.roomId) === currentRoomId
     );
+
     copiedArr[roomIdx].notRead = 0;
 
     setCurrentRoomId(-1);
@@ -206,11 +209,9 @@ const App = () => {
             path="/companions/:contentId"
             element={
               <ContentDetail
+                setIsShowChatModal={setIsShowChatModal}
                 sockClient={sockClient}
-                chatLists={chatLists}
-                currentRoomId={currentRoomId}
-                handleChangeRoomId={handleChangeRoomId}
-                handleChatRoomOut={handleChatRoomOut}
+                setCurrentRoomId={setCurrentRoomId}
               />
             }
           />
