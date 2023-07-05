@@ -70,6 +70,15 @@ const ContentDetail = ({
 
   const handleChatModal = async () => {
     await sockClient.subscribe(`/sub/chat/room/${contentId}`);
+    // (data: any) => {
+    //   const respData = JSON.parse(data.body);
+    //   if (respData.message !== null) {
+    //     return;
+    //   }
+    //   setCurrentRoomId(Number(contentId));
+    //   setIsShowChatModal(true);
+
+    // }
     await sockClient.send(
       '/pub/chat/enter',
       {},
@@ -80,10 +89,11 @@ const ContentDetail = ({
         profile: loginUser.profile,
       })
     );
+    // 도와줘 장미에몽 <- ㅋㅋㅋㅋㅋㅋㅋㅋ
     setTimeout(() => {
-      setIsShowChatModal(cur => !cur);
       setCurrentRoomId(Number(contentId));
-    }, 1000);
+      setIsShowChatModal(cur => !cur);
+    }, 3000);
   };
 
   return (
