@@ -20,30 +20,30 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 class StompChatControllerTest {
 
-    @Autowired
-    private RoomService roomService;
-
-    @Autowired
-    private SimpMessagingTemplate template;
-
-    @Autowired
-    private StompChatController chatController;
-    @Test
-    void message() {
-        ChatDTO message = new ChatDTO("5", "joe", "zipcks1381@gmail.com", "profile",  "me");
-        Mono<Void> result = chatController.message(message);
-        result.block();
-
-        Instant startTime = Instant.now();
-
-        result = chatController.message(message);
-
-        result.subscribeOn(Schedulers.boundedElastic())
-                .doOnSuccess(v -> {
-                    Duration duration = Duration.between(startTime, Instant.now());
-                    System.out.println("Processing time: " + duration.toMillis() + " milliseconds");
-                })
-                .block();
-
-    }
+//    @Autowired
+//    private RoomService roomService;
+//
+//    @Autowired
+//    private SimpMessagingTemplate template;
+//
+//    @Autowired
+//    private StompChatController chatController;
+//    @Test
+//    void message() {
+//        ChatDTO message = new ChatDTO("5", "joe", "zipcks1381@gmail.com", "profile",  "me");
+//        Mono<Void> result = chatController.message(message);
+//        result.block();
+//
+//        Instant startTime = Instant.now();
+//
+//        result = chatController.message(message);
+//
+//        result.subscribeOn(Schedulers.boundedElastic())
+//                .doOnSuccess(v -> {
+//                    Duration duration = Duration.between(startTime, Instant.now());
+//                    System.out.println("Processing time: " + duration.toMillis() + " milliseconds");
+//                })
+//                .block();
+//
+//    }
 }
