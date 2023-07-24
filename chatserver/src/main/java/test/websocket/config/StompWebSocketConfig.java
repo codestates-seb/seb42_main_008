@@ -11,15 +11,13 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 public class StompWebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/ws/chat")
-                .setAllowedOriginPatterns("http://localhost:3000","*")
-//                .setAllowedOriginPatterns("*")
+        registry.addEndpoint("/ws/chat").setAllowedOriginPatterns("http://localhost:3000", "*") //수정 예정
                 .withSockJS();
     }
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-        registry.setApplicationDestinationPrefixes("/pub");//보내는경로의 prefix? ex)/pub/chat/enter..
-        registry.enableSimpleBroker("/sub");//구독 주소 prefix
+        registry.setApplicationDestinationPrefixes("/pub");
+        registry.enableSimpleBroker("/sub");
     }
 }
