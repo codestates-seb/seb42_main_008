@@ -3,7 +3,6 @@ package test.websocket.repository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.*;
-import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import reactor.core.publisher.Mono;
@@ -15,33 +14,28 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
 
-import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
-import static org.springframework.data.mongodb.core.query.Criteria.*;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.project;
+import static org.springframework.data.mongodb.core.query.Criteria.where;
 
 @RequiredArgsConstructor
-public class MongoDBRepositoryImpl implements MongoDBRepositoryCustom{
+public class MongoDBRepositoryImpl implements MongoDBRepositoryCustom {
     private final ReactiveMongoTemplate mongoTemplate;
 
     @Override
     public Mono<Void> pushMessage(String roomId, ChatData chatData) {
         return mongoTemplate.updateFirst(
-                Query.query(where("roomId").is(roomId)),
-                new Update().push("messages", chatData)
-                        .set("lastTime",chatData.getCurTime()), ChatRoom.class)
+                        Query.query(where("roomId").is(roomId)),
+                        new Update().push("messages", chatData)
+                                .set("lastTime", chatData.getCurTime()), ChatRoom.class)
                 .then();
     }
 
     @Override
     public Mono<Void> pushUser(String roomId, ChatUser user) {
         return mongoTemplate.updateFirst(
-//                Query.query(Criteria.where("roomId").is(roomId)),
-////                Query.query(Criteria.where("roomId").is(roomId).and("users.email").ne(user.getEmail())),    //시간무시
-////                new Update().addToSet("users.$", user), ChatRoom.class)
-//                new Update().set("users.$", user), ChatRoom.class)
-//                .then();
-                Query.query(where("roomId").is(roomId).and("users.email").is(user.getEmail())),
-                new Update().set("users.$", user),
-                ChatRoom.class)
+                        Query.query(where("roomId").is(roomId).and("users.email").is(user.getEmail())),
+                        new Update().set("users.$", user),
+                        ChatRoom.class)
                 .flatMap(updateResult -> {
                     if (updateResult.getModifiedCount() == 0) {
                         return mongoTemplate.updateFirst(
@@ -79,7 +73,7 @@ public class MongoDBRepositoryImpl implements MongoDBRepositoryCustom{
         ProjectionOperation project = project().andExclude("_id").and(ArrayOperators.Filter.filter("messages")
                         .as("message")
                         .by(ComparisonOperators.Gt.valueOf("$$message.curTime").greaterThanValue(afterTime)))
-                        .as("messages");
+                .as("messages");
         TypedAggregation<ChatRoom> aggregation = Aggregation.newAggregation(ChatRoom.class, match, project);
 
         return mongoTemplate.aggregate(aggregation, ChatRoom.class)
