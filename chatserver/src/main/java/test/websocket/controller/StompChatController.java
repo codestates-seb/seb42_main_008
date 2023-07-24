@@ -6,9 +6,8 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import reactor.core.publisher.Mono;
-import test.websocket.annotation.MeasureExecutionTime;
-import test.websocket.dto.ChatData;
 import test.websocket.dto.ChatDTO;
+import test.websocket.dto.ChatData;
 import test.websocket.dto.ChatUser;
 import test.websocket.service.RoomService;
 
@@ -33,7 +32,6 @@ public class StompChatController {
     }
 
     @MessageMapping(value = "/chat/message")
-//    @MeasureExecutionTime
     public Mono<Void> message(ChatDTO message) {
         Instant startTime = Instant.now();
         return Mono.just(message).flatMap(m -> {
@@ -46,18 +44,6 @@ public class StompChatController {
                     });
         });
     }
-
-//    @MessageMapping(value = "/chat/check")
-//    public Mono<Void> checkMessage(@RequestBody ChatDTO.Check check) {
-//        return roomService.deleteCheckListByEmail(check.getRoomId(), check.getEmail(), check.getChatDataId())
-//                .then();
-//    }
-
-//    @MessageMapping(value = "/chat/check")
-//    public Mono<Void> checkMessage(@RequestBody ChatDTO.Check check) {
-//        return roomService.deleteCheckListByEmail(check.getRoomId(), check.getEmail(), check.getChatDataId())
-//                .then(Mono.defer(() -> roomService.updateLastTime(check.getRoomId(), check.getEmail())));
-//    }
     @MessageMapping(value = "/chat/check")
     public Mono<Void> checkMessage(@RequestBody ChatDTO.Check check) {
 
