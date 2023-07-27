@@ -12,7 +12,7 @@ spring:
             required: true
   data:
     redis:
-      host: 52.79.183.219
+      host: 13.125.46.105
       port: 6379
       password: ${REDIS_PASSWORD}
       repositories:
@@ -59,3 +59,4 @@ jwt:
   refresh-token-expiration-minutes: 300
 config:
   domain: ${AWS_S3_ENDPOINT}
+  chat-server: ${CHAT_SERVER}
