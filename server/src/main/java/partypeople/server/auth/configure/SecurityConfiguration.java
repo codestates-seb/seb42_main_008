@@ -57,42 +57,43 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .headers().frameOptions().sameOrigin()
-            .and()
-            .csrf().disable()
-            .cors(withDefaults())
-            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            .and()
-            .formLogin().disable()
-            .httpBasic().disable()  //UsernamePasswordAuthenticationFilter 필터 끊기?
-            .exceptionHandling()
-            .authenticationEntryPoint(new MemberAuthenticationEntryPoint())
-            .and()
-            .apply(new CustomFilterConfigurer())
-            .and()
-//        .authorizeHttpRequests(authorize -> authorize
-//                .antMatchers(HttpMethod.POST, "/members/follows").hasRole("USER")
-//                .antMatchers(HttpMethod.DELETE, "/members/*").hasRole("USER")
-//                .antMatchers(HttpMethod.PATCH, "/members/*").hasRole("USER")
-//                .antMatchers(HttpMethod.GET, "/members/**").hasRole("USER")
-//                .antMatchers(HttpMethod.GET,
-//                    "/companions/continents",
-//                    "/companions/nations",
-//                    "/companions/search",
-//                    "/messages/not-read/*").permitAll()
-//                .antMatchers(
-//                    "/companions/**",
-//                    "/messages/**",
-//                    "/reviews/**").hasRole("USER")
-//                .anyRequest().permitAll()
-//            )
-            .oauth2Login(oAuth2 -> oAuth2
-                .authorizationEndpoint()
-                .baseUri("/members/login")
+                .headers().frameOptions().sameOrigin()
                 .and()
-                .successHandler(new OAuth2MemberSuccessHandler(jwtTokenizer, authorityUtils, memberService))
-                .failureHandler(new MemberAuthenticationFailureHandler())
-            );
+                .csrf().disable()
+                .cors(withDefaults())
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .formLogin().disable()
+                .httpBasic().disable()  //UsernamePasswordAuthenticationFilter 필터 끊기?
+                .exceptionHandling()
+                .authenticationEntryPoint(new MemberAuthenticationEntryPoint())
+                .and()
+                .apply(new CustomFilterConfigurer())
+                .and()
+                .authorizeHttpRequests(authorize -> authorize
+                        .antMatchers(HttpMethod.POST, "/members/follows").hasRole("USER")
+                        .antMatchers(HttpMethod.DELETE, "/members/*").hasRole("USER")
+                        .antMatchers(HttpMethod.PATCH, "/members/*").hasRole("USER")
+                        .antMatchers(HttpMethod.GET, "/members/**").hasRole("USER")
+                        .antMatchers(HttpMethod.GET,
+                                "/companions/continents",
+                                "/companions/nations",
+                                "/companions/search",
+                                "/messages/not-read/*",
+                                "/companions/incomplete-numbers").permitAll()
+                        .antMatchers(
+                                "/companions/**",
+                                "/messages/**",
+                                "/reviews/**").hasRole("USER")
+                        .anyRequest().permitAll()
+                )
+                .oauth2Login(oAuth2 -> oAuth2
+                        .authorizationEndpoint()
+                        .baseUri("/members/login")
+                        .and()
+                        .successHandler(new OAuth2MemberSuccessHandler(jwtTokenizer, authorityUtils, memberService))
+                        .failureHandler(new MemberAuthenticationFailureHandler())
+                );
 
         return http.build();
     }
@@ -115,11 +116,11 @@ public class SecurityConfiguration {
 
     private ClientRegistration clientRegistration() {
         return CommonOAuth2Provider
-            .GOOGLE
-            .getBuilder("google")
-            .clientId(clientId)
-            .clientSecret(clientSecret)
-            .build();
+                .GOOGLE
+                .getBuilder("google")
+                .clientId(clientId)
+                .clientSecret(clientSecret)
+                .build();
     }
 
     @Bean
@@ -148,8 +149,8 @@ public class SecurityConfiguration {
             JwtAuthorizationFilter jwtAuthorizationFilter = new JwtAuthorizationFilter(jwtTokenizer, authorityUtils, redisTemplate);
 
             builder
-                .addFilter(jwtAuthenticationFilter)
-                .addFilterAfter(jwtAuthorizationFilter, JwtAuthenticationFilter.class);
+                    .addFilter(jwtAuthenticationFilter)
+                    .addFilterAfter(jwtAuthorizationFilter, JwtAuthenticationFilter.class);
         }
     }
 }
