@@ -1,5 +1,6 @@
 package partypeople.server.companion.service;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -10,7 +11,9 @@ import java.util.Map;
 
 @Service
 public class ChatRoomService {
-    private final String chatUrl = "https://620a-59-10-231-15.ngrok-free.app/chat/room";
+
+    @Value("${config.chat-server}")
+    private String chatUrl;
     public void createChatRoom(Companion companion) {
         Map<String, String> body = new HashMap<>();
         body.put("companionId", String.valueOf(companion.getCompanionId()));
