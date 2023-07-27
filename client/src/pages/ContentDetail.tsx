@@ -12,14 +12,25 @@ import {
 import { useEffect, useState } from 'react';
 import { MdArrowBackIosNew } from 'react-icons/md';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useRecoilValue } from 'recoil';
+import { userInfo } from 'states/userState';
 import styled from 'styled-components';
 import { getDateString } from 'utils/getDateString';
 
-const ContentDetail = () => {
+const ContentDetail = ({
+  sockClient,
+  setIsShowChatModal,
+  setCurrentRoomId,
+}: {
+  sockClient: any;
+  setIsShowChatModal: React.Dispatch<React.SetStateAction<boolean>>;
+  setCurrentRoomId: React.Dispatch<React.SetStateAction<number>>;
+}) => {
   const { contentId } = useParams<{ contentId: string }>();
   const [sub, setSub] = useState<subApply[]>([]);
   const [part, setPart] = useState<partApply[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const loginUser = useRecoilValue(userInfo);
 
   const navigate = useNavigate();
 
@@ -56,6 +67,24 @@ const ContentDetail = () => {
         console.log(error);
       });
   }, [contentId]);
+
+  const handleChatModal = async () => {
+    await sockClient.subscribe(`/sub/chat/room/${contentId}`);
+    await sockClient.send(
+      '/pub/chat/enter',
+      {},
+      JSON.stringify({
+        roomId: contentId,
+        nickname: loginUser.nickname,
+        email: loginUser.email,
+        profile: loginUser.profile,
+      })
+    );
+    setTimeout(() => {
+      setIsShowChatModal(cur => !cur);
+      setCurrentRoomId(Number(contentId));
+    }, 1000);
+  };
 
   return (
     <Container>
@@ -98,6 +127,7 @@ const ContentDetail = () => {
                 setSub={setSub}
                 part={part}
                 setPart={setPart}
+                handleChatModal={handleChatModal}
               />
               {detail.companionStatus ? (
                 <TravelComplete detail={detail} part={part} setPart={setPart} />
