@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import partypeople.server.companion.dto.CompanionChatDTO;
 import partypeople.server.companion.entity.Companion;
 
 import java.time.LocalDate;
@@ -21,7 +22,8 @@ public interface CompanionRepository extends JpaRepository<Companion, Long> {
     @EntityGraph(attributePaths = {"participants", "member"})
     List<Companion> findByDateBeforeAndCompanionStatusFalse(LocalDate today);
 
-    List<Companion> findByCompanionStatusFalse();
+    @Query("SELECT new partypeople.server.companion.dto.CompanionChatDTO(c.companionId, c.title) FROM Companion c WHERE c.companionStatus = false")
+    List<CompanionChatDTO> findByCompanionStatusFalse();
 
     List<Companion> findAllByMemberMemberId(Long memberId); //작성자
 
@@ -30,84 +32,87 @@ public interface CompanionRepository extends JpaRepository<Companion, Long> {
     List<Companion> findBySubscribersMemberMemberId(Long memberId); //신청자
 
     @Query("SELECT distinct c FROM Companion c join c.companionTags ct join ct.tag t" +
-        " WHERE c.date = :date" +
-        " AND c.nation.code = :nationCode" +
-        " AND (c.title LIKE %:keyword% OR c.address LIKE %:keyword%" +
-        " OR c.content LIKE %:keyword%" +
-        " OR ct.tag.name LIKE %:keyword%)")
+            " WHERE c.date = :date" +
+            " AND c.nation.code = :nationCode" +
+            " AND (c.title LIKE %:keyword% OR c.address LIKE %:keyword%" +
+            " OR c.content LIKE %:keyword%" +
+            " OR ct.tag.name LIKE %:keyword%)")
     @EntityGraph(attributePaths = {"member"})
     Page<Companion> findInEntire(Pageable pageable, @Param("keyword") String keyword,
                                  @Param("nationCode") String nationCode,
-                                 @Param("date")LocalDate date);
+                                 @Param("date") LocalDate date);
+
     @Query("SELECT distinct c FROM Companion c join c.companionTags ct join ct.tag t" +
-        " WHERE c.nation.code = :nationCode" +
-        " AND (c.title LIKE %:keyword% OR c.address LIKE %:keyword%" +
-        " OR c.content LIKE %:keyword%" +
-        " OR ct.tag.name LIKE %:keyword%)")
+            " WHERE c.nation.code = :nationCode" +
+            " AND (c.title LIKE %:keyword% OR c.address LIKE %:keyword%" +
+            " OR c.content LIKE %:keyword%" +
+            " OR ct.tag.name LIKE %:keyword%)")
     @EntityGraph(attributePaths = {"member"})
     Page<Companion> findInEntire(Pageable pageable, @Param("keyword") String keyword,
                                  @Param("nationCode") String nationCode);
 
     @Query("SELECT distinct c FROM Companion c join c.companionTags ct join ct.tag t" +
-        " WHERE c.date = :date" +
-        " AND c.nation.code = :nationCode" +
-        " AND ct.tag.name LIKE %:keyword%")
+            " WHERE c.date = :date" +
+            " AND c.nation.code = :nationCode" +
+            " AND ct.tag.name LIKE %:keyword%")
     @EntityGraph(attributePaths = {"member"})
     Page<Companion> findInTags(Pageable pageable, @Param("keyword") String keyword,
                                @Param("nationCode") String nationCode,
-                               @Param("date")LocalDate date);
+                               @Param("date") LocalDate date);
+
     @Query("SELECT distinct c FROM Companion c join c.companionTags ct join ct.tag t" +
-        " WHERE c.nation.code = :nationCode" +
-        " AND ct.tag.name LIKE %:keyword%")
+            " WHERE c.nation.code = :nationCode" +
+            " AND ct.tag.name LIKE %:keyword%")
     @EntityGraph(attributePaths = {"member"})
     Page<Companion> findInTags(Pageable pageable, @Param("keyword") String keyword,
                                @Param("nationCode") String nationCode);
 
     @Query("SELECT distinct c FROM Companion c join c.companionTags ct join ct.tag t" +
-        " WHERE c.date = :date" +
-        " AND c.nation.code = :nationCode" +
-        " AND c.title LIKE %:keyword%")
+            " WHERE c.date = :date" +
+            " AND c.nation.code = :nationCode" +
+            " AND c.title LIKE %:keyword%")
     @EntityGraph(attributePaths = {"member"})
     Page<Companion> findInTitle(Pageable pageable, @Param("keyword") String keyword,
-                                 @Param("nationCode") String nationCode,
-                                 @Param("date")LocalDate date);
+                                @Param("nationCode") String nationCode,
+                                @Param("date") LocalDate date);
 
     @Query("SELECT distinct c FROM Companion c join c.companionTags ct join ct.tag t" +
-        " WHERE c.nation.code = :nationCode" +
-        " AND c.title LIKE %:keyword%")
+            " WHERE c.nation.code = :nationCode" +
+            " AND c.title LIKE %:keyword%")
     @EntityGraph(attributePaths = {"member"})
     Page<Companion> findInTitle(Pageable pageable, @Param("keyword") String keyword,
-                                 @Param("nationCode") String nationCode);
+                                @Param("nationCode") String nationCode);
 
     @Query("SELECT distinct c FROM Companion c join c.companionTags ct join ct.tag t" +
-        " WHERE c.date = :date" +
-        " AND c.nation.code = :nationCode" +
-        " AND c.content LIKE %:keyword%")
+            " WHERE c.date = :date" +
+            " AND c.nation.code = :nationCode" +
+            " AND c.content LIKE %:keyword%")
     @EntityGraph(attributePaths = {"member"})
     Page<Companion> findInContent(Pageable pageable, @Param("keyword") String keyword,
-                                 @Param("nationCode") String nationCode,
-                                 @Param("date")LocalDate date);
+                                  @Param("nationCode") String nationCode,
+                                  @Param("date") LocalDate date);
 
     @Query("SELECT distinct c FROM Companion c join c.companionTags ct join ct.tag t" +
-        " WHERE c.nation.code = :nationCode" +
-        " AND c.content LIKE %:keyword%")
+            " WHERE c.nation.code = :nationCode" +
+            " AND c.content LIKE %:keyword%")
     @EntityGraph(attributePaths = {"member"})
     Page<Companion> findInContent(Pageable pageable, @Param("keyword") String keyword,
-                                 @Param("nationCode") String nationCode);
+                                  @Param("nationCode") String nationCode);
 
     @Query("SELECT distinct c FROM Companion c join c.companionTags ct join ct.tag t" +
-        " WHERE c.date = :date" +
-        " AND c.nation.code = :nationCode" +
-        " AND c.address LIKE %:keyword%")
+            " WHERE c.date = :date" +
+            " AND c.nation.code = :nationCode" +
+            " AND c.address LIKE %:keyword%")
     @EntityGraph(attributePaths = {"member"})
     Page<Companion> findInAddress(Pageable pageable, @Param("keyword") String keyword,
-                                 @Param("nationCode") String nationCode,
-                                 @Param("date")LocalDate date);
+                                  @Param("nationCode") String nationCode,
+                                  @Param("date") LocalDate date);
+
     @Query("SELECT distinct c FROM Companion c join c.companionTags ct join ct.tag t" +
-        " WHERE c.nation.code = :nationCode" +
-        " AND c.address LIKE %:keyword%")
+            " WHERE c.nation.code = :nationCode" +
+            " AND c.address LIKE %:keyword%")
     @EntityGraph(attributePaths = {"member"})
     Page<Companion> findInAddress(Pageable pageable, @Param("keyword") String keyword,
-                                 @Param("nationCode") String nationCode);
+                                  @Param("nationCode") String nationCode);
 
 }
