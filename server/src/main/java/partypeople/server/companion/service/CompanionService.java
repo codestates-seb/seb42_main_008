@@ -4,16 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.reactive.function.client.WebClient;
 import partypeople.server.companion.dto.CompanionChatDTO;
 import partypeople.server.companion.dto.CompanionDto;
 import partypeople.server.companion.entity.Companion;
@@ -33,10 +27,11 @@ import partypeople.server.nation.service.NationService;
 import partypeople.server.review.entity.Review;
 import partypeople.server.review.service.ReviewService;
 import partypeople.server.utils.CustomBeanUtils;
-import reactor.core.publisher.Mono;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -80,9 +75,7 @@ public class CompanionService {
             findCompanion.setCompanionTags(companionTags);
         });
 
-        Companion updateCompanion = beanUtils.copyNonNullProperties(companion, findCompanion);
-
-        return updateCompanion;
+        return beanUtils.copyNonNullProperties(companion, findCompanion);
     }
 
     public void deleteCompanion(Long companionId) {
@@ -136,16 +129,13 @@ public class CompanionService {
                 messageService.createMessage(message);
             }
             companion.setCompanionStatus(true);
+            //TODO
+            //채팅방 기록을 삭제 할지 말지?
         }
     }
 
     public List<CompanionChatDTO> getIncompleteCompanions() {
-        List<Companion> incompleteCompanions = companionRepository.findByCompanionStatusFalse();
-        List<CompanionChatDTO> companions = incompleteCompanions.stream()
-                .map(i -> new CompanionChatDTO(String.valueOf(i.getCompanionId()), i.getTitle()))
-                .collect(Collectors.toList());
-
-        return companions;
+        return companionRepository.findByCompanionStatusFalse();
     }
 
     @Transactional(readOnly = true)
@@ -182,6 +172,7 @@ public class CompanionService {
         }
         return companionPage;
     }
+
     private Page<Companion> getCompanionPage(String condition, String keyword, String nationCode, PageRequest pageRequest) {
         Page<Companion> companionPage;
 
