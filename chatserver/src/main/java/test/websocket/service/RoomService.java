@@ -2,8 +2,9 @@ package test.websocket.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import test.websocket.dto.ChatData;
 import test.websocket.dto.ChatRoom;
@@ -14,6 +15,8 @@ import test.websocket.repository.MongoDBRepository;
 import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 
 @RequiredArgsConstructor
@@ -27,7 +30,6 @@ public class RoomService {
         mongoDBRepository.findNotReadMessagesByRoomId("1", LocalDateTime.now()).subscribe();
     }
 
-    @Transactional
     public Mono<Void> createRoom(Mono<CompanionChatDTO> requestBodyMono) {
         return requestBodyMono
                 .flatMap(dto -> {
@@ -80,4 +82,23 @@ public class RoomService {
         return mongoDBRepository.updateLastTime(roomId, email);
     }
 
+    public Mono<Void> initializeChatRoomsForCompanions(Flux<CompanionChatDTO> companionChatDTOFlux) {
+        Mono<Set<String>> existingCompanionIdsMono = mongoDBRepository.findAll()
+                .map(ChatRoom::getRoomId)
+                .collect(Collectors.toSet());
+
+        return existingCompanionIdsMono.flatMap(existingCompanionIds -> companionChatDTOFlux
+                .filter(dto -> !existingCompanionIds.contains(dto.getCompanionId()))
+                .map(dto -> new ChatRoom(dto.getCompanionId(), dto.getCompanionTitle()))
+                .collectList()
+                .flatMap(chatRooms -> mongoDBRepository.saveAll(chatRooms).then()));
+    }
+
+    public Mono<Void> deleteRoomByRoomId(String roomId) {
+        return mongoDBRepository.deleteById(roomId)
+                .onErrorResume(EmptyResultDataAccessException.class, ex -> {
+                    System.out.println("Room with id " + roomId + " not found.");
+                    return Mono.empty();
+                });
+    }
 }
