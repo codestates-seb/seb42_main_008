@@ -2,8 +2,10 @@ package test.websocket.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import test.websocket.dto.ChatRoomDTO;
 import test.websocket.dto.CompanionChatDTO;
@@ -41,5 +43,17 @@ public class RoomController {
     @GetMapping("/room/{room-id}")
     public Mono<ResponseEntity<ChatRoomDTO>> getRoom(@PathVariable("room-id") String roomId) {
         return roomService.findRoomByRoomId(roomId).map(body -> ResponseEntity.ok(new ChatRoomDTO(body, body.getRoomId())));
+    }
+
+    @PostMapping(value = "/initializeChatRoom")
+    public Mono<ResponseEntity<Void>> initializeChatRoom(@RequestBody List<CompanionChatDTO> companionChatDTOS) {
+        return roomService.initializeChatRoomsForCompanions(Flux.fromIterable(companionChatDTOS))
+                .then(Mono.just(ResponseEntity.ok().build()));
+    }
+
+    @DeleteMapping("/room/{room-id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public Mono<Void> deleteRoom(@PathVariable("room-id") String roomId) {
+        return roomService.deleteRoomByRoomId(roomId);
     }
 }
