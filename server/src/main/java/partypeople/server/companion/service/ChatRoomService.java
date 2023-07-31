@@ -28,6 +28,14 @@ public class ChatRoomService {
         webClient.post().uri(url).contentType(MediaType.APPLICATION_JSON).bodyValue(body).retrieve().bodyToMono(String.class).subscribe();
     }
 
+    public void initializeChatRoom(List<CompanionChatDTO> companionChatDTOS) {
+        Flux<CompanionChatDTO> companionChatDTOFlux = Flux.fromIterable(companionChatDTOS);
+
+        String url = chatUrl + "/chat/initializeChatRoom";
+
+        webClient.post().uri(url).contentType(MediaType.APPLICATION_JSON).body(companionChatDTOFlux, CompanionChatDTO.class).retrieve().bodyToMono(String.class).subscribe();
+    }
+
     public void removeChatRoom(Long companionId) {
         String url = chatUrl + "/chat/room/" + companionId;
         webClient.delete().uri(url).retrieve().bodyToMono(String.class).subscribe();
