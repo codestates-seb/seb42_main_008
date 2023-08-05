@@ -152,11 +152,7 @@ public class CompanionService {
     public Page<Companion> findCompanionByKeyword(int page, int size, String sortDir, String sortBy, String condition,
                                                   String keyword, String nationCode, String date) {
         PageRequest pageRequest = PageRequest.of(page, size, Sort.Direction.valueOf(sortDir), sortBy);
-        if (!date.equals("")) {
-            LocalDate parseDate = LocalDate.parse(date);
-            return getCompanionPage(condition, keyword, nationCode, pageRequest, parseDate);
-        }
-        return getCompanionPage(condition, keyword, nationCode, pageRequest);
+        return companionRepository.findCompanion(pageRequest, condition, keyword, nationCode, date);
     }
 
     private Companion findVerifiedCompanionById(Long companionId) {
@@ -164,38 +160,5 @@ public class CompanionService {
 
         return optionalCompanion.orElseThrow(() ->
                 new BusinessLogicException(ExceptionCode.COMPANION_NOT_FOUND));
-    }
-
-    private Page<Companion> getCompanionPage(String condition, String keyword, String nationCode, PageRequest pageRequest, LocalDate parseDate) {
-        Page<Companion> companionPage;
-
-        if (condition.equals("tags")) {
-            companionPage = companionRepository.findInTags(pageRequest, keyword, nationCode, parseDate);
-        } else if (condition.equals("title")) {
-            companionPage = companionRepository.findInTitle(pageRequest, keyword, nationCode, parseDate);
-        } else if (condition.equals("content")) {
-            companionPage = companionRepository.findInContent(pageRequest, keyword, nationCode, parseDate);
-        } else if (condition.equals("address")) {
-            companionPage = companionRepository.findInAddress(pageRequest, keyword, nationCode, parseDate);
-        } else {
-            companionPage = companionRepository.findInEntire(pageRequest, keyword, nationCode, parseDate);
-        }
-        return companionPage;
-    }
-    private Page<Companion> getCompanionPage(String condition, String keyword, String nationCode, PageRequest pageRequest) {
-        Page<Companion> companionPage;
-
-        if (condition.equals("tags")) {
-            companionPage = companionRepository.findInTags(pageRequest, keyword, nationCode);
-        } else if (condition.equals("title")) {
-            companionPage = companionRepository.findInTitle(pageRequest, keyword, nationCode);
-        } else if (condition.equals("content")) {
-            companionPage = companionRepository.findInContent(pageRequest, keyword, nationCode);
-        } else if (condition.equals("address")) {
-            companionPage = companionRepository.findInAddress(pageRequest, keyword, nationCode);
-        } else {
-            companionPage = companionRepository.findInEntire(pageRequest, keyword, nationCode);
-        }
-        return companionPage;
     }
 }
