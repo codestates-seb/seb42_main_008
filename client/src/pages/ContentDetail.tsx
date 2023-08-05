@@ -1,4 +1,6 @@
+import { ChatRoomData } from 'App';
 import customAxios from 'api/customAxios';
+
 import CompanionTab from 'components/ContentDetail/CompanionTab';
 import ContentWriter from 'components/ContentDetail/ContentWriter';
 import SearchMap from 'components/ContentDetail/SearchMap';
@@ -21,10 +23,14 @@ const ContentDetail = ({
   sockClient,
   setIsShowChatModal,
   setCurrentRoomId,
-}: {
+  getChatRoomsData,
+}: // chatLists,
+{
   sockClient: any;
   setIsShowChatModal: React.Dispatch<React.SetStateAction<boolean>>;
   setCurrentRoomId: React.Dispatch<React.SetStateAction<number>>;
+  chatLists: ChatRoomData[];
+  getChatRoomsData: () => Promise<ChatRoomData[]>;
 }) => {
   const { contentId } = useParams<{ contentId: string }>();
   const [sub, setSub] = useState<subApply[]>([]);
@@ -80,10 +86,16 @@ const ContentDetail = ({
         profile: loginUser.profile,
       })
     );
-    setTimeout(() => {
-      setIsShowChatModal(cur => !cur);
-      setCurrentRoomId(Number(contentId));
-    }, 1000);
+    setTimeout(async () => {
+      await handleChangeRoomId();
+      await getChatRoomsData().then(() => {
+        setIsShowChatModal(cur => !cur);
+      });
+    }, 300);
+  };
+
+  const handleChangeRoomId = async () => {
+    setCurrentRoomId(Number(contentId));
   };
 
   return (
