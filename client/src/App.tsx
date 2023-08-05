@@ -25,7 +25,7 @@ import SockJS from 'sockjs-client';
 import { loginState, userInfo } from 'states/userState';
 import axios from 'axios';
 
-interface ChatRoomData {
+export interface ChatRoomData {
   lastTime: string;
   number: number;
   roomId: string;
@@ -52,8 +52,27 @@ const App = () => {
         })
       );
     }
-
+    setCurrentRoomId(-1);
     setIsShowChatModal(!isShowChatModal);
+  };
+
+  const getChatRoomsData = async () => {
+    const res = await axios
+      .get(`${process.env.REACT_APP_CHAT_SERVER}/chat/rooms`, {
+        params: { email: loginUser.email },
+      })
+      .then(res => {
+        const chatListData: ChatRoomData[] = res.data.map(
+          (item: ChatRoomData) => {
+            return { ...item, notRead: 0 };
+          }
+        );
+        setChatLists(chatListData);
+
+        return chatListData;
+      });
+
+    return res;
   };
 
   useEffect(() => {
@@ -66,20 +85,7 @@ const App = () => {
     };
 
     if (isLogin) {
-      axios
-        .get(`${process.env.REACT_APP_CHAT_SERVER}/chat/rooms`, {
-          params: { email: loginUser.email },
-        })
-        .then(res => {
-          const chatListData: ChatRoomData[] = res.data.map(
-            (item: ChatRoomData) => {
-              return { ...item, notRead: 0 };
-            }
-          );
-          setChatLists(chatListData);
-
-          return chatListData;
-        })
+      getChatRoomsData()
         .then(res => {
           const chatListResp: ChatRoomData[] = res;
 
@@ -140,7 +146,7 @@ const App = () => {
         })
         .catch(err => console.log(err));
     }
-  }, [isLogin, currentRoomId]);
+  }, [isLogin]);
 
   const handleChangeRoomId = (roomId: number) => {
     const copiedArr = chatLists.slice();
@@ -212,6 +218,8 @@ const App = () => {
                 setIsShowChatModal={setIsShowChatModal}
                 sockClient={sockClient}
                 setCurrentRoomId={setCurrentRoomId}
+                chatLists={chatLists}
+                getChatRoomsData={getChatRoomsData}
               />
             }
           />
