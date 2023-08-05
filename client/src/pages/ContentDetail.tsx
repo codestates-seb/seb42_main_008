@@ -86,7 +86,6 @@ const ContentDetail = ({
         profile: loginUser.profile,
       })
     );
-
     setTimeout(async () => {
       await handleChangeRoomId();
       await getChatRoomsData().then(() => {
