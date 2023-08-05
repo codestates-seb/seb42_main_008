@@ -3,7 +3,6 @@ package partypeople.server.member.service;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.security.SignatureException;
 import lombok.RequiredArgsConstructor;
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -12,7 +11,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.ObjectUtils;
 import partypeople.server.auth.jwt.JwtTokenizer;
 import partypeople.server.auth.utils.CustomAuthorityUtils;
 import partypeople.server.companion.entity.Companion;
@@ -26,9 +24,10 @@ import partypeople.server.review.repository.ReviewRepository;
 import partypeople.server.utils.CustomBeanUtils;
 
 import java.security.SecureRandom;
-import java.util.*;
+import java.util.List;
+import java.util.Locale;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -54,12 +53,13 @@ public class MemberService {
         List<String> roles = authorityUtils.createRoles(member.getEmail());
         member.setRoles(roles);
 
-        Member savedMember = memberRepository.save(member);
-        return savedMember;
+        return memberRepository.save(member);
     }
+
     public String encryptedPassword(String password) {
         return passwordEncoder.encode(password);
     }
+
     @Transactional(readOnly = true)
     public Member findMember(Long memberId) {
         return findVerifiedMemberById(memberId);
@@ -73,7 +73,7 @@ public class MemberService {
     @Transactional(readOnly = true)
     public Page<Member> findMembers(int page, int size, String sortBy, String sortDir) {
         return memberRepository.findAll(PageRequest.of(page, size,
-            Sort.Direction.valueOf(sortDir), sortBy));
+                Sort.Direction.valueOf(sortDir), sortBy));
     }
 
     public Member updateMember(Member member) {
@@ -86,11 +86,10 @@ public class MemberService {
         return updatedMember;
     }
 
-    public void deleteMember(long memberId,String password) {
+    public void deleteMember(long memberId, String password) {
         Member member = findVerifiedMemberById(memberId);
 
         if (passwordEncoder.matches(password, member.getPassword())) {
-//            member.setMemberStatus(Member.MemberStatus.MEMBER_QUIT);
             memberRepository.delete(member);
         } else {
             throw new BusinessLogicException(ExceptionCode.PASSWORD_NOT_MATCH);
@@ -100,25 +99,15 @@ public class MemberService {
 
     private Member findVerifiedMemberByEmail(String email) {
         Optional<Member> optionalMember = memberRepository.findByEmail(email);
-        Member findMember = optionalMember
-            .orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
 
-//        if(findMember.getMemberStatus().equals(Member.MemberStatus.MEMBER_QUIT)) {
-//            throw new BusinessLogicException(ExceptionCode.WITHDRAWAL_MEMBER);
-//        }
-
-        return findMember;
+        return optionalMember
+                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
     }
 
     private Member findVerifiedMemberById(Long memberId) {
         Optional<Member> optionalMember = memberRepository.findById(memberId);
-        Member findMember = optionalMember
-            .orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
-
-//        if(findMember.getMemberStatus().equals(Member.MemberStatus.MEMBER_QUIT)) {
-//            throw new BusinessLogicException(ExceptionCode.WITHDRAWAL_MEMBER);
-//        }
-        return findMember;
+        return optionalMember
+                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
     }
 
     private void verifyExistsMember(Member member) {
@@ -143,7 +132,7 @@ public class MemberService {
     public void logout(String Authorization) {
         String accessToken = Authorization.replace("Bearer ", "");
 
-        try{
+        try {
             Long expiration = jwtTokenizer.getExpiration(accessToken);
             String email = jwtTokenizer.extractEmail(accessToken);
             redisTemplate.opsForValue().set(accessToken, "logout", expiration, TimeUnit.MILLISECONDS);
@@ -158,7 +147,7 @@ public class MemberService {
     }
 
     public String reissueAT(String refreshToken) {
-        try{
+        try {
             Long expiration = jwtTokenizer.getExpiration(refreshToken);
             //유효기간 안
             //DB안의 발행토큰인지 확인
@@ -166,9 +155,9 @@ public class MemberService {
 //            if (ObjectUtils.isEmpty(value)) {
 //                throw new BusinessLogicException(ExceptionCode.REFRESH_TOKEN_ERROR);
 //            } else {
-                Member member = findMember(jwtTokenizer.extractEmail(refreshToken));
+            Member member = findMember(jwtTokenizer.extractEmail(refreshToken));
 
-                return jwtTokenizer.delegateAccessToken(member);
+            return jwtTokenizer.delegateAccessToken(member);
 //            }
         } catch (SignatureException se) {
             throw new BusinessLogicException(ExceptionCode.SIGNATURE_ERROR);
@@ -209,19 +198,19 @@ public class MemberService {
         try {
             findMember.setPassword(passwordEncoder.encode(password));
 
-            mailService.sendEmail(findMember.getEmail(),subject,body);
+            mailService.sendEmail(findMember.getEmail(), subject, body);
         } catch (Exception e) {
             System.out.println("e.getMessage() = " + e.getMessage());
             throw new RuntimeException(e);
         }
     }
 
-    public void oauthPassword(String email,String password) {
+    public void oauthPassword(String email, String password) {
         String subject = "임시 비밀번호 발급";
         String body = "다음은 당신의 임시 비밀번호 입니다(자체 로그인/회원 탈퇴에 필요) ! : " + password;
 
         try {
-            mailService.sendEmail(email,subject,body);
+            mailService.sendEmail(email, subject, body);
         } catch (Exception e) {
             System.out.println("e.getMessage() = " + e.getMessage());
             throw new RuntimeException(e);
@@ -241,34 +230,11 @@ public class MemberService {
         return new String(password);
     }
 
-//    public String oauthNickCheck(String name, String client) {
-//        List<String> nicknames = memberRepository.findAllNicknames();
-//        List<String> lowerNicknames = nicknames.stream()
-//                .map(String::toLowerCase)
-//                .collect(Collectors.toList());
-//        String lowerName = name.toLowerCase();
-//
-//        if (name.length() > NICKNAME_MAX_SIZE) {
-//            name = name.substring(0, 10);
-//        }
-//
-//        if (!(lowerNicknames.contains(lowerName))) {
-//            return name;
-//        }
-//
-//        String randomNickname;
-//        do {
-//            randomNickname = generateRandomString(client);
-//        } while (lowerNicknames.contains(randomNickname.toLowerCase()));
-//
-//        return randomNickname;
-//    }
-
     public String oauthNickCheck(String name, String client) {
         List<String> nicknames = memberRepository.findAllNicknames();
 
         if (name.length() > NICKNAME_MAX_SIZE) {
-            name = name.substring(0,10);
+            name = name.substring(0, 10);
         }
 
         if (!(nicknames.contains(name))) {
@@ -276,7 +242,7 @@ public class MemberService {
         }
 
         String randomNickname;
-        do{
+        do {
             randomNickname = generateRandomString(client);
         } while (nicknames.contains(randomNickname));
 
