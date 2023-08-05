@@ -62,11 +62,17 @@ const ChatModal = ({
   };
 
   useEffect(() => {
+    let subscription: any; // 웹소켓 구독 저장을 위한 변수 추가
+
     if (currentRoomId !== -1) {
-      sockClient.subscribe(`/sub/chat/room/${currentRoomId}`, (data: any) => {
-        const respData = JSON.parse(data.body);
-        setChatDatas(cur => [...cur, respData]);
-      });
+      // 구독 시작
+      subscription = sockClient.subscribe(
+        `/sub/chat/room/${currentRoomId}`,
+        (data: any) => {
+          const respData = JSON.parse(data.body);
+          setChatDatas(cur => [...cur, respData]);
+        }
+      );
       sockClient.send(
         '/pub/chat/enter',
         {},
@@ -79,6 +85,13 @@ const ChatModal = ({
       );
       getChatData();
     }
+
+    return () => {
+      if (subscription) {
+        // 구독 해제
+        subscription.unsubscribe();
+      }
+    };
   }, [currentRoomId]);
 
   const handleSendMessage = () => {
@@ -99,7 +112,9 @@ const ChatModal = ({
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.keyCode === 229) return;
     if (event.key === 'Enter') {
+      event.preventDefault();
       handleSendMessage();
     }
   };

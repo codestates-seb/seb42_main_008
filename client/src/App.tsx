@@ -128,7 +128,6 @@ const App = () => {
                   ) {
                     copiedArr[dataIdx].notRead += 1;
                   }
-
                   // 배열 재정렬
                   copiedArr
                     .sort((a, b) => {
