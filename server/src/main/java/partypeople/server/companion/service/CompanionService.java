@@ -8,6 +8,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import partypeople.server.companion.dto.CompanionChatDTO;
 import partypeople.server.companion.dto.CompanionDto;
 import partypeople.server.companion.entity.Companion;
 import partypeople.server.companion.entity.Participant;
@@ -28,9 +29,7 @@ import partypeople.server.review.service.ReviewService;
 import partypeople.server.utils.CustomBeanUtils;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -46,13 +45,18 @@ public class CompanionService {
     private final MessageService messageService;
     private final MessageMapper messageMapper;
     private final CustomBeanUtils<Companion> beanUtils;
+    private final ChatRoomService chatRoomService;
 
     public Companion createCompanion(Companion companion) {
         memberService.findMember(companion.getMember().getMemberId());
         Nation nation = nationService.findNation(companion.getNation());
         companion.setNation(nation);
 
-        return companionRepository.save(companion);
+        Companion savedCompanion = companionRepository.save(companion);
+
+        chatRoomService.createChatRoom(savedCompanion);
+
+        return savedCompanion;
     }
 
     public Companion updateCompanion(Companion companion) {
@@ -128,55 +132,26 @@ public class CompanionService {
         }
     }
 
+    public List<CompanionChatDTO> getIncompleteCompanions() {
+        List<Companion> incompleteCompanions = companionRepository.findByCompanionStatusFalse();
+        List<CompanionChatDTO> companions = incompleteCompanions.stream()
+                .map(i -> new CompanionChatDTO(String.valueOf(i.getCompanionId()), i.getTitle()))
+                .collect(Collectors.toList());
+
+        return companions;
+    }
+
     @Transactional(readOnly = true)
     public Page<Companion> findCompanionByKeyword(int page, int size, String sortDir, String sortBy, String condition,
                                                   String keyword, String nationCode, String date) {
         PageRequest pageRequest = PageRequest.of(page, size, Sort.Direction.valueOf(sortDir), sortBy);
-        if (!date.equals("")) {
-            LocalDate parseDate = LocalDate.parse(date);
-            return getCompanionPage(condition, keyword, nationCode, pageRequest, parseDate);
-        }
-        return getCompanionPage(condition, keyword, nationCode, pageRequest);
+        return companionRepository.findCompanion(pageRequest, condition, keyword, nationCode, date);
     }
 
     private Companion findVerifiedCompanionById(Long companionId) {
         Optional<Companion> optionalCompanion = companionRepository.findById(companionId);
-        Companion findCompanion = optionalCompanion.orElseThrow(() ->
+
+        return optionalCompanion.orElseThrow(() ->
                 new BusinessLogicException(ExceptionCode.COMPANION_NOT_FOUND));
-
-        return findCompanion;
-    }
-
-    private Page<Companion> getCompanionPage(String condition, String keyword, String nationCode, PageRequest pageRequest, LocalDate parseDate) {
-        Page<Companion> companionPage;
-
-        if (condition.equals("tags")) {
-            companionPage = companionRepository.findInTags(pageRequest, keyword, nationCode, parseDate);
-        } else if (condition.equals("title")) {
-            companionPage = companionRepository.findInTitle(pageRequest, keyword, nationCode, parseDate);
-        } else if (condition.equals("content")) {
-            companionPage = companionRepository.findInContent(pageRequest, keyword, nationCode, parseDate);
-        } else if (condition.equals("address")) {
-            companionPage = companionRepository.findInAddress(pageRequest, keyword, nationCode, parseDate);
-        } else {
-            companionPage = companionRepository.findInEntire(pageRequest, keyword, nationCode, parseDate);
-        }
-        return companionPage;
-    }
-    private Page<Companion> getCompanionPage(String condition, String keyword, String nationCode, PageRequest pageRequest) {
-        Page<Companion> companionPage;
-
-        if (condition.equals("tags")) {
-            companionPage = companionRepository.findInTags(pageRequest, keyword, nationCode);
-        } else if (condition.equals("title")) {
-            companionPage = companionRepository.findInTitle(pageRequest, keyword, nationCode);
-        } else if (condition.equals("content")) {
-            companionPage = companionRepository.findInContent(pageRequest, keyword, nationCode);
-        } else if (condition.equals("address")) {
-            companionPage = companionRepository.findInAddress(pageRequest, keyword, nationCode);
-        } else {
-            companionPage = companionRepository.findInEntire(pageRequest, keyword, nationCode);
-        }
-        return companionPage;
     }
 }
