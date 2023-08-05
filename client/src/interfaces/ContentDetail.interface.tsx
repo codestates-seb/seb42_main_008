@@ -1,3 +1,5 @@
+import { ChatRoomData } from 'App';
+
 // * 신청자, 참여자 탭
 interface contentsTab {
   tabName: string;
