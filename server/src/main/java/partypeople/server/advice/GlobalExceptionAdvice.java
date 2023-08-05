@@ -23,22 +23,20 @@ public class GlobalExceptionAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleMethodArgumentNotValidException(
             MethodArgumentNotValidException e) {
-        final ErrorResponse response = ErrorResponse.of(e.getBindingResult());
 
-        return response;
+        return ErrorResponse.of(e.getBindingResult());
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleConstraintViolationException(
             ConstraintViolationException e) {
-        final ErrorResponse response = ErrorResponse.of(e.getConstraintViolations());
 
-        return response;
+        return ErrorResponse.of(e.getConstraintViolations());
     }
 
     @ExceptionHandler
-    public ResponseEntity handleBusinessLogicException(BusinessLogicException e) {
+    public ResponseEntity<ErrorResponse> handleBusinessLogicException(BusinessLogicException e) {
         final ErrorResponse response = ErrorResponse.of(e.getExceptionCode());
 
         return new ResponseEntity<>(response, HttpStatus.valueOf(e.getExceptionCode().getStatus()));
@@ -48,29 +46,26 @@ public class GlobalExceptionAdvice {
     @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
     public ErrorResponse handleHttpRequestMethodNotSupportedException(
             HttpRequestMethodNotSupportedException e) {
-        final ErrorResponse response = ErrorResponse.of(HttpStatus.METHOD_NOT_ALLOWED);
 
-        return response;
+        return ErrorResponse.of(HttpStatus.METHOD_NOT_ALLOWED);
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleHttpMessageNotReadableException(
             HttpMessageNotReadableException e) {
-        final ErrorResponse response = ErrorResponse.of(HttpStatus.BAD_REQUEST,
-                "Required request body is missing");
 
-        return response;
+        return ErrorResponse.of(HttpStatus.BAD_REQUEST,
+                "Required request body is missing");
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleMissingServletRequestParameterException(
             MissingServletRequestParameterException e) {
-        final ErrorResponse response = ErrorResponse.of(HttpStatus.BAD_REQUEST,
-                e.getMessage());
 
-        return response;
+        return ErrorResponse.of(HttpStatus.BAD_REQUEST,
+                e.getMessage());
     }
 
 
@@ -78,20 +73,16 @@ public class GlobalExceptionAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handlePropertyReferenceException(PropertyReferenceException e) {
 
-        final ErrorResponse response = ErrorResponse.of(HttpStatus.BAD_REQUEST,
+        return ErrorResponse.of(HttpStatus.BAD_REQUEST,
                 e.getMessage());
-
-        return response;
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleMissingRequestHeaderException(MissingRequestHeaderException e) {
 
-        final ErrorResponse response = ErrorResponse.of(HttpStatus.BAD_REQUEST,
+        return ErrorResponse.of(HttpStatus.BAD_REQUEST,
                 e.getMessage());
-
-        return response;
     }
 
     @ExceptionHandler

@@ -17,3 +17,6 @@ logging:
             messaging: ERROR
             config:
               WebSocketMessageBrokerStats: ERROR
+
+config:
+    web-server: "http://ec2-54-180-24-129.ap-northeast-2.compute.amazonaws.com:8080"

@@ -1,11 +1,7 @@
 package partypeople.server.companion.controller;
 
-import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -23,9 +19,7 @@ import partypeople.server.utils.UriCreator;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import java.net.URI;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/companions")
@@ -34,6 +28,7 @@ import java.util.Map;
 public class CompanionController {
     private static final String COMPANION_DEFAULT_URL = "/companions";
     private final CompanionService companionService;
+    private final ChatRoomService chatRoomService;
     private final CompanionMapper mapper;
     private final TagService tagService;
 
@@ -80,7 +75,7 @@ public class CompanionController {
         List<Companion> companions = companionPage.getContent();
 
         return ResponseEntity.ok(
-            new MultiResponseDto<>(mapper.companionsToCompanionResponseDtos(companions), companionPage)
+                new MultiResponseDto<>(mapper.companionsToCompanionResponseDtos(companions), companionPage)
         );
     }
 
@@ -109,16 +104,17 @@ public class CompanionController {
                                        @RequestParam(value = "nationCode") String nationCode,
                                        @RequestParam(value = "date") String date) {
         Page<Companion> companionPage = companionService.findCompanionByKeyword(page - 1, size, sortDir, sortBy,
-            condition, keyword, nationCode, date);
+                condition, keyword, nationCode, date);
         List<Companion> companions = companionPage.getContent();
 
         return ResponseEntity.ok(
-            new MultiResponseDto<>(mapper.companionsToCompanionResponseDtos(companions), companionPage)
+                new MultiResponseDto<>(mapper.companionsToCompanionResponseDtos(companions), companionPage)
         );
     }
 
     @GetMapping("/incomplete-numbers")
-    public ResponseEntity getIncomplete() {
-        return ResponseEntity.ok(companionService.getIncompleteCompanions());
+    public ResponseEntity<?> getIncomplete() {
+        chatRoomService.initializeChatRoom(companionService.getIncompleteCompanions());
+        return ResponseEntity.ok().build();
     }
 }

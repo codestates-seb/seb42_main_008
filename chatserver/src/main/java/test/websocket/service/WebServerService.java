@@ -15,12 +15,14 @@ public class WebServerService {
     @Value("${config.web-server}")
     private String url;
 
-    public Mono<List<ChatData>> getInCompleteNumbers() {
-//        String url = "http://localhost:8080/companions/incomplete-numbers";
-//        String url = "http://ec2-54-180-24-129.ap-northeast-2.compute.amazonaws.com:8080/companions/incomplete-numbers";
-        WebClient webClient = WebClient.create();
+    private final WebClient webClient= WebClient.create();;
 
-        return webClient.get().uri(url).accept(MediaType.APPLICATION_JSON).retrieve().bodyToMono(new ParameterizedTypeReference<>() {
-        });
+    public void loadInitialChatData() {
+        getInCompleteNumbers().subscribe();
+    }
+
+    private Mono<Void> getInCompleteNumbers() {
+        return webClient.get().uri(url + "/companions/incomplete-numbers").accept(MediaType.APPLICATION_JSON).retrieve().bodyToMono(new ParameterizedTypeReference<>() {
+        }).then();
     }
 }
