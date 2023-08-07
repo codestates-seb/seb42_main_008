@@ -33,15 +33,10 @@ public class StompChatController {
 
     @MessageMapping(value = "/chat/message")
     public Mono<Void> message(ChatDTO message) {
-        Instant startTime = Instant.now();
         return Mono.just(message).flatMap(m -> {
             m.setCurTime(LocalDateTime.now());
             template.convertAndSend("/sub/chat/room/" + m.getRoomId(), m);
-            return roomService.insertMsg(new ChatData(m), m.getRoomId())
-                    .doOnSuccess(v -> {
-                        Duration duration = Duration.between(startTime, Instant.now());
-                        System.out.println("Processing time: " + duration.toMillis() + " milliseconds");
-                    });
+            return roomService.insertMsg(new ChatData(m), m.getRoomId());
         });
     }
     @MessageMapping(value = "/chat/check")
