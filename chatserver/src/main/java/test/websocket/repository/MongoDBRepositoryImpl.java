@@ -57,14 +57,9 @@ public class MongoDBRepositoryImpl implements MongoDBRepositoryCustom {
 
     @Override
     public Mono<Void> updateLastTime(String roomId, String email) {
-        Instant startTime = Instant.now();
         Query query = Query.query(where("roomId").is(roomId).and("users.email").is(email));
         Update update = new Update().set("users.$.lastCheckTime", LocalDateTime.now());
-        return mongoTemplate.updateFirst(query, update, ChatRoom.class).then()
-                .doOnSuccess(v -> {
-                    Duration duration = Duration.between(startTime, Instant.now());
-                    System.out.println("Processing time: " + duration.toMillis() + " milliseconds");
-                });
+        return mongoTemplate.updateFirst(query, update, ChatRoom.class).then();
     }
 
     @Override
