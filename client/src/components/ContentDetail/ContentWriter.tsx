@@ -14,6 +14,7 @@ const ContentWriter = ({
   setSub,
   part,
   setPart,
+  handleChatModal,
 }: companionProps) => {
   const { memberId, nickname } = useRecoilValue(userInfo);
   const params = useParams();
@@ -143,6 +144,12 @@ const ContentWriter = ({
           </>
         )}
       </ButtonBox>
+      {(part && detail.memberId === memberId) ||
+      part.some((part: partApply) => part.memberId === memberId) ? (
+        <ButtonBox>
+          <ChatButton onClick={handleChatModal}>채팅 참여하기</ChatButton>
+        </ButtonBox>
+      ) : null}
     </Container>
   );
 };
@@ -309,12 +316,36 @@ const Button = styled.button`
     cursor: pointer;
   }
 `;
+const ChatButton = styled.button`
+  color: white;
+  background-color: #feb35c;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 30px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  width: 80%;
+  &:hover {
+    transition: all 0.2s ease 0s;
+    color: black;
+    background-color: white;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+  }
+  @media screen and (max-width: 768px) {
+    background-color: #feb35c;
+    color: white;
+    border: none;
+    padding: 5px;
+    border-radius: 30px;
+    font-size: 0.8rem;
+    cursor: pointer;
+  }
+`;
 
 /* TODO:
 1. 기본 구조 * 
-2. 작성자인지 아닌지 구분하여 버튼 내용 다르게 하기
-2-1. onClick 이벤트도 다르게 하기
-2-2. 프로필 이미지 불러오기
-2-3. 배터리 게이지 표시
-3. 참여자 탭에서 수락, 거절 버튼 안보이도록 수정
+2. 작성자인지 아닌지 구분하여 버튼 내용 다르게 하기 *
+2-1. onClick 이벤트도 다르게 하기 *
+2-2. 프로필 이미지 불러오기 *
+3. 참여자 탭에서 수락, 거절 버튼 안보이도록 수정 *
 */

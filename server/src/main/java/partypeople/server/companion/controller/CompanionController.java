@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import partypeople.server.companion.dto.CompanionDto;
 import partypeople.server.companion.entity.Companion;
 import partypeople.server.companion.mapper.CompanionMapper;
+import partypeople.server.companion.service.ChatRoomService;
 import partypeople.server.companion.service.CompanionService;
 import partypeople.server.dto.MultiResponseDto;
 import partypeople.server.dto.SingleResponseDto;
@@ -27,6 +28,7 @@ import java.util.List;
 public class CompanionController {
     private static final String COMPANION_DEFAULT_URL = "/companions";
     private final CompanionService companionService;
+    private final ChatRoomService chatRoomService;
     private final CompanionMapper mapper;
     private final TagService tagService;
 
@@ -73,7 +75,7 @@ public class CompanionController {
         List<Companion> companions = companionPage.getContent();
 
         return ResponseEntity.ok(
-            new MultiResponseDto<>(mapper.companionsToCompanionResponseDtos(companions), companionPage)
+                new MultiResponseDto<>(mapper.companionsToCompanionResponseDtos(companions), companionPage)
         );
     }
 
@@ -102,11 +104,17 @@ public class CompanionController {
                                        @RequestParam(value = "nationCode") String nationCode,
                                        @RequestParam(value = "date") String date) {
         Page<Companion> companionPage = companionService.findCompanionByKeyword(page - 1, size, sortDir, sortBy,
-            condition, keyword, nationCode, date);
+                condition, keyword, nationCode, date);
         List<Companion> companions = companionPage.getContent();
 
         return ResponseEntity.ok(
-            new MultiResponseDto<>(mapper.companionsToCompanionResponseDtos(companions), companionPage)
+                new MultiResponseDto<>(mapper.companionsToCompanionResponseDtos(companions), companionPage)
         );
+    }
+
+    @GetMapping("/incomplete-numbers")
+    public ResponseEntity<?> getIncomplete() {
+        chatRoomService.initializeChatRoom(companionService.getIncompleteCompanions());
+        return ResponseEntity.ok().build();
     }
 }

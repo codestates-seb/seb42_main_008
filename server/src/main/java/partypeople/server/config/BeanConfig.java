@@ -27,6 +27,7 @@ public class BeanConfig {
     @Value("${spring.data.redis.password}")
     private String password;
 
+
     @Bean
     public RedisConnectionFactory redisConnectionFactory(){
 //        return new LettuceConnectionFactory(host, port);

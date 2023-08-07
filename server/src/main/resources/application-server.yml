@@ -59,3 +59,4 @@ jwt:
   refresh-token-expiration-minutes: 300
 config:
   domain: ${AWS_S3_ENDPOINT}
+  chat-server: ${CHAT_SERVER}

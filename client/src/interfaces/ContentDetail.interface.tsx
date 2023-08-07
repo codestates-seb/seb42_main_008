@@ -1,3 +1,5 @@
+import { ChatRoomData } from 'App';
+
 // * 신청자, 참여자 탭
 interface contentsTab {
   tabName: string;
@@ -64,6 +66,7 @@ interface companionProps {
   setSub: (newValue: subApply[]) => void;
   part: partApply[];
   setPart: (newValue: partApply[]) => void;
+  handleChatModal?: () => void;
 }
 
 // * 신청자 정보

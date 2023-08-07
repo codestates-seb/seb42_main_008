@@ -24,6 +24,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import partypeople.server.companion.dto.CompanionDto;
 import partypeople.server.companion.entity.Companion;
 import partypeople.server.companion.mapper.CompanionMapper;
+import partypeople.server.companion.service.ChatRoomService;
 import partypeople.server.companion.service.CompanionService;
 import partypeople.server.config.SecurityConfigurationTest;
 import partypeople.server.tag.entity.Tag;
@@ -65,6 +66,9 @@ public class CompanionControllerTest {
 
     @MockBean
     private CompanionService companionService;
+
+    @MockBean
+    private ChatRoomService chatRoomService;
 
     @MockBean
     private CompanionMapper mapper;
