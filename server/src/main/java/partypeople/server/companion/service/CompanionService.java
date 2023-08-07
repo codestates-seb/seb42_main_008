@@ -135,7 +135,7 @@ public class CompanionService {
     public List<CompanionChatDTO> getIncompleteCompanions() {
         List<Companion> incompleteCompanions = companionRepository.findByCompanionStatusFalse();
         List<CompanionChatDTO> companions = incompleteCompanions.stream()
-                .map(i -> new CompanionChatDTO(String.valueOf(i.getCompanionId()), i.getTitle()))
+                .map(i -> new CompanionChatDTO(i.getCompanionId(), i.getTitle()))
                 .collect(Collectors.toList());
 
         return companions;
