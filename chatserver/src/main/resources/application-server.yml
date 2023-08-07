@@ -1,0 +1,22 @@
+spring:
+  data:
+    mongodb:
+      host: ${MONGODB_HOST}
+      port: 27017
+      database: "Chatting"
+      username: ${MONGODB_ID}
+      password: ${MONGODB_PW}
+      authentication-database: "admin"
+
+logging:
+  level:
+    org:
+      springframework:
+        web:
+          socket:
+            messaging: ERROR
+            config:
+              WebSocketMessageBrokerStats: ERROR
+
+config:
+    web-server: "http://ec2-54-180-24-129.ap-northeast-2.compute.amazonaws.com:8080"

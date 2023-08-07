@@ -30,6 +30,5 @@ public class ChatRoom {
         this.title = title;
         this.lastTime = LocalDateTime.now();
     }
-
 }
 

@@ -4,16 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.reactive.function.client.WebClient;
 import partypeople.server.companion.dto.CompanionChatDTO;
 import partypeople.server.companion.dto.CompanionDto;
 import partypeople.server.companion.entity.Companion;
@@ -33,7 +27,6 @@ import partypeople.server.nation.service.NationService;
 import partypeople.server.review.entity.Review;
 import partypeople.server.review.service.ReviewService;
 import partypeople.server.utils.CustomBeanUtils;
-import reactor.core.publisher.Mono;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -152,11 +145,7 @@ public class CompanionService {
     public Page<Companion> findCompanionByKeyword(int page, int size, String sortDir, String sortBy, String condition,
                                                   String keyword, String nationCode, String date) {
         PageRequest pageRequest = PageRequest.of(page, size, Sort.Direction.valueOf(sortDir), sortBy);
-        if (!date.equals("")) {
-            LocalDate parseDate = LocalDate.parse(date);
-            return getCompanionPage(condition, keyword, nationCode, pageRequest, parseDate);
-        }
-        return getCompanionPage(condition, keyword, nationCode, pageRequest);
+        return companionRepository.findCompanion(pageRequest, condition, keyword, nationCode, date);
     }
 
     private Companion findVerifiedCompanionById(Long companionId) {
@@ -164,38 +153,5 @@ public class CompanionService {
 
         return optionalCompanion.orElseThrow(() ->
                 new BusinessLogicException(ExceptionCode.COMPANION_NOT_FOUND));
-    }
-
-    private Page<Companion> getCompanionPage(String condition, String keyword, String nationCode, PageRequest pageRequest, LocalDate parseDate) {
-        Page<Companion> companionPage;
-
-        if (condition.equals("tags")) {
-            companionPage = companionRepository.findInTags(pageRequest, keyword, nationCode, parseDate);
-        } else if (condition.equals("title")) {
-            companionPage = companionRepository.findInTitle(pageRequest, keyword, nationCode, parseDate);
-        } else if (condition.equals("content")) {
-            companionPage = companionRepository.findInContent(pageRequest, keyword, nationCode, parseDate);
-        } else if (condition.equals("address")) {
-            companionPage = companionRepository.findInAddress(pageRequest, keyword, nationCode, parseDate);
-        } else {
-            companionPage = companionRepository.findInEntire(pageRequest, keyword, nationCode, parseDate);
-        }
-        return companionPage;
-    }
-    private Page<Companion> getCompanionPage(String condition, String keyword, String nationCode, PageRequest pageRequest) {
-        Page<Companion> companionPage;
-
-        if (condition.equals("tags")) {
-            companionPage = companionRepository.findInTags(pageRequest, keyword, nationCode);
-        } else if (condition.equals("title")) {
-            companionPage = companionRepository.findInTitle(pageRequest, keyword, nationCode);
-        } else if (condition.equals("content")) {
-            companionPage = companionRepository.findInContent(pageRequest, keyword, nationCode);
-        } else if (condition.equals("address")) {
-            companionPage = companionRepository.findInAddress(pageRequest, keyword, nationCode);
-        } else {
-            companionPage = companionRepository.findInEntire(pageRequest, keyword, nationCode);
-        }
-        return companionPage;
     }
 }

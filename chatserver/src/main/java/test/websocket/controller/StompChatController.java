@@ -4,13 +4,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestBody;
 import reactor.core.publisher.Mono;
-import test.websocket.dto.ChatData;
 import test.websocket.dto.ChatDTO;
+import test.websocket.dto.ChatData;
 import test.websocket.dto.ChatUser;
 import test.websocket.service.RoomService;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.time.LocalDateTime;
 
 @Controller
@@ -21,7 +23,7 @@ public class StompChatController {
     private final RoomService roomService;
 
     @MessageMapping(value = "/chat/enter")
-    public Mono<Void> enter(ChatDTO chatDto){
+    public Mono<Void> enter(ChatDTO chatDto) {
         return Mono.just(chatDto).flatMap(m -> {
             m.setCurTime(LocalDateTime.now());
             template.convertAndSend("/sub/chat/room/" + m.getRoomId(), m);
@@ -30,11 +32,21 @@ public class StompChatController {
     }
 
     @MessageMapping(value = "/chat/message")
-    public Mono<Void> message(ChatDTO message){
+    public Mono<Void> message(ChatDTO message) {
+        Instant startTime = Instant.now();
         return Mono.just(message).flatMap(m -> {
             m.setCurTime(LocalDateTime.now());
             template.convertAndSend("/sub/chat/room/" + m.getRoomId(), m);
-            return roomService.insertMsg(new ChatData(m), m.getRoomId());
+            return roomService.insertMsg(new ChatData(m), m.getRoomId())
+                    .doOnSuccess(v -> {
+                        Duration duration = Duration.between(startTime, Instant.now());
+                        System.out.println("Processing time: " + duration.toMillis() + " milliseconds");
+                    });
         });
+    }
+    @MessageMapping(value = "/chat/check")
+    public Mono<Void> checkMessage(@RequestBody ChatDTO.Check check) {
+
+        return roomService.updateLastTime(check.getRoomId(), check.getEmail());
     }
 }

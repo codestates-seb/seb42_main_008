@@ -1,24 +1,28 @@
 package test.websocket.service;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
-import test.websocket.dto.CompanionChatDTO;
+import test.websocket.dto.ChatData;
 
 import java.util.List;
 
 @Service
 public class WebServerService {
-    public Mono<List<CompanionChatDTO>> getInCompleteNumbers() {
-        String url = "https://fb8e-1-237-37-135.ngrok-free.app/companions/incomplete-numbers";
-        WebClient webClient = WebClient.create();
+    @Value("${config.web-server}")
+    private String url;
 
-        return webClient.get()
-                .uri(url)
-                .accept(MediaType.APPLICATION_JSON)
-                .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<>() {});
+    private final WebClient webClient= WebClient.create();;
+
+    public void loadInitialChatData() {
+        getInCompleteNumbers().subscribe();
+    }
+
+    private Mono<Void> getInCompleteNumbers() {
+        return webClient.get().uri(url + "/companions/incomplete-numbers").accept(MediaType.APPLICATION_JSON).retrieve().bodyToMono(new ParameterizedTypeReference<>() {
+        }).then();
     }
 }
