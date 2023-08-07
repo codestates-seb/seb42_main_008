@@ -17,11 +17,13 @@ jobs:
           echo "REACT_APP_CLIENT_ID=$REACT_APP_CLIENT_ID" >> .env
           echo "REACT_APP_API_KEY=$REACT_APP_API_KEY" >> .env
           echo "REACT_APP_SERVER=$REACT_APP_SERVER" >> .env
+          echo "REACT_APP_CHAT_SERVER=$REACT_APP_CHAT_SERVER" >> .env
           cat .env
         env:
           REACT_APP_CLIENT_ID: ${{ secrets.REACT_APP_CLIENT_ID }}
           REACT_APP_API_KEY: ${{ secrets.REACT_APP_API_KEY }}
           REACT_APP_SERVER: ${{ secrets.REACT_APP_SERVER }}
+          REACT_APP_CHAT_SERVER: ${{ secrets.REACT_APP_CHAT_SERVER }}
         working-directory: ./client
       - name: Install dependencies
         run: npm install
